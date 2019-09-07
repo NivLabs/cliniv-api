@@ -60,6 +60,8 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<executable>true</executable>
+					<target>1.11</target>
+					<source>1.11</source>
 				</configuration>
 			</plugin>
 		</plugins>
