@@ -1,4 +1,4 @@
-package br.com.netinformatica.config;
+package br.com.ft.gdp.config;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +44,7 @@ public class SwaggerConfig {
 				.globalResponseMessage(RequestMethod.POST, Arrays.asList(m201, m403, m422, m500))
 				.globalResponseMessage(RequestMethod.PUT, Arrays.asList(m204put, m403, m404, m422, m500))
 				.globalResponseMessage(RequestMethod.DELETE, Arrays.asList(m204del, m403, m404, m500)).select()
-				.apis(RequestHandlerSelectors.basePackage("br.com.netinformatica.controller.post")).build().apiInfo(apiInfo())
+				.apis(RequestHandlerSelectors.basePackage("br.com.ft.gdp.controller.ResponsibleController")).build().apiInfo(apiInfo())
 				.globalResponseMessage(RequestMethod.GET, Arrays.asList(m403, m404, m500));
 	}
 

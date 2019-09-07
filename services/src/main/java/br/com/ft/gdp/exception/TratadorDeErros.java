@@ -1,4 +1,4 @@
-package br.com.netinformatica.exception;
+package br.com.ft.gdp.exception;
 
 import javax.servlet.http.HttpServletRequest;
 

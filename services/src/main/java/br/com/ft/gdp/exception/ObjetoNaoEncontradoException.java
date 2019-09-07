@@ -1,4 +1,4 @@
-package br.com.netinformatica.exception;
+package br.com.ft.gdp.exception;
 
 public class ObjetoNaoEncontradoException extends RuntimeException {
 
