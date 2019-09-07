@@ -10,6 +10,11 @@
 	<artifactId>services</artifactId>
 	<name>Services</name>
 	<description>Camada de Serviços da API</description>
+
+	<properties>
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+	</properties>
+
 	<dependencies>
 
 

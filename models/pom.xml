@@ -11,6 +11,10 @@
 	<name>Models</name>
 	<description>Pacote de entidades básicas da Lampião Soluções</description>
 
+	<properties>
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

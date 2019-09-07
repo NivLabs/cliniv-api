@@ -17,6 +17,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 		<io.jwt.version>0.9.1</io.jwt.version>
 	</properties>
 
