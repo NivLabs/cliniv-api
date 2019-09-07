@@ -1,4 +1,4 @@
-package br.com.ft.gdp.models;
+package br.com.ft.gdp.models.common;
 
 import java.io.Serializable;
 import java.util.HashSet;

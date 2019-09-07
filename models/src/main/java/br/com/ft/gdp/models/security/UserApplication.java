@@ -1,4 +1,4 @@
-package br.com.ft.gdp.models;
+package br.com.ft.gdp.models.security;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,12 @@ import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.ft.gdp.models.BaseObject;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 /**
  * Classe User.java
  * 
@@ -21,19 +27,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * 
  * @since 6 de set de 2019
  */
-public class UserApplication {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserApplication extends BaseObject {
+
+    private static final long serialVersionUID = -4066717030226233952L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 200)
     private String name;
 
-    @Column(nullable = false, length = 200)
     private String email;
 
-    @Column(nullable = false, length = 14, unique = true)
-    private String cgc;
+    private String cpf;
 
     @JsonIgnore
     @Column(nullable = false, length = 500)
@@ -43,4 +53,5 @@ public class UserApplication {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USARIO_PERFIL", joinColumns = {@JoinColumn(name = "ID_USUARIO")}, inverseJoinColumns = {@JoinColumn(name = "USARIO_PERFIL")})
     private List<Perfil> perfis = new ArrayList<>();
+
 }
