@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.models.common.Responsible;
 import br.com.ft.gdp.service.ResponsibleService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * Classe ResponsibleController.java
@@ -21,6 +23,7 @@ import br.com.ft.gdp.service.ResponsibleService;
  * 
  * @since 7 de set de 2019
  */
+@Api("Endpoint - Responsáveis")
 @RestController
 @RequestMapping(value = "/responsible")
 public class ResponsibleController {
@@ -28,10 +31,11 @@ public class ResponsibleController {
     @Autowired
     private ResponsibleService service;
 
+    @ApiOperation(nickname = "responsible-get", value = "Busca uma página de responsáveis")
     @GetMapping
     public ResponseEntity<Page<Responsible>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                       @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                      @RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
+                                                      @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
                                                       @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
