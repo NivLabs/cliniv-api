@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -41,13 +42,15 @@ public class VisitEvent extends BaseObject {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
 	private Long id;
 	
+	@ManyToOne
 	private Patient patient;
 	
+	@ManyToOne
 	private EventType eventeType;
 	
+	@ManyToOne
 	private Responsible responsible;
 	
 	@Column(name = "URL_DOC")
@@ -93,7 +96,3 @@ public class VisitEvent extends BaseObject {
 	}
 
 }
-
-
-
-
