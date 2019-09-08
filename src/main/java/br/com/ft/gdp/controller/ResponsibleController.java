@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,6 +64,17 @@ public class ResponsibleController {
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdResponsible.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdResponsible.getResponsibleDTOFromDomain());
+
+    }
+
+    @ApiOperation(nickname = "responsible-put", value = "Atualiza um responsável na aplicação")
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponsibleDTO> update(@PathVariable("id") Long id,
+                                                 @Validated @RequestBody(required = true) ResponsibleDTO responsible,
+                                                 HttpServletResponse response) {
+        Responsible createdResponsible = service.update(id, responsible.getResponsibleDomainFromDTO());
+
+        return ResponseEntity.ok().body(createdResponsible.getResponsibleDTOFromDomain());
 
     }
 
