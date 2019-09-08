@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class ErroPadraoSpring {
+public class StandardErrorSpring {
 
     private Long timestamp;
     private Integer status;

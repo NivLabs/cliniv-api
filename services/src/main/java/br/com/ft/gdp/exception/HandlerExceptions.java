@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class TratadorDeErros {
+public class HandlerExceptions {
 
-	@ExceptionHandler(ObjetoNaoEncontradoException.class)
-	public ResponseEntity<ErroPadraoSpring> objetoNaoEncontrado(ObjetoNaoEncontradoException e,
+	@ExceptionHandler(ObjectNotFoundException.class)
+	public ResponseEntity<StandardErrorSpring> objetoNaoEncontrado(ObjectNotFoundException e,
 			HttpServletRequest req) {
-		ErroPadraoSpring err = new ErroPadraoSpring(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(),
+		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(),
 				"Não Encontrado", e.getMessage(), req.getRequestURI());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}
 
-	public ResponseEntity<ErroPadraoSpring> operacaoInvalida(OperacaoInvalidaException e, HttpServletRequest req) {
-		ErroPadraoSpring err = new ErroPadraoSpring(System.currentTimeMillis(), HttpStatus.METHOD_NOT_ALLOWED.value(),
+	public ResponseEntity<StandardErrorSpring> operacaoInvalida(InvalidOperationException e, HttpServletRequest req) {
+		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.METHOD_NOT_ALLOWED.value(),
 				"Operação inválida", e.getMessage(), req.getRequestURI());
 		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(err);
 	}

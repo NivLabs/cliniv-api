@@ -1,14 +1,14 @@
 package br.com.ft.gdp.exception;
 
-public class OperacaoInvalidaException extends RuntimeException {
+public class InvalidOperationException extends RuntimeException {
 
     private static final long serialVersionUID = -4230025063997222496L;
 
-    public OperacaoInvalidaException() {
+    public InvalidOperationException() {
         super("Operação inválida");
     }
 
-    public OperacaoInvalidaException(String arg0) {
+    public InvalidOperationException(String arg0) {
         super(arg0);
     }
 

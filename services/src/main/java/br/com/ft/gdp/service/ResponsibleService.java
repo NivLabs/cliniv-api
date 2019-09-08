@@ -1,11 +1,13 @@
 package br.com.ft.gdp.service;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.dao.ResponsibleDao;
+import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.common.Responsible;
 
 /**
@@ -28,32 +30,33 @@ public class ResponsibleService extends GenerciService<Responsible, Long> {
 
     @Override
     public Responsible findById(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+        return dao.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
     }
 
     @Override
     public Responsible update(Long id, Responsible entity) {
-        // TODO Auto-generated method stub
-        return null;
+        Responsible auxEntity = findById(id);
+        BeanUtils.copyProperties(entity, auxEntity, "id");
+        return dao.save(auxEntity);
     }
 
     @Override
     public void delete(Responsible entity) {
-        // TODO Auto-generated method stub
-
+        deleteById(entity.getId());
     }
 
     @Override
     public void deleteById(Long id) {
-        // TODO Auto-generated method stub
+        Responsible auxEntity = findById(id);
+        dao.delete(auxEntity);
 
     }
 
     @Override
     public Responsible persist(Responsible entity) {
-        // TODO Auto-generated method stub
-        return null;
+        entity.setId(null);
+        return dao.save(entity);
     }
 
 }
