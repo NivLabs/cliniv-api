@@ -19,8 +19,6 @@ import javax.persistence.ForeignKey;
 public class Patient implements Serializable {
 
     private static final long serialVersionUID = 3114141863299939006L;
-
-    
     
     @ElementCollection
     @CollectionTable(name = "TELEFONE", foreignKey = @ForeignKey(name = "FK_TELEFONE_USUARIO"))

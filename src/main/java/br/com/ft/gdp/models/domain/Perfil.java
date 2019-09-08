@@ -24,7 +24,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Perfil extends BaseObject {
 
-    @Id
+	private static final long serialVersionUID = 7152893131512662767L;
+	
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
