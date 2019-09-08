@@ -32,7 +32,11 @@ public class EventTypeService extends GenerciService<EventType, Long> {
     @Override
     public EventType findById(Long id) {
         return dao.findById(id)
+<<<<<<< HEAD
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Tipo de evento com ID: [%s] não encontrado", id)));
+=======
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
+>>>>>>> 8e75f2d10e8d4b2efe3d95c905ebd35197db62d8
     }
 
     @Override

@@ -46,7 +46,11 @@ public class EventTypeController {
     @Autowired
     private ApplicationEventPublisher publisher;
 
+<<<<<<< HEAD
     @ApiOperation(nickname = "eventtype-get", value = "Busca uma página de tipos de eventos")
+=======
+    @ApiOperation(nickname = "eventtype-get", value = "Busca uma página de responsáveis")
+>>>>>>> 8e75f2d10e8d4b2efe3d95c905ebd35197db62d8
     @GetMapping
     public ResponseEntity<Page<EventType>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                       @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
@@ -56,7 +60,11 @@ public class EventTypeController {
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
 
+<<<<<<< HEAD
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo tipo de evento na aplicação")
+=======
+    @ApiOperation(nickname = "responsible-post", value = "Insere um novo responsável na aplicação")
+>>>>>>> 8e75f2d10e8d4b2efe3d95c905ebd35197db62d8
     @PostMapping
     public ResponseEntity<EventTypeDTO> persist(@Validated @RequestBody(required = true) EventTypeDTO eventType,
                                                   HttpServletResponse response) {
@@ -68,7 +76,11 @@ public class EventTypeController {
 
     }
 
+<<<<<<< HEAD
     @ApiOperation(nickname = "responsible-put", value = "Atualiza um tipo de evento na aplicação")
+=======
+    @ApiOperation(nickname = "responsible-put", value = "Atualiza um responsável na aplicação")
+>>>>>>> 8e75f2d10e8d4b2efe3d95c905ebd35197db62d8
     @PutMapping("/{id}")
     public ResponseEntity<EventTypeDTO> update(@PathVariable("id") Long id,
                                                  @Validated @RequestBody(required = true) EventTypeDTO eventType,
@@ -79,7 +91,11 @@ public class EventTypeController {
 
     }
 
+<<<<<<< HEAD
     @ApiOperation(nickname = "eventtype-get-id", value = "Busca um tipo de evento baseado no identificador")
+=======
+    @ApiOperation(nickname = "eventtype-get-id", value = "Busca um responsável baseano no identificador")
+>>>>>>> 8e75f2d10e8d4b2efe3d95c905ebd35197db62d8
     @GetMapping("/{id}")
     public ResponseEntity<EventType> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
