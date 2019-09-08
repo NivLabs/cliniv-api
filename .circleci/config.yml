@@ -28,14 +28,6 @@ jobs:
           paths:
             - ~/.m2
           key: gestao-de-prontuario-{{ checksum "pom.xml" }}
-        
-      # package into a jar
-      - run: mvn clean package
 
-      # build and push docker image to docker hub
-      - run: mvn clean compile jib:build -Dimage=viniciosarodrigues/gestao-de-prontuario:$CIRCLE_BUILD_NUM
-
-      # store raw contents of src code
-      - store_artifacts:
-          path: target/classes
-          destination: gestao-de-prontuario
+      # clean and build
+      - run: mvn clean install
