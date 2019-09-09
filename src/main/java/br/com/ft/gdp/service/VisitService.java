@@ -6,56 +6,56 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.ft.gdp.dao.EventTypeDao;
+import br.com.ft.gdp.dao.VisitDao;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
-import br.com.ft.gdp.models.domain.EventType;
+import br.com.ft.gdp.models.domain.Visit;
 
 /**
  * 
-* Classe EventTypeService.java
+* Classe VisitService.java
 *
 * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
 *
 * @since 8 de set de 2019
  */
 @Service
-public class EventTypeService extends GenerciService<EventType, Long> {
+public class VisitService extends GenerciService<Visit, Long> {
 
     @Autowired
-    private EventTypeDao dao;
+    private VisitDao dao;
 
     @Override
-    public Page<EventType> searchEntityPage(Pageable pageRequest) {
+    public Page<Visit> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
     }
 
     @Override
-    public EventType findById(Long id) {
-        return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Tipo de evento com ID: [%s] não encontrado", id)));
-
+    public Visit findById(Long id) {
+        return dao.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Visita com ID: [%s] não encontrado", id)));
     }
 
     @Override
-    public EventType update(Long id, EventType entity) {
-        EventType auxEntity = findById(id);
+    public Visit update(Long id, Visit entity) {
+        Visit auxEntity = findById(id);
         BeanUtils.copyProperties(entity, auxEntity, "id");
         return dao.save(auxEntity);
     }
 
     @Override
-    public void delete(EventType entity) {
+    public void delete(Visit entity) {
         deleteById(entity.getId());
     }
 
     @Override
     public void deleteById(Long id) {
-        EventType auxEntity = findById(id);
+        Visit auxEntity = findById(id);
         dao.delete(auxEntity);
 
     }
 
     @Override
-    public EventType persist(EventType entity) {
+    public Visit persist(Visit entity) {
         entity.setId(null);
         return dao.save(entity);
     }

@@ -78,13 +78,13 @@ public class ResponsibleController {
 
     }
 
-    @ApiOperation(nickname = "responsible-get-id", value = "Busca um responsável baseano no identificador")
+    @ApiOperation(nickname = "responsible-get-id", value = "Busca um responsável baseado no identificador")
     @GetMapping("/{id}")
     public ResponseEntity<Responsible> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @ApiOperation(nickname = "responsible-get-cpf", value = "Busca um responsável baseano no cpf")
+    @ApiOperation(nickname = "responsible-get-cpf", value = "Busca um responsável baseado no cpf")
     @GetMapping("/{cpf}/cpf")
     public ResponseEntity<Responsible> findByCpf(@PathVariable("cpf") String cpf) {
         return ResponseEntity.ok(service.findByCpf(cpf));

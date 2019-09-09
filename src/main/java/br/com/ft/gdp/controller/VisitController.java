@@ -21,34 +21,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
-import br.com.ft.gdp.models.domain.EventType;
-import br.com.ft.gdp.models.dto.EventTypeDTO;
-import br.com.ft.gdp.service.EventTypeService;
+import br.com.ft.gdp.models.domain.Visit;
+import br.com.ft.gdp.models.dto.VisitDTO;
+import br.com.ft.gdp.service.VisitService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
  * 
-* Classe EventTypeController.java
+* Classe VisitController.java
 *
 * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
 *
 * @since 8 de set de 2019
  */
-@Api("Endpoint - Tipo Evento")
+@Api("Endpoint - Visita")
 @RestController
-@RequestMapping(value = "/eventType")
-public class EventTypeController {
+@RequestMapping(value = "/Visit")
+public class VisitController {
 
     @Autowired
-    private EventTypeService service;
+    private VisitService service;
 
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @ApiOperation(nickname = "eventtype-get", value = "Busca uma página de tipos de eventos")
+    @ApiOperation(nickname = "Visit-get", value = "Busca uma página de visitas")
     @GetMapping
-    public ResponseEntity<Page<EventType>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<Page<Visit>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                       @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
                                                       @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
                                                       @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
@@ -56,33 +56,32 @@ public class EventTypeController {
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
 
-    @ApiOperation(nickname = "responsible-post", value = "Insere um novo tipo de evento na aplicação")
+    @ApiOperation(nickname = "responsible-post", value = "Insere uma nova visita na aplicação")
     @PostMapping
-    public ResponseEntity<EventTypeDTO> persist(@Validated @RequestBody(required = true) EventTypeDTO eventType,
+    public ResponseEntity<VisitDTO> persist(@Validated @RequestBody(required = true) VisitDTO Visit,
                                                   HttpServletResponse response) {
-        EventType createdEventType = service.persist(eventType.getEventTypeDomainFromDTO());
+        Visit createdVisit = service.persist(Visit.getVisitDomainFromDTO());
 
-        publisher.publishEvent(new CreatedResourceEvent(this, response, createdEventType.getId()));
+        publisher.publishEvent(new CreatedResourceEvent(this, response, createdVisit.getId()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdEventType.getEventTypeDTOFromDomain());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdVisit.getVisitDTOFromDomain());
 
     }
 
-
-    @ApiOperation(nickname = "responsible-put", value = "Atualiza um tipo de evento na aplicação")
+    @ApiOperation(nickname = "responsible-put", value = "Atualiza uma visita na aplicação")
     @PutMapping("/{id}")
-    public ResponseEntity<EventTypeDTO> update(@PathVariable("id") Long id,
-                                                 @Validated @RequestBody(required = true) EventTypeDTO eventType,
+    public ResponseEntity<VisitDTO> update(@PathVariable("id") Long id,
+                                                 @Validated @RequestBody(required = true) VisitDTO Visit,
                                                  HttpServletResponse response) {
-        EventType createdResponsible = service.update(id, eventType.getEventTypeDomainFromDTO());
+        Visit createdResponsible = service.update(id, Visit.getVisitDomainFromDTO());
 
-        return ResponseEntity.ok().body(createdResponsible.getEventTypeDTOFromDomain());
+        return ResponseEntity.ok().body(createdResponsible.getVisitDTOFromDomain());
 
     }
 
-    @ApiOperation(nickname = "eventtype-get-id", value = "Busca um tipo de evento baseado no identificador")
+    @ApiOperation(nickname = "Visit-get-id", value = "Busca uma visita baseado no identificador")
     @GetMapping("/{id}")
-    public ResponseEntity<EventType> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<Visit> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
