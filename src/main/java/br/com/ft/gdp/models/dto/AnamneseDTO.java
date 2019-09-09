@@ -7,13 +7,15 @@ import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.domain.Anamnese;
+import br.com.ft.gdp.models.domain.AnamnesisItem;
 import br.com.ft.gdp.models.domain.Patient;
+import br.com.ft.gdp.models.domain.Visit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@Data	
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode	
@@ -25,10 +27,13 @@ public class AnamneseDTO implements Serializable{
 	@NotBlank(message = "Informar o VISITANTE é obrigatório.")
 	private Visit idVisit;
 	
+	@NotBlank(message = "Informar o PACIENTE é obrigatório.")
 	private Patient idPatient;
 	
+	@NotBlank(message = "Informar o ITEM ANAMNESIS é obrigatório.")
 	private AnamnesisItem idAnamnesisItem;
 	
+	@NotBlank(message = "Informar a RESPOSTA é obrigatório.")
 	private Response response;
 	
 	@JsonIgnore

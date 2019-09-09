@@ -9,6 +9,7 @@ import javax.persistence.Table;
 
 import br.com.ft.gdp.models.BaseObject;
 import br.com.ft.gdp.models.dto.AnamneseDTO;
+import br.com.ft.gdp.models.dto.AnamnesisItemDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
