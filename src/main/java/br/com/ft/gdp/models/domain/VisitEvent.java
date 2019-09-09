@@ -1,6 +1,6 @@
 package br.com.ft.gdp.models.domain;
 
-import java.time.LocalDateTime;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,14 +41,14 @@ public class VisitEvent extends BaseObject {
 	private static final long serialVersionUID = 8988537898462013276L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@ManyToOne
+	@Transient
 	private Patient patient;
 	
 	@ManyToOne
-	private EventType eventeType;
+	private EventType eventType;
 	
 	@ManyToOne
 	private Responsible responsible;
@@ -65,12 +65,12 @@ public class VisitEvent extends BaseObject {
 	@Column(name = "DH_EVENTO")
 	@Temporal(TemporalType.TIMESTAMP)
 	@DateTimeFormat(pattern = "ddMMyyyyHHmmss")
-	private LocalDateTime eventDateTime;
+	private Calendar eventDateTime;
 	
-	public VisitEvent(Patient patient, 	EventType eventeType, Responsible responsible,
+	public VisitEvent(Patient patient,	EventType eventType, Responsible responsible,
 			String urlDoc, String title, String observations) {
 		this.patient = patient;
-		this.eventeType = eventeType;
+		this.eventType = eventType;
 		this.responsible = responsible;
 		this.urlDoc = urlDoc;
 		this.title = title;
@@ -79,7 +79,7 @@ public class VisitEvent extends BaseObject {
 	
 	@PrePersist
     public void prePersist() {
-        final LocalDateTime now = LocalDateTime.now();
+        final Calendar now = Calendar.getInstance();
         this.eventDateTime = now;
     }
 	
