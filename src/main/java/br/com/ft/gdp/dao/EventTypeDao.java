@@ -1,7 +1,5 @@
 package br.com.ft.gdp.dao;
 
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,11 +15,5 @@ import br.com.ft.gdp.models.domain.EventType;
  */
 @Repository
 public interface EventTypeDao extends JpaRepository<EventType, Long> {
-
-    /**
-     * @param cpf
-     * @return
-     */
-    public Optional<EventType> findById(Long id);
 
 }
