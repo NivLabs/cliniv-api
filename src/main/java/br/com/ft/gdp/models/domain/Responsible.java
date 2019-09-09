@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.ft.gdp.models.BaseObject;
 import br.com.ft.gdp.models.dto.ResponsibleDTO;
 import lombok.AllArgsConstructor;
@@ -42,7 +44,8 @@ public class Responsible extends BaseObject {
 
     @Column(name = "REGISTRO_PROFISSIONAL")
     private String professionalIdentity;
-    
+
+    @JsonIgnore
     public ResponsibleDTO getResponsibleDTOFromDomain() {
         ResponsibleDTO dtoEntity = new ResponsibleDTO();
 

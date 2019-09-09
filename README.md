@@ -17,6 +17,7 @@ Funcionalidades da API
 # Como densenvolver?
 Para contribuir com o projeto, existem alguns requisítos mínimos de configurações, são eles?
 - Java 11 + **(Obrigatório)**
+- MySql Server (Community) **(Obrigatório)**
 - Lombok 1.16.0 + **(Obrigatório)**
 - Eclipse ou STS **(Obrigatório)**
 - No caso do Eclipse, usar o plugin do Spring Tools *(Opcional)*

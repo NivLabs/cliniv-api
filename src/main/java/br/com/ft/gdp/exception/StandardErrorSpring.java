@@ -21,8 +21,8 @@ public class StandardErrorSpring implements Serializable {
     private Long timestamp;
     private Integer status;
     private String error;
-    private String message;
-    private String path;
     private List<ErrorItem> validations = new ArrayList<>();
+    private String path;
+    private String message;
 
 }

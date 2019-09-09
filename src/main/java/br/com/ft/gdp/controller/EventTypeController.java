@@ -21,33 +21,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
-import br.com.ft.gdp.models.domain.Responsible;
-import br.com.ft.gdp.models.dto.ResponsibleDTO;
-import br.com.ft.gdp.service.ResponsibleService;
+import br.com.ft.gdp.models.domain.EventType;
+import br.com.ft.gdp.models.dto.EventTypeDTO;
+import br.com.ft.gdp.service.EventTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * Classe ResponsibleController.java
  * 
- * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
- * @since 7 de set de 2019
+* Classe EventTypeController.java
+*
+* @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
+*
+* @since 8 de set de 2019
  */
-@Api("Endpoint - Responsáveis")
+@Api("Endpoint - Tipo Evento")
 @RestController
-@RequestMapping(value = "/responsible")
-public class ResponsibleController {
+@RequestMapping(value = "/eventType")
+public class EventTypeController {
 
     @Autowired
-    private ResponsibleService service;
+    private EventTypeService service;
 
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @ApiOperation(nickname = "responsible-get", value = "Busca uma página de responsáveis")
+    @ApiOperation(nickname = "eventtype-get", value = "Busca uma página de tipos de eventos")
     @GetMapping
-    public ResponseEntity<Page<Responsible>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<Page<EventType>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                       @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
                                                       @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
                                                       @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
@@ -55,39 +56,34 @@ public class ResponsibleController {
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
 
-    @ApiOperation(nickname = "responsible-post", value = "Insere um novo responsável na aplicação")
+    @ApiOperation(nickname = "responsible-post", value = "Insere um novo tipo de evento na aplicação")
     @PostMapping
-    public ResponseEntity<ResponsibleDTO> persist(@Validated @RequestBody(required = true) ResponsibleDTO responsible,
+    public ResponseEntity<EventTypeDTO> persist(@Validated @RequestBody(required = true) EventTypeDTO eventType,
                                                   HttpServletResponse response) {
-        Responsible createdResponsible = service.persist(responsible.getResponsibleDomainFromDTO());
+        EventType createdEventType = service.persist(eventType.getEventTypeDomainFromDTO());
 
-        publisher.publishEvent(new CreatedResourceEvent(this, response, createdResponsible.getId()));
+        publisher.publishEvent(new CreatedResourceEvent(this, response, createdEventType.getId()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdResponsible.getResponsibleDTOFromDomain());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdEventType.getEventTypeDTOFromDomain());
 
     }
 
-    @ApiOperation(nickname = "responsible-put", value = "Atualiza um responsável na aplicação")
+
+    @ApiOperation(nickname = "responsible-put", value = "Atualiza um tipo de evento na aplicação")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponsibleDTO> update(@PathVariable("id") Long id,
-                                                 @Validated @RequestBody(required = true) ResponsibleDTO responsible,
+    public ResponseEntity<EventTypeDTO> update(@PathVariable("id") Long id,
+                                                 @Validated @RequestBody(required = true) EventTypeDTO eventType,
                                                  HttpServletResponse response) {
-        Responsible createdResponsible = service.update(id, responsible.getResponsibleDomainFromDTO());
+        EventType createdResponsible = service.update(id, eventType.getEventTypeDomainFromDTO());
 
-        return ResponseEntity.ok().body(createdResponsible.getResponsibleDTOFromDomain());
+        return ResponseEntity.ok().body(createdResponsible.getEventTypeDTOFromDomain());
 
     }
 
-    @ApiOperation(nickname = "responsible-get-id", value = "Busca um responsável baseado no identificador")
+    @ApiOperation(nickname = "eventtype-get-id", value = "Busca um tipo de evento baseado no identificador")
     @GetMapping("/{id}")
-    public ResponseEntity<Responsible> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<EventType> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
-    }
-
-    @ApiOperation(nickname = "responsible-get-cpf", value = "Busca um responsável baseado no cpf")
-    @GetMapping("/{cpf}/cpf")
-    public ResponseEntity<Responsible> findByCpf(@PathVariable("cpf") String cpf) {
-        return ResponseEntity.ok(service.findByCpf(cpf));
     }
 
 }
