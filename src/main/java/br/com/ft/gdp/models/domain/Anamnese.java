@@ -38,7 +38,7 @@ public class Anamnese extends BaseObject{
 	private AnamnesisItem idAnamnesisItem;
 	
 	@Column(name = "RESPOSTA")
-	private Response response;
+	private String response;
 		
 	public AnamneseDTO getAnamneseDTOFromDomain() {
 		AnamneseDTO dto = new AnamneseDTO();

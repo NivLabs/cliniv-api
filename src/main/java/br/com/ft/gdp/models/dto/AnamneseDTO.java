@@ -34,7 +34,7 @@ public class AnamneseDTO implements Serializable{
 	private AnamnesisItem idAnamnesisItem;
 	
 	@NotBlank(message = "Informar a RESPOSTA é obrigatório.")
-	private Response response;
+	private String response;
 	
 	@JsonIgnore
 	public Anamnese getAnamnesesDomainFromDTO() {
