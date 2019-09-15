@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,11 +30,11 @@ import io.swagger.annotations.ApiOperation;
 
 /**
  * 
-* Classe EventTypeController.java
-*
-* @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
-*
-* @since 8 de set de 2019
+ * Classe EventTypeController.java
+ *
+ * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
+ *
+ * @since 8 de set de 2019
  */
 @Api("Endpoint - Tipo Evento")
 @RestController
@@ -48,10 +49,11 @@ public class EventTypeController {
 
     @ApiOperation(nickname = "eventtype-get", value = "Busca uma página de tipos de eventos")
     @GetMapping
+    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Page<EventType>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                      @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                      @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                      @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+                                                    @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+                                                    @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+                                                    @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
@@ -59,7 +61,7 @@ public class EventTypeController {
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo tipo de evento na aplicação")
     @PostMapping
     public ResponseEntity<EventTypeDTO> persist(@Validated @RequestBody(required = true) EventTypeDTO eventType,
-                                                  HttpServletResponse response) {
+                                                HttpServletResponse response) {
         EventType createdEventType = service.persist(eventType.getEventTypeDomainFromDTO());
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdEventType.getId()));
@@ -68,12 +70,11 @@ public class EventTypeController {
 
     }
 
-
     @ApiOperation(nickname = "responsible-put", value = "Atualiza um tipo de evento na aplicação")
     @PutMapping("/{id}")
     public ResponseEntity<EventTypeDTO> update(@PathVariable("id") Long id,
-                                                 @Validated @RequestBody(required = true) EventTypeDTO eventType,
-                                                 HttpServletResponse response) {
+                                               @Validated @RequestBody(required = true) EventTypeDTO eventType,
+                                               HttpServletResponse response) {
         EventType createdResponsible = service.update(id, eventType.getEventTypeDomainFromDTO());
 
         return ResponseEntity.ok().body(createdResponsible.getEventTypeDTOFromDomain());

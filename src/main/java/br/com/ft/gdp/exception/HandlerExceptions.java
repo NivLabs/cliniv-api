@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -99,6 +100,14 @@ public class HandlerExceptions {
     public ResponseEntity<StandardErrorSpring> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest req) {
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
                 "Requisição mal formada", getValidations(e), "Erro de validação", req.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<StandardErrorSpring> methodArgumentNotValidException(AccessDeniedException e, HttpServletRequest req) {
+        StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.FORBIDDEN.value(),
+                "Sem permissões", Arrays.asList(), "Seu usuário não tem permissão para acessar este recurso", req.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
