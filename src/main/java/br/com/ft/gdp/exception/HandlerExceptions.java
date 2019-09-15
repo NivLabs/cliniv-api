@@ -64,6 +64,31 @@ public class HandlerExceptions {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(err);
     }
 
+    /**
+     * Captura tentativa de resgate de senha inválido
+     * 
+     * @param e
+     * @param req
+     * @return
+     */
+    @ExceptionHandler(NewPasswordInvalidException.class)
+    public ResponseEntity<StandardErrorSpring> objetoNaoEncontrado(NewPasswordInvalidException e,
+                                                                   HttpServletRequest req) {
+
+        StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+                "Informações inválidas", Arrays.asList(), "Você não forneceu as informações necessárias para recuperar a senha",
+                req.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    /**
+     * Trata exceções de propriedades inválidas
+     * 
+     * @param e
+     * @param req
+     * @return
+     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<StandardErrorSpring> objetoNaoEncontrado(HttpMessageNotReadableException e,
                                                                    HttpServletRequest req) {
@@ -104,6 +129,13 @@ public class HandlerExceptions {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
+    /**
+     * Trata a falta de permissão
+     * 
+     * @param e
+     * @param req
+     * @return
+     */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<StandardErrorSpring> methodArgumentNotValidException(AccessDeniedException e, HttpServletRequest req) {
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.FORBIDDEN.value(),

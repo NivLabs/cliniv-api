@@ -29,15 +29,15 @@ import io.swagger.annotations.ApiOperation;
 
 /**
  * 
-* Classe VisitController.java
-*
-* @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
-*
-* @since 8 de set de 2019
+ * Classe VisitController.java
+ *
+ * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
+ *
+ * @since 8 de set de 2019
  */
 @Api("Endpoint - Visita")
 @RestController
-@RequestMapping(value = "/Visit")
+@RequestMapping(value = "/visit")
 public class VisitController {
 
     @Autowired
@@ -49,9 +49,9 @@ public class VisitController {
     @ApiOperation(nickname = "Visit-get", value = "Busca uma página de visitas")
     @GetMapping
     public ResponseEntity<Page<Visit>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                      @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                      @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                      @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+                                                @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+                                                @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+                                                @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
@@ -59,7 +59,7 @@ public class VisitController {
     @ApiOperation(nickname = "responsible-post", value = "Insere uma nova visita na aplicação")
     @PostMapping
     public ResponseEntity<VisitDTO> persist(@Validated @RequestBody(required = true) VisitDTO Visit,
-                                                  HttpServletResponse response) {
+                                            HttpServletResponse response) {
         Visit createdVisit = service.persist(Visit.getVisitDomainFromDTO());
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdVisit.getId()));
@@ -71,8 +71,8 @@ public class VisitController {
     @ApiOperation(nickname = "responsible-put", value = "Atualiza uma visita na aplicação")
     @PutMapping("/{id}")
     public ResponseEntity<VisitDTO> update(@PathVariable("id") Long id,
-                                                 @Validated @RequestBody(required = true) VisitDTO Visit,
-                                                 HttpServletResponse response) {
+                                           @Validated @RequestBody(required = true) VisitDTO Visit,
+                                           HttpServletResponse response) {
         Visit createdResponsible = service.update(id, Visit.getVisitDomainFromDTO());
 
         return ResponseEntity.ok().body(createdResponsible.getVisitDTOFromDomain());

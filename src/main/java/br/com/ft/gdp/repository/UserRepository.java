@@ -18,4 +18,10 @@ import br.com.ft.gdp.models.domain.UserApplication;
 public interface UserRepository extends JpaRepository<UserApplication, Long> {
 
     public Optional<UserApplication> findByUsername(String username);
+
+    /**
+     * @param usernameOrEmail
+     * @return
+     */
+    public Optional<UserApplication> findByUsernameOrEmail(String usernameOrEmail);
 }

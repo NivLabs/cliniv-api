@@ -1,6 +1,7 @@
 package br.com.ft.gdp.models.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
@@ -48,6 +50,13 @@ public class UserApplication extends BaseObject {
 
     @Column(name = "USUARIO")
     private String username;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @Column(name = "DATA_NASCIMENTO")
+    private Date bornDate;
+
+    @Column(name = "NOME_MAE")
+    private String motherName;
 
     @JsonIgnore
     @Column(name = "SENHA", nullable = false, length = 500)
