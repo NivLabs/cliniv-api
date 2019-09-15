@@ -7,9 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.ft.gdp.models.BaseObject;
 import br.com.ft.gdp.models.dto.AnamneseDTO;
-import br.com.ft.gdp.models.dto.AnamnesisItemDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,6 +41,7 @@ public class Anamnese extends BaseObject{
 	@Column(name = "RESPOSTA")
 	private String response;
 		
+	@JsonIgnore
 	public AnamneseDTO getAnamneseDTOFromDomain() {
 		AnamneseDTO dto = new AnamneseDTO();
 		
