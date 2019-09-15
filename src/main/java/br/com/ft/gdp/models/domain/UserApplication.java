@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,6 +33,8 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "USUARIO")
 public class UserApplication extends BaseObject {
 
     private static final long serialVersionUID = -4066717030226233952L;
@@ -39,19 +43,22 @@ public class UserApplication extends BaseObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-
+    @Column(name = "EMAIL")
     private String email;
 
-    private String cpf;
+    @Column(name = "USUARIO")
+    private String username;
 
     @JsonIgnore
-    @Column(nullable = false, length = 500)
+    @Column(name = "SENHA", nullable = false, length = 500)
     private String password;
+
+    @Column(name = "ATIVO")
+    private boolean active;
 
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "USARIO_PERFIL", joinColumns = {@JoinColumn(name = "ID_USUARIO")}, inverseJoinColumns = {@JoinColumn(name = "USARIO_PERFIL")})
-    private List<Perfil> perfis = new ArrayList<>();
+    @JoinTable(name = "USUARIO_PERMISSAO", joinColumns = {@JoinColumn(name = "ID_USUARIO")}, inverseJoinColumns = {@JoinColumn(name = "ID_PERMISSAO")})
+    private List<Role> roles = new ArrayList<>();
 
 }
