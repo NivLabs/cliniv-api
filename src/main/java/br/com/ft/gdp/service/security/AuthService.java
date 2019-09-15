@@ -32,7 +32,8 @@ public class AuthService {
      * @param newPasswordRequest
      */
     public void createNePassword(NewPasswordRequestDTO newPasswordRequest) {
-        UserApplication usuario = userRepo.findByUsernameOrEmail(newPasswordRequest.getUsernameOrEmail())
+        UserApplication usuario = userRepo
+                .findByUsernameOrEmail(newPasswordRequest.getUsernameOrEmail(), newPasswordRequest.getUsernameOrEmail())
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Usuário não encontrado para o email/usuário: [%s]",
                                                                              newPasswordRequest.getUsernameOrEmail())));
 
