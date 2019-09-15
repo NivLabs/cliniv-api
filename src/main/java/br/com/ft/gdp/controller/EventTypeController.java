@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api("Endpoint - Tipo Evento")
 @RestController
-@RequestMapping(value = "/eventType")
+@RequestMapping(value = "/eventtype")
 public class EventTypeController {
 
     @Autowired
