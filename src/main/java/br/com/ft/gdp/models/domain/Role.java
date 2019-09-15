@@ -1,8 +1,11 @@
 package br.com.ft.gdp.models.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import br.com.ft.gdp.models.BaseObject;
 import lombok.AllArgsConstructor;
@@ -22,14 +25,19 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Perfil extends BaseObject {
+@Entity
+@Table(name = "PERMISSAO")
+public class Role extends BaseObject {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 7152893131512662767L;
-	@Id
+     * 
+     */
+    private static final long serialVersionUID = 7152893131512662767L;
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
+    @Column(name = "DESCRICAO")
+    private String description;
 }
