@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.ft.gdp.models.BaseObject;
 import br.com.ft.gdp.models.dto.AnamnesisItemDTO;
 import lombok.AllArgsConstructor;
@@ -33,9 +35,12 @@ public class AnamnesisItem extends BaseObject{
 	@Column(name = "RESPOSTA")
 	private String response;
 	
-	private AnamnesisItemDTO AnamnesisItemDTOFromDomain() {
+	@JsonIgnore
+	public AnamnesisItemDTO getAnamnesisItemDTOFromDomain() {
 		AnamnesisItemDTO domain = new AnamnesisItemDTO();
-		
+		domain.setId(getId());
+		domain.setQuestion(getQuestion());
+		domain.setResponse(getResponse());
 		return domain;
 	}
 }

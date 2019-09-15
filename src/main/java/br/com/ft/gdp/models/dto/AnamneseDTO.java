@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.ft.gdp.models.domain.Anamnese;
 import br.com.ft.gdp.models.domain.AnamnesisItem;
 import br.com.ft.gdp.models.domain.Patient;
@@ -35,8 +33,7 @@ public class AnamneseDTO implements Serializable{
 	
 	@NotBlank(message = "Informar a RESPOSTA é obrigatório.")
 	private String response;
-	
-	@JsonIgnore
+		
 	public Anamnese getAnamnesesDomainFromDTO() {
 		Anamnese domain = new Anamnese();
 		

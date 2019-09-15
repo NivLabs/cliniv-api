@@ -24,14 +24,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
-import br.com.ft.gdp.models.domain.Anamnese;
-import br.com.ft.gdp.models.dto.AnamneseDTO;
-import br.com.ft.gdp.service.AnamneseService;
+import br.com.ft.gdp.models.domain.AnamnesisItem;
+import br.com.ft.gdp.models.dto.AnamnesisItemDTO;
+import br.com.ft.gdp.service.AnamnesisItemService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * AnamneseController.java
+ * AnamnesisItemController.java
  *
  * @author <a href="henriquedreyer@gmail.com">Henrique Dreyer</a>
  *
@@ -39,20 +39,20 @@ import io.swagger.annotations.ApiOperation;
  * 
  */
 
-@Api("Endpoint - Anamnese")
+@Api("Endpoint - AnamnesisItem")
 @RestController
-@RequestMapping("/Anamnese")
-public class AnamneseController {
-
+@RequestMapping("/AnamnesisItem")
+public class AnamnesisItemController {
+	
 	@Autowired
-	private AnamneseService service;
+	private AnamnesisItemService service;
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
 
-	@ApiOperation(nickname = "anamnese-get", value = "Busca uma página de Anamnesis")
+	@ApiOperation(nickname = "AnamnesisItem-get", value = "Busca uma página de Itens Anamnesis")
 	@GetMapping
-	public ResponseEntity<Page<Anamnese>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+	public ResponseEntity<Page<AnamnesisItem>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
 			@RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
@@ -60,32 +60,31 @@ public class AnamneseController {
 		return ResponseEntity.ok(service.searchEntityPage(pageSettings));
 	}
 
-	@ApiOperation(nickname = "anamnese-post", value = "Insere uma nova anamnese na aplicação")
+	@ApiOperation(nickname = "AnamnesisItem-post", value = "Insere uma nova anamnese na aplicação")
 	@PostMapping
-	public ResponseEntity<AnamneseDTO> persist(@Validated @RequestBody(required = true) AnamneseDTO anamneseDto,
+	public ResponseEntity<AnamnesisItemDTO> persist(@Validated @RequestBody(required = true) AnamnesisItemDTO anamnesisItemDTO,
 			HttpServletResponse response) {
-		Anamnese createdAnamnese = service.persist(anamneseDto.getAnamnesesDomainFromDTO());
+		AnamnesisItem createdAnamnesisItem = service.persist(anamnesisItemDTO.getAnamnesisItemDomainFromDTO());
 
-		publisher.publishEvent(new CreatedResourceEvent(this, response, createdAnamnese.getId()));
+		publisher.publishEvent(new CreatedResourceEvent(this, response, createdAnamnesisItem.getId()));
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdAnamnese.getAnamneseDTOFromDomain());
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdAnamnesisItem.getAnamnesisItemDTOFromDomain());
 
 	}
 
-	@ApiOperation(nickname = "anamnese-put", value = "Atualiza uma anamnese na aplicação")
+	@ApiOperation(nickname = "AnamnesisItem-put", value = "Atualiza uma anamnese na aplicação")
 	@PutMapping("/{id}")
-	public ResponseEntity<AnamneseDTO> update(@PathVariable("id") Long id,
-			@Validated @RequestBody(required = true) AnamneseDTO anamneseDTO, HttpServletResponse response) {
-		Anamnese createdAnamnese = service.update(id, anamneseDTO.getAnamnesesDomainFromDTO());
+	public ResponseEntity<AnamnesisItemDTO> update(@PathVariable("id") Long id,
+			@Validated @RequestBody(required = true) AnamnesisItemDTO anamnesisItemDTO, HttpServletResponse response) {
+		AnamnesisItem createdAnamnese = service.update(id, anamnesisItemDTO.getAnamnesisItemDomainFromDTO());
 
-		return ResponseEntity.ok().body(createdAnamnese.getAnamneseDTOFromDomain());
+		return ResponseEntity.ok().body(createdAnamnese.getAnamnesisItemDTOFromDomain());
 
 	}
 
-	@ApiOperation(nickname = "anamnese-get-id", value = "Busca uma anamnese baseada no identificador")
+	@ApiOperation(nickname = "AnamnesisItem-get-id", value = "Busca uma anamnese baseada no identificador")
 	@GetMapping("/{id}")
-	public ResponseEntity<Anamnese> findById(@PathVariable("id") Long id) {
+	public ResponseEntity<AnamnesisItem> findById(@PathVariable("id") Long id) {
 		return ResponseEntity.ok(service.findById(id));
 	}
-
 }
