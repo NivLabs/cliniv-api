@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package br.com.ft.gdp.models.domain;
 
 import java.util.Date;
