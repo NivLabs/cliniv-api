@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +32,7 @@ public class AuthController {
 
     @ApiOperation(nickname = "auth-forgot", value = "Cria uma nova senha em caso de esquecimento")
     @PutMapping("/forgot")
-    public ResponseEntity<Void> update(@PathVariable("id") Long id,
-                                       @Validated @RequestBody(required = true) NewPasswordRequestDTO newPasswordDTO,
+    public ResponseEntity<Void> update(@Validated @RequestBody(required = true) NewPasswordRequestDTO newPasswordDTO,
                                        HttpServletResponse response) {
         authService.createNePassword(newPasswordDTO);
         return ResponseEntity.noContent().build();

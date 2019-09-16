@@ -22,7 +22,7 @@ public class StandardErrorSpring implements Serializable {
     private Integer status;
     private String error;
     private List<ErrorItem> validations = new ArrayList<>();
-    private String path;
     private String message;
+    private String path;
 
 }

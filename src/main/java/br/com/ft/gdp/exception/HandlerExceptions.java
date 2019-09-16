@@ -72,8 +72,8 @@ public class HandlerExceptions {
      * @return
      */
     @ExceptionHandler(NewPasswordInvalidException.class)
-    public ResponseEntity<StandardErrorSpring> objetoNaoEncontrado(NewPasswordInvalidException e,
-                                                                   HttpServletRequest req) {
+    public ResponseEntity<StandardErrorSpring> newPasswordInvalidException(NewPasswordInvalidException e,
+                                                                           HttpServletRequest req) {
 
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
                 "Informações inválidas", Arrays.asList(), "Você não forneceu as informações necessárias para recuperar a senha",
