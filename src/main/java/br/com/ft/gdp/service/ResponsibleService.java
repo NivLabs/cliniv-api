@@ -19,7 +19,7 @@ import br.com.ft.gdp.util.StringUtils;
  * @since 7 de set de 2019
  */
 @Service
-public class ResponsibleService extends GenerciService<Responsible, Long> {
+public class ResponsibleService extends GenericService<Responsible, Long> {
 
     @Autowired
     private ResponsibleDao dao;

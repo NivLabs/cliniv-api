@@ -19,7 +19,7 @@ import br.com.ft.gdp.models.domain.EventType;
 * @since 8 de set de 2019
  */
 @Service
-public class EventTypeService extends GenerciService<EventType, Long> {
+public class EventTypeService extends GenericService<EventType, Long> {
 
     @Autowired
     private EventTypeDao dao;

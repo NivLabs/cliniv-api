@@ -21,7 +21,7 @@ import org.springframework.data.domain.Pageable;
  *      Ver documentação do objeto de paginação do Spring
  *      </p>
  */
-public abstract class GenerciService<E extends Serializable, PK extends Serializable> {
+public abstract class GenericService<E extends Serializable, PK extends Serializable> {
 
     /**
      * Realiza a busca da lista paginada da entidade, o método recebe como parâmetro um objeto do tipo Pageable do Spring.
