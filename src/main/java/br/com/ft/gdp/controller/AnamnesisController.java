@@ -1,3 +1,4 @@
+
 /**
  * 
  */
@@ -64,7 +65,7 @@ public class AnamnesisController {
 
     @ApiOperation(nickname = "anamnese-post", value = "Insere uma nova anamnese na aplicação")
     @PostMapping
-    @PreAuthorize("hasAnyRole('TECNICO', 'MEDICO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO' ,'MEDICO', 'ADMIN')")
     public ResponseEntity<AnamneseDTO> persist(@Validated @RequestBody(required = true) AnamneseDTO anamneseDto,
                                                HttpServletResponse response) {
         Anamnese createdAnamnese = service.persist(anamneseDto.getAnamnesesDomainFromDTO());
@@ -77,7 +78,7 @@ public class AnamnesisController {
 
     @ApiOperation(nickname = "anamnese-put", value = "Atualiza uma anamnese na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TECNICO', 'MEDICO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ENFERMEIRO', 'MEDICO', 'ADMIN')")
     public ResponseEntity<AnamneseDTO> update(@PathVariable("id") Long id,
                                               @Validated @RequestBody(required = true) AnamneseDTO anamneseDTO,
                                               HttpServletResponse response) {
