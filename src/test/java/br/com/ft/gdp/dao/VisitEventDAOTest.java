@@ -24,7 +24,7 @@ import br.com.ft.gdp.models.domain.Responsible;
 import br.com.ft.gdp.models.domain.VisitEvent;
 
 /**
- * Classe VisitEventResponseDTO.java
+ * Classe VisitEventDAOTest.java
  * 
  * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
  *
@@ -36,7 +36,7 @@ import br.com.ft.gdp.models.domain.VisitEvent;
 public class VisitEventDAOTest {
 
 	@Autowired
-	VisitEventDAO visitEventDAO;
+	VisitEventDao visitEventDAO;
 	@Autowired
 	EventTypeDao eventDAO;
 	@Autowired

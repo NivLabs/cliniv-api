@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * Classe VisitEventResponseDTO.java
+ * Classe ApplicationMainTests.java
  * 
  * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
  *
