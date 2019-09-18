@@ -60,7 +60,7 @@ public class EventTypeController {
 
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo tipo de evento na aplicação")
     @PostMapping
-    @PreAuthorize("hasAnyRole('TECNICO', 'MEDICO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO', 'MEDICO', 'ADMIN')")
     public ResponseEntity<EventTypeDTO> persist(@Validated @RequestBody(required = true) EventTypeDTO eventType,
                                                 HttpServletResponse response) {
         EventType createdEventType = service.persist(eventType.getEventTypeDomainFromDTO());
@@ -73,7 +73,7 @@ public class EventTypeController {
 
     @ApiOperation(nickname = "responsible-put", value = "Atualiza um tipo de evento na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TECNICO', 'MEDICO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO', 'MEDICO', 'ADMIN')")
     public ResponseEntity<EventTypeDTO> update(@PathVariable("id") Long id,
                                                @Validated @RequestBody(required = true) EventTypeDTO eventType,
                                                HttpServletResponse response) {
@@ -85,7 +85,7 @@ public class EventTypeController {
 
     @ApiOperation(nickname = "eventtype-get-id", value = "Busca um tipo de evento baseado no identificador")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TECNICO', ''MEDICO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO', 'MEDICO', 'ADMIN')")
     public ResponseEntity<EventType> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
