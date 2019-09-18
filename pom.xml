@@ -9,9 +9,10 @@
 		<version>2.1.8.RELEASE</version>
 	</parent>
 
-	<artifactId>services</artifactId>
-	<name>Services</name>
-	<description>Camada de Serviços da API</description>
+	<groupId>br.com.ft</groupId>
+	<artifactId>gestao-de-prontuario</artifactId>
+	<name>Gestão de Prontuário</name>
+	<description>API da aplicação de Gestão de Prontuário</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -83,6 +84,8 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
+		
+		<!-- H2 DB (For Tests) -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
