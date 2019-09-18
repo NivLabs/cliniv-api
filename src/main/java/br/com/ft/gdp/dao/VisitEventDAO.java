@@ -1,7 +1,10 @@
 package br.com.ft.gdp.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.ft.gdp.models.domain.VisitEvent;
 
@@ -13,6 +16,9 @@ import br.com.ft.gdp.models.domain.VisitEvent;
  * @since 08 Sept, 2019
  */
 @Repository
-public interface VisitEventDAO extends JpaRepository<VisitEvent, Long> {
-
+public interface VisitEventDao extends JpaRepository<VisitEvent, Long> {
+	
+	@Transactional(readOnly = true)
+	Page<VisitEvent> findByPatientId(Long id, Pageable pageable);
+	
 }

@@ -1,6 +1,6 @@
 package br.com.ft.gdp.models.domain;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,12 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
@@ -66,9 +63,8 @@ public class VisitEvent extends BaseObject {
 	private String observations;
 	
 	@Column(name = "DH_EVENTO")
-	@Temporal(TemporalType.TIMESTAMP)
-	@DateTimeFormat(pattern = "ddMMyyyyHHmmss")
-	private Calendar eventDateTime;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDateTime eventDateTime;
 	
 	public VisitEvent(Patient patient,	EventType eventType, Responsible responsible,
 			String urlDoc, String title, String observations) {
@@ -82,7 +78,7 @@ public class VisitEvent extends BaseObject {
 	
 	@PrePersist
     public void prePersist() {
-        final Calendar now = Calendar.getInstance();
+        final LocalDateTime now = LocalDateTime.now();
         this.eventDateTime = now;
     }
 	

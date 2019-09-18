@@ -1,7 +1,7 @@
 package br.com.ft.gdp.models.dto.visitEvent;
 
 import java.io.Serializable;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -37,7 +37,7 @@ public class VisitEventResponseDTO implements Serializable {
 	private String urlDoc;
 	private String title;
 	private String observations;
-	private Calendar eventDateTime;
+	private LocalDateTime eventDateTime;
 	
 	@JsonIgnore
 	public static VisitEventResponseDTO getDtoFrom(VisitEvent domain) {
