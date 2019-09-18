@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,6 +53,7 @@ public class AnamnesisItemController {
 
     @ApiOperation(nickname = "AnamnesisItem-get", value = "Busca uma página de Itens Anamnesis")
     @GetMapping
+    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Page<AnamnesisItem>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                         @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
                                                         @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
@@ -62,6 +64,7 @@ public class AnamnesisItemController {
 
     @ApiOperation(nickname = "AnamnesisItem-post", value = "Insere uma nova anamnese na aplicação")
     @PostMapping
+    @PreAuthorize("hasAnyRole('TECNICO', 'MEDICO', 'ADMIN')")
     public ResponseEntity<AnamnesisItemDTO> persist(@Validated @RequestBody(required = true) AnamnesisItemDTO anamnesisItemDTO,
                                                     HttpServletResponse response) {
         AnamnesisItem createdAnamnesisItem = service.persist(anamnesisItemDTO.getAnamnesisItemDomainFromDTO());
@@ -74,6 +77,7 @@ public class AnamnesisItemController {
 
     @ApiOperation(nickname = "AnamnesisItem-put", value = "Atualiza uma anamnese na aplicação")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('TECNICO', 'MEDICO', 'ADMIN')")
     public ResponseEntity<AnamnesisItemDTO> update(@PathVariable("id") Long id,
                                                    @Validated @RequestBody(required = true) AnamnesisItemDTO anamnesisItemDTO,
                                                    HttpServletResponse response) {
@@ -85,6 +89,7 @@ public class AnamnesisItemController {
 
     @ApiOperation(nickname = "AnamnesisItem-get-id", value = "Busca uma anamnese baseada no identificador")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<AnamnesisItem> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
