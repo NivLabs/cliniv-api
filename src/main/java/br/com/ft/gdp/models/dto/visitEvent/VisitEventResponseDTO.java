@@ -40,7 +40,7 @@ public class VisitEventResponseDTO implements Serializable {
 	private Calendar eventDateTime;
 	
 	@JsonIgnore
-	public static VisitEventResponseDTO toDTO(VisitEvent domain) {
+	public static VisitEventResponseDTO getDtoFrom(VisitEvent domain) {
 		return new VisitEventResponseDTO(domain.getId(),
 										  domain.getPatient(),
 										  domain.getEventType(),

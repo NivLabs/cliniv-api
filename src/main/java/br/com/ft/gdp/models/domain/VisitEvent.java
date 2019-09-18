@@ -16,7 +16,10 @@ import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.com.ft.gdp.models.BaseObject;
+import br.com.ft.gdp.models.dto.visitEvent.VisitEventRequestDTO;
 import br.com.ft.gdp.models.dto.visitEvent.VisitEventResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -84,7 +87,8 @@ public class VisitEvent extends BaseObject {
     }
 	
 	@Transient
-	public static VisitEvent toDomain(VisitEventResponseDTO dto) {
+	@JsonIgnore
+	public static VisitEvent getDomainFrom(VisitEventResponseDTO dto) {
 		return new VisitEvent(dto.getId(), 
 							   dto.getPatient(), 
 							   dto.getEventType(), 
@@ -93,6 +97,17 @@ public class VisitEvent extends BaseObject {
 							   dto.getTitle(), 
 							   dto.getObservations(), 
 							   dto.getEventDateTime());
+	}
+	
+	@Transient
+	@JsonIgnore
+	public static VisitEvent getDomainFrom(VisitEventRequestDTO dto) {
+		return new VisitEvent(dto.getPatient(),
+							   dto.getEventType(),
+							   dto.getResponsible(),
+							   dto.getUrlDoc(),
+							   dto.getTitle(),
+							   dto.getObservations());
 	}
 
 }

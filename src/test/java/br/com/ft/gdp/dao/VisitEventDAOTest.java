@@ -170,7 +170,6 @@ public class VisitEventDAOTest {
 		
 		Page<VisitEvent> page = this.visitEventDAO.findAll(pageable);
 		
-		
 		assertEquals(0, page.getPageable().getPageNumber());
 		assertEquals(1, page.nextPageable().getPageNumber());
 		assertEquals(4, page.getTotalElements());

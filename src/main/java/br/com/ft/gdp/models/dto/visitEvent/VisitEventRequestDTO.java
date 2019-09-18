@@ -53,7 +53,7 @@ public class VisitEventRequestDTO implements Serializable {
 	private String observations;
 	
 	@JsonIgnore
-	public static VisitEventRequestDTO toDTO(VisitEvent domain) {
+	public static VisitEventRequestDTO getDtoFrom(VisitEvent domain) {
 		return new VisitEventRequestDTO(domain.getPatient(),
 										 domain.getEventType(),
 										 domain.getResponsible(), 
