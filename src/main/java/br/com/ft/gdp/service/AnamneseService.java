@@ -21,7 +21,7 @@ import javassist.tools.rmi.ObjectNotFoundException;
  * 
  */
 @Service
-public class AnamneseService extends GenerciService<Anamnese, Long> {
+public class AnamneseService extends GenericService<Anamnese, Long> {
 
     private AnamneseDao dao;
 

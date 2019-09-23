@@ -22,7 +22,7 @@ import br.com.ft.gdp.models.domain.AnamnesisItem;
  * 
  */
 @Service
-public class AnamnesisItemService extends GenerciService<AnamnesisItem, Long> {
+public class AnamnesisItemService extends GenericService<AnamnesisItem, Long> {
 
     @Autowired
     private AnamnesisItemDao dao;
