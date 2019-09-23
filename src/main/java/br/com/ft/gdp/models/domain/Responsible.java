@@ -1,10 +1,17 @@
 package br.com.ft.gdp.models.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,17 +49,21 @@ public class Responsible extends BaseObject {
 
     private String cpf;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "ESPECIALIDADE_RESPONSAVEL", joinColumns = @JoinColumn(name = "ID_RESPONSAVEL"), inverseJoinColumns = @JoinColumn(name = "ID_ESPECIALIDADE"))
+    private List<Specialty> specialty = new ArrayList<>();
+
     @Column(name = "REGISTRO_PROFISSIONAL")
     private String professionalIdentity;
 
     @JsonIgnore
     public ResponsibleDTO getResponsibleDTOFromDomain() {
         ResponsibleDTO dtoEntity = new ResponsibleDTO();
-
         dtoEntity.setId(getId());
         dtoEntity.setCpf(getCpf());
         dtoEntity.setName(getName());
         dtoEntity.setProfessionalIdentity(getProfessionalIdentity());
+        dtoEntity.setSpecialty(getSpecialty());
 
         return dtoEntity;
     }
