@@ -8,9 +8,6 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.ft.gdp.models.domain.EventType;
-import br.com.ft.gdp.models.domain.Patient;
-import br.com.ft.gdp.models.domain.Responsible;
 import br.com.ft.gdp.models.domain.VisitEvent;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,11 +31,11 @@ public class VisitEventRequestDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@NotNull(message = "Informar o PACIENTE, é obrigatório")
-	private Patient patient;
+	private Long patientId;
 	@NotNull(message = "Informar o TIPO DO EVENTO, é obrigatório")
-	private EventType eventType;
+	private Long eventTypeId;
 	@NotNull(message = "Informar o RESPONSÁVEL, é obrigatório")
-	private Responsible responsible;
+	private Long responsibleId;
 	
 	@NotBlank(message = "Informar a URL DO DOCUMENTO, é obrigatório")
 	private String urlDoc;
@@ -54,9 +51,9 @@ public class VisitEventRequestDTO implements Serializable {
 	
 	@JsonIgnore
 	public static VisitEventRequestDTO getDtoFrom(VisitEvent domain) {
-		return new VisitEventRequestDTO(domain.getPatient(),
-										 domain.getEventType(),
-										 domain.getResponsible(), 
+		return new VisitEventRequestDTO(domain.getPatient().getId(),
+										 domain.getEventType().getId(),
+										 domain.getResponsible().getId(), 
 										 domain.getUrlDoc(), 
 										 domain.getTitle(), 
 										 domain.getObservations());

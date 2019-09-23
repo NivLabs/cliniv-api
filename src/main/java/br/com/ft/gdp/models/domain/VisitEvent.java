@@ -98,12 +98,15 @@ public class VisitEvent extends BaseObject {
 	@Transient
 	@JsonIgnore
 	public static VisitEvent getDomainFrom(VisitEventRequestDTO dto) {
-		return new VisitEvent(dto.getPatient(),
-							   dto.getEventType(),
-							   dto.getResponsible(),
-							   dto.getUrlDoc(),
-							   dto.getTitle(),
-							   dto.getObservations());
+		Responsible responsible = new Responsible();
+		EventType eventType     = new EventType();
+		Patient patient         = new Patient();
+		
+		eventType.setId(dto.getEventTypeId());
+		patient.setId(dto.getPatientId());
+		responsible.setId(dto.getResponsibleId());
+
+		return new VisitEvent(patient, eventType, responsible, dto.getUrlDoc(), dto.getTitle(), dto.getObservations());
 	}
 
 }
