@@ -1,6 +1,8 @@
 package br.com.ft.gdp.models.dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -8,6 +10,7 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.domain.Responsible;
+import br.com.ft.gdp.models.domain.Specialty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,6 +40,8 @@ public class ResponsibleDTO implements Serializable {
     @Size(min = 11, max = 11, message = "Você deve informar os 11 dígitos do CPF")
     private String cpf;
 
+    private List<Specialty> specialty = new ArrayList<>();
+
     private String professionalIdentity;
 
     @JsonIgnore
@@ -47,6 +52,7 @@ public class ResponsibleDTO implements Serializable {
         domain.setCpf(getCpf());
         domain.setName(getName());
         domain.setProfessionalIdentity(getProfessionalIdentity());
+        domain.setSpecialty(getSpecialty());
 
         return domain;
     }
