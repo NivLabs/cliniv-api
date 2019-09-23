@@ -19,7 +19,7 @@ import br.com.ft.gdp.models.domain.Patient;
 * @since 15 de set de 2019
  */
 @Service
-public class PatientService extends GenerciService<Patient, Long> {
+public class PatientService extends GenericService<Patient, Long> {
 
     @Autowired
     private PatientDao dao;

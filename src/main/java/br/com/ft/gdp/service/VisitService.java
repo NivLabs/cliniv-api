@@ -19,7 +19,7 @@ import br.com.ft.gdp.models.domain.Visit;
 * @since 8 de set de 2019
  */
 @Service
-public class VisitService extends GenerciService<Visit, Long> {
+public class VisitService extends GenericService<Visit, Long> {
 
     @Autowired
     private VisitDao dao;

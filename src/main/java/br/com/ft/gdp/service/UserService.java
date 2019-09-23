@@ -19,7 +19,7 @@ import br.com.ft.gdp.repository.UserRepository;
  * @since 15 de set de 2019
  */
 @Service
-public class UserService extends GenerciService<UserApplication, Long> {
+public class UserService extends GenericService<UserApplication, Long> {
 
     @Autowired
     private UserRepository userRepo;

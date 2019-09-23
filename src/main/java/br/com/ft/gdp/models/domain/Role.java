@@ -40,4 +40,5 @@ public class Role extends BaseObject {
 
     @Column(name = "DESCRICAO")
     private String description;
+
 }
