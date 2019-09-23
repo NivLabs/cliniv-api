@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +48,7 @@ public class ResponsibleController {
 
     @ApiOperation(nickname = "responsible-get", value = "Busca uma página de responsáveis")
     @GetMapping
+    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Page<Responsible>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                       @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
                                                       @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
@@ -57,6 +59,7 @@ public class ResponsibleController {
 
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo responsável na aplicação")
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponsibleDTO> persist(@Validated @RequestBody(required = true) ResponsibleDTO responsible,
                                                   HttpServletResponse response) {
         Responsible createdResponsible = service.persist(responsible.getResponsibleDomainFromDTO());
@@ -69,6 +72,7 @@ public class ResponsibleController {
 
     @ApiOperation(nickname = "responsible-put", value = "Atualiza um responsável na aplicação")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<ResponsibleDTO> update(@PathVariable("id") Long id,
                                                  @Validated @RequestBody(required = true) ResponsibleDTO responsible,
                                                  HttpServletResponse response) {
@@ -80,12 +84,14 @@ public class ResponsibleController {
 
     @ApiOperation(nickname = "responsible-get-id", value = "Busca um responsável baseado no identificador")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Responsible> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @ApiOperation(nickname = "responsible-get-cpf", value = "Busca um responsável baseado no cpf")
     @GetMapping("/{cpf}/cpf")
+    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Responsible> findByCpf(@PathVariable("cpf") String cpf) {
         return ResponseEntity.ok(service.findByCpf(cpf));
     }

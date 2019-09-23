@@ -30,6 +30,15 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    /**
+     * Gera nova senha de acesso.
+     * 
+     * OBS: NÃO IMPLEMENTAR PRÉ-AUTORIZADOR (@PreAuthorize)
+     * 
+     * @param newPasswordDTO
+     * @param response
+     * @return
+     */
     @ApiOperation(nickname = "auth-forgot", value = "Cria uma nova senha em caso de esquecimento")
     @PutMapping("/forgot")
     public ResponseEntity<Void> update(@Validated @RequestBody(required = true) NewPasswordRequestDTO newPasswordDTO,

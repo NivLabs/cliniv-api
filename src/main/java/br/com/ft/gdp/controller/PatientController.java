@@ -51,17 +51,18 @@ public class PatientController {
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Page<Patient>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                    @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                    @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                    @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+                                                  @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+                                                  @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+                                                  @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
 
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo paciente na aplicação")
     @PostMapping
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<PatientDTO> persist(@Validated @RequestBody(required = true) PatientDTO Patient,
-                                                HttpServletResponse response) {
+                                              HttpServletResponse response) {
         Patient createdPatient = service.persist(Patient.getPatientDomainFromDTO());
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdPatient.getId()));
@@ -72,9 +73,10 @@ public class PatientController {
 
     @ApiOperation(nickname = "responsible-put", value = "Atualiza um paciente na aplicação")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<PatientDTO> update(@PathVariable("id") Long id,
-                                               @Validated @RequestBody(required = true) PatientDTO Patient,
-                                               HttpServletResponse response) {
+                                             @Validated @RequestBody(required = true) PatientDTO Patient,
+                                             HttpServletResponse response) {
         Patient createdResponsible = service.update(id, Patient.getPatientDomainFromDTO());
 
         return ResponseEntity.ok().body(createdResponsible.getPatientDTOFromDomain());
@@ -83,12 +85,14 @@ public class PatientController {
 
     @ApiOperation(nickname = "Patient-get-id", value = "Busca um paciente baseado no identificador")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<Patient> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
-    
+
     @ApiOperation(nickname = "Patient-get-cpf", value = "Busca um paciente pelo cpf")
     @GetMapping("/{cpf}")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<Patient> findByCpf(@PathVariable("cpf") String cpf) {
         return ResponseEntity.ok(service.findByCpf(cpf));
     }
