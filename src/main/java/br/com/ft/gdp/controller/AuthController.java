@@ -14,6 +14,7 @@ import br.com.ft.gdp.models.dto.NewPasswordRequestDTO;
 import br.com.ft.gdp.service.security.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * Classe AuthController.java
@@ -22,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
  * 
  * @since 15 de set de 2019
  */
-@Api("Endpoint - Auth - Autorização")
+@Api(value = "Endpoint - Auth - Autorização")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -33,7 +34,7 @@ public class AuthController {
     /**
      * Gera nova senha de acesso.
      * 
-     * OBS: NÃO IMPLEMENTAR PRÉ-AUTORIZADOR (@PreAuthorize)
+     * OBS: NÃO IMPLEMENTAR PRÉ-AUTORIZAÇÃO (@PreAuthorize)
      * 
      * @param newPasswordDTO
      * @param response
@@ -41,7 +42,7 @@ public class AuthController {
      */
     @ApiOperation(nickname = "auth-forgot", value = "Cria uma nova senha em caso de esquecimento")
     @PutMapping("/forgot")
-    public ResponseEntity<Void> update(@Validated @RequestBody(required = true) NewPasswordRequestDTO newPasswordDTO,
+    public ResponseEntity<Void> update(@ApiParam(name = "NewPasswordDTO", value = "Objeto de requisição para alteração de senha") @Validated @RequestBody(required = true) NewPasswordRequestDTO newPasswordDTO,
                                        HttpServletResponse response) {
         authService.createNePassword(newPasswordDTO);
         return ResponseEntity.noContent().build();
