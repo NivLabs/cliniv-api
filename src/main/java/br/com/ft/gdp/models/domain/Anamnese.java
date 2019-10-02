@@ -31,15 +31,17 @@ public class Anamnese extends BaseObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ID_VISITA")
-    private Visit idVisit;
+    @ManyToOne
+    @JoinColumn(name = "ID_VISITA")
+    private Visit visit;
 
-    @Column(name = "ID_PACIENTE")
-    private Patient idPatient;
+    @ManyToOne
+    @JoinColumn(name = "ID_PACIENTE")
+    private Patient patient;
 
     @ManyToOne
     @JoinColumn(name = "ID_ANAMNESE_ITEM")
-    private AnamnesisItem idAnamnesisItem;
+    private AnamnesisItem anamneseItem;
 
     @Column(name = "RESPOSTA")
     private String response;
@@ -48,11 +50,11 @@ public class Anamnese extends BaseObject {
     public AnamneseDTO getAnamneseDTOFromDomain() {
         AnamneseDTO dto = new AnamneseDTO();
 
-        dto.setId(getId());
-        dto.setIdAnamnesisItem(getIdAnamnesisItem());
-        dto.setIdPatient(getIdPatient());
-        dto.setIdVisit(getIdVisit());
-        dto.setResponse(getResponse());
+        dto.setId(id);
+        dto.setIdAnamnesisItem(anamneseItem);
+        dto.setIdPatient(patient);
+        dto.setIdVisit(visit);
+        dto.setResponse(response);
 
         return dto;
     }
