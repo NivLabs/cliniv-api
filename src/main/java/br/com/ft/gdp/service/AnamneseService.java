@@ -4,13 +4,14 @@
 package br.com.ft.gdp.service;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.dao.AnamneseDao;
+import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Anamnese;
-import javassist.tools.rmi.ObjectNotFoundException;
 
 /**
  * AnamnesisService.java
@@ -23,6 +24,7 @@ import javassist.tools.rmi.ObjectNotFoundException;
 @Service
 public class AnamneseService extends GenericService<Anamnese, Long> {
 
+    @Autowired
     private AnamneseDao dao;
 
     @Override

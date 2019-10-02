@@ -3,6 +3,7 @@ package br.com.ft.gdp.dao;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import br.com.ft.gdp.models.domain.Anamnese;
 
@@ -14,12 +15,13 @@ import br.com.ft.gdp.models.domain.Anamnese;
  * @since 12 de set de 2019
  * 
  */
-public interface AnamneseDao extends JpaRepository<Anamnese, Long>{
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	public Optional<Anamnese> findById(Long id);
+@Repository
+public interface AnamneseDao extends JpaRepository<Anamnese, Long> {
+
+    /**
+     * @param id
+     * @return
+     */
+    public Optional<Anamnese> findById(Long id);
 
 }
