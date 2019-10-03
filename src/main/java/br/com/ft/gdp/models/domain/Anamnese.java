@@ -41,7 +41,7 @@ public class Anamnese extends BaseObject {
 
     @ManyToOne
     @JoinColumn(name = "ID_ANAMNESE_ITEM")
-    private AnamnesisItem anamneseItem;
+    private AnamnesisItem anamnesisItem;
 
     @Column(name = "RESPOSTA")
     private String response;
@@ -51,9 +51,9 @@ public class Anamnese extends BaseObject {
         AnamneseDTO dto = new AnamneseDTO();
 
         dto.setId(id);
-        dto.setIdAnamnesisItem(anamneseItem);
-        dto.setIdPatient(patient);
-        dto.setIdVisit(visit);
+        dto.setAnamnesisItem(anamnesisItem);
+        dto.setPatient(patient);
+        dto.setVisit(visit);
         dto.setResponse(response);
 
         return dto;

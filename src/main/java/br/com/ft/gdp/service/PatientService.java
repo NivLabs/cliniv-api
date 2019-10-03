@@ -12,11 +12,11 @@ import br.com.ft.gdp.models.domain.Patient;
 
 /**
  * 
-* Classe PatientService.java
-*
-* @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
-*
-* @since 15 de set de 2019
+ * Classe PatientService.java
+ *
+ * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
+ *
+ * @since 15 de set de 2019
  */
 @Service
 public class PatientService extends GenericService<Patient, Long> {
@@ -34,9 +34,10 @@ public class PatientService extends GenericService<Patient, Long> {
         return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com ID: [%s] não encontrado", id)));
 
     }
-    
+
     public Patient findByCpf(String cpf) {
-        return dao.findByCpf(cpf).orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com cpf: [%s] não encontrado", cpf)));
+        return dao.findByCpf(cpf)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com cpf: [%s] não encontrado", cpf)));
 
     }
 
@@ -63,6 +64,14 @@ public class PatientService extends GenericService<Patient, Long> {
     public Patient persist(Patient entity) {
         entity.setId(null);
         return dao.save(entity);
+    }
+
+    /**
+     * @param document
+     * @return
+     */
+    public Patient findByRg(String rg) {
+        return dao.findByRg(rg).orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com rg: [%s] não encontrado", rg)));
     }
 
 }

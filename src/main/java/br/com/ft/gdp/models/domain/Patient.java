@@ -3,15 +3,15 @@ package br.com.ft.gdp.models.domain;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,56 +38,55 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Patient extends BaseObject {
 
-	private static final long serialVersionUID = 4873898002597934236L;
+    private static final long serialVersionUID = 4873898002597934236L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(name = "NOME")
-	private String firstName;
+    @Column(name = "NOME")
+    private String firstName;
 
-	@Column(name = "SOBRENOME")
-	private String lastName;
+    @Column(name = "SOBRENOME")
+    private String lastName;
 
-	@Column(name = "RG")
-	private String rg;
+    @Column(name = "RG")
+    private String rg;
 
-	@Column(name = "CPF")
-	private String cpf;
+    @Column(name = "CPF")
+    private String cpf;
 
-	@Column(name = "DATA_NASCIMENTO")
-	private Date bornDate;
+    @Column(name = "DATA_NASCIMENTO")
+    private Date bornDate;
 
-	@ElementCollection
-	@CollectionTable(name = "TELEFONE", foreignKey = @ForeignKey(name = "FK_TELEFONE_PACIENTE"))
-	@Column(name = "TELEFONE")
-	private Set<String> phones = new HashSet<>();
+    @OneToMany
+    @JoinColumn(name = "ID_PACIENTE")
+    private Set<PatientPhone> phones = new HashSet<>();
 
-	@Column(name = "SEXO")
-	private String gender;
+    @Column(name = "SEXO")
+    private String gender;
 
-	@Column(name = "NOME_COMP_PAI")
-	private String fatherName;
+    @Column(name = "NOME_COMP_PAI")
+    private String fatherName;
 
-	@Column(name = "NOME_COMP_MAE")
-	private String motherName;
-	
+    @Column(name = "NOME_COMP_MAE")
+    private String motherName;
+
     @JsonIgnore
     public PatientDTO getPatientDTOFromDomain() {
-    	PatientDTO dtoEntity = new PatientDTO();
-    	
-    	dtoEntity.setId(getId());
-    	dtoEntity.setFirstName(getFirstName());
-    	dtoEntity.setLastName(getLastName());
-    	dtoEntity.setRg(getRg());
-    	dtoEntity.setCpf(getCpf());
-    	dtoEntity.setBornDate(getBornDate());
-    	dtoEntity.setPhones(getPhones());
-    	dtoEntity.setGender(getGender());
-    	dtoEntity.setFatherName(getFatherName());
-    	dtoEntity.setMotherName(getMotherName());
-        
+        PatientDTO dtoEntity = new PatientDTO();
+
+        dtoEntity.setId(getId());
+        dtoEntity.setFirstName(getFirstName());
+        dtoEntity.setLastName(getLastName());
+        dtoEntity.setRg(getRg());
+        dtoEntity.setCpf(getCpf());
+        dtoEntity.setBornDate(getBornDate());
+        dtoEntity.setPhones(phones.stream().map(PatientPhone::getPhoneNumber).collect(Collectors.toSet()));
+        dtoEntity.setGender(getGender());
+        dtoEntity.setFatherName(getFatherName());
+        dtoEntity.setMotherName(getMotherName());
+
         return dtoEntity;
     }
 

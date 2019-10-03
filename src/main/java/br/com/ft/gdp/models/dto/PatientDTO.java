@@ -5,12 +5,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.domain.Patient;
+import br.com.ft.gdp.models.domain.PatientPhone;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,52 +30,50 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class PatientDTO implements Serializable {
 
-	private static final long serialVersionUID = -1070682704153329772L;
+    private static final long serialVersionUID = -1070682704153329772L;
 
-	private Long id;
+    private Long id;
 
-	@NotBlank(message = "Informar o NOME do paciente é obrigatório")
-    @Size(min = 3, max = 45, message = "O nome do paciente deve conter ao menos três letras")
-	private String firstName;
+    private String firstName;
 
-	@NotBlank(message = "Informar o SOBRENOME do paciente é obrigatório")
-    @Size(min = 3, max = 45, message = "O sobrenome do paciente deve conter ao menos três letras")
-	private String lastName;
+    private String lastName;
 
-	private String rg;
+    private String rg;
 
-	@NotBlank(message = "Informar o CPF do paciente é obrigatório")
-    @Size(min = 11, max = 11, message = "O cpf do paciente deve conter 11 digitos")
-	private String cpf;
+    private String cpf;
 
-	
-	@NotBlank(message = "Informar a data de nascimento do paciente é obrigatório")
-	private Date bornDate;
+    @DateTimeFormat(iso = ISO.DATE)
+    private Date bornDate;
 
-	private Set<String> phones = new HashSet<>();
+    private Set<String> phones = new HashSet<>();
 
-	@NotBlank(message = "Informar o sexo do paciente é obrigatório")
-	private String gender;
+    private String gender;
 
-	private String fatherName;
+    private String fatherName;
 
-	private String motherName;
-	
+    private String motherName;
+
     @JsonIgnore
     public Patient getPatientDomainFromDTO() {
-    	Patient domain = new Patient();
-    	
+        Patient domain = new Patient();
+
         domain.setId(getId());
         domain.setFirstName(getFirstName());
         domain.setLastName(getLastName());
         domain.setRg(getRg());
         domain.setCpf(getCpf());
         domain.setBornDate(getBornDate());
-        domain.setPhones(getPhones());
+        phones.forEach(phoneNumber -> {
+            PatientPhone phone = new PatientPhone();
+            phone.setPhoneNumber(phoneNumber);
+            domain.getPhones().add(phone);
+
+        });
+
         domain.setGender(getGender());
         domain.setFatherName(getFatherName());
         domain.setMotherName(getMotherName());
-        
+
         return domain;
     }
 

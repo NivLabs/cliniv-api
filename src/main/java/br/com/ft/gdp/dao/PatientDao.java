@@ -30,4 +30,10 @@ public interface PatientDao extends JpaRepository<Patient, Long> {
      */
     public Optional<Patient> findByCpf(String cpf);
 
+    /**
+     * @param rg
+     * @return
+     */
+    public Optional<Patient> findByRg(String rg);
+
 }

@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.models.domain.Patient;
+import br.com.ft.gdp.models.dto.NewOrUpdatePatientDTO;
 import br.com.ft.gdp.models.dto.PatientDTO;
+import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.service.PatientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -61,9 +63,9 @@ public class PatientController {
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo paciente na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<PatientDTO> persist(@Validated @RequestBody(required = true) PatientDTO Patient,
+    public ResponseEntity<PatientDTO> persist(@Validated @RequestBody(required = true) NewOrUpdatePatientDTO newPatient,
                                               HttpServletResponse response) {
-        Patient createdPatient = service.persist(Patient.getPatientDomainFromDTO());
+        Patient createdPatient = service.persist(newPatient.getPatientDomainFromDTO());
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdPatient.getId()));
 
@@ -75,9 +77,9 @@ public class PatientController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<PatientDTO> update(@PathVariable("id") Long id,
-                                             @Validated @RequestBody(required = true) PatientDTO Patient,
+                                             @Validated @RequestBody(required = true) NewOrUpdatePatientDTO patient,
                                              HttpServletResponse response) {
-        Patient createdResponsible = service.update(id, Patient.getPatientDomainFromDTO());
+        Patient createdResponsible = service.update(id, patient.getPatientDomainFromDTO());
 
         return ResponseEntity.ok().body(createdResponsible.getPatientDTOFromDomain());
 
@@ -90,11 +92,15 @@ public class PatientController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @ApiOperation(nickname = "Patient-get-cpf", value = "Busca um paciente pelo cpf")
-    @GetMapping("/{cpf}")
+    @ApiOperation(nickname = "Patient-get-document", value = "Busca um paciente pelo documento")
+    @GetMapping("{documentType}/{document}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<Patient> findByCpf(@PathVariable("cpf") String cpf) {
-        return ResponseEntity.ok(service.findByCpf(cpf));
+    public ResponseEntity<PatientDTO> findByCpf(@PathVariable("documentType") DocumentType documentType,
+                                                @PathVariable("document") String document) {
+        if (documentType.equals(DocumentType.CPF))
+            return ResponseEntity.ok(service.findByCpf(document).getPatientDTOFromDomain());
+        else
+            return ResponseEntity.ok(service.findByRg(document).getPatientDTOFromDomain());
     }
 
 }
