@@ -1,5 +1,8 @@
 package br.com.ft.gdp.controller;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -101,6 +106,14 @@ public class PatientController {
             return ResponseEntity.ok(service.findByCpf(document).getPatientDTOFromDomain());
         else
             return ResponseEntity.ok(service.findByRg(document).getPatientDTOFromDomain());
+    }
+
+    @ApiOperation(nickname = "Patient-get-composite", value = "Busca um paciente baseado no identificador composto")
+    @GetMapping("/{name}/{motherName}/{bornDate}")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    public ResponseEntity<List<Patient>> findByComposition(@PathVariable("name") String name, @PathVariable("motherName") String motherName,
+                                                           @PathVariable("bornDate") @DateTimeFormat(iso = ISO.DATE_TIME) Date bornDate) {
+        return ResponseEntity.ok(service.findByComposition(name, motherName, bornDate));
     }
 
 }

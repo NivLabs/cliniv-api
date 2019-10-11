@@ -1,5 +1,8 @@
 package br.com.ft.gdp.service;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -72,6 +75,18 @@ public class PatientService extends GenericService<Patient, Long> {
      */
     public Patient findByRg(String rg) {
         return dao.findByRg(rg).orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com rg: [%s] não encontrado", rg)));
+    }
+
+    /**
+     * @param name
+     * @param motherName
+     * @param bornDate
+     * @return
+     */
+    public List<Patient> findByComposition(String name, String motherName, Date bornDate) {
+        name = "%".concat(name).concat("%");
+        motherName = "%".concat(motherName).concat("%");
+        return dao.findByComposition(name, motherName, bornDate);
     }
 
 }
