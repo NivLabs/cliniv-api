@@ -3,55 +3,41 @@ package br.com.ft.gdp.models.dto;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.validation.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.ft.gdp.models.domain.Patient;
-import br.com.ft.gdp.models.domain.Visit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
+ * Classe VisitDTO.java
  * 
-* Classe VisitDTO.java
-*
-* @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
-*
-* @since 8 de set de 2019
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
+ * 
+ * @since 11 de out de 2019
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 public class VisitDTO implements Serializable {
 
-	private static final long serialVersionUID = 2370290606342755763L;
+    private static final long serialVersionUID = -6838739544914003033L;
 
     private Long id;
 
-    @NotBlank(message = "Informar o PACIENTE  da visita é obrigatório")
     private Patient patient;
-    
-    @NotBlank(message = "Informar a DATA de inicio da visita é obrigatório")
+
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     private Date dateTimeEntry;
-    
+
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     private Date dateTimeExit;
-    
-    @NotBlank(message = "Informar o MOTIVO da visita é obrigatório")
+
     private String reasonForEntry;
 
-    @JsonIgnore
-    public Visit getVisitDomainFromDTO() {
-    	Visit domain = new Visit();
-    	
-        domain.setId(getId());
-        domain.setPatient(getPatient());
-        domain.setDateTimeEntry(getDateTimeEntry());
-        domain.setDateTimeExit(getDateTimeExit());
-        domain.setReasonForEntry(getReasonForEntry());
-        return domain;
-    }
 }

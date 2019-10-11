@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.models.domain.Visit;
+import br.com.ft.gdp.models.dto.NewVisitDTO;
 import br.com.ft.gdp.models.dto.VisitDTO;
 import br.com.ft.gdp.service.VisitService;
 import io.swagger.annotations.Api;
@@ -58,9 +59,9 @@ public class VisitController {
 
     @ApiOperation(nickname = "responsible-post", value = "Insere uma nova visita na aplicação")
     @PostMapping
-    public ResponseEntity<VisitDTO> persist(@Validated @RequestBody(required = true) VisitDTO Visit,
+    public ResponseEntity<VisitDTO> persist(@Validated @RequestBody(required = true) NewVisitDTO visit,
                                             HttpServletResponse response) {
-        Visit createdVisit = service.persist(Visit.getVisitDomainFromDTO());
+        Visit createdVisit = service.persistNewVisit(visit);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdVisit.getId()));
 
@@ -69,14 +70,10 @@ public class VisitController {
     }
 
     @ApiOperation(nickname = "responsible-put", value = "Atualiza uma visita na aplicação")
-    @PutMapping("/{id}")
-    public ResponseEntity<VisitDTO> update(@PathVariable("id") Long id,
-                                           @Validated @RequestBody(required = true) VisitDTO Visit,
-                                           HttpServletResponse response) {
-        Visit createdResponsible = service.update(id, Visit.getVisitDomainFromDTO());
-
-        return ResponseEntity.ok().body(createdResponsible.getVisitDTOFromDomain());
-
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Void> update(@PathVariable("id") Long id) {
+        service.closeVisit(id);
+        return ResponseEntity.ok().build();
     }
 
     @ApiOperation(nickname = "Visit-get-id", value = "Busca uma visita baseado no identificador")

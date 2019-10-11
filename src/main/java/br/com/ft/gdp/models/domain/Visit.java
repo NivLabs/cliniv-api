@@ -33,27 +33,27 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Visit extends BaseObject {
 
-	private static final long serialVersionUID = -2728953699232281599L;
+    private static final long serialVersionUID = -2728953699232281599L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "ID_PACIENTE")
     private Patient patient;
-    
+
     @Column(name = "DH_ENTRADA")
     private Date dateTimeEntry;
-    
+
     @Column(name = "DH_SAIDA")
     private Date dateTimeExit;
-    
+
     @Column(name = "MOTIVO_ENTRADA")
     private String reasonForEntry;
 
     @JsonIgnore
     public VisitDTO getVisitDTOFromDomain() {
-    	VisitDTO dtoEntity = new VisitDTO();
+        VisitDTO dtoEntity = new VisitDTO();
 
         dtoEntity.setId(getId());
         dtoEntity.setPatient(getPatient());
