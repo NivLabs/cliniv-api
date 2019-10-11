@@ -69,9 +69,9 @@ public class VisitController {
 
     }
 
-    @ApiOperation(nickname = "responsible-put", value = "Atualiza uma visita na aplicação")
+    @ApiOperation(nickname = "responsible-put-exit", value = "Atualiza hora de saída da visita na aplicação")
     @PutMapping("/{id}/status")
-    public ResponseEntity<Void> update(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> updateVisitToEnd(@PathVariable("id") Long id) {
         service.closeVisit(id);
         return ResponseEntity.ok().build();
     }
