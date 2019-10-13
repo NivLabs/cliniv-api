@@ -25,6 +25,7 @@ public class NewVisitDTO implements Serializable {
 
     private static final long serialVersionUID = 2370290606342755763L;
 
+    @NotBlank(message = "Informar o cliente é obrigatório")
     private Long patientId;
 
     @NotBlank(message = "Informar o MOTIVO da visita é obrigatório")

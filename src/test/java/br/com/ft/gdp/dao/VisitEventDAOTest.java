@@ -58,7 +58,6 @@ public class VisitEventDAOTest {
 		this.eventDAO.save(eventType);
 
 		responsible = new Responsible();
-		responsible.setCpf("11164480413");
 		responsible.setName("Williams Gomes");
 		responsible.setProfessionalIdentity("Médico Chefe");
 		this.responsibleDao.save(responsible);
