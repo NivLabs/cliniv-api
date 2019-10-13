@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.domain.Responsible;
-import br.com.ft.gdp.models.domain.Specialty;
+import br.com.ft.gdp.models.domain.Speciality;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,11 +36,7 @@ public class ResponsibleDTO implements Serializable {
     @Size(min = 3, message = "O nome deve conter ao menos três letras")
     private String name;
 
-    @NotBlank(message = "Informar o CPF é obrigatório")
-    @Size(min = 11, max = 11, message = "Você deve informar os 11 dígitos do CPF")
-    private String cpf;
-
-    private List<Specialty> specialty = new ArrayList<>();
+    private List<Speciality> specialty = new ArrayList<>();
 
     private String professionalIdentity;
 
@@ -49,7 +45,6 @@ public class ResponsibleDTO implements Serializable {
         Responsible domain = new Responsible();
 
         domain.setId(getId());
-        domain.setCpf(getCpf());
         domain.setName(getName());
         domain.setProfessionalIdentity(getProfessionalIdentity());
         domain.setSpecialty(getSpecialty());

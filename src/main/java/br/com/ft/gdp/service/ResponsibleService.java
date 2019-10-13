@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import br.com.ft.gdp.dao.ResponsibleDao;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Responsible;
-import br.com.ft.gdp.util.StringUtils;
+import br.com.ft.gdp.models.dto.NewResponsibleDTO;
+import br.com.ft.gdp.models.dto.ResponsibleDTO;
 
 /**
  * Classe ResponsibleService.java
@@ -23,6 +24,9 @@ public class ResponsibleService extends GenericService<Responsible, Long> {
 
     @Autowired
     private ResponsibleDao dao;
+
+    @Autowired
+    private SpecialityService specialityService;
 
     @Override
     public Page<Responsible> searchEntityPage(Pageable pageRequest) {
@@ -61,13 +65,19 @@ public class ResponsibleService extends GenericService<Responsible, Long> {
     }
 
     /**
-     * @param cpf
+     * Realiza a persistência à partir de um DTO
+     * 
+     * @param responsible
      * @return
      */
-    public Responsible findByCpf(String cpf) {
-        String formatedCpf = StringUtils.getDigits(cpf);
-        return dao.findByCpf(formatedCpf)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Responsável com CPF: [%s] não encontrado", cpf)));
-    }
+    public ResponsibleDTO persistDTO(NewResponsibleDTO responsible) {
+        Responsible domain = new Responsible();
+        domain.setName(responsible.getName());
+        domain.setProfessionalIdentity(responsible.getProfessionalIdentity());
+        responsible.getEspecialityIdsList().forEach(id -> {
+            domain.getSpecialty().add(specialityService.findById(id));
+        });
 
+        return persist(domain).getResponsibleDTOFromDomain();
+    }
 }

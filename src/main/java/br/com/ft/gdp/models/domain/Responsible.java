@@ -47,11 +47,9 @@ public class Responsible extends BaseObject {
     @Column(name = "NOME")
     private String name;
 
-    private String cpf;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "ESPECIALIDADE_RESPONSAVEL", joinColumns = @JoinColumn(name = "ID_RESPONSAVEL"), inverseJoinColumns = @JoinColumn(name = "ID_ESPECIALIDADE"))
-    private List<Specialty> specialty = new ArrayList<>();
+    private List<Speciality> specialty = new ArrayList<>();
 
     @Column(name = "REGISTRO_PROFISSIONAL")
     private String professionalIdentity;
@@ -60,7 +58,6 @@ public class Responsible extends BaseObject {
     public ResponsibleDTO getResponsibleDTOFromDomain() {
         ResponsibleDTO dtoEntity = new ResponsibleDTO();
         dtoEntity.setId(getId());
-        dtoEntity.setCpf(getCpf());
         dtoEntity.setName(getName());
         dtoEntity.setProfessionalIdentity(getProfessionalIdentity());
         dtoEntity.setSpecialty(getSpecialty());

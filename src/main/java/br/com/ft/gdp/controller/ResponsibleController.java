@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.models.domain.Responsible;
+import br.com.ft.gdp.models.dto.NewResponsibleDTO;
 import br.com.ft.gdp.models.dto.ResponsibleDTO;
 import br.com.ft.gdp.service.ResponsibleService;
 import io.swagger.annotations.Api;
@@ -60,13 +61,13 @@ public class ResponsibleController {
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo responsável na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<ResponsibleDTO> persist(@Validated @RequestBody(required = true) ResponsibleDTO responsible,
+    public ResponseEntity<ResponsibleDTO> persist(@Validated @RequestBody(required = true) NewResponsibleDTO responsible,
                                                   HttpServletResponse response) {
-        Responsible createdResponsible = service.persist(responsible.getResponsibleDomainFromDTO());
+        ResponsibleDTO createdResponsible = service.persistDTO(responsible);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdResponsible.getId()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdResponsible.getResponsibleDTOFromDomain());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdResponsible);
 
     }
 
@@ -85,15 +86,7 @@ public class ResponsibleController {
     @ApiOperation(nickname = "responsible-get-id", value = "Busca um responsável baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<Responsible> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<ResponsibleDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findById(id).getResponsibleDTOFromDomain());
     }
-
-    @ApiOperation(nickname = "responsible-get-cpf", value = "Busca um responsável baseado no cpf")
-    @GetMapping("/{cpf}/cpf")
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<Responsible> findByCpf(@PathVariable("cpf") String cpf) {
-        return ResponseEntity.ok(service.findByCpf(cpf));
-    }
-
 }
