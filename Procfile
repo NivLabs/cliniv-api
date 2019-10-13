@@ -1,1 +1,1 @@
-web: java -Dserver.port=$PORT -Dspring.profiles.active=prod $JAVA_OPTS -jar target/gestao-de-prontuario*.war
+web: java $JAVA_OPTS -jar target/gestao-de-prontuario*.war
