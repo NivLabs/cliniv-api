@@ -3,7 +3,7 @@ jobs:
   build:
     branches:
       only:
-        - master
+        - develop
     docker:
       - image: circleci/openjdk:11.0.1-jdk
 
