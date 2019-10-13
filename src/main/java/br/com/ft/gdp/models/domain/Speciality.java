@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "ESPECIALIDADE")
-public class Specialty implements Serializable {
+public class Speciality implements Serializable {
 
     private static final long serialVersionUID = 5635833259887178379L;
 
