@@ -33,4 +33,4 @@ jobs:
           key: gestao-de-prontuario-{{ checksum "pom.xml" }}
 
       # clean and build
-      - run: mvn clean install
+      - run: mvn clean install -DskipTests=true
