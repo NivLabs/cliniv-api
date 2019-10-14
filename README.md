@@ -1,5 +1,5 @@
 [![CircleCI](https://circleci.com/gh/viniciosarodrigues/gestao-de-prontuario/tree/master.svg?style=shield)](https://circleci.com/gh/viniciosarodrigues/gestao-de-prontuario/tree/master)
-
+[![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge&style=flat)](https://gestao-prontuario.herokuapp.com/swagger-ui.html)
 # FT - Gestão de Prontuário - API
 O FT - Gestão de Prontuário - API (FTGP-API) é uma API Rest OpenSource criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no processo de prontuário. O FTGP-API é integrado com um client baseado em Angular, o [FTGP-UI](https://github.com/viniciosarodrigues/gestao-de-prontuario-ui).
 
