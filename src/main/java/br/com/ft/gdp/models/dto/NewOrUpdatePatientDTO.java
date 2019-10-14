@@ -3,7 +3,6 @@ package br.com.ft.gdp.models.dto;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -32,17 +31,17 @@ import lombok.NoArgsConstructor;
 public class NewOrUpdatePatientDTO implements Serializable {
     private static final long serialVersionUID = 1575416178033511932L;
 
-    @NotBlank(message = "Informar o NOME do paciente é obrigatório")
+    @NotNull(message = "Informar o NOME do paciente é obrigatório")
     @Size(min = 3, max = 45, message = "O nome do paciente deve conter ao menos três letras")
     private String firstName;
 
-    @NotBlank(message = "Informar o SOBRENOME do paciente é obrigatório")
+    @NotNull(message = "Informar o SOBRENOME do paciente é obrigatório")
     @Size(min = 3, max = 45, message = "O sobrenome do paciente deve conter ao menos três letras")
     private String lastName;
 
     private String rg;
 
-    @NotBlank(message = "Informar o CPF do paciente é obrigatório")
+    @NotNull(message = "Informar o CPF do paciente é obrigatório")
     @Size(min = 11, max = 11, message = "O cpf do paciente deve conter 11 digitos")
     private String cpf;
 
@@ -50,7 +49,7 @@ public class NewOrUpdatePatientDTO implements Serializable {
     @DateTimeFormat(iso = ISO.DATE)
     private Date bornDate;
 
-    @NotBlank(message = "Informar o sexo do paciente é obrigatório")
+    @NotNull(message = "Informar o sexo do paciente é obrigatório")
     private String gender;
 
     private String fatherName;

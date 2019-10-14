@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,10 +26,10 @@ public class NewResponsibleDTO implements Serializable {
 
     private static final long serialVersionUID = 6040676863976066146L;
 
-    @NotBlank(message = "O nome do responsável é obrigatório")
+    @NotNull(message = "O nome do responsável é obrigatório")
     private String name;
 
-    @NotBlank(message = "A identidade do profissional é obrigatória")
+    @NotNull(message = "A identidade do profissional é obrigatória")
     private String professionalIdentity;
 
     private Set<Long> especialityIdsList = new HashSet<>();

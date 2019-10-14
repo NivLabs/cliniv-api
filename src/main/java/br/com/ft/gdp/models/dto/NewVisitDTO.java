@@ -2,7 +2,7 @@ package br.com.ft.gdp.models.dto;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,10 +25,10 @@ public class NewVisitDTO implements Serializable {
 
     private static final long serialVersionUID = 2370290606342755763L;
 
-    @NotBlank(message = "Informar o cliente é obrigatório")
+    @NotNull(message = "Informar o cliente é obrigatório")
     private Long patientId;
 
-    @NotBlank(message = "Informar o MOTIVO da visita é obrigatório")
+    @NotNull(message = "Informar o MOTIVO da visita é obrigatório")
     private String reasonForEntry;
 
 }
