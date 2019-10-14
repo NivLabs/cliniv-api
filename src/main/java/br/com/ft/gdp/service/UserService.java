@@ -3,7 +3,6 @@ package br.com.ft.gdp.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.InvalidOperationException;
@@ -23,8 +22,6 @@ public class UserService extends GenericService<UserApplication, Long> {
 
     @Autowired
     private UserRepository userRepo;
-    @Autowired
-    BCryptPasswordEncoder bc;
 
     public UserApplication findByUsername(String username) {
         return userRepo.findByUsername(username).orElseThrow(() -> new ObjectNotFoundException(
