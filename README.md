@@ -5,8 +5,7 @@ O FT - Gestão de Prontuário - API (FTGP-API) é uma API Rest OpenSource criada
 
 
 Atualmente encontra-se na versão 1.0.0
-
-- [Swagger](https://gestao-prontuario.herokuapp.com/swagger-ui.html)
+[Swagger](https://gestao-prontuario.herokuapp.com/swagger-ui.html)
 
 Funcionalidades da API
 - Cadastro de Pacientes
@@ -40,7 +39,6 @@ Caso não tenha o Lombok, já existe uma dependência do mesmo no projeto, basta
 ## Como rodar a API?
 Por ser um projeto SpringBoot, não se faz necessário o uso de nenhum servidor externo, pois o framework já disponibiliza um Tomcat embarcado, desta forma basta clicar com o botão direito na raiz do projeto, **Run As** -> **SpringBoot App**.
 Também pode rodar apartir do **ApplicationMain** encontrado no pacote base da aplicação.
-
 ## Como contribuir
 Caso queira contribuir, basta realizar um fork do repositório, fazer a implementação desejada, **criar uma issue de push** e realizar pull request para a **master**.
 
