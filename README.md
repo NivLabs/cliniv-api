@@ -6,6 +6,8 @@ O FT - Gestão de Prontuário - API (FTGP-API) é uma API Rest OpenSource criada
 
 Atualmente encontra-se na versão 1.0.0
 
+- [Swagger](https://gestao-prontuario.herokuapp.com/swagger-ui.html)
+
 Funcionalidades da API
 - Cadastro de Pacientes
 - Cadastro de Responsáveis (Enfermeiro, Médico, Técnico, etc)
