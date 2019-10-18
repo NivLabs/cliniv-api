@@ -65,7 +65,7 @@ public class PatientController {
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
 
-    @ApiOperation(nickname = "responsible-post", value = "Insere um novo paciente na aplicação")
+    @ApiOperation(nickname = "patient-post", value = "Insere um novo paciente na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<PatientDTO> persist(@Validated @RequestBody(required = true) NewOrUpdatePatientDTO newPatient,
@@ -78,7 +78,7 @@ public class PatientController {
 
     }
 
-    @ApiOperation(nickname = "responsible-put", value = "Atualiza um paciente na aplicação")
+    @ApiOperation(nickname = "patient-put", value = "Atualiza um paciente na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<PatientDTO> update(@PathVariable("id") Long id,
@@ -90,14 +90,14 @@ public class PatientController {
 
     }
 
-    @ApiOperation(nickname = "Patient-get-id", value = "Busca um paciente baseado no identificador")
+    @ApiOperation(nickname = "patient-get-id", value = "Busca um paciente baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<Patient> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @ApiOperation(nickname = "Patient-get-document", value = "Busca um paciente pelo documento")
+    @ApiOperation(nickname = "patient-get-document", value = "Busca um paciente pelo documento")
     @GetMapping("{documentType}/{document}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<PatientDTO> findByCpf(@PathVariable("documentType") DocumentType documentType,
@@ -108,7 +108,7 @@ public class PatientController {
             return ResponseEntity.ok(service.findByRg(document).getPatientDTOFromDomain());
     }
 
-    @ApiOperation(nickname = "Patient-get-composite", value = "Busca um paciente baseado no identificador composto")
+    @ApiOperation(nickname = "patient-get-composite", value = "Busca um paciente baseado no identificador composto")
     @GetMapping("/{name}/{motherName}/{bornDate}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<List<Patient>> findByComposition(@PathVariable("name") String name, @PathVariable("motherName") String motherName,

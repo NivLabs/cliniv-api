@@ -56,6 +56,8 @@ public class NewOrUpdatePatientDTO implements Serializable {
 
     private String motherName;
 
+    private NewOrUpdatePatientAddressDTO address;
+
     @JsonIgnore
     public Patient getPatientDomainFromDTO() {
         Patient domain = new Patient();
