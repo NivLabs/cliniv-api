@@ -1,6 +1,5 @@
-package br.com.ft.gdp.dao;
+package br.com.ft.gdp.repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,24 +18,20 @@ import br.com.ft.gdp.models.domain.Patient;
  * @since 15 de set de 2019
  */
 @Repository
-public interface PatientDao extends JpaRepository<Patient, Long> {
-
-    /**
-     * @param id
-     * @return
-     */
-    public Optional<Patient> findById(Long id);
+public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     /**
      * @param cpf
      * @return
      */
+    @Query("from Patient where person.cpf = :cpf")
     public Optional<Patient> findByCpf(String cpf);
 
     /**
      * @param rg
      * @return
      */
+    @Query("from Patient where person.rg = :rg")
     public Optional<Patient> findByRg(String rg);
 
     /**
@@ -45,7 +40,8 @@ public interface PatientDao extends JpaRepository<Patient, Long> {
      * @param bornDate
      * @return
      */
-    @Query("from Patient where firstName like :name and motherName like :motherName and bornDate = :bornDate")
-    public List<Patient> findByComposition(String name, String motherName, Date bornDate);
+    @Query("from Patient where firstName like :name and motherName like :motherName")
+    public List<Patient> findByComposition(String name, String motherName);
+
 
 }

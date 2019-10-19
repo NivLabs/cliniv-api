@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.ft.gdp.dao.VisitEventDao;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.VisitEvent;
+import br.com.ft.gdp.repository.VisitEventRepository;
 
 /**
  * Classe VisitEventService.java
@@ -21,7 +21,7 @@ import br.com.ft.gdp.models.domain.VisitEvent;
 public class VisitEventService extends GenericService<VisitEvent, Long> {
 	
 	@Autowired
-	private VisitEventDao dao;
+	private VisitEventRepository dao;
 
 	@Override
 	public Page<VisitEvent> searchEntityPage(Pageable pageRequest) {

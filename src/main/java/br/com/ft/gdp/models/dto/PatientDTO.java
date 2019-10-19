@@ -8,10 +8,6 @@ import java.util.Set;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import br.com.ft.gdp.models.domain.Patient;
-import br.com.ft.gdp.models.domain.PatientPhone;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,28 +49,6 @@ public class PatientDTO implements Serializable {
 
     private String motherName;
 
-    @JsonIgnore
-    public Patient getPatientDomainFromDTO() {
-        Patient domain = new Patient();
-
-        domain.setId(getId());
-        domain.setFirstName(getFirstName());
-        domain.setLastName(getLastName());
-        domain.setRg(getRg());
-        domain.setCpf(getCpf());
-        domain.setBornDate(getBornDate());
-        phones.forEach(phoneNumber -> {
-            PatientPhone phone = new PatientPhone();
-            phone.setPhoneNumber(phoneNumber);
-            domain.getPhones().add(phone);
-
-        });
-
-        domain.setGender(getGender());
-        domain.setFatherName(getFatherName());
-        domain.setMotherName(getMotherName());
-
-        return domain;
-    }
+    private AddressDTO address;
 
 }

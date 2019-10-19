@@ -1,6 +1,5 @@
 package br.com.ft.gdp.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -9,9 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.ft.gdp.dao.PatientDao;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Patient;
+import br.com.ft.gdp.models.domain.Person;
+import br.com.ft.gdp.models.domain.PersonAddress;
+import br.com.ft.gdp.models.dto.NewOrUpdatePatientDTO;
+import br.com.ft.gdp.repository.PatientRepository;
+import br.com.ft.gdp.repository.PersonRepository;
 
 /**
  * 
@@ -25,7 +28,13 @@ import br.com.ft.gdp.models.domain.Patient;
 public class PatientService extends GenericService<Patient, Long> {
 
     @Autowired
-    private PatientDao dao;
+    private PatientRepository dao;
+
+    @Autowired
+    private PersonRepository personDao;
+
+    @Autowired
+    private PersonAddressService addressService;
 
     @Override
     public Page<Patient> searchEntityPage(Pageable pageRequest) {
@@ -60,7 +69,6 @@ public class PatientService extends GenericService<Patient, Long> {
     public void deleteById(Long id) {
         Patient auxEntity = findById(id);
         dao.delete(auxEntity);
-
     }
 
     @Override
@@ -83,10 +91,35 @@ public class PatientService extends GenericService<Patient, Long> {
      * @param bornDate
      * @return
      */
-    public List<Patient> findByComposition(String name, String motherName, Date bornDate) {
+    public List<Patient> findByComposition(String name, String motherName) {
         name = "%".concat(name).concat("%");
         motherName = "%".concat(motherName).concat("%");
-        return dao.findByComposition(name, motherName, bornDate);
+        return dao.findByComposition(name, motherName);
+    }
+
+    /**
+     * @param newPatient
+     * @return
+     */
+    public Patient persistDto(NewOrUpdatePatientDTO newPatient) {
+        Person personFromDto = personDao.findByCpf(newPatient.getCpf()).orElse(new Person());
+        BeanUtils.copyProperties(newPatient, personFromDto);
+        personDao.save(personFromDto);
+
+        if (personFromDto.getListOfAddress().isEmpty()) {
+            PersonAddress address = new PersonAddress();
+            BeanUtils.copyProperties(newPatient.getAddress(), address);
+            address.setPersonId(personFromDto.getId());
+            addressService.persist(address);
+
+            personFromDto.getListOfAddress().add(address);
+        }
+
+        Patient patient = new Patient();
+        BeanUtils.copyProperties(newPatient, patient, "address");
+        patient.setPerson(personFromDto);
+
+        return dao.save(patient);
     }
 
 }

@@ -8,18 +8,20 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Classe NewOrUpdatePatientAddressDTO.java
+ * Classe AddressDTO.java
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
+ * 
  * @since 18 de out de 2019
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class NewOrUpdatePatientAddressDTO implements Serializable {
+public class AddressDTO implements Serializable {
 
-    private static final long serialVersionUID = 4507712865290776284L;
+    private static final long serialVersionUID = 5868142007921449692L;
 
     private String street;
     private String addressNumber;

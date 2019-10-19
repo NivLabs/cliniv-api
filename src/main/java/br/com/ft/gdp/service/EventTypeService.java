@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.ft.gdp.dao.EventTypeDao;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.EventType;
+import br.com.ft.gdp.repository.EventTypeRepository;
 
 /**
  * 
@@ -22,7 +22,7 @@ import br.com.ft.gdp.models.domain.EventType;
 public class EventTypeService extends GenericService<EventType, Long> {
 
     @Autowired
-    private EventTypeDao dao;
+    private EventTypeRepository dao;
 
     @Override
     public Page<EventType> searchEntityPage(Pageable pageRequest) {

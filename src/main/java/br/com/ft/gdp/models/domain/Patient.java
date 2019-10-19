@@ -1,22 +1,25 @@
 package br.com.ft.gdp.models.domain;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
+import br.com.ft.gdp.models.dto.AddressDTO;
 import br.com.ft.gdp.models.dto.PatientDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,49 +47,33 @@ public class Patient extends BaseObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NOME")
-    private String firstName;
-
-    @Column(name = "SOBRENOME")
-    private String lastName;
-
-    @Column(name = "RG")
-    private String rg;
-
-    @Column(name = "CPF")
-    private String cpf;
-
-    @Column(name = "DATA_NASCIMENTO")
-    private Date bornDate;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_PESSOA")
+    private Person person;
 
     @OneToMany
     @JoinColumn(name = "ID_PACIENTE")
     private Set<PatientPhone> phones = new HashSet<>();
-
-    @Column(name = "SEXO")
-    private String gender;
-
-    @Column(name = "NOME_COMP_PAI")
-    private String fatherName;
-
-    @Column(name = "NOME_COMP_MAE")
-    private String motherName;
 
     @JsonIgnore
     public PatientDTO getPatientDTOFromDomain() {
         PatientDTO dtoEntity = new PatientDTO();
 
         dtoEntity.setId(getId());
-        dtoEntity.setFirstName(getFirstName());
-        dtoEntity.setLastName(getLastName());
-        dtoEntity.setRg(getRg());
-        dtoEntity.setCpf(getCpf());
-        dtoEntity.setBornDate(getBornDate());
+        dtoEntity.setFirstName(getPerson().getFirstName());
+        dtoEntity.setLastName(getPerson().getLastName());
+        dtoEntity.setRg(getPerson().getRg());
+        dtoEntity.setCpf(getPerson().getCpf());
+        dtoEntity.setBornDate(getPerson().getBornDate());
         dtoEntity.setPhones(phones.stream().map(PatientPhone::getPhoneNumber).collect(Collectors.toSet()));
-        dtoEntity.setGender(getGender());
-        dtoEntity.setFatherName(getFatherName());
-        dtoEntity.setMotherName(getMotherName());
-
+        dtoEntity.setGender(getPerson().getGender());
+        dtoEntity.setFatherName(getPerson().getFatherName());
+        dtoEntity.setMotherName(getPerson().getMotherName());
+        if (!getPerson().getListOfAddress().isEmpty()) {
+            AddressDTO address = new AddressDTO();
+            BeanUtils.copyProperties(getPerson().getListOfAddress().get(0), address);
+            dtoEntity.setAddress(address);
+        }
         return dtoEntity;
     }
 

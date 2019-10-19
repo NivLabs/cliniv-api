@@ -1,4 +1,4 @@
-package br.com.ft.gdp.dao;
+package br.com.ft.gdp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,6 +13,6 @@ import br.com.ft.gdp.models.domain.Responsible;
  * @since 7 de set de 2019
  */
 @Repository
-public interface ResponsibleDao extends JpaRepository<Responsible, Long> {
+public interface ResponsibleRepository extends JpaRepository<Responsible, Long> {
 
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package br.com.ft.gdp.dao;
+package br.com.ft.gdp.repository;
 
 import java.util.Optional;
 
@@ -17,7 +17,7 @@ import br.com.ft.gdp.models.domain.AnamnesisItem;
  * @since 12 de set de 2019
  * 
  */
-public interface AnamnesisItemDao extends JpaRepository<AnamnesisItem, Long>{
+public interface AnamnesisItemRepository extends JpaRepository<AnamnesisItem, Long>{
 	
 	/**
 	 * @param id

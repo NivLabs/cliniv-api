@@ -1,4 +1,4 @@
-package br.com.ft.gdp.dao;
+package br.com.ft.gdp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,6 +13,6 @@ import br.com.ft.gdp.models.domain.Speciality;
  * @since 13 de out de 2019
  */
 @Repository
-public interface SpecialityDao extends JpaRepository<Speciality, Long> {
+public interface SpecialityRepository extends JpaRepository<Speciality, Long> {
 
 }

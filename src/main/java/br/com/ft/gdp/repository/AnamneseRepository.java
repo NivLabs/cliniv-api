@@ -1,4 +1,4 @@
-package br.com.ft.gdp.dao;
+package br.com.ft.gdp.repository;
 
 import java.util.Optional;
 
@@ -16,7 +16,7 @@ import br.com.ft.gdp.models.domain.Anamnese;
  * 
  */
 @Repository
-public interface AnamneseDao extends JpaRepository<Anamnese, Long> {
+public interface AnamneseRepository extends JpaRepository<Anamnese, Long> {
 
     /**
      * @param id

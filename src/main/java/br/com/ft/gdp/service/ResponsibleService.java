@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.ft.gdp.dao.ResponsibleDao;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Responsible;
 import br.com.ft.gdp.models.dto.NewResponsibleDTO;
 import br.com.ft.gdp.models.dto.ResponsibleDTO;
+import br.com.ft.gdp.repository.ResponsibleRepository;
 
 /**
  * Classe ResponsibleService.java
@@ -23,7 +23,7 @@ import br.com.ft.gdp.models.dto.ResponsibleDTO;
 public class ResponsibleService extends GenericService<Responsible, Long> {
 
     @Autowired
-    private ResponsibleDao dao;
+    private ResponsibleRepository dao;
 
     @Autowired
     private SpecialityService specialityService;

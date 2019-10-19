@@ -8,11 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.ft.gdp.dao.VisitDao;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Visit;
 import br.com.ft.gdp.models.dto.NewVisitDTO;
+import br.com.ft.gdp.repository.VisitRepository;
 
 /**
  * 
@@ -26,7 +26,7 @@ import br.com.ft.gdp.models.dto.NewVisitDTO;
 public class VisitService extends GenericService<Visit, Long> {
 
     @Autowired
-    private VisitDao dao;
+    private VisitRepository dao;
     @Autowired
     private PatientService patientService;
 

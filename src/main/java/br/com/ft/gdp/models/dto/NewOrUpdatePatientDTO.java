@@ -6,12 +6,15 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.domain.Patient;
+import br.com.ft.gdp.models.domain.Person;
+import br.com.ft.gdp.models.domain.PersonAddress;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -60,18 +63,23 @@ public class NewOrUpdatePatientDTO implements Serializable {
 
     @JsonIgnore
     public Patient getPatientDomainFromDTO() {
-        Patient domain = new Patient();
+        Person person = new Person();
+        person.setFirstName(getFirstName());
+        person.setLastName(getLastName());
+        person.setRg(getRg());
+        person.setCpf(getCpf());
+        person.setGender(getGender());
+        person.setFatherName(getFatherName());
+        person.setMotherName(getMotherName());
+        person.setBornDate(getBornDate());
+        PersonAddress personAddress = new PersonAddress();
+        BeanUtils.copyProperties(getAddress(), personAddress);
+        person.getListOfAddress().add(personAddress);
+        Patient patient = new Patient();
 
-        domain.setFirstName(getFirstName());
-        domain.setLastName(getLastName());
-        domain.setRg(getRg());
-        domain.setCpf(getCpf());
-        domain.setBornDate(getBornDate());
-        domain.setGender(getGender());
-        domain.setFatherName(getFatherName());
-        domain.setMotherName(getMotherName());
+        patient.setPerson(person);
 
-        return domain;
+        return patient;
     }
 
 }
