@@ -94,15 +94,12 @@ public class PatientController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @ApiOperation(nickname = "patient-get-document", value = "Busca um paciente pelo documento")
+    @ApiOperation(nickname = "patient-get-by-document", value = "Busca um paciente pelo documento")
     @GetMapping("{documentType}/{document}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<PatientDTO> findByCpf(@PathVariable("documentType") DocumentType documentType,
+    public ResponseEntity<PatientDTO> findByDocument(@PathVariable("documentType") DocumentType documentType,
                                                 @PathVariable("document") String document) {
-        if (documentType.equals(DocumentType.CPF))
             return ResponseEntity.ok(service.findByCpf(document).getPatientDTOFromDomain());
-        else
-            return ResponseEntity.ok(service.findByRg(document).getPatientDTOFromDomain());
     }
 
     @ApiOperation(nickname = "patient-get-composite", value = "Busca um paciente baseado no identificador composto")

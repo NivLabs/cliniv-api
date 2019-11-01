@@ -26,12 +26,6 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     public Optional<Person> findByCpf(String cpf);
 
     /**
-     * @param rg
-     * @return
-     */
-    public Optional<Person> findByRg(String rg);
-
-    /**
      * @param name
      * @param motherName
      * @param bornDate

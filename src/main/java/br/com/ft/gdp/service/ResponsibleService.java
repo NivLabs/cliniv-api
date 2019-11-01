@@ -72,7 +72,6 @@ public class ResponsibleService extends GenericService<Responsible, Long> {
      */
     public ResponsibleDTO persistDTO(NewResponsibleDTO responsible) {
         Responsible domain = new Responsible();
-        domain.setName(responsible.getName());
         domain.setProfessionalIdentity(responsible.getProfessionalIdentity());
         responsible.getEspecialityIdsList().forEach(id -> {
             domain.getSpecialty().add(specialityService.findById(id));

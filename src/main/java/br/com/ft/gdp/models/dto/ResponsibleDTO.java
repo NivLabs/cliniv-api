@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.Responsible;
 import br.com.ft.gdp.models.domain.Speciality;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,10 @@ public class ResponsibleDTO implements Serializable {
     @Size(min = 3, message = "O nome deve conter ao menos três letras")
     private String name;
 
+    @NotBlank(message = "Informar o SOBRENOME é obrigatório")
+    @Size(min = 1, message = "O nome deve conter ao menos uma letra")
+    private String lastName;
+
     private List<Speciality> specialty = new ArrayList<>();
 
     private String professionalIdentity;
@@ -43,11 +48,15 @@ public class ResponsibleDTO implements Serializable {
     @JsonIgnore
     public Responsible getResponsibleDomainFromDTO() {
         Responsible domain = new Responsible();
+        domain.setId(id);
+        domain.setProfessionalIdentity(professionalIdentity);
+        domain.setSpecialty(specialty);
 
-        domain.setId(getId());
-        domain.setName(getName());
-        domain.setProfessionalIdentity(getProfessionalIdentity());
-        domain.setSpecialty(getSpecialty());
+        Person person = new Person();
+        person.setFirstName(name);
+        person.setLastName(lastName);
+
+        domain.setPerson(person);
 
         return domain;
     }

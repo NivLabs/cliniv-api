@@ -28,13 +28,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
     public Optional<Patient> findByCpf(String cpf);
 
     /**
-     * @param rg
-     * @return
-     */
-    @Query("from Patient where person.rg = :rg")
-    public Optional<Patient> findByRg(String rg);
-
-    /**
      * @param name
      * @param motherName
      * @param bornDate

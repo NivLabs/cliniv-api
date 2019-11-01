@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -44,8 +45,8 @@ public class Responsible extends BaseObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NOME")
-    private String name;
+    @OneToOne(fetch = FetchType.EAGER)
+    private Person person;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "ESPECIALIDADE_RESPONSAVEL", joinColumns = @JoinColumn(name = "ID_RESPONSAVEL"), inverseJoinColumns = @JoinColumn(name = "ID_ESPECIALIDADE"))
@@ -58,7 +59,8 @@ public class Responsible extends BaseObject {
     public ResponsibleDTO getResponsibleDTOFromDomain() {
         ResponsibleDTO dtoEntity = new ResponsibleDTO();
         dtoEntity.setId(getId());
-        dtoEntity.setName(getName());
+        dtoEntity.setName(getPerson().getFirstName());
+        dtoEntity.setLastName(getPerson().getLastName());
         dtoEntity.setProfessionalIdentity(getProfessionalIdentity());
         dtoEntity.setSpecialty(getSpecialty());
 

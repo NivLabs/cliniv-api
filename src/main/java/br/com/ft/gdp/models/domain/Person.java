@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.ft.gdp.models.BaseObject;
@@ -47,9 +48,6 @@ public class Person extends BaseObject {
     @Column(name = "SOBRENOME")
     private String lastName;
 
-    @Column(name = "RG")
-    private String rg;
-
     @Column(name = "CPF")
     private String cpf;
 
@@ -68,5 +66,9 @@ public class Person extends BaseObject {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PESSOA")
     private List<PersonAddress> listOfAddress = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_USUARIO")
+    private UserApplication user;
 
 }

@@ -42,8 +42,6 @@ public class NewOrUpdatePatientDTO implements Serializable {
     @Size(min = 3, max = 45, message = "O sobrenome do paciente deve conter ao menos três letras")
     private String lastName;
 
-    private String rg;
-
     @NotNull(message = "Informar o CPF do paciente é obrigatório")
     @Size(min = 11, max = 11, message = "O cpf do paciente deve conter 11 digitos")
     private String cpf;
@@ -66,7 +64,6 @@ public class NewOrUpdatePatientDTO implements Serializable {
         Person person = new Person();
         person.setFirstName(getFirstName());
         person.setLastName(getLastName());
-        person.setRg(getRg());
         person.setCpf(getCpf());
         person.setGender(getGender());
         person.setFatherName(getFatherName());

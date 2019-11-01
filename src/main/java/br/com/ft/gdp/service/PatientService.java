@@ -78,14 +78,6 @@ public class PatientService extends GenericService<Patient, Long> {
     }
 
     /**
-     * @param document
-     * @return
-     */
-    public Patient findByRg(String rg) {
-        return dao.findByRg(rg).orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com rg: [%s] não encontrado", rg)));
-    }
-
-    /**
      * @param name
      * @param motherName
      * @param bornDate

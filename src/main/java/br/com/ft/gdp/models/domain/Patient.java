@@ -62,7 +62,6 @@ public class Patient extends BaseObject {
         dtoEntity.setId(getId());
         dtoEntity.setFirstName(getPerson().getFirstName());
         dtoEntity.setLastName(getPerson().getLastName());
-        dtoEntity.setRg(getPerson().getRg());
         dtoEntity.setCpf(getPerson().getCpf());
         dtoEntity.setBornDate(getPerson().getBornDate());
         dtoEntity.setPhones(phones.stream().map(PatientPhone::getPhoneNumber).collect(Collectors.toSet()));
