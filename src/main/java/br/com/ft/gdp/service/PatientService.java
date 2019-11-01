@@ -106,7 +106,7 @@ public class PatientService extends GenericService<Patient, Long> {
         BeanUtils.copyProperties(newPatient, personFromDto);
         personDao.save(personFromDto);
 
-        if (personFromDto.getListOfAddress().isEmpty()) {
+        if (personFromDto.getListOfAddress() != null && personFromDto.getListOfAddress().isEmpty()) {
             PersonAddress address = new PersonAddress();
             BeanUtils.copyProperties(newPatient.getAddress(), address);
             address.setPersonId(personFromDto.getId());
