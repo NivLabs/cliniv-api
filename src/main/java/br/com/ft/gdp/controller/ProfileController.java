@@ -6,10 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.config.security.UserOfSystem;
+import br.com.ft.gdp.exception.InvalidOperationException;
 import br.com.ft.gdp.models.dto.UserInfoDTO;
 import br.com.ft.gdp.service.UserService;
 import io.swagger.annotations.Api;
@@ -41,4 +45,30 @@ public class ProfileController {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(service.findByUsername(userFromSession.getUsername()).getUserInfoDTO());
     }
+
+    @ApiOperation(nickname = "profile-put", value = "Atualiza dados do perfil do usuário logado")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+    public ResponseEntity<UserInfoDTO> updateMe(@RequestParam(name = "id") Long id, @RequestBody UserInfoDTO entity) {
+        UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        validUserToUpdate(entity, userFromSession);
+
+        UserInfoDTO userUpdated = service.updateUserInfo(id, entity);
+        return ResponseEntity.ok(userUpdated);
+    }
+
+    /**
+     * 
+     * Verifica se o usuário que está sendo alterado é o mesmo da sessão
+     * 
+     * @param entity
+     * @param userFromSession
+     */
+    private void validUserToUpdate(UserInfoDTO entity, UserOfSystem userFromSession) {
+        if (!userFromSession.getUsername().equals(entity.getUsername())) {
+            throw new InvalidOperationException("Operação não permitida, você só pode editar o seu próprio perfil");
+        }
+    }
+
 }

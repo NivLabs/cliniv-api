@@ -22,7 +22,7 @@ import br.com.ft.gdp.repository.AnamnesisItemRepository;
  * 
  */
 @Service
-public class AnamnesisItemService extends GenericService<AnamnesisItem, Long> {
+public class AnamnesisItemService implements GenericService<AnamnesisItem, Long> {
 
     @Autowired
     private AnamnesisItemRepository dao;

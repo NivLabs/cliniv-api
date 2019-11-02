@@ -5,6 +5,8 @@ import java.io.Serializable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import br.com.ft.gdp.exception.InvalidOperationException;
+
 /**
  * Classe genérica base com CRUD para a criação da camada de serviços
  * 
@@ -21,7 +23,7 @@ import org.springframework.data.domain.Pageable;
  *      Ver documentação do objeto de paginação do Spring
  *      </p>
  */
-public abstract class GenericService<E extends Serializable, PK extends Serializable> {
+public interface GenericService<E extends Serializable, PK extends Serializable> {
 
     /**
      * Realiza a busca da lista paginada da entidade, o método recebe como parâmetro um objeto do tipo Pageable do Spring.
@@ -32,7 +34,9 @@ public abstract class GenericService<E extends Serializable, PK extends Serializ
      * @return Objeto paginado com a Entidade
      * @see Pageable
      */
-    public abstract Page<E> searchEntityPage(Pageable pageRequest);
+    public default Page<E> searchEntityPage(Pageable pageRequest) {
+        throw new InvalidOperationException("Operação inválida");
+    }
 
     /**
      * Realiza a busca da entidade por ID (Chave primária, podendo ser composta ou não)
@@ -40,7 +44,9 @@ public abstract class GenericService<E extends Serializable, PK extends Serializ
      * @param id
      * @return Entidade
      */
-    public abstract E findById(PK id);
+    public default E findById(PK id) {
+        throw new InvalidOperationException("Operação inválida");
+    }
 
     /**
      * Atualiza a entidade em questão, o ID deve ser informado e diferente de nulo para que possa ser feita a implementação correta baseada
@@ -50,7 +56,9 @@ public abstract class GenericService<E extends Serializable, PK extends Serializ
      * @param entity
      * @return
      */
-    public abstract E update(PK id, E entity);
+    public default E update(PK id, E entity) {
+        throw new InvalidOperationException("Operação inválida");
+    }
 
     /**
      * Realiza o delete. Este método pode ser implementado tanto com um delete físico quanto por um delete lógico, vai depender da regra de
@@ -58,7 +66,9 @@ public abstract class GenericService<E extends Serializable, PK extends Serializ
      * 
      * @param entity
      */
-    public abstract void delete(E entity);
+    public default void delete(E entity) {
+        throw new InvalidOperationException("Operação inválida");
+    }
 
     /**
      * Realiza o delete por chave primária. Este método só deve ser usado por entidades sem depedências de integridade física. Desta forma
@@ -66,7 +76,9 @@ public abstract class GenericService<E extends Serializable, PK extends Serializ
      * 
      * @param id
      */
-    public abstract void deleteById(PK id);
+    public default void deleteById(PK id) {
+        throw new InvalidOperationException("Operação inválida");
+    }
 
     /**
      * Método usado para persistir entidades. Por definição arquitetural, as entidades de inserção devem sempre conter ID nulo.
@@ -74,5 +86,7 @@ public abstract class GenericService<E extends Serializable, PK extends Serializ
      * @param entity
      * @return
      */
-    public abstract E persist(E entity);
+    public default E persist(E entity) {
+        throw new InvalidOperationException("Operação inválida");
+    }
 }

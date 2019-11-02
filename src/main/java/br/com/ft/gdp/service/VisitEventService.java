@@ -18,7 +18,7 @@ import br.com.ft.gdp.repository.VisitEventRepository;
  * @since 17 Sept, 2019
  */
 @Service
-public class VisitEventService extends GenericService<VisitEvent, Long> {
+public class VisitEventService implements GenericService<VisitEvent, Long> {
 	
 	@Autowired
 	private VisitEventRepository dao;

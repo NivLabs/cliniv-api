@@ -20,7 +20,7 @@ import br.com.ft.gdp.repository.ResponsibleRepository;
  * @since 7 de set de 2019
  */
 @Service
-public class ResponsibleService extends GenericService<Responsible, Long> {
+public class ResponsibleService implements GenericService<Responsible, Long> {
 
     @Autowired
     private ResponsibleRepository dao;

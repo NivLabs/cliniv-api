@@ -17,7 +17,7 @@ import br.com.ft.gdp.repository.SpecialityRepository;
  * @since 13 de out de 2019
  */
 @Service
-public class SpecialityService extends GenericService<Speciality, Long> {
+public class SpecialityService implements GenericService<Speciality, Long> {
 
     @Autowired
     private SpecialityRepository dao;

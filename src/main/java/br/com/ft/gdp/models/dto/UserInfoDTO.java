@@ -35,4 +35,5 @@ public class UserInfoDTO implements Serializable {
     private String secondaryNumber;
     private Date bornDate;
     private String observations;
+    private String username;
 }

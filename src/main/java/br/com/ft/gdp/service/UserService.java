@@ -5,9 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.ft.gdp.exception.InvalidOperationException;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.UserApplication;
+import br.com.ft.gdp.models.dto.UserInfoDTO;
 import br.com.ft.gdp.repository.UserRepository;
 
 /**
@@ -18,7 +18,7 @@ import br.com.ft.gdp.repository.UserRepository;
  * @since 15 de set de 2019
  */
 @Service
-public class UserService extends GenericService<UserApplication, Long> {
+public class UserService implements GenericService<UserApplication, Long> {
 
     @Autowired
     private UserRepository userRepo;
@@ -45,18 +45,12 @@ public class UserService extends GenericService<UserApplication, Long> {
     }
 
     @Override
-    public void delete(UserApplication entity) {
-        throw new InvalidOperationException();
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        throw new InvalidOperationException();
-    }
-
-    @Override
     public UserApplication persist(UserApplication entity) {
         return userRepo.save(entity);
+    }
+
+    public UserInfoDTO updateUserInfo(Long id, UserInfoDTO entity) {
+        return null;
     }
 
 }

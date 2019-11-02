@@ -18,7 +18,7 @@ import br.com.ft.gdp.repository.PersonRepository;
  * @since 19 de out de 2019
  */
 @Service
-public class PersonService extends GenericService<Person, Long> {
+public class PersonService implements GenericService<Person, Long> {
 
     @Autowired
     private PersonRepository dao;

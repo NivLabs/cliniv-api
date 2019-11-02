@@ -19,7 +19,7 @@ import br.com.ft.gdp.repository.EventTypeRepository;
 * @since 8 de set de 2019
  */
 @Service
-public class EventTypeService extends GenericService<EventType, Long> {
+public class EventTypeService implements GenericService<EventType, Long> {
 
     @Autowired
     private EventTypeRepository dao;

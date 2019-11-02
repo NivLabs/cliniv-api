@@ -23,7 +23,7 @@ import br.com.ft.gdp.repository.VisitRepository;
  * @since 8 de set de 2019
  */
 @Service
-public class VisitService extends GenericService<Visit, Long> {
+public class VisitService implements GenericService<Visit, Long> {
 
     @Autowired
     private VisitRepository dao;
