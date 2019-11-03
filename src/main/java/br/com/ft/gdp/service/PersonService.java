@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Person;
+import br.com.ft.gdp.models.domain.PersonAddress;
 import br.com.ft.gdp.repository.PersonRepository;
 
 /**
@@ -23,6 +24,12 @@ public class PersonService implements GenericService<Person, Long> {
     @Autowired
     private PersonRepository dao;
 
+    @Autowired
+    private PersonAddressService addressService;
+
+    @Autowired
+    private PersonPhoneService phoneService;
+
     @Override
     public Page<Person> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
@@ -37,6 +44,8 @@ public class PersonService implements GenericService<Person, Long> {
     public Person update(Long id, Person entity) {
         Person person = findById(id);
         BeanUtils.copyProperties(entity, person, "id");
+        person = dao.save(person);
+
         return person;
     }
 
@@ -53,7 +62,20 @@ public class PersonService implements GenericService<Person, Long> {
     @Override
     public Person persist(Person entity) {
         entity.setId(null);
-        return dao.save(entity);
+        Person person = dao.save(entity);
+        if (!person.getListOfAddress().isEmpty()) {
+            PersonAddress address = person.getListOfAddress().get(0);
+            address.setPersonId(person.getId());
+            addressService.persist(address);
+        }
+        if (!person.getPhones().isEmpty()) {
+            person.getPhones().forEach(phone -> {
+                phone.setPersonId(person.getId());
+                phoneService.saveOrupdate(phone);
+            });
+        }
+
+        return person;
     }
 
     public Person findByCpf(String cpf) {

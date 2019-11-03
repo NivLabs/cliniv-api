@@ -37,8 +37,8 @@ public class AuthService {
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Usuário não encontrado para o email/usuário: [%s]",
                                                                              newPasswordRequest.getUsernameOrEmail())));
 
-        if (!usuario.getBornDate().equals(newPasswordRequest.getBornDate())
-                && !usuario.getMotherName().equals(newPasswordRequest.getMotherName()))
+        if (!usuario.getPerson().getBornDate().equals(newPasswordRequest.getBornDate())
+                && !usuario.getPerson().getMotherName().equals(newPasswordRequest.getMotherName()))
             throw new NewPasswordInvalidException();
 
         usuario.setPassword(bc.encode(newPasswordRequest.getNewPassword()));

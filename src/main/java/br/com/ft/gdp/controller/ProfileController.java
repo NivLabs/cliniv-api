@@ -1,15 +1,15 @@
 package br.com.ft.gdp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.config.security.UserOfSystem;
@@ -35,9 +35,6 @@ public class ProfileController {
     @Autowired
     private UserService service;
 
-    @Autowired
-    private ApplicationEventPublisher publisher;
-
     @ApiOperation(nickname = "profile-get", value = "Busca dados do perfil do usuário logado")
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
@@ -49,12 +46,12 @@ public class ProfileController {
     @ApiOperation(nickname = "profile-put", value = "Atualiza dados do perfil do usuário logado")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<UserInfoDTO> updateMe(@RequestParam(name = "id") Long id, @RequestBody UserInfoDTO entity) {
+    public ResponseEntity<UserInfoDTO> updateMe(@PathVariable(name = "id") Long id, @Validated @RequestBody UserInfoDTO entity) {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         validUserToUpdate(entity, userFromSession);
 
-        UserInfoDTO userUpdated = service.updateUserInfo(id, entity);
+        UserInfoDTO userUpdated = service.createOrUpdateUserInfo(id, entity);
         return ResponseEntity.ok(userUpdated);
     }
 
@@ -66,9 +63,10 @@ public class ProfileController {
      * @param userFromSession
      */
     private void validUserToUpdate(UserInfoDTO entity, UserOfSystem userFromSession) {
-        if (!userFromSession.getUsername().equals(entity.getUsername())) {
+        if (!userFromSession.getUsername().equals(entity.getUserName()))
             throw new InvalidOperationException("Operação não permitida, você só pode editar o seu próprio perfil");
-        }
+        else if (entity.getPhoneNumber().isEmpty() || entity.getPhoneNumber().isBlank())
+            throw new InvalidOperationException("O telefone principal é obrigatório");
     }
 
 }

@@ -1,7 +1,6 @@
 package br.com.ft.gdp.models.domain;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -18,7 +17,6 @@ import javax.persistence.Table;
 
 import org.springframework.beans.BeanUtils;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
@@ -52,7 +50,8 @@ public class UserApplication extends BaseObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_PESSOA")
     private Person person;
 
     @Column(name = "EMAIL")
@@ -60,13 +59,6 @@ public class UserApplication extends BaseObject {
 
     @Column(name = "USUARIO")
     private String username;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @Column(name = "DATA_NASCIMENTO")
-    private Date bornDate;
-
-    @Column(name = "NOME_MAE")
-    private String motherName;
 
     @JsonIgnore
     @Column(name = "SENHA", nullable = false, length = 500)
@@ -85,15 +77,38 @@ public class UserApplication extends BaseObject {
         UserInfoDTO userInfo = new UserInfoDTO();
 
         BeanUtils.copyProperties(this, userInfo);
-        BeanUtils.copyProperties(this.getPerson(), userInfo, "user");
-        if (!this.getPerson().getListOfAddress().isEmpty()) {
-            AddressDTO address = new AddressDTO();
-            BeanUtils.copyProperties(this.getPerson().getListOfAddress().get(0), address);
-            userInfo.setAddress(address);
+        if (this.getPerson() != null) {
+            BeanUtils.copyProperties(this.getPerson(), userInfo, "user");
+
+            if (!this.getPerson().getListOfAddress().isEmpty()) {
+                AddressDTO address = new AddressDTO();
+                BeanUtils.copyProperties(this.getPerson().getListOfAddress().get(0), address);
+                userInfo.setAddress(address);
+            }
+            getPhoneNumbers(userInfo);
+            userInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
         }
-        userInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
-        
+        userInfo.setUserName(this.username);
+
         return userInfo;
+    }
+
+    /**
+     * @param userInfo
+     */
+    private void getPhoneNumbers(UserInfoDTO userInfo) {
+        if (!this.getPerson().getPhones().isEmpty()) {
+            for (int i = 0; i < this.getPerson().getPhones().toArray().length; i++) {
+                if (i == 2)
+                    break;
+                if (i == 0)
+                    userInfo.setPhoneNumber(((PersonPhone) this.getPerson().getPhones().toArray()[i]).getPhoneNumber());
+                if (i == 1) {
+                    userInfo.setSecondaryNumber(((PersonPhone) this.getPerson().getPhones().toArray()[i]).getPhoneNumber());
+                }
+
+            }
+        }
     }
 
 }

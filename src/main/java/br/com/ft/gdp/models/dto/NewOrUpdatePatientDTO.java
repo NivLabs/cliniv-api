@@ -65,7 +65,6 @@ public class NewOrUpdatePatientDTO implements Serializable {
         person.setFirstName(getFirstName());
         person.setLastName(getLastName());
         person.setCpf(getCpf());
-        person.setGender(getGender());
         person.setFatherName(getFatherName());
         person.setMotherName(getMotherName());
         person.setBornDate(getBornDate());

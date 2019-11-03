@@ -83,6 +83,24 @@ public class HandlerExceptions {
     }
 
     /**
+     * Captura erros de requisições mal formadas
+     * 
+     * @param e
+     * @param req
+     * @return
+     */
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<StandardErrorSpring> validationException(ValidationException e,
+                                                                   HttpServletRequest req) {
+
+        StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+                "Informações inválidas", Arrays.asList(), e.getMessage(),
+                req.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    /**
      * Trata exceções de propriedades inválidas
      * 
      * @param e

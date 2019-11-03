@@ -1,9 +1,5 @@
 package br.com.ft.gdp.models.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.beans.BeanUtils;
@@ -51,10 +46,6 @@ public class Patient extends BaseObject {
     @JoinColumn(name = "ID_PESSOA")
     private Person person;
 
-    @OneToMany
-    @JoinColumn(name = "ID_PACIENTE")
-    private Set<PatientPhone> phones = new HashSet<>();
-
     @JsonIgnore
     public PatientDTO getPatientDTOFromDomain() {
         PatientDTO dtoEntity = new PatientDTO();
@@ -64,8 +55,6 @@ public class Patient extends BaseObject {
         dtoEntity.setLastName(getPerson().getLastName());
         dtoEntity.setCpf(getPerson().getCpf());
         dtoEntity.setBornDate(getPerson().getBornDate());
-        dtoEntity.setPhones(phones.stream().map(PatientPhone::getPhoneNumber).collect(Collectors.toSet()));
-        dtoEntity.setGender(getPerson().getGender());
         dtoEntity.setFatherName(getPerson().getFatherName());
         dtoEntity.setMotherName(getPerson().getMotherName());
         if (!getPerson().getListOfAddress().isEmpty()) {

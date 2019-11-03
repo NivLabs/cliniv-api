@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -26,13 +27,14 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class PatientPhone implements Serializable {
+@IdClass(PersonPhoneId.class)
+public class PersonPhone implements Serializable {
 
     private static final long serialVersionUID = -3625278264448753918L;
 
     @Id
-    @Column(name = "ID_PACIENTE")
-    private Long patientId;
+    @Column(name = "ID_PESSOA")
+    private Long personId;
 
     @Id
     @Column(name = "TELEFONE")

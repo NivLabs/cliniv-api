@@ -2,20 +2,25 @@ package br.com.ft.gdp.models.domain;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.ft.gdp.models.BaseObject;
+import br.com.ft.gdp.models.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -52,7 +57,8 @@ public class Person extends BaseObject {
     private String cpf;
 
     @Column(name = "SEXO")
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(name = "NOME_COMP_PAI")
     private String fatherName;
@@ -67,8 +73,8 @@ public class Person extends BaseObject {
     @JoinColumn(name = "ID_PESSOA")
     private List<PersonAddress> listOfAddress = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_USUARIO")
-    private UserApplication user;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ID_PESSOA")
+    private Set<PersonPhone> phones = new HashSet<>();
 
 }

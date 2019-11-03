@@ -1,5 +1,7 @@
 package br.com.ft.gdp.service;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,6 +57,14 @@ public class PersonAddressService implements GenericService<PersonAddress, Long>
     public PersonAddress persist(PersonAddress entity) {
         entity.setId(null);
         return dao.save(entity);
+    }
+
+    /**
+     * @param id
+     */
+    public void deleteByPersonId(Long id) {
+        List<PersonAddress> listToDelete = dao.findByPersonId(id);
+        dao.deleteAll(listToDelete);
     }
 
 }
