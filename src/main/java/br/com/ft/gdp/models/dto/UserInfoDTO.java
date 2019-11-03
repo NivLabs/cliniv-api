@@ -3,6 +3,11 @@ package br.com.ft.gdp.models.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.NotNull;
+
+import br.com.ft.gdp.models.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,16 +29,23 @@ public class UserInfoDTO implements Serializable {
     private static final long serialVersionUID = 5123075975481132373L;
 
     private Long id;
+    @NotNull(message = "O primeiro nome deve ser informado")
     private String firstName;
+    @NotNull(message = "O sobrenome deve ser informado")
     private String lastName;
     private String fatherName;
+    @NotNull(message = "O nome da mãe deve ser informado")
     private String motherName;
+    @NotNull(message = "O documento deve ser informado")
     private DocumentDTO document;
-    private String gender;
+    @NotNull(message = "O gênero deve ser informa")
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     private AddressDTO address;
     private String phoneNumber;
     private String secondaryNumber;
+    @NotNull(message = "A data de nascimento deve ser informada")
     private Date bornDate;
     private String observations;
-    private String username;
+    private String userName;
 }
