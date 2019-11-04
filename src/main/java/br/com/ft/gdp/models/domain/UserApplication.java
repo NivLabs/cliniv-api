@@ -85,30 +85,11 @@ public class UserApplication extends BaseObject {
                 BeanUtils.copyProperties(this.getPerson().getListOfAddress().get(0), address);
                 userInfo.setAddress(address);
             }
-            getPhoneNumbers(userInfo);
             userInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
         }
         userInfo.setUserName(this.username);
 
         return userInfo;
-    }
-
-    /**
-     * @param userInfo
-     */
-    private void getPhoneNumbers(UserInfoDTO userInfo) {
-        if (!this.getPerson().getPhones().isEmpty()) {
-            for (int i = 0; i < this.getPerson().getPhones().toArray().length; i++) {
-                if (i == 2)
-                    break;
-                if (i == 0)
-                    userInfo.setPhoneNumber(((PersonPhone) this.getPerson().getPhones().toArray()[i]).getPhoneNumber());
-                if (i == 1) {
-                    userInfo.setSecondaryNumber(((PersonPhone) this.getPerson().getPhones().toArray()[i]).getPhoneNumber());
-                }
-
-            }
-        }
     }
 
 }

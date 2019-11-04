@@ -27,9 +27,6 @@ public class PersonService implements GenericService<Person, Long> {
     @Autowired
     private PersonAddressService addressService;
 
-    @Autowired
-    private PersonPhoneService phoneService;
-
     @Override
     public Page<Person> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
@@ -67,12 +64,6 @@ public class PersonService implements GenericService<Person, Long> {
             PersonAddress address = person.getListOfAddress().get(0);
             address.setPersonId(person.getId());
             addressService.persist(address);
-        }
-        if (!person.getPhones().isEmpty()) {
-            person.getPhones().forEach(phone -> {
-                phone.setPersonId(person.getId());
-                phoneService.saveOrupdate(phone);
-            });
         }
 
         return person;

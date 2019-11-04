@@ -2,11 +2,8 @@ package br.com.ft.gdp.models.domain;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -73,8 +70,10 @@ public class Person extends BaseObject {
     @JoinColumn(name = "ID_PESSOA")
     private List<PersonAddress> listOfAddress = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ID_PESSOA")
-    private Set<PersonPhone> phones = new HashSet<>();
+    @Column(name = "TELEFONE_PRINCIPAL")
+    private String principalPhone;
+
+    @Column(name = "TELEFONE_SECUNDARIO")
+    private String secondaryPhone;
 
 }

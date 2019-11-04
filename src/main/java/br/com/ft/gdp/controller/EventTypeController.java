@@ -58,7 +58,7 @@ public class EventTypeController {
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
 
-    @ApiOperation(nickname = "responsible-post", value = "Insere um novo tipo de evento na aplicação")
+    @ApiOperation(nickname = "eventtype-post", value = "Insere um novo tipo de evento na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO', 'MEDICO', 'ADMIN')")
     public ResponseEntity<EventTypeDTO> persist(@Validated @RequestBody(required = true) EventTypeDTO eventType,
@@ -71,7 +71,7 @@ public class EventTypeController {
 
     }
 
-    @ApiOperation(nickname = "responsible-put", value = "Atualiza um tipo de evento na aplicação")
+    @ApiOperation(nickname = "eventtype-put", value = "Atualiza um tipo de evento na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO', 'MEDICO', 'ADMIN')")
     public ResponseEntity<EventTypeDTO> update(@PathVariable("id") Long id,

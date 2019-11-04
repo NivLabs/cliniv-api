@@ -65,8 +65,6 @@ public class ProfileController {
     private void validUserToUpdate(UserInfoDTO entity, UserOfSystem userFromSession) {
         if (!userFromSession.getUsername().equals(entity.getUserName()))
             throw new InvalidOperationException("Operação não permitida, você só pode editar o seu próprio perfil");
-        else if (entity.getPhoneNumber().isEmpty() || entity.getPhoneNumber().isBlank())
-            throw new InvalidOperationException("O telefone principal é obrigatório");
     }
 
 }

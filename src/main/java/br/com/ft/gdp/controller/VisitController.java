@@ -47,7 +47,7 @@ public class VisitController {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @ApiOperation(nickname = "Visit-get", value = "Busca uma página de visitas")
+    @ApiOperation(nickname = "visit-get", value = "Busca uma página de visitas")
     @GetMapping
     public ResponseEntity<Page<Visit>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                 @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
@@ -57,7 +57,7 @@ public class VisitController {
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
 
-    @ApiOperation(nickname = "responsible-post", value = "Insere uma nova visita na aplicação")
+    @ApiOperation(nickname = "visit-post", value = "Insere uma nova visita na aplicação")
     @PostMapping
     public ResponseEntity<VisitDTO> persist(@Validated @RequestBody(required = true) NewVisitDTO visit,
                                             HttpServletResponse response) {
@@ -69,14 +69,14 @@ public class VisitController {
 
     }
 
-    @ApiOperation(nickname = "responsible-put-exit", value = "Atualiza hora de saída da visita na aplicação")
+    @ApiOperation(nickname = "visit-put-exit", value = "Atualiza hora de saída da visita na aplicação")
     @PutMapping("/{id}/status")
     public ResponseEntity<Void> updateVisitToEnd(@PathVariable("id") Long id) {
         service.closeVisit(id);
         return ResponseEntity.ok().build();
     }
 
-    @ApiOperation(nickname = "Visit-get-id", value = "Busca uma visita baseado no identificador")
+    @ApiOperation(nickname = "visit-get-id", value = "Busca uma visita baseado no identificador")
     @GetMapping("/{id}")
     public ResponseEntity<Visit> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));

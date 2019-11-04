@@ -46,7 +46,7 @@ public class UserInfoDTO implements Serializable {
     private Gender gender;
     private AddressDTO address;
     @Size(min = 8, message = "Informe um número de telefone válido. O número deve conter ao menos 8 dígitos.")
-    private String phoneNumber;
+    private String principalPhone;
     @Size(min = 8, message = "Informe um número de telefone válido. O número deve conter ao menos 8 dígitos.")
     private String secondaryNumber;
     @NotNull(message = "A data de nascimento deve ser informada")

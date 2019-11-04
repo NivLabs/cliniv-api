@@ -14,7 +14,6 @@ import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.PersonAddress;
-import br.com.ft.gdp.models.domain.PersonPhone;
 import br.com.ft.gdp.models.domain.UserApplication;
 import br.com.ft.gdp.models.dto.UserInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
@@ -110,24 +109,6 @@ public class UserService implements GenericService<UserApplication, Long> {
             personToUpdate.getListOfAddress().add(0, addressToUpdate);
         } else {
             personToUpdate.setListOfAddress(Arrays.asList());
-        }
-
-        if (entity.getPhoneNumber() != null) {
-            logger.info("Telefone principal informado :: Adicionando à lista de telfones da Pessoa Física | {}", entity.getPhoneNumber());
-            PersonPhone principalPhone = new PersonPhone();
-            principalPhone.setPersonId(personToUpdate.getId());
-            principalPhone.setPhoneNumber(entity.getPhoneNumber());
-            personToUpdate.getPhones().add(principalPhone);
-
-        }
-
-        if (entity.getSecondaryNumber() != null) {
-            logger.info("Telefone secundário informado :: Adicionando à lista de telfones da Pessoa Física | {}",
-                        entity.getSecondaryNumber());
-            PersonPhone secondaryPhone = new PersonPhone();
-            secondaryPhone.setPersonId(personToUpdate.getId());
-            secondaryPhone.setPhoneNumber(entity.getSecondaryNumber());
-            personToUpdate.getPhones().add(secondaryPhone);
         }
 
         return personToUpdate;
