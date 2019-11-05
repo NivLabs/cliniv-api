@@ -70,7 +70,7 @@ public class NewOrUpdatePatientDTO implements Serializable {
         person.setBornDate(getBornDate());
         PersonAddress personAddress = new PersonAddress();
         BeanUtils.copyProperties(getAddress(), personAddress);
-        person.getListOfAddress().add(personAddress);
+        person.setAddress(personAddress);
         Patient patient = new Patient();
 
         patient.setPerson(person);

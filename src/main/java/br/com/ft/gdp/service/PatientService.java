@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Person;
-import br.com.ft.gdp.models.domain.PersonAddress;
 import br.com.ft.gdp.models.dto.NewOrUpdatePatientDTO;
 import br.com.ft.gdp.repository.PatientRepository;
 import br.com.ft.gdp.repository.PersonRepository;
@@ -32,9 +31,6 @@ public class PatientService implements GenericService<Patient, Long> {
 
     @Autowired
     private PersonRepository personDao;
-
-    @Autowired
-    private PersonAddressService addressService;
 
     @Override
     public Page<Patient> searchEntityPage(Pageable pageRequest) {
@@ -97,15 +93,6 @@ public class PatientService implements GenericService<Patient, Long> {
         Person personFromDto = personDao.findByCpf(newPatient.getCpf()).orElse(new Person());
         BeanUtils.copyProperties(newPatient, personFromDto);
         personDao.save(personFromDto);
-
-        if (personFromDto.getListOfAddress() != null && personFromDto.getListOfAddress().isEmpty()) {
-            PersonAddress address = new PersonAddress();
-            BeanUtils.copyProperties(newPatient.getAddress(), address);
-            address.setPersonId(personFromDto.getId());
-            addressService.persist(address);
-
-            personFromDto.getListOfAddress().add(address);
-        }
 
         Patient patient = new Patient();
         BeanUtils.copyProperties(newPatient, patient, "address");

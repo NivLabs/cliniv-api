@@ -14,7 +14,6 @@ import org.springframework.beans.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
-import br.com.ft.gdp.models.dto.AddressDTO;
 import br.com.ft.gdp.models.dto.PatientDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -57,11 +56,8 @@ public class Patient extends BaseObject {
         dtoEntity.setBornDate(getPerson().getBornDate());
         dtoEntity.setFatherName(getPerson().getFatherName());
         dtoEntity.setMotherName(getPerson().getMotherName());
-        if (!getPerson().getListOfAddress().isEmpty()) {
-            AddressDTO address = new AddressDTO();
-            BeanUtils.copyProperties(getPerson().getListOfAddress().get(0), address);
-            dtoEntity.setAddress(address);
-        }
+        if (getPerson().getAddress() != null)
+            BeanUtils.copyProperties(getPerson().getAddress(), dtoEntity.getAddress());
         return dtoEntity;
     }
 

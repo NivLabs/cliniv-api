@@ -2,9 +2,12 @@ package br.com.ft.gdp.models.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.ft.gdp.models.BaseObject;
@@ -34,8 +37,9 @@ public class PersonAddress extends BaseObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "ID_PESSOA")
-    private Long personId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_PESSOA")
+    private Person person;
 
     @Column(name = "LOGRADOURO")
     private String street;

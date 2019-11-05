@@ -27,7 +27,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class UserInfoDTO implements Serializable {
+public class ProfileInfoDTO implements Serializable {
 
     private static final long serialVersionUID = 5123075975481132373L;
 
@@ -46,11 +46,12 @@ public class UserInfoDTO implements Serializable {
     private Gender gender;
     private AddressDTO address;
     @Size(min = 8, message = "Informe um número de telefone válido. O número deve conter ao menos 8 dígitos.")
-    private String principalPhone;
+    private String principalNumber;
     @Size(min = 8, message = "Informe um número de telefone válido. O número deve conter ao menos 8 dígitos.")
     private String secondaryNumber;
     @NotNull(message = "A data de nascimento deve ser informada")
     private Date bornDate;
     private String observations;
     private String userName;
+    private String email;
 }

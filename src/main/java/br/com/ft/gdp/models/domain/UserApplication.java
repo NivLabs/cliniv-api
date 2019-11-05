@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import br.com.ft.gdp.models.BaseObject;
 import br.com.ft.gdp.models.dto.AddressDTO;
 import br.com.ft.gdp.models.dto.DocumentDTO;
-import br.com.ft.gdp.models.dto.UserInfoDTO;
+import br.com.ft.gdp.models.dto.ProfileInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -73,23 +73,26 @@ public class UserApplication extends BaseObject {
     private List<Role> roles = new ArrayList<>();
 
     @JsonIgnore
-    public UserInfoDTO getUserInfoDTO() {
-        UserInfoDTO userInfo = new UserInfoDTO();
+    public ProfileInfoDTO getUserInfoDTO() {
+        ProfileInfoDTO userInfo = new ProfileInfoDTO();
 
-        BeanUtils.copyProperties(this, userInfo);
-        if (this.getPerson() != null) {
-            BeanUtils.copyProperties(this.getPerson(), userInfo, "user");
-
-            if (!this.getPerson().getListOfAddress().isEmpty()) {
-                AddressDTO address = new AddressDTO();
-                BeanUtils.copyProperties(this.getPerson().getListOfAddress().get(0), address);
-                userInfo.setAddress(address);
-            }
-            userInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+        BeanUtils.copyProperties(this, userInfo, "password", "person");
+        BeanUtils.copyProperties(this.getPerson(), userInfo, "user", "id");
+        if (this.getPerson().getAddress() != null) {
+            userInfo.setAddress(new AddressDTO());
+            BeanUtils.copyProperties(this.getPerson().getAddress(), userInfo.getAddress());
         }
+        userInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
         userInfo.setUserName(this.username);
 
         return userInfo;
+    }
+
+    /**
+     * @param userId
+     */
+    public UserApplication(Long userId) {
+        this.id = userId;
     }
 
 }
