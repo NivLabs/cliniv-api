@@ -133,6 +133,7 @@ public class PatientService implements GenericService<Patient, Long> {
             logger.error("Tipo do documento inválido, informe um documento válido");
             throw new ValidationException("Tipo do documento inválido, informe um documento válido.");
         }
+        patientCheckIfExists(entity);
         if (entity.getDocument() != null && entity.getDocument().getValue() != null) {
             try {
                 logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
@@ -145,24 +146,49 @@ public class PatientService implements GenericService<Patient, Long> {
         }
 
         logger.info("Copiando as propriedades da requisição para o obijeto de negócio...");
-        BeanUtils.copyProperties(entity, personFromDb);
+        BeanUtils.copyProperties(entity, personFromDb, "id");
+        personFromDb.setCpf(entity.getDocument().getValue());
 
         logger.info("Verificando e-mail");
         if (entity.getAddress() != null) {
             PatientInfoAddressDTO address = entity.getAddress();
             PersonAddress personAddress = new PersonAddress();
-            BeanUtils.copyProperties(address, personAddress);
+            if (personFromDb.getAddress() != null)
+                personAddress = personFromDb.getAddress();
+            BeanUtils.copyProperties(address, personAddress, "id");
             personAddress.setPerson(personFromDb);
             personFromDb.setAddress(personAddress);
         }
 
-        personService.persist(personFromDb);
+        if (personFromDb.getId() != null)
+            personService.update(personFromDb.getId(), personFromDb);
+        else
+            personService.persist(personFromDb);
 
         Patient newPatient = new Patient();
         newPatient.setId(null);
         newPatient.setPerson(personFromDb);
+        dao.save(newPatient);
 
         return entity;
+    }
+
+    /**
+     * @param entity
+     */
+    private void patientCheckIfExists(PatientInfoDTO entity) {
+        try {
+            logger.info("Verificando se já há cadastro de paciente na base de dados :: CPF da busca -> {}",
+                        entity.getDocument().getValue());
+            if (findByCpf(entity.getDocument().getValue()) != null) {
+                logger.warn("Paciente com o CPF {} já cadastrado.", entity.getDocument().getValue());
+                throw new ValidationException("Paciente com o CPF informado já está cadastrado.");
+            }
+        } catch (ObjectNotFoundException e) {
+            logger.info("Nenhum cadastro de paciente encontrado :: CPF da busca -> {}",
+                        entity.getDocument().getValue());
+            logger.info("Continuando cadastro de paciente...");
+        }
     }
 
     /**
