@@ -8,50 +8,59 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 import br.com.ft.gdp.models.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 /**
- * Classe UserInfoDTO.java
+ * Classe NewPatientDTO.java
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  * 
- * @since 31 de out de 2019
+ * @since 3 de out de 2019
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@ToString
-public class ProfileInfoDTO implements Serializable {
-
-    private static final long serialVersionUID = 5123075975481132373L;
+public class PatientInfoDTO implements Serializable {
+    private static final long serialVersionUID = 1575416178033511932L;
 
     private Long id;
-    @NotNull(message = "O primeiro nome deve ser informado")
+
+    @NotNull(message = "Informe o NOME do paciente é obrigatório")
+    @Size(min = 3, max = 45, message = "O nome do paciente deve conter ao menos três letras")
     private String firstName;
-    @NotNull(message = "O sobrenome deve ser informado")
+
+    @NotNull(message = "Informe o SOBRENOME do paciente é obrigatório")
+    @Size(min = 3, max = 45, message = "O sobrenome do paciente deve conter ao menos três letras")
     private String lastName;
-    private String fatherName;
-    @NotNull(message = "O nome da mãe deve ser informado")
-    private String motherName;
+
+    @NotNull(message = "Informar a data de nascimento do paciente é obrigatório")
+    @DateTimeFormat(iso = ISO.DATE)
+    private Date bornDate;
+
     @NotNull(message = "O documento deve ser informado")
     private DocumentDTO document;
     @NotNull(message = "O gênero deve ser informado")
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    private AddressDTO address;
+
+    private String fatherName;
+
+    private String motherName;
+
     @Size(min = 8, message = "Informe um número de telefone válido. O número deve conter ao menos 8 dígitos.")
     private String principalNumber;
+
     @Size(min = 8, message = "Informe um número de telefone válido. O número deve conter ao menos 8 dígitos.")
     private String secondaryNumber;
-    @NotNull(message = "A data de nascimento deve ser informada")
-    private Date bornDate;
-    private String observations;
-    private String userName;
-    private String email;
+
+    private PatientInfoAddressDTO address;
+
 }

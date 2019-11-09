@@ -2,8 +2,6 @@ package br.com.ft.gdp.models.dto;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -41,14 +39,7 @@ public class PatientDTO implements Serializable {
     @DateTimeFormat(iso = ISO.DATE)
     private Date bornDate;
 
-    private Set<String> phones = new HashSet<>();
+    private String principalNumber;
 
     private String gender;
-
-    private String fatherName;
-
-    private String motherName;
-
-    private AddressDTO address;
-
 }

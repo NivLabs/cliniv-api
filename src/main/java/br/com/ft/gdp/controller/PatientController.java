@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.models.domain.Patient;
-import br.com.ft.gdp.models.dto.NewOrUpdatePatientDTO;
 import br.com.ft.gdp.models.dto.PatientDTO;
+import br.com.ft.gdp.models.dto.PatientInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.service.PatientService;
 import io.swagger.annotations.Api;
@@ -54,36 +54,36 @@ public class PatientController {
     @ApiOperation(nickname = "patient-get", value = "Busca uma página de pacientes")
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<Page<Patient>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<Page<PatientDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                   @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
                                                   @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
                                                   @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        return ResponseEntity.ok(service.searchEntityPage(pageSettings));
+        return ResponseEntity.ok(service.getListOfPatientInfo(pageSettings));
     }
 
     @ApiOperation(nickname = "patient-post", value = "Insere um novo paciente na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<PatientDTO> persist(@Validated @RequestBody(required = true) NewOrUpdatePatientDTO newPatient,
-                                              HttpServletResponse response) {
-        Patient createdPatient = service.persistDto(newPatient);
+    public ResponseEntity<PatientInfoDTO> persist(@Validated @RequestBody(required = true) PatientInfoDTO newPatient,
+                                                  HttpServletResponse response) {
+        PatientInfoDTO createdPatient = service.persist(newPatient);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdPatient.getId()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdPatient.getPatientDTOFromDomain());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPatient);
 
     }
 
     @ApiOperation(nickname = "patient-put", value = "Atualiza um paciente na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<PatientDTO> update(@PathVariable("id") Long id,
-                                             @Validated @RequestBody(required = true) NewOrUpdatePatientDTO patient,
-                                             HttpServletResponse response) {
-        Patient createdResponsible = service.update(id, patient.getPatientDomainFromDTO());
+    public ResponseEntity<PatientInfoDTO> update(@PathVariable("id") Long id,
+                                                 @Validated @RequestBody(required = true) PatientInfoDTO patient,
+                                                 HttpServletResponse response) {
+        PatientInfoDTO createdResponsible = service.update(id, patient);
 
-        return ResponseEntity.ok().body(createdResponsible.getPatientDTOFromDomain());
+        return ResponseEntity.ok().body(createdResponsible);
 
     }
 
@@ -97,9 +97,9 @@ public class PatientController {
     @ApiOperation(nickname = "patient-get-by-document", value = "Busca um paciente pelo documento")
     @GetMapping("{documentType}/{document}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<PatientDTO> findByDocument(@PathVariable("documentType") DocumentType documentType,
-                                                @PathVariable("document") String document) {
-            return ResponseEntity.ok(service.findByCpf(document).getPatientDTOFromDomain());
+    public ResponseEntity<PatientInfoDTO> findByDocument(@PathVariable("documentType") DocumentType documentType,
+                                                         @PathVariable("document") String document) {
+        return ResponseEntity.ok(service.findByCpf(document));
     }
 
     @ApiOperation(nickname = "patient-get-composite", value = "Busca um paciente baseado no identificador composto")
