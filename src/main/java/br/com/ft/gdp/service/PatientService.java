@@ -17,6 +17,7 @@ import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.PersonAddress;
+import br.com.ft.gdp.models.dto.DocumentDTO;
 import br.com.ft.gdp.models.dto.PatientDTO;
 import br.com.ft.gdp.models.dto.PatientInfoAddressDTO;
 import br.com.ft.gdp.models.dto.PatientInfoDTO;
@@ -62,22 +63,64 @@ public class PatientService implements GenericService<Patient, Long> {
         return new PageImpl<>(listOfPatientDTO, pageRequest, pageOfPatient.getTotalElements());
     }
 
-    @Override
-    public Patient findById(Long id) {
-        return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com ID: [%s] não encontrado", id)));
+    public PatientInfoDTO findByPateintId(Long id) {
+        Patient patient = dao.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com ID: [%s] não encontrado", id)));
+        Person person = patient.getPerson();
+
+        PatientInfoDTO patientInfo = new PatientInfoDTO();
+        BeanUtils.copyProperties(person, patientInfo, "id");
+        patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+
+        if (person.getAddress() != null) {
+            PatientInfoAddressDTO address = new PatientInfoAddressDTO();
+            BeanUtils.copyProperties(person.getAddress(), address);
+            patientInfo.setAddress(address);
+        }
+
+        patientInfo.setId(patient.getId());
+
+        return patientInfo;
 
     }
 
-    public PatientInfoDTO findByCpf(String cpf) {
-        Patient patient = dao.findByCpf(cpf)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com cpf: [%s] não encontrado", cpf)));
-        Person person = patient.getPerson();
-        PatientInfoDTO patientInfo = new PatientInfoDTO();
+    public PatientInfoDTO findPersonByCpf(String cpf) {
+        Person personFromDb = personService.findByCpf(cpf);
 
-        patientInfo.setId(patient.getId());
-        BeanUtils.copyProperties(person, patient, "id");
+        PatientInfoDTO patientInfo = new PatientInfoDTO();
+        BeanUtils.copyProperties(personFromDb, patientInfo, "id");
+        patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+
+        if (personFromDb.getAddress() != null) {
+            PatientInfoAddressDTO address = new PatientInfoAddressDTO();
+            BeanUtils.copyProperties(personFromDb.getAddress(), address);
+            patientInfo.setAddress(address);
+        }
 
         return patientInfo;
+    }
+
+    public PatientInfoDTO findByCpf(String cpf) {
+        try {
+            Patient patient = dao.findByCpf(cpf)
+                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com cpf: [%s] não encontrado", cpf)));
+            Person personFromDb = patient.getPerson();
+
+            PatientInfoDTO patientInfo = new PatientInfoDTO();
+            BeanUtils.copyProperties(personFromDb, patientInfo, "id");
+            patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+
+            if (personFromDb.getAddress() != null) {
+                PatientInfoAddressDTO address = new PatientInfoAddressDTO();
+                BeanUtils.copyProperties(personFromDb.getAddress(), address);
+                patientInfo.setAddress(address);
+            }
+
+            patientInfo.setId(patient.getId());
+            return patientInfo;
+        } catch (ObjectNotFoundException e) {
+            return findPersonByCpf(cpf);
+        }
 
     }
 
@@ -180,7 +223,8 @@ public class PatientService implements GenericService<Patient, Long> {
         try {
             logger.info("Verificando se já há cadastro de paciente na base de dados :: CPF da busca -> {}",
                         entity.getDocument().getValue());
-            if (findByCpf(entity.getDocument().getValue()) != null) {
+            PatientInfoDTO patient = findByCpf(entity.getDocument().getValue());
+            if (patient != null && patient.getId() != null) {
                 logger.warn("Paciente com o CPF {} já cadastrado.", entity.getDocument().getValue());
                 throw new ValidationException("Paciente com o CPF informado já está cadastrado.");
             }

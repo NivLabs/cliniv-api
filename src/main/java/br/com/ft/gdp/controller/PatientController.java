@@ -55,9 +55,9 @@ public class PatientController {
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Page<PatientDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                  @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                  @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                  @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+                                                     @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+                                                     @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+                                                     @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
         return ResponseEntity.ok(service.getListOfPatientInfo(pageSettings));
     }
@@ -90,8 +90,8 @@ public class PatientController {
     @ApiOperation(nickname = "patient-get-id", value = "Busca um paciente baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<Patient> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<PatientInfoDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findByPateintId(id));
     }
 
     @ApiOperation(nickname = "patient-get-by-document", value = "Busca um paciente pelo documento")
