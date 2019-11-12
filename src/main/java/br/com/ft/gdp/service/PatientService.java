@@ -213,6 +213,7 @@ public class PatientService implements GenericService<Patient, Long> {
         newPatient.setPerson(personFromDb);
         dao.save(newPatient);
 
+        entity.setId(newPatient.getId());
         return entity;
     }
 
