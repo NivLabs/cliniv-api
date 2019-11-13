@@ -6,6 +6,7 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import br.com.ft.gdp.models.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,5 +42,5 @@ public class PatientDTO implements Serializable {
 
     private String principalNumber;
 
-    private String gender;
+    private Gender gender;
 }

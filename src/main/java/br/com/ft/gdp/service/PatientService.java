@@ -132,19 +132,26 @@ public class PatientService implements GenericService<Patient, Long> {
      * @return
      */
     public PatientInfoDTO update(Long id, PatientInfoDTO entity) {
-        Person entityFromDb = findById(id).getPerson();
+        Patient patient = dao.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com ID: [%s] não encontrado", id)));
+        Person entityFromDb = patient.getPerson();
 
         BeanUtils.copyProperties(entity, entityFromDb, "id");
+        entityFromDb.setCpf(entity.getDocument().getValue());
 
         if (entity.getAddress() != null) {
+            PersonAddress personAddress = null;
             PatientInfoAddressDTO address = entity.getAddress();
-            PersonAddress personAddress = new PersonAddress();
+            if (entityFromDb.getAddress() == null)
+                personAddress = new PersonAddress();
+            else
+                personAddress = entityFromDb.getAddress();
             BeanUtils.copyProperties(address, personAddress);
             personAddress.setPerson(entityFromDb);
             entityFromDb.setAddress(personAddress);
         }
 
-        personService.update(id, entityFromDb);
+        personService.update(entityFromDb.getId(), entityFromDb);
 
         return entity;
     }
