@@ -12,6 +12,7 @@ import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Visit;
 import br.com.ft.gdp.models.dto.NewVisitDTO;
 import br.com.ft.gdp.models.dto.VisitDTO;
+import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.repository.VisitRepository;
 
 /**
@@ -37,7 +38,17 @@ public class VisitService implements GenericService<Visit, Long> {
      * @return
      */
     public List<VisitDTO> getVisitsByPatientId(Long patientId) {
-        return dao.findByPatient(new Patient(patientId));
+        List<Visit> listOfVisits = dao.findByPatient(new Patient(patientId));
+
+        return convert(listOfVisits);
+    }
+
+    /**
+     * @param listOfVisits
+     * @return
+     */
+    private List<VisitDTO> convert(List<Visit> listOfVisits) {
+        return null;
     }
 
     @Override
@@ -92,6 +103,15 @@ public class VisitService implements GenericService<Visit, Long> {
         convertedVisit.setPatient(savedPatient);
 
         return persist(convertedVisit);
+    }
+
+    /**
+     * @param documentType
+     * @param documentValue
+     * @return
+     */
+    public List<VisitDTO> findByDocument(DocumentType documentType, String documentValue) {
+        return null;
     }
 
 }

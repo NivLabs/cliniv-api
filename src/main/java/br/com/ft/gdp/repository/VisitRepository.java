@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Visit;
-import br.com.ft.gdp.models.dto.VisitDTO;
 
 /**
  * 
@@ -24,6 +23,6 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
      * @param patientId
      * @return
      */
-    List<VisitDTO> findByPatient(Patient patient);
+    List<Visit> findByPatient(Patient patient);
 
 }
