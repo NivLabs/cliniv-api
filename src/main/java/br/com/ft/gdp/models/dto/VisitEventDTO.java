@@ -9,23 +9,26 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Classe VisitDTO.java
+ * Classe VisitEventDTO.java
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  * 
  * @since 18 de nov de 2019
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class VisitDTO implements Serializable {
+public class VisitEventDTO implements Serializable {
 
-    private static final long serialVersionUID = -7717106082371494163L;
+    private static final long serialVersionUID = -5192545539633937184L;
 
     private Long id;
 
-    private Date entryDatetime;
+    private Date datetime;
 
-    private String entryCause;
+    private String description;
+
+    private Long documentId;
 }

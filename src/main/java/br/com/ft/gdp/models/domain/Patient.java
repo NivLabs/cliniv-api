@@ -40,4 +40,7 @@ public class Patient extends BaseObject {
     @JoinColumn(name = "ID_PESSOA")
     private Person person;
 
+    public Patient(Long patientId) {
+        this.id = patientId;
+    }
 }

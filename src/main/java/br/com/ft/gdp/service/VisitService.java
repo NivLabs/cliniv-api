@@ -1,17 +1,17 @@
 package br.com.ft.gdp.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Visit;
 import br.com.ft.gdp.models.dto.NewVisitDTO;
+import br.com.ft.gdp.models.dto.VisitDTO;
 import br.com.ft.gdp.repository.VisitRepository;
 
 /**
@@ -30,9 +30,14 @@ public class VisitService implements GenericService<Visit, Long> {
     @Autowired
     private PatientService patientService;
 
-    @Override
-    public Page<Visit> searchEntityPage(Pageable pageRequest) {
-        return dao.findAll(pageRequest);
+    /**
+     * Busca histórico de Visitas por Paciente
+     * 
+     * @param patientId
+     * @return
+     */
+    public List<VisitDTO> getVisitsByPatientId(Long patientId) {
+        return dao.findByPatient(new Patient(patientId));
     }
 
     @Override

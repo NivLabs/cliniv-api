@@ -1,9 +1,13 @@
 package br.com.ft.gdp.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Visit;
+import br.com.ft.gdp.models.dto.VisitDTO;
 
 /**
  * 
@@ -15,5 +19,11 @@ import br.com.ft.gdp.models.domain.Visit;
  */
 @Repository
 public interface VisitRepository extends JpaRepository<Visit, Long> {
+
+    /**
+     * @param patientId
+     * @return
+     */
+    List<VisitDTO> findByPatient(Patient patient);
 
 }

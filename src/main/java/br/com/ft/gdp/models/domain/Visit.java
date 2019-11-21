@@ -11,10 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.ft.gdp.models.BaseObject;
-import br.com.ft.gdp.models.dto.VisitDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -53,16 +50,4 @@ public class Visit extends BaseObject {
 
     @Column(name = "MOTIVO_ENTRADA")
     private String reasonForEntry;
-
-    @JsonIgnore
-    public VisitDTO getVisitDTOFromDomain() {
-        VisitDTO dtoEntity = new VisitDTO();
-
-        dtoEntity.setId(getId());
-        dtoEntity.setPatient(getPatient());
-        dtoEntity.setDateTimeEntry(getDateTimeEntry());
-        dtoEntity.setDateTimeExit(getDateTimeExit());
-        dtoEntity.setReasonForEntry(getReasonForEntry());
-        return dtoEntity;
-    }
 }

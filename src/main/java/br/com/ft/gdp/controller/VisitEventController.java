@@ -1,31 +1,11 @@
 package br.com.ft.gdp.controller;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.ft.gdp.event.CreatedResourceEvent;
-import br.com.ft.gdp.models.domain.VisitEvent;
-import br.com.ft.gdp.models.dto.visitEvent.VisitEventRequestDTO;
-import br.com.ft.gdp.models.dto.visitEvent.VisitEventResponseDTO;
 import br.com.ft.gdp.service.VisitEventService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 /**
  * Classe VisitEventController.java
@@ -38,37 +18,8 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/visit-event")
 public class VisitEventController {
-	
-	@Autowired
-	private VisitEventService service;
-	
-	@Autowired
-	private ApplicationEventPublisher publisher;
-	
-	@ApiOperation(nickname = "visit-event-by-patient-get", value = "Busca uma página com os eventos de visitas de um paciente.")
-	@GetMapping(value = "/patient/{patientId}")
-	public ResponseEntity<Page<VisitEventResponseDTO>> findPageByPatient(@PathVariable("patientId") Long patientId,
-															  			 @RequestParam(value = "page", defaultValue = "0") Integer page,
-															  			 @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-															  			 @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-															  			 @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-		
-		Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		Page<VisitEvent> visitEvents = this.service.findByPatientId(patientId, pageSettings);
-		Page<VisitEventResponseDTO> visitEventsDTO = visitEvents.map(visitEvent -> VisitEventResponseDTO.getDtoFrom(visitEvent));
-		
-		return ResponseEntity.ok(visitEventsDTO);
-	}
-	
-	@ApiOperation(nickname = "visit-event-post", value = "Cria um novo evento de visita")
-	@PostMapping
-	public ResponseEntity<VisitEventResponseDTO> save(@Validated @RequestBody(required = true) VisitEventRequestDTO visitEventReq,
-													   HttpServletResponse response) {
-		
-		VisitEvent createdVisitEvent = this.service.persist(VisitEvent.getDomainFrom(visitEventReq));
-		this.publisher.publishEvent(new CreatedResourceEvent(this, response, createdVisitEvent.getId()));
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(VisitEventResponseDTO.getDtoFrom(createdVisitEvent));
-	}
+
+    @Autowired
+    private VisitEventService service;
 
 }
