@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.ft.gdp.models.dto.InstituteInfoDTO;
 import br.com.ft.gdp.service.InstituteService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * Classe VisitEventController.java
@@ -25,6 +26,7 @@ public class InstituteController {
     @Autowired()
     private InstituteService service;
 
+    @ApiOperation(nickname = "institute-get-about", value = "Busca as informações intitucionais do estabelecimento")
     @GetMapping("/about")
     public ResponseEntity<InstituteInfoDTO> getInfo() {
         return ResponseEntity.ok(service.getInstitute());

@@ -13,11 +13,12 @@ import br.com.ft.gdp.models.dto.InstituteInfoDTO;
 import br.com.ft.gdp.repository.InstituteRepository;
 
 /**
- * Classe UserService.java
+ * 
+ * Classe InstituteService.java
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  * 
- * @since 15 de set de 2019
+ * @since 30 de nov de 2019
  */
 @Service
 public class InstituteService implements GenericService<Institute, String> {
