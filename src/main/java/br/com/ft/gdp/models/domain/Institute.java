@@ -14,13 +14,13 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Classe Maintainer.java
+ * 
+ * Classe Institute.java
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  * 
  * @since 30 de nov de 2019
  */
-
 @Entity
 @Table(name = "INSTITUTO")
 @Data

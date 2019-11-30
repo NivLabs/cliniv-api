@@ -12,11 +12,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 /**
- * Classe VisitEventController.java
  * 
- * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
- *
- * @since 17 Sept, 2019
+ * Classe InstituteController.java
+ * 
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
+ * 
+ * @since 30 de nov de 2019
  */
 @Api("Endpoint - Informações da Instituição")
 @RestController
