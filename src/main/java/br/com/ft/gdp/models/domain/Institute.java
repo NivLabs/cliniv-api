@@ -1,6 +1,7 @@
 package br.com.ft.gdp.models.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -78,5 +79,11 @@ public class Institute implements Serializable {
 
     @Column(name = "GESTAO")
     private String management;
+
+    @Column(name = "DATA_DE_REGISTRO")
+    private Date licenseDate;
+
+    @Column(name = "USUARIO_DE_REGISTRO")
+    private String userOfRegister;
 
 }
