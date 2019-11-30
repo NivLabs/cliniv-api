@@ -26,6 +26,6 @@ public class PatientInfoAddressDTO implements Serializable {
     private String complement;
     private String postalCode;
     private String state;
-    private String district;
+    private String neighborhood;
     private String city;
 }

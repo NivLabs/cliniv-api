@@ -57,7 +57,7 @@ public class PersonAddress extends BaseObject {
     private String state;
 
     @Column(name = "BAIRRO")
-    private String district;
+    private String neighborhood;
 
     @Column(name = "CIDADE")
     private String city;

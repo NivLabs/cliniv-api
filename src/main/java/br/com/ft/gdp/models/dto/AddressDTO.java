@@ -36,7 +36,7 @@ public class AddressDTO implements Serializable {
     @NotNull(message = "Informe o estado do endereço")
     private String state;
     @NotNull(message = "Informe o bairro do endereço")
-    private String district;
+    private String neighborhood;
     @NotNull(message = "Informe a cidade do endereço")
     private String city;
 }

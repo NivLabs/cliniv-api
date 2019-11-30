@@ -12,6 +12,7 @@ import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Visit;
 import br.com.ft.gdp.models.dto.NewVisitDTO;
 import br.com.ft.gdp.models.dto.VisitDTO;
+import br.com.ft.gdp.models.dto.VisitInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.repository.VisitRepository;
 
@@ -51,10 +52,13 @@ public class VisitService implements GenericService<Visit, Long> {
         return null;
     }
 
-    @Override
-    public Visit findById(Long id) {
-        return dao.findById(id)
+    public VisitInfoDTO findInfoById(Long id) {
+        VisitInfoDTO visitInfo = new VisitInfoDTO();
+
+        dao.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Visita com ID: [%s] não encontrado", id)));
+
+        return visitInfo;
     }
 
     @Override

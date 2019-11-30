@@ -23,6 +23,7 @@ import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.Visit;
 import br.com.ft.gdp.models.dto.NewVisitDTO;
 import br.com.ft.gdp.models.dto.VisitDTO;
+import br.com.ft.gdp.models.dto.VisitInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.service.VisitService;
 import io.swagger.annotations.Api;
@@ -90,8 +91,8 @@ public class VisitController {
 
     @ApiOperation(nickname = "visit-get-id", value = "Busca uma visita baseado no identificador")
     @GetMapping("/{id}")
-    public ResponseEntity<Visit> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<VisitInfoDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findInfoById(id));
     }
 
 }
