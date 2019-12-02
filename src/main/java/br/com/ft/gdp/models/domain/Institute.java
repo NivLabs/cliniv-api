@@ -44,7 +44,7 @@ public class Institute implements Serializable {
     @Column(name = "NOME_CORPORATIVO")
     private String corporativeName;
 
-    @Column(name = "NATUREZA LEGAL")
+    @Column(name = "NATUREZA_LEGAL")
     private String legalNature;
 
     @Column(name = "LOGRADOURO")
