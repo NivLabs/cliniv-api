@@ -2,15 +2,17 @@ package br.com.ft.gdp.models.domain;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -41,17 +43,24 @@ public class VisitEvent extends BaseObject {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Transient
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_PACIENTE")
     private Patient patient;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_TIPO_EVENTO")
     private EventType eventType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_RESPONSAVEL")
     private Responsible responsible;
 
-    @Column(name = "URL_DOC")
-    private String urlDoc;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_VISITA")
+    private Visit visit;
+
+    @Column(name = "ID_DOCUMENTO_DIGITAL")
+    private Long documentId;
 
     @Column(name = "TITULO")
     private String title;
@@ -62,16 +71,6 @@ public class VisitEvent extends BaseObject {
     @Column(name = "DH_EVENTO")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDateTime eventDateTime;
-
-    public VisitEvent(Patient patient, EventType eventType, Responsible responsible,
-            String urlDoc, String title, String observations) {
-        this.patient = patient;
-        this.eventType = eventType;
-        this.responsible = responsible;
-        this.urlDoc = urlDoc;
-        this.title = title;
-        this.observations = observations;
-    }
 
     @PrePersist
     public void prePersist() {

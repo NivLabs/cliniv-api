@@ -1,5 +1,6 @@
 package br.com.ft.gdp.service;
 
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -11,11 +12,14 @@ import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.Visit;
+import br.com.ft.gdp.models.domain.VisitEvent;
 import br.com.ft.gdp.models.dto.DocumentDTO;
 import br.com.ft.gdp.models.dto.NewVisitDTO;
 import br.com.ft.gdp.models.dto.VisitDTO;
+import br.com.ft.gdp.models.dto.VisitEventDTO;
 import br.com.ft.gdp.models.dto.VisitInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
+import br.com.ft.gdp.repository.VisitEventRepository;
 import br.com.ft.gdp.repository.VisitRepository;
 
 /**
@@ -31,6 +35,8 @@ public class VisitService implements GenericService<Visit, Long> {
 
     @Autowired
     private VisitRepository dao;
+    @Autowired
+    private VisitEventRepository visitEventRepo;
     @Autowired
     private PatientService patientService;
 
@@ -64,6 +70,13 @@ public class VisitService implements GenericService<Visit, Long> {
         visitInfo.setPatientId(visitFromDb.getPatient().getId());
         visitInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
+        List<VisitEvent> listOfEventsFromDb = visitEventRepo.findByVisitId(visitFromDb.getId());
+        listOfEventsFromDb.forEach(event -> {
+            visitInfo.getEvents()
+                    .add(new VisitEventDTO(event.getId(), Date.from(event.getEventDateTime().atZone(ZoneId.systemDefault()).toInstant()),
+                            event.getEventType().getDescription(),
+                            event.getDocumentId()));
+        });
         return visitInfo;
     }
 

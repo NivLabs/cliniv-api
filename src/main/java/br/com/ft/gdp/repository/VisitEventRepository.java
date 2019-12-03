@@ -1,5 +1,7 @@
 package br.com.ft.gdp.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,5 +22,11 @@ public interface VisitEventRepository extends JpaRepository<VisitEvent, Long> {
 
     @Transactional(readOnly = true)
     Page<VisitEvent> findByPatientId(Long id, Pageable pageable);
+
+    /**
+     * @param visitId
+     * @return
+     */
+    List<VisitEvent> findByVisitId(Long visitId);
 
 }
