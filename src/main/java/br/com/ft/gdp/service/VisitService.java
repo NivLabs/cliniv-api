@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Patient;
+import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.Visit;
+import br.com.ft.gdp.models.dto.DocumentDTO;
 import br.com.ft.gdp.models.dto.NewVisitDTO;
 import br.com.ft.gdp.models.dto.VisitDTO;
 import br.com.ft.gdp.models.dto.VisitInfoDTO;
@@ -53,10 +55,14 @@ public class VisitService implements GenericService<Visit, Long> {
     }
 
     public VisitInfoDTO findInfoById(Long id) {
+        Visit visitFromDb = dao.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Visita com código %s não encontrada", id)));
+        Person person = visitFromDb.getPatient().getPerson();
         VisitInfoDTO visitInfo = new VisitInfoDTO();
-
-        dao.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Visita com ID: [%s] não encontrado", id)));
+        BeanUtils.copyProperties(person, visitInfo);
+        visitInfo.setId(visitFromDb.getId());
+        visitInfo.setPatientId(visitFromDb.getPatient().getId());
+        visitInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
         return visitInfo;
     }
