@@ -41,12 +41,14 @@ public class VisitInfoDTO implements Serializable {
 
     private String principalNumber;
 
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE)
     private Date bornDate;
 
     private Gender gender;
 
     private List<VisitEventDTO> events = new ArrayList<>();
+
+    private List<MedicineInfoDTO> medicines = new ArrayList<>();
 
     private List<String> allergies = new ArrayList<>();
 
