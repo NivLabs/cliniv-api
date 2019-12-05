@@ -1,7 +1,10 @@
 package br.com.ft.gdp.models.dto;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +29,8 @@ public class VisitEventDTO implements Serializable {
 
     private Long id;
 
-    private Date datetime;
+    @DateTimeFormat(iso = ISO.DATE_TIME)
+    private LocalDateTime datetime;
 
     private String description;
 
