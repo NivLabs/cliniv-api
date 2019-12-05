@@ -49,6 +49,8 @@ public class VisitInfoDTO implements Serializable {
     private List<VisitEventDTO> events = new ArrayList<>();
 
     private List<MedicineInfoDTO> medicines = new ArrayList<>();
+    
+    private List<EvolutionInfoDTO> evolutions = new ArrayList<>();
 
     private List<String> allergies = new ArrayList<>();
 

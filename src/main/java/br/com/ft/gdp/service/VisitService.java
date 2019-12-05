@@ -1,6 +1,5 @@
 package br.com.ft.gdp.service;
 
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -71,12 +70,10 @@ public class VisitService implements GenericService<Visit, Long> {
         visitInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
         List<VisitEvent> listOfEventsFromDb = visitEventRepo.findByVisitId(visitFromDb.getId());
-        listOfEventsFromDb.forEach(event -> {
-            visitInfo.getEvents()
-                    .add(new VisitEventDTO(event.getId(), Date.from(event.getEventDateTime().atZone(ZoneId.systemDefault()).toInstant()),
-                            event.getEventType().getDescription(),
-                            event.getDocumentId()));
-        });
+        listOfEventsFromDb.forEach(event -> visitInfo.getEvents()
+                .add(new VisitEventDTO(event.getId(), event.getEventDateTime(),
+                        event.getEventType().getDescription(),
+                        event.getDocumentId())));
         return visitInfo;
     }
 
