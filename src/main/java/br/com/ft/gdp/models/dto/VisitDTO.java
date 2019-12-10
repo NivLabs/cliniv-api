@@ -28,4 +28,6 @@ public class VisitDTO implements Serializable {
     private Date entryDatetime;
 
     private String entryCause;
+
+    private Boolean isFinished;
 }

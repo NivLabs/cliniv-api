@@ -1,6 +1,7 @@
 package br.com.ft.gdp.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -25,4 +26,5 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
      */
     List<Visit> findByPatient(Patient patient);
 
+    Optional<Visit> findByPatientAndDateTimeExitIsNull(Patient patient);
 }

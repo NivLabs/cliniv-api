@@ -67,6 +67,12 @@ public class VisitController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiOperation(nickname = "visit-get-active", value = "Busca a visita ativa do paciente")
+    @GetMapping("/actived/{id}/patient")
+    public ResponseEntity<VisitInfoDTO> getActiveVisit(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.getActiveVisit(id));
+    }
+
     @ApiOperation(nickname = "visit-get-with-filters", value = "Busca uma visita baseado em filtros")
     @GetMapping
     public ResponseEntity<List<VisitDTO>> findWithFilters(@RequestParam("patientId") Long patientId,

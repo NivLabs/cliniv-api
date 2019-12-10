@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.ObjectNotFoundException;
+import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.Visit;
 import br.com.ft.gdp.models.domain.VisitEvent;
 import br.com.ft.gdp.models.dto.DocumentDTO;
 import br.com.ft.gdp.models.dto.NewVisitDTO;
+import br.com.ft.gdp.models.dto.PatientInfoDTO;
 import br.com.ft.gdp.models.dto.VisitDTO;
 import br.com.ft.gdp.models.dto.VisitEventDTO;
 import br.com.ft.gdp.models.dto.VisitInfoDTO;
@@ -56,6 +58,7 @@ public class VisitService implements GenericService<Visit, Long> {
      * @return
      */
     private List<VisitDTO> convert(List<Visit> listOfVisits) {
+
         return null;
     }
 
@@ -115,6 +118,13 @@ public class VisitService implements GenericService<Visit, Long> {
      * @return
      */
     public Visit persistNewVisit(NewVisitDTO visitDto) {
+        VisitInfoDTO visit = getActiveVisit(visitDto.getPatientId());
+        if (visit != null) {
+            throw new ValidationException(String
+                    .format("O paciente de código [%s] e nome [%s] já possui uma visita ativa, favor realizar a alta da visita para iniciar uma nova.",
+                            visit.getPatientId(), visit.getFirstName()));
+        }
+
         Patient savedPatient = patientService.findById(visitDto.getPatientId());
 
         Visit convertedVisit = new Visit();
@@ -132,6 +142,32 @@ public class VisitService implements GenericService<Visit, Long> {
      */
     public List<VisitDTO> findByDocument(DocumentType documentType, String documentValue) {
         return null;
+    }
+
+    /**
+     * Realiza a busca de visita ativa por código de paciente
+     * 
+     * @return
+     */
+    public VisitInfoDTO getActiveVisit(Long patientId) {
+        PatientInfoDTO patient = patientService.findByPateintId(patientId);
+        Visit visitFromDb = dao.findByPatientAndDateTimeExitIsNull(new Patient(patient.getId()))
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        String.format("Nenhuma visita ativa encontrada para %s, inicie uma nova visita para o paciente.",
+                                      patient.getFirstName())));
+        Person person = visitFromDb.getPatient().getPerson();
+        VisitInfoDTO visitInfo = new VisitInfoDTO();
+        BeanUtils.copyProperties(person, visitInfo);
+        visitInfo.setId(visitFromDb.getId());
+        visitInfo.setPatientId(visitFromDb.getPatient().getId());
+        visitInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+
+        List<VisitEvent> listOfEventsFromDb = visitEventRepo.findByVisitId(visitFromDb.getId());
+        listOfEventsFromDb.forEach(event -> visitInfo.getEvents()
+                .add(new VisitEventDTO(event.getId(), event.getEventDateTime(),
+                        event.getEventType().getDescription(),
+                        event.getDocumentId())));
+        return visitInfo;
     }
 
 }
