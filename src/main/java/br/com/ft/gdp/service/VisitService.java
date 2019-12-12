@@ -51,7 +51,7 @@ public class VisitService implements GenericService<Visit, Long> {
     public List<VisitDTO> getVisitsByPatientId(Long patientId) {
 		List<Visit> listOfVisits = dao.findByPatient(new Patient(patientId));
 		
-		if (listOfVisits.isEmpty()) throw new ObjectNotFoundException(String.format("Não existe visita para o paciente %s", patientId), Visit.class.getName());
+		if (listOfVisits.isEmpty()) throw new ObjectNotFoundException(String.format("Não existe visita para o paciente %s", patientId));
 		
 		List<VisitDTO> listOfVisitsDTO = new ArrayList<>();
 		listOfVisits.forEach(visit -> listOfVisitsDTO
