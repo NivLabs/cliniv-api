@@ -1,5 +1,6 @@
 package br.com.ft.gdp.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -45,23 +46,26 @@ public class VisitService implements GenericService<Visit, Long> {
      * Busca histórico de Visitas por Paciente
      * 
      * @param patientId
-     * @return
+     * @return lista de VisitDTO
      */
     public List<VisitDTO> getVisitsByPatientId(Long patientId) {
-        List<Visit> listOfVisits = dao.findByPatient(new Patient(patientId));
-
-        return convert(listOfVisits);
+		List<Visit> listOfVisits = dao.findByPatient(new Patient(patientId)).orElseThrow(
+				() -> new ObjectNotFoundException(String.format("Não existe visita para o paciente %s", patientId)));
+		
+		List<VisitDTO> listOfVisitsDTO = new ArrayList<>();
+		listOfVisits.forEach(visit -> listOfVisitsDTO
+                .add(new VisitDTO(visit.getId(), visit.getDateTimeEntry(),
+                        visit.getReasonForEntry(),
+                        Boolean.valueOf(visit.getDateTimeExit()!=null))));
+        return listOfVisitsDTO;
     }
 
-    /**
-     * @param listOfVisits
-     * @return
-     */
-    private List<VisitDTO> convert(List<Visit> listOfVisits) {
-
-        return null;
-    }
-
+   
+	/**
+	 * Busca Visitas por Id
+	 * @param id
+	 * @return VisitInfoDTO
+	 */
     public VisitInfoDTO findInfoById(Long id) {
         Visit visitFromDb = dao.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Visita com código %s não encontrada", id)));
@@ -115,7 +119,7 @@ public class VisitService implements GenericService<Visit, Long> {
      * Realiza a criação de uma visita de paciente à partir do DTO
      * 
      * @param visitDto
-     * @return
+     * @return Visit
      */
     public Visit persistNewVisit(NewVisitDTO visitDto) {
         VisitInfoDTO visit = getActiveVisit(visitDto.getPatientId());
@@ -147,7 +151,7 @@ public class VisitService implements GenericService<Visit, Long> {
     /**
      * Realiza a busca de visita ativa por código de paciente
      * 
-     * @return
+     * @return VisitInfoDTO
      */
     public VisitInfoDTO getActiveVisit(Long patientId) {
         PatientInfoDTO patient = patientService.findByPateintId(patientId);
