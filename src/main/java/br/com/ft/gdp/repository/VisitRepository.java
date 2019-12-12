@@ -24,7 +24,7 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
      * @param patientId
      * @return
      */
-	Optional<List<Visit>> findByPatient(Patient patient);
+	List<Visit> findByPatient(Patient patient);
 
     Optional<Visit> findByPatientAndDateTimeExitIsNull(Patient patient);
 }
