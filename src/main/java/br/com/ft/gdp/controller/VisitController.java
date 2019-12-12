@@ -75,9 +75,9 @@ public class VisitController {
 
     @ApiOperation(nickname = "visit-get-with-filters", value = "Busca uma visita baseado em filtros")
     @GetMapping
-    public ResponseEntity<List<VisitDTO>> findWithFilters(@RequestParam("patientId") Long patientId,
-                                                          @RequestParam("documentType") DocumentType documentType,
-                                                          @RequestParam("documentValue") String documentValue) {
+    public ResponseEntity<List<VisitDTO>> findWithFilters(@RequestParam(name = "patientId", required = false) Long patientId,
+                                                          @RequestParam(name = "documentType", required = false) DocumentType documentType,
+                                                          @RequestParam(name = "documentValue", required = false) String documentValue) {
         List<VisitDTO> returnList = null;
         if (patientId != null && documentValue != null) {
             throw new ValidationException(
