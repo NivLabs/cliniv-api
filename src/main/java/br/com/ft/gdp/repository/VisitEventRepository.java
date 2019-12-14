@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.ft.gdp.models.domain.VisitEvent;
 
 /**
- * Classe VisitEventResponseDTO.java
+ * Classe VisitEventRepository.java
  * 
  * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
  *
