@@ -1,5 +1,7 @@
 package br.com.ft.gdp.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.models.domain.VisitEvent;
-import br.com.ft.gdp.models.dto.PatientInfoDTO;
 import br.com.ft.gdp.service.VisitEventService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,46 +41,73 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/visit-event")
 public class VisitEventController {
 
-    @Autowired
-    private VisitEventService service;
-    
-    @Autowired
-    private ApplicationEventPublisher publisher;
-    
-    @ApiOperation(nickname = "visit-event-get", value = "Busca uma página de eventos da visita")
-    @GetMapping
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<Page<VisitEvent>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                     @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                     @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                     @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-        Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        return ResponseEntity.ok(service.searchEntityPage(pageSettings));
-    }
-    
-    @ApiOperation(nickname = "visit-event-post", value = "Insere um novo evento da visita")
-    @PostMapping
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<VisitEvent> persist(@Validated @RequestBody(required = true) VisitEvent newVisitEvent,
-                                                  HttpServletResponse response) {
-        VisitEvent createdVisitEvent = service.persist(newVisitEvent);
+	@Autowired
+	private VisitEventService service;
 
-        publisher.publishEvent(new CreatedResourceEvent(this, response, createdVisitEvent.getId()));
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdVisitEvent);
+	@ApiOperation(nickname = "visit-event-get", value = "Busca uma página de eventos de visita")
+	@GetMapping
+	@PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+	public ResponseEntity<Page<VisitEvent>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+			@RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+		Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		return ResponseEntity.ok(service.searchEntityPage(pageSettings));
+	}
 
-    }
-    
-    @ApiOperation(nickname = "visit-event-put", value = "Atualiza um evento da visita na aplicação")
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<VisitEvent> update(@PathVariable("id") Long id,
-                                                 @Validated @RequestBody(required = true) VisitEvent visitEvent,
-                                                 HttpServletResponse response) {
-        VisitEvent createdVisitEvent = service.update(id, visitEvent);
+	@ApiOperation(nickname = "visit-event-post", value = "Insere um novo evento de visita")
+	@PostMapping
+	@PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+	public ResponseEntity<VisitEvent> persist(@Validated @RequestBody(required = true) VisitEvent newVisitEvent,
+			HttpServletResponse response) {
+		VisitEvent createdVisitEvent = service.persist(newVisitEvent);
 
-        return ResponseEntity.ok().body(createdVisitEvent);
+		publisher.publishEvent(new CreatedResourceEvent(this, response, createdVisitEvent.getId()));
 
-    }
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdVisitEvent);
+
+	}
+
+	@ApiOperation(nickname = "visit-event-put", value = "Atualiza um evento de visita na aplicação")
+	@PutMapping("/{id}")
+	@PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+	public ResponseEntity<VisitEvent> update(@PathVariable("id") Long id,
+			@Validated @RequestBody(required = true) VisitEvent visitEvent, HttpServletResponse response) {
+		VisitEvent createdVisitEvent = service.update(id, visitEvent);
+
+		return ResponseEntity.ok().body(createdVisitEvent);
+
+	}
+
+	@ApiOperation(nickname = "visit-event-get-id", value = "Busca um evento de visita baseado no identificador")
+	@GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+	public ResponseEntity<VisitEvent> findById(@PathVariable("id") Long id) {
+		return ResponseEntity.ok(service.findById(id));
+	}
+
+	@ApiOperation(nickname = "visit-event-get-by-patient", value = "Busca um evento de visita baseado no paciente")
+	@GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+	public ResponseEntity<Page<VisitEvent>> findByPatientId(
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
+			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+			@RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+			@RequestParam(value = "direction", defaultValue = "ASC") String direction, @PathVariable("id") Long id) {
+		Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+
+		return ResponseEntity.ok(service.findByPatientId(id, pageSettings));
+	}
+
+	@ApiOperation(nickname = "visit-event-by-visit", value = "Busca um evento de visita baseado no visitante")
+	@GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+	public ResponseEntity<List<VisitEvent>> findByVisitId(@PathVariable("id") Long id) {
+
+		return ResponseEntity.ok(service.findByVisitId(id));
+	}
 
 }
