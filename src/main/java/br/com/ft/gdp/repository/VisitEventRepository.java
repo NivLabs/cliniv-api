@@ -20,9 +20,6 @@ import br.com.ft.gdp.models.domain.VisitEvent;
 @Repository
 public interface VisitEventRepository extends JpaRepository<VisitEvent, Long> {
 
-    @Transactional(readOnly = true)
-    Page<VisitEvent> findByPatientId(Long id, Pageable pageable);
-
     /**
      * @param visitId
      * @return
