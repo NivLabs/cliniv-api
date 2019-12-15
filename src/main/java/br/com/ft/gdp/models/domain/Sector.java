@@ -11,10 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.beans.BeanUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
-import br.com.ft.gdp.models.dto.ResponsibleDTO;
 import br.com.ft.gdp.models.dto.SectorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -58,7 +59,10 @@ public class Sector extends BaseObject {
     	SectorDTO dtoEntity = new SectorDTO();
         dtoEntity.setId(getId());
         dtoEntity.setDescription(getDescription());
-     
+        SectorDTO sectorDTOPai = dtoEntity.getSector();
+		Sector sectorPai =  getSector();
+		BeanUtils.copyProperties(sectorPai, sectorDTOPai);
+		dtoEntity.setSector(sectorDTOPai);
         return dtoEntity;
     }
 }

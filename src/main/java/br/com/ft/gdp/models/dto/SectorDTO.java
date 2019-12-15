@@ -2,10 +2,10 @@ package br.com.ft.gdp.models.dto;
 
 import java.io.Serializable;
 
+import org.springframework.beans.BeanUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.ft.gdp.models.domain.Person;
-import br.com.ft.gdp.models.domain.Responsible;
 import br.com.ft.gdp.models.domain.Sector;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,13 +30,18 @@ public class SectorDTO implements Serializable {
 	private Long id;
 
 	private String description;
+	
+	private SectorDTO sector;
 
 	@JsonIgnore
 	public Sector getSectorDomainFromDTO() {
 		Sector domain = new Sector();
 		domain.setId(id);
 		domain.setDescription(description);
-
+		SectorDTO sectorDTOPai = getSector();
+		Sector sectorPai = domain.getSector();
+		BeanUtils.copyProperties(sectorDTOPai, sectorPai);
+		domain.setSector(sectorPai);
 		return domain;
 	}
 }

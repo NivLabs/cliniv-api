@@ -45,7 +45,7 @@ public class SectorController {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @ApiOperation(nickname = "patient-get", value = "Busca uma página de pacientes")
+    @ApiOperation(nickname = "sector-get", value = "Busca uma página de setores")
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Page<SectorDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -56,20 +56,20 @@ public class SectorController {
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
 
-    @ApiOperation(nickname = "patient-post", value = "Insere um novo paciente na aplicação")
+    @ApiOperation(nickname = "sector-post", value = "Insere um novo setor na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<SectorDTO> persist(@Validated @RequestBody(required = true) SectorDTO newPatient,
+    public ResponseEntity<SectorDTO> persist(@Validated @RequestBody(required = true) SectorDTO newsector,
                                                   HttpServletResponse response) {
-        SectorDTO createdPatient = service.persist(newPatient);
+        SectorDTO createdsector = service.persist(newsector);
 
-        publisher.publishEvent(new CreatedResourceEvent(this, response, createdPatient.getId()));
+        publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdPatient);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdsector);
 
     }
 
-    @ApiOperation(nickname = "patient-put", value = "Atualiza um paciente na aplicação")
+    @ApiOperation(nickname = "sector-put", value = "Atualiza um setor na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<SectorDTO> update(@PathVariable("id") Long id,
