@@ -33,15 +33,4 @@ public class SectorDTO implements Serializable {
 	
 	private SectorDTO sector;
 
-	@JsonIgnore
-	public Sector getSectorDomainFromDTO() {
-		Sector domain = new Sector();
-		domain.setId(id);
-		domain.setDescription(description);
-		SectorDTO sectorDTOPai = getSector();
-		Sector sectorPai = domain.getSector();
-		BeanUtils.copyProperties(sectorDTOPai, sectorPai);
-		domain.setSector(sectorPai);
-		return domain;
-	}
 }

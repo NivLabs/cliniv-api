@@ -53,16 +53,4 @@ public class Sector extends BaseObject {
     @JoinColumn(name = "ID_SETOR")
     private Sector sector;
 
-    
-    @JsonIgnore
-    public SectorDTO getSectorDTOFromDomain() {
-    	SectorDTO dtoEntity = new SectorDTO();
-        dtoEntity.setId(getId());
-        dtoEntity.setDescription(getDescription());
-        SectorDTO sectorDTOPai = dtoEntity.getSector();
-		Sector sectorPai =  getSector();
-		BeanUtils.copyProperties(sectorPai, sectorDTOPai);
-		dtoEntity.setSector(sectorDTOPai);
-        return dtoEntity;
-    }
 }

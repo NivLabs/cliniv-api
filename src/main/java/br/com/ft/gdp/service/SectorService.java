@@ -36,7 +36,6 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 
           pageOfSector.forEach(sector -> {
         	  SectorDTO sectorConverted = new SectorDTO();
-              sectorConverted = sector.getSectorDTOFromDomain();
               BeanUtils.copyProperties(sector, sectorConverted, "id");
               listOfSectorDTO.add(sectorConverted);
           });
@@ -45,17 +44,20 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 
     
     public SectorDTO findById(Long id) {
-    	  Sector Sector = dao.findById(id)
+    	  Sector sector = dao.findById(id)
                   .orElseThrow(() -> new ObjectNotFoundException(String.format("Setor com ID: [%s] não encontrado", id)));
-
-          return Sector.getSectorDTOFromDomain();
+    	  SectorDTO sectorDTO = new SectorDTO();
+    	  BeanUtils.copyProperties(sector, sectorDTO, "id");
+          return sectorDTO;
     }
 
     public SectorDTO update(Long id, SectorDTO sectorDTO) {
-    	Sector auxEntity = dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(
+    	Sector sector = dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(
                 String.format("Setor com o ID: [%s] não encontrado", id)));
-        BeanUtils.copyProperties(sectorDTO, auxEntity, "id");
-        return dao.save(auxEntity).getSectorDTOFromDomain();
+        BeanUtils.copyProperties(sectorDTO, sector, "id");
+        sector = dao.save(sector);
+  	  	BeanUtils.copyProperties(sector, sectorDTO, "id");
+        return sectorDTO;
     }
 
     @Override
@@ -70,9 +72,13 @@ public class SectorService implements GenericService<SectorDTO, Long> {
         dao.delete(auxEntity);
     }
 
-	public SectorDTO persist(SectorDTO newSector) {
-		newSector.setId(null);
-		return dao.save(newSector.getSectorDomainFromDTO()).getSectorDTOFromDomain();
+	public SectorDTO persist(SectorDTO sectorDTO) {
+		sectorDTO.setId(null);
+		Sector sector =  new Sector();
+		BeanUtils.copyProperties(sectorDTO, sector, "id");
+        sector = dao.save(sector);
+        BeanUtils.copyProperties(sector, sectorDTO, "id");
+        return sectorDTO;
 	}
 
 }
