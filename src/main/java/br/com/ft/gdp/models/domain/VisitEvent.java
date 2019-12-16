@@ -25,9 +25,13 @@ import lombok.NoArgsConstructor;
 /**
  * Classe VisitEvent.java
  * 
+ * @version 1.0
  * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
- *
  * @since 08 Sept, 2019
+ * 
+ * @version 2.0
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
+ * @since 15 Dez, 2019
  */
 @Entity
 @Table(name = "VISITA_EVENTO")
@@ -69,7 +73,7 @@ public class VisitEvent extends BaseObject {
     private String observations;
 
     @Column(name = "DH_EVENTO")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime eventDateTime;
 
     @PrePersist
