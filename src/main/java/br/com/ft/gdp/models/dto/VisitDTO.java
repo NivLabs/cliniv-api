@@ -1,7 +1,7 @@
 package br.com.ft.gdp.models.dto;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +25,7 @@ public class VisitDTO implements Serializable {
 
     private Long id;
 
-    private Date entryDatetime;
+    private LocalDateTime entryDatetime;
 
     private String entryCause;
 
