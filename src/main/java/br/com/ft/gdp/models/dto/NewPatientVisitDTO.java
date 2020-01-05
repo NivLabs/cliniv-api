@@ -21,14 +21,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class NewVisitDTO implements Serializable {
+public class NewPatientVisitDTO implements Serializable {
 
     private static final long serialVersionUID = 2370290606342755763L;
 
-    @NotNull(message = "Informar o cliente é obrigatório")
-    private Long patientId;
+    @NotNull(message = "Informar o código do paciente é obrigatório")
+    private Long id;
+
+    @NotNull(message = "Informar o código do responsável é obrigatório")
+    private Long responsibleId;
 
     @NotNull(message = "Informar o MOTIVO da visita é obrigatório")
-    private String reasonForEntry;
+    private String entryCause;
 
 }

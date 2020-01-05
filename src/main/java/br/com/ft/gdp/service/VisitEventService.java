@@ -61,13 +61,6 @@ public class VisitEventService implements GenericService<VisitEvent, Long> {
     }
 
     /**
-     * Retorna os eventos de visitas de um paciente
-     */
-    public Page<VisitEvent> findByPatientId(Long id, Pageable pageable) {
-        return dao.findByPatientId(id, pageable);
-    }
-
-    /**
      * @param visitId
      * @return
      */

@@ -1,5 +1,8 @@
 package br.com.ft.gdp.models.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,60 +12,46 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
-import br.com.ft.gdp.models.dto.EventTypeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Classe EventType.java
+ * Classe Sector.java
  * 
  * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
- * 
- * @since 8 de set de 2019
+ *
+ * @since 13 dez, 2019
  */
 @Entity
-@Table(name = "TIPO_EVENTO")
+@Table(name = "SETOR")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 @NoArgsConstructor
-public class EventType extends BaseObject {
+@AllArgsConstructor
+public class Sector extends BaseObject {
 
-    private static final long serialVersionUID = -8716334303463572525L;
+    private static final long serialVersionUID = -8491049323618565782L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_TIPO_EVENTO")
-    private EventType superEventType;
-
-    @Column(name = "NOME")
-    private String name;
-
     @Column(name = "DESCRICAO")
     private String description;
 
-    public EventType(long id) {
-        this.id = id;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_SETOR")
+    private Sector superSector;
 
-    @JsonIgnore
-    public EventTypeDTO getEventTypeDTOFromDomain() {
-        EventTypeDTO dtoEntity = new EventTypeDTO();
-
-        dtoEntity.setId(getId());
-        dtoEntity.setName(getName());
-        dtoEntity.setDescription(getDescription());
-        return dtoEntity;
-    }
+    @OneToMany(mappedBy = "superSector", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Sector> sectors = new ArrayList<>();
 
 }

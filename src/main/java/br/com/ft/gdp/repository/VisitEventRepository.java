@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.ft.gdp.models.domain.VisitEvent;
 
 /**
- * Classe VisitEventResponseDTO.java
+ * Classe VisitEventRepository.java
  * 
  * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
  *
@@ -19,9 +19,6 @@ import br.com.ft.gdp.models.domain.VisitEvent;
  */
 @Repository
 public interface VisitEventRepository extends JpaRepository<VisitEvent, Long> {
-
-    @Transactional(readOnly = true)
-    Page<VisitEvent> findByPatientId(Long id, Pageable pageable);
 
     /**
      * @param visitId

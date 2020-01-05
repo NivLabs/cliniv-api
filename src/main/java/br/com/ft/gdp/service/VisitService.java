@@ -1,7 +1,7 @@
 package br.com.ft.gdp.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -10,12 +10,14 @@ import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.exception.ValidationException;
+import br.com.ft.gdp.models.domain.EventType;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Person;
+import br.com.ft.gdp.models.domain.Responsible;
 import br.com.ft.gdp.models.domain.Visit;
 import br.com.ft.gdp.models.domain.VisitEvent;
 import br.com.ft.gdp.models.dto.DocumentDTO;
-import br.com.ft.gdp.models.dto.NewVisitDTO;
+import br.com.ft.gdp.models.dto.NewPatientVisitDTO;
 import br.com.ft.gdp.models.dto.PatientInfoDTO;
 import br.com.ft.gdp.models.dto.VisitDTO;
 import br.com.ft.gdp.models.dto.VisitEventDTO;
@@ -49,24 +51,25 @@ public class VisitService implements GenericService<Visit, Long> {
      * @return lista de VisitDTO
      */
     public List<VisitDTO> getVisitsByPatientId(Long patientId) {
-		List<Visit> listOfVisits = dao.findByPatient(new Patient(patientId));
-		
-		if (listOfVisits.isEmpty()) throw new ObjectNotFoundException(String.format("Não existe visita para o paciente %s", patientId));
-		
-		List<VisitDTO> listOfVisitsDTO = new ArrayList<>();
-		listOfVisits.forEach(visit -> listOfVisitsDTO
+        List<Visit> listOfVisits = dao.findByPatient(new Patient(patientId));
+
+        if (listOfVisits.isEmpty())
+            throw new ObjectNotFoundException(String.format("Não existe visita para o paciente %s", patientId));
+
+        List<VisitDTO> listOfVisitsDTO = new ArrayList<>();
+        listOfVisits.forEach(visit -> listOfVisitsDTO
                 .add(new VisitDTO(visit.getId(), visit.getDateTimeEntry(),
                         visit.getReasonForEntry(),
-                        Boolean.valueOf(visit.getDateTimeExit()!=null))));
+                        Boolean.valueOf(visit.getDateTimeExit() != null))));
         return listOfVisitsDTO;
     }
 
-   
-	/**
-	 * Busca Visitas por Id
-	 * @param id
-	 * @return VisitInfoDTO
-	 */
+    /**
+     * Busca Visitas por Id
+     * 
+     * @param id
+     * @return VisitInfoDTO
+     */
     public VisitInfoDTO findInfoById(Long id) {
         Visit visitFromDb = dao.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Visita com código %s não encontrada", id)));
@@ -112,7 +115,7 @@ public class VisitService implements GenericService<Visit, Long> {
 
     public void closeVisit(Long id) {
         Visit auxEntity = findById(id);
-        auxEntity.setDateTimeExit(new Date());
+        auxEntity.setDateTimeExit(LocalDateTime.now());
         update(id, auxEntity);
     }
 
@@ -122,22 +125,49 @@ public class VisitService implements GenericService<Visit, Long> {
      * @param visitDto
      * @return Visit
      */
-    public Visit persistNewVisit(NewVisitDTO visitDto) {
-        VisitInfoDTO visit = getActiveVisit(visitDto.getPatientId());
+    public VisitInfoDTO persistNewVisit(NewPatientVisitDTO visitDto) {
+        VisitInfoDTO visit = null;
+        try {
+            visit = getActiveVisit(visitDto.getId());
+
+        } catch (ValidationException e) {
+
+            PatientInfoDTO savedPatient = patientService.findByPateintId(visitDto.getId());
+
+            Visit convertedVisit = new Visit();
+            convertedVisit.setReasonForEntry(visitDto.getEntryCause());
+            convertedVisit.setPatient(new Patient(savedPatient.getId()));
+            convertedVisit = persist(convertedVisit);
+            createEntryEvent(convertedVisit, visitDto.getResponsibleId());
+            visit = getActiveVisit(convertedVisit.getPatient().getId());
+
+            return visit;
+        }
         if (visit != null) {
             throw new ValidationException(String
                     .format("O paciente de código [%s] e nome [%s] já possui uma visita ativa, favor realizar a alta da visita para iniciar uma nova.",
                             visit.getPatientId(), visit.getFirstName()));
         }
+        return visit;
+    }
 
-        Patient savedPatient = patientService.findById(visitDto.getPatientId());
+    /**
+     * @param convertedVisit
+     */
+    private void createEntryEvent(Visit convertedVisit, Long responsibleId) {
+        VisitEvent entryEvent = new VisitEvent();
+        entryEvent.setPatient(new Patient(convertedVisit.getPatient().getId()));
+        entryEvent.setEventDateTime(convertedVisit.getDateTimeEntry());
+        entryEvent.setTitle("Entrada inicial");
+        entryEvent.setVisit(new Visit(convertedVisit.getId()));
 
-        Visit convertedVisit = new Visit();
-        convertedVisit.setDateTimeEntry(new Date());
-        convertedVisit.setReasonForEntry(visitDto.getReasonForEntry());
-        convertedVisit.setPatient(savedPatient);
+        // Verificar Responsável
+        entryEvent.setResponsible(new Responsible(responsibleId));
 
-        return persist(convertedVisit);
+        // Verificar Tipo do evento
+        entryEvent.setEventType(new EventType(1L));
+
+        visitEventRepo.save(entryEvent);
     }
 
     /**
@@ -157,7 +187,7 @@ public class VisitService implements GenericService<Visit, Long> {
     public VisitInfoDTO getActiveVisit(Long patientId) {
         PatientInfoDTO patient = patientService.findByPateintId(patientId);
         Visit visitFromDb = dao.findByPatientAndDateTimeExitIsNull(new Patient(patient.getId()))
-                .orElseThrow(() -> new ObjectNotFoundException(
+                .orElseThrow(() -> new ValidationException(
                         String.format("Nenhuma visita ativa encontrada para %s, inicie uma nova visita para o paciente.",
                                       patient.getFirstName())));
         Person person = visitFromDb.getPatient().getPerson();

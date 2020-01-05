@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.exception.ValidationException;
-import br.com.ft.gdp.models.domain.Visit;
-import br.com.ft.gdp.models.dto.NewVisitDTO;
+import br.com.ft.gdp.models.dto.NewPatientVisitDTO;
 import br.com.ft.gdp.models.dto.VisitDTO;
 import br.com.ft.gdp.models.dto.VisitInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
@@ -50,18 +50,21 @@ public class VisitController {
 
     @ApiOperation(nickname = "visit-post", value = "Insere uma nova visita na aplicação")
     @PostMapping
-    public ResponseEntity<VisitDTO> persist(@Validated @RequestBody(required = true) NewVisitDTO visit,
-                                            HttpServletResponse response) {
-        Visit createdVisit = service.persistNewVisit(visit);
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    public ResponseEntity<VisitInfoDTO> persist(@Validated @RequestBody(required = true) NewPatientVisitDTO visit,
+                                                HttpServletResponse response) {
+
+        VisitInfoDTO createdVisit = service.persistNewVisit(visit);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdVisit.getId()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdVisit);
 
     }
 
     @ApiOperation(nickname = "visit-put-exit", value = "Atualiza hora de saída da visita na aplicação")
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<Void> updateVisitToEnd(@PathVariable("id") Long id) {
         service.closeVisit(id);
         return ResponseEntity.ok().build();
@@ -69,12 +72,14 @@ public class VisitController {
 
     @ApiOperation(nickname = "visit-get-active", value = "Busca a visita ativa do paciente")
     @GetMapping("/actived/{id}/patient")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<VisitInfoDTO> getActiveVisit(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.getActiveVisit(id));
     }
 
     @ApiOperation(nickname = "visit-get-with-filters", value = "Busca uma visita baseado em filtros")
     @GetMapping
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<List<VisitDTO>> findWithFilters(@RequestParam(name = "patientId", required = false) Long patientId,
                                                           @RequestParam(name = "documentType", required = false) DocumentType documentType,
                                                           @RequestParam(name = "documentValue", required = false) String documentValue) {
@@ -97,6 +102,7 @@ public class VisitController {
 
     @ApiOperation(nickname = "visit-get-id", value = "Busca uma visita baseado no identificador")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<VisitInfoDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findInfoById(id));
     }

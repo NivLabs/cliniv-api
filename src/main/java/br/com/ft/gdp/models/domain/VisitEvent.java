@@ -25,9 +25,13 @@ import lombok.NoArgsConstructor;
 /**
  * Classe VisitEvent.java
  * 
+ * @version 1.0
  * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
- *
  * @since 08 Sept, 2019
+ * 
+ * @version 2.0
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
+ * @since 15 Dez, 2019
  */
 @Entity
 @Table(name = "VISITA_EVENTO")
@@ -40,22 +44,22 @@ public class VisitEvent extends BaseObject {
     private static final long serialVersionUID = 8988537898462013276L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PACIENTE")
     private Patient patient;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_TIPO_EVENTO")
     private EventType eventType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_RESPONSAVEL")
     private Responsible responsible;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_VISITA")
     private Visit visit;
 
@@ -69,7 +73,7 @@ public class VisitEvent extends BaseObject {
     private String observations;
 
     @Column(name = "DH_EVENTO")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime eventDateTime;
 
     @PrePersist
