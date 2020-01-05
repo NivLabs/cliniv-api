@@ -1,5 +1,8 @@
 package br.com.ft.gdp.models.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,14 +12,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
-import br.com.ft.gdp.models.dto.SectorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -37,32 +38,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Sector extends BaseObject {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8491049323618565782L;
+    private static final long serialVersionUID = -8491049323618565782L;
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "DESCRICAO")
     private String description;
-    
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_SETOR")
-    private Sector sector;
 
-    
-    @JsonIgnore
-    public SectorDTO getSectorDTOFromDomain() {
-    	SectorDTO dtoEntity = new SectorDTO();
-        dtoEntity.setId(getId());
-        dtoEntity.setDescription(getDescription());
-        SectorDTO sectorDTOPai = dtoEntity.getSector();
-		Sector sectorPai =  getSector();
-		BeanUtils.copyProperties(sectorPai, sectorDTOPai);
-		dtoEntity.setSector(sectorDTOPai);
-        return dtoEntity;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_SETOR")
+    private Sector superSector;
+
+    @OneToMany(mappedBy = "superSector", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Sector> sectors = new ArrayList<>();
+
 }

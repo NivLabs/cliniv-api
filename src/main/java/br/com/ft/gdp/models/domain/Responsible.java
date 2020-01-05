@@ -66,4 +66,9 @@ public class Responsible extends BaseObject {
 
         return dtoEntity;
     }
+
+    public Responsible(Long id) {
+        super();
+        this.id = id;
+    }
 }

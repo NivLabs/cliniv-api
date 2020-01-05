@@ -1,10 +1,11 @@
 package br.com.ft.gdp.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -38,7 +39,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api("Endpoint - Tipo Evento")
 @RestController
-@RequestMapping(value = "/eventtype")
+@RequestMapping(value = "/event-type")
 public class EventTypeController {
 
     @Autowired
@@ -50,12 +51,12 @@ public class EventTypeController {
     @ApiOperation(nickname = "eventtype-get", value = "Busca uma página de tipos de eventos")
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<Page<EventType>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                    @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                    @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+    public ResponseEntity<List<EventType>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                    @RequestParam(value = "linesPerPage", defaultValue = "100") Integer linesPerPage,
+                                                    @RequestParam(value = "orderBy", defaultValue = "description") String orderBy,
                                                     @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        return ResponseEntity.ok(service.searchEntityPage(pageSettings));
+        return ResponseEntity.ok(service.searchEntityPage(pageSettings).getContent());
     }
 
     @ApiOperation(nickname = "eventtype-post", value = "Insere um novo tipo de evento na aplicação")

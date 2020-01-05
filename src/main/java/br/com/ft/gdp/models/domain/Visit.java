@@ -1,6 +1,6 @@
 package br.com.ft.gdp.models.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import br.com.ft.gdp.models.BaseObject;
@@ -43,11 +44,22 @@ public class Visit extends BaseObject {
     private Patient patient;
 
     @Column(name = "DH_ENTRADA")
-    private Date dateTimeEntry;
+    private LocalDateTime dateTimeEntry;
 
     @Column(name = "DH_SAIDA")
-    private Date dateTimeExit;
+    private LocalDateTime dateTimeExit;
 
     @Column(name = "MOTIVO_ENTRADA")
     private String reasonForEntry;
+
+    public Visit(Long id) {
+        this.id = id;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        final LocalDateTime now = LocalDateTime.now();
+        this.dateTimeEntry = now;
+    }
+
 }

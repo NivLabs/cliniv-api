@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,16 +35,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventType extends BaseObject {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -8716334303463572525L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_TIPO_EVENTO")
     private EventType superEventType;
 
@@ -52,6 +50,10 @@ public class EventType extends BaseObject {
 
     @Column(name = "DESCRICAO")
     private String description;
+
+    public EventType(long id) {
+        this.id = id;
+    }
 
     @JsonIgnore
     public EventTypeDTO getEventTypeDTOFromDomain() {
@@ -62,4 +64,5 @@ public class EventType extends BaseObject {
         dtoEntity.setDescription(getDescription());
         return dtoEntity;
     }
+
 }

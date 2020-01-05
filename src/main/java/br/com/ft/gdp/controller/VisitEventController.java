@@ -1,7 +1,5 @@
 package br.com.ft.gdp.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +85,6 @@ public class VisitEventController {
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<VisitEvent> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
-    }   
+    }
 
 }
