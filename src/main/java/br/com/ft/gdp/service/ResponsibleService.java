@@ -25,9 +25,6 @@ public class ResponsibleService implements GenericService<Responsible, Long> {
     @Autowired
     private ResponsibleRepository dao;
 
-    @Autowired
-    private SpecialityService specialityService;
-
     @Override
     public Page<Responsible> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
@@ -73,10 +70,6 @@ public class ResponsibleService implements GenericService<Responsible, Long> {
     public ResponsibleDTO persistDTO(NewResponsibleDTO responsible) {
         Responsible domain = new Responsible();
         domain.setProfessionalIdentity(responsible.getProfessionalIdentity());
-        responsible.getEspecialityIdsList().forEach(id -> {
-            domain.getSpecialty().add(specialityService.findById(id));
-        });
-
         return persist(domain).getResponsibleDTOFromDomain();
     }
 }
