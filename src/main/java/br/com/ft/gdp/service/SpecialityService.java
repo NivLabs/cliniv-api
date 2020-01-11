@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Speciality;
+import br.com.ft.gdp.models.dto.ResponsibleDTO;
 import br.com.ft.gdp.models.dto.SpecialityDTO;
+import br.com.ft.gdp.models.dto.SpecialityInfoDTO;
 import br.com.ft.gdp.repository.SpecialityRepository;
 
 /**
@@ -38,13 +40,20 @@ public class SpecialityService {
         return new PageImpl<>(convertedContent, pageRequest, pageFromDb.getTotalElements());
     }
 
-    public SpecialityDTO findById(Long id) {
+    public SpecialityInfoDTO findById(Long id) {
         Speciality specFromDb = dao.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Especialidade com identificador %s não encontrada", id)));
 
-        SpecialityDTO convertedSpec = new SpecialityDTO();
+        SpecialityInfoDTO convertedSpec = new SpecialityInfoDTO();
 
-        BeanUtils.copyProperties(specFromDb, convertedSpec);
+        BeanUtils.copyProperties(specFromDb, convertedSpec, "responsibles");
+
+        specFromDb.getResponsibles().forEach(responsible -> {
+            ResponsibleDTO responsibleDTO = new ResponsibleDTO();
+            BeanUtils.copyProperties(responsible, responsibleDTO);
+            BeanUtils.copyProperties(responsible.getPerson(), responsibleDTO, "id");
+            convertedSpec.getResponsibles().add(responsibleDTO);
+        });
 
         return convertedSpec;
     }
