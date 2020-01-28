@@ -30,7 +30,8 @@ public class NewPatientVisitDTO implements Serializable {
 
     private Long eventTypeId;
 
-    @NotNull(message = "Informar o código do responsável é obrigatório")
+    private Long specialitityId;
+
     private Long responsibleId;
 
     @NotNull(message = "Informar o MOTIVO da visita é obrigatório")

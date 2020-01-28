@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.com.ft.gdp.config.security.UserOfSystem;
 import br.com.ft.gdp.exception.NewPasswordInvalidException;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
+import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.UserApplication;
+import br.com.ft.gdp.models.dto.ForgotPasswordRequestDTO;
 import br.com.ft.gdp.models.dto.NewPasswordRequestDTO;
 import br.com.ft.gdp.repository.UserRepository;
 
@@ -31,7 +34,7 @@ public class AuthService {
      * 
      * @param newPasswordRequest
      */
-    public void createNePassword(NewPasswordRequestDTO newPasswordRequest) {
+    public void createNewPassword(ForgotPasswordRequestDTO newPasswordRequest) {
         UserApplication usuario = userRepo
                 .findByUsernameOrEmail(newPasswordRequest.getUsernameOrEmail(), newPasswordRequest.getUsernameOrEmail())
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Usuário não encontrado para o email/usuário: [%s]",
@@ -43,6 +46,27 @@ public class AuthService {
 
         usuario.setPassword(bc.encode(newPasswordRequest.getNewPassword()));
         userRepo.save(usuario);
+    }
+
+    /**
+     * Altera a senha do usuário ativo na sessão
+     * 
+     * @param newPasswordDTO
+     * @param userFromSession
+     */
+    public void updatePassword(NewPasswordRequestDTO newPasswordDTO, UserOfSystem userFromSession) {
+        if (!newPasswordDTO.getNewPassword().equals(newPasswordDTO.getConfirmNewPassword())) {
+            throw new ValidationException("A nova senha e a confirmação de nova senha devem ser iguais");
+        }
+        UserApplication userFromDb = userRepo.findByUsername(userFromSession.getUsername())
+                .orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+
+        if (bc.matches(newPasswordDTO.getOldPassword(), userFromDb.getPassword())) {
+            userFromDb.setPassword(bc.encode(newPasswordDTO.getNewPassword()));
+        } else {
+            throw new ValidationException("A senha atual não está correta");
+        }
+        userRepo.saveAndFlush(userFromDb);
     }
 
 }
