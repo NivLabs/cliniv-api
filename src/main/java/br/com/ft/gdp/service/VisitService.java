@@ -128,17 +128,17 @@ public class VisitService implements GenericService<Visit, Long> {
     public VisitInfoDTO persistNewVisit(NewPatientVisitDTO visitDto) {
         VisitInfoDTO visit = null;
         try {
-            visit = getActiveVisit(visitDto.getId());
+            visit = getActiveVisit(visitDto.getPatientId());
 
         } catch (ValidationException e) {
 
-            PatientInfoDTO savedPatient = patientService.findByPateintId(visitDto.getId());
+            PatientInfoDTO savedPatient = patientService.findByPateintId(visitDto.getPatientId());
 
             Visit convertedVisit = new Visit();
             convertedVisit.setReasonForEntry(visitDto.getEntryCause());
             convertedVisit.setPatient(new Patient(savedPatient.getId()));
             convertedVisit = persist(convertedVisit);
-            createEntryEvent(convertedVisit, visitDto.getResponsibleId());
+            createEntryEvent(convertedVisit, visitDto);
             visit = getActiveVisit(convertedVisit.getPatient().getId());
 
             return visit;
@@ -154,18 +154,21 @@ public class VisitService implements GenericService<Visit, Long> {
     /**
      * @param convertedVisit
      */
-    private void createEntryEvent(Visit convertedVisit, Long responsibleId) {
+    private void createEntryEvent(Visit convertedVisit, NewPatientVisitDTO request) {
         VisitEvent entryEvent = new VisitEvent();
         entryEvent.setPatient(new Patient(convertedVisit.getPatient().getId()));
         entryEvent.setEventDateTime(convertedVisit.getDateTimeEntry());
-        entryEvent.setTitle("Entrada inicial");
+        entryEvent.setTitle(convertedVisit.getReasonForEntry());
         entryEvent.setVisit(new Visit(convertedVisit.getId()));
 
         // Verificar Responsável
-        entryEvent.setResponsible(new Responsible(responsibleId));
+        entryEvent.setResponsible(new Responsible(request.getResponsibleId()));
 
+        if (request.getEventTypeId() != 1L && request.getEventTypeId() != 2L && request.getEventTypeId() != 3L)
+            throw new ValidationException(
+                    "O tipo de evento informado é inválido. Tipos de entradas esperados: Entrada de paciente (1, 2 ou 3)");
         // Verificar Tipo do evento
-        entryEvent.setEventType(new EventType(1L));
+        entryEvent.setEventType(new EventType(request.getEventTypeId()));
 
         visitEventRepo.save(entryEvent);
     }
