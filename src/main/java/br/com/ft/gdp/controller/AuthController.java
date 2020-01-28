@@ -4,12 +4,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.ft.gdp.config.security.UserOfSystem;
+import br.com.ft.gdp.models.dto.ForgotPasswordRequestDTO;
 import br.com.ft.gdp.models.dto.NewPasswordRequestDTO;
 import br.com.ft.gdp.service.security.AuthService;
 import io.swagger.annotations.Api;
@@ -42,10 +46,31 @@ public class AuthController {
      */
     @ApiOperation(nickname = "auth-forgot", value = "Cria uma nova senha em caso de esquecimento")
     @PutMapping("/forgot")
-    public ResponseEntity<Void> update(@ApiParam(name = "NewPasswordDTO", value = "Objeto de requisição para alteração de senha") @Validated @RequestBody(required = true) NewPasswordRequestDTO newPasswordDTO,
+    public ResponseEntity<Void> update(@ApiParam(name = "ForgotPasswordRequest", value = "Objeto de requisição para alteração de senha") @Validated @RequestBody(required = true) ForgotPasswordRequestDTO forgotPasswordDTO,
                                        HttpServletResponse response) {
-        authService.createNePassword(newPasswordDTO);
+        authService.createNewPassword(forgotPasswordDTO);
         return ResponseEntity.noContent().build();
 
     }
+
+    /**
+     * Altera a senha de acesso.
+     * 
+     * 
+     * @param newPasswordDTO
+     * @param response
+     * @return
+     */
+    @ApiOperation(nickname = "auth-new-password", value = "Altera a senha de acesso")
+    @PutMapping("/password")
+    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+    public ResponseEntity<Void> update(@ApiParam(name = "NewPasswordRequest", value = "Objeto de requisição para alteração de senha, o usuário da sessão ativa é utilizado") @Validated @RequestBody(required = true) NewPasswordRequestDTO newPasswordDTO,
+                                       HttpServletResponse response) {
+        UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        authService.updatePassword(newPasswordDTO, userFromSession);
+        return ResponseEntity.noContent().build();
+
+    }
+
 }

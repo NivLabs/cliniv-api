@@ -26,9 +26,12 @@ public class NewPatientVisitDTO implements Serializable {
     private static final long serialVersionUID = 2370290606342755763L;
 
     @NotNull(message = "Informar o código do paciente é obrigatório")
-    private Long id;
+    private Long patientId;
 
-    @NotNull(message = "Informar o código do responsável é obrigatório")
+    private Long eventTypeId;
+
+    private Long specialitityId;
+
     private Long responsibleId;
 
     @NotNull(message = "Informar o MOTIVO da visita é obrigatório")
