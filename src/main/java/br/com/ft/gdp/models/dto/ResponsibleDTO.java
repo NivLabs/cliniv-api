@@ -1,14 +1,12 @@
 package br.com.ft.gdp.models.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import br.com.ft.gdp.models.domain.Person;
-import br.com.ft.gdp.models.domain.Responsible;
+import br.com.ft.gdp.models.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,28 +28,18 @@ public class ResponsibleDTO implements Serializable {
 
     private Long id;
 
-    @NotBlank(message = "Informar o NOME é obrigatório")
-    @Size(min = 3, message = "O nome deve conter ao menos três letras")
     private String firstName;
 
-    @NotBlank(message = "Informar o SOBRENOME é obrigatório")
-    @Size(min = 1, message = "O nome deve conter ao menos uma letra")
     private String lastName;
 
-    private String professionalIdentity;
+    private String rg;
 
-    @JsonIgnore
-    public Responsible getResponsibleDomainFromDTO() {
-        Responsible domain = new Responsible();
-        domain.setId(id);
-        domain.setProfessionalIdentity(professionalIdentity);
+    private String cpf;
 
-        Person person = new Person();
-        person.setFirstName(firstName);
-        person.setLastName(lastName);
+    @DateTimeFormat(iso = ISO.DATE)
+    private Date bornDate;
 
-        domain.setPerson(person);
+    private String principalNumber;
 
-        return domain;
-    }
+    private Gender gender;
 }
