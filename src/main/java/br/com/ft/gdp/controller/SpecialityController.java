@@ -37,7 +37,7 @@ public class SpecialityController {
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<List<SpecialityDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                        @RequestParam(value = "linesPerPage", defaultValue = "40") Integer linesPerPage,
+                                                        @RequestParam(value = "linesPerPage", defaultValue = "100") Integer linesPerPage,
                                                         @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
                                                         @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
