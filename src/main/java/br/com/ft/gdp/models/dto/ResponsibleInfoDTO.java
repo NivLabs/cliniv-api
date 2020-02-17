@@ -4,14 +4,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * Classe NewPatientDTO.java
+ * Classe ResponsibleInfoDTO.java
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  * 
- * @since 3 de out de 2019
+ * @since 9 de fev de 2020
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class PatientInfoDTO extends PersonInfoDTO {
-    private static final long serialVersionUID = 1575416178033511932L;
+public class ResponsibleInfoDTO extends PersonInfoDTO {
+
+    private static final long serialVersionUID = 3558512431533807447L;
+
 }

@@ -1,7 +1,5 @@
 package br.com.ft.gdp.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +18,6 @@ import br.com.ft.gdp.repository.UserRepository;
  */
 @Service
 public class UserService implements GenericService<UserApplication, Long> {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private UserRepository userRepo;

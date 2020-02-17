@@ -10,10 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.ft.gdp.models.BaseObject;
-import br.com.ft.gdp.models.dto.ResponsibleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -46,17 +43,6 @@ public class Responsible extends BaseObject {
 
     @Column(name = "REGISTRO_PROFISSIONAL")
     private String professionalIdentity;
-
-    @JsonIgnore
-    public ResponsibleDTO getResponsibleDTOFromDomain() {
-        ResponsibleDTO dtoEntity = new ResponsibleDTO();
-        dtoEntity.setId(getId());
-        dtoEntity.setFirstName(getPerson().getFirstName());
-        dtoEntity.setLastName(getPerson().getLastName());
-        dtoEntity.setProfessionalIdentity(getProfessionalIdentity());
-
-        return dtoEntity;
-    }
 
     public Responsible(Long id) {
         super();

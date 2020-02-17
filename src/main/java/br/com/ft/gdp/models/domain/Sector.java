@@ -15,8 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.ft.gdp.models.BaseObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;

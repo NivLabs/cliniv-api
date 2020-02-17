@@ -1,8 +1,12 @@
 package br.com.ft.gdp.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +14,7 @@ import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Responsible;
 import br.com.ft.gdp.models.dto.NewResponsibleDTO;
 import br.com.ft.gdp.models.dto.ResponsibleDTO;
+import br.com.ft.gdp.models.dto.ResponsibleInfoDTO;
 import br.com.ft.gdp.repository.ResponsibleRepository;
 
 /**
@@ -20,42 +25,55 @@ import br.com.ft.gdp.repository.ResponsibleRepository;
  * @since 7 de set de 2019
  */
 @Service
-public class ResponsibleService implements GenericService<Responsible, Long> {
+public class ResponsibleService {
 
     @Autowired
     private ResponsibleRepository dao;
 
-    @Override
-    public Page<Responsible> searchEntityPage(Pageable pageRequest) {
-        return dao.findAll(pageRequest);
+    public Page<ResponsibleDTO> searchEntityPage(Pageable pageRequest) {
+        Page<Responsible> pageOfResponsibles = dao.findAll(pageRequest);
+
+        List<ResponsibleDTO> listOfResponsibleDTO = new ArrayList<>();
+
+        pageOfResponsibles.forEach(responsible -> {
+            ResponsibleDTO responsibleConverted = new ResponsibleDTO();
+            responsibleConverted.setId(responsible.getId());
+            BeanUtils.copyProperties(responsible.getPerson(), responsibleConverted, "id");
+            listOfResponsibleDTO.add(responsibleConverted);
+        });
+        return new PageImpl<>(listOfResponsibleDTO, pageRequest, pageOfResponsibles.getTotalElements());
     }
 
-    @Override
-    public Responsible findById(Long id) {
-        return dao.findById(id)
+    public ResponsibleInfoDTO findById(Long id) {
+        Responsible responsibleFromDb = dao.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
+
+        ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
+        responsibleConverted.setId(responsibleFromDb.getId());
+        BeanUtils.copyProperties(responsibleFromDb.getPerson(), responsibleConverted, "id");
+
+        return responsibleConverted;
     }
 
-    @Override
-    public Responsible update(Long id, Responsible entity) {
-        Responsible auxEntity = findById(id);
-        BeanUtils.copyProperties(entity, auxEntity, "id");
-        return dao.save(auxEntity);
+    public ResponsibleInfoDTO update(Long id, ResponsibleInfoDTO responsible) {
+        Responsible responsibleFromDb = dao.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
+        BeanUtils.copyProperties(responsible, responsibleFromDb, "id");
+        dao.save(responsibleFromDb);
+        return responsible;
     }
 
-    @Override
     public void delete(Responsible entity) {
         deleteById(entity.getId());
     }
 
-    @Override
     public void deleteById(Long id) {
-        Responsible auxEntity = findById(id);
-        dao.delete(auxEntity);
+        Responsible responsibleFromDb = dao.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
+        dao.delete(responsibleFromDb);
 
     }
 
-    @Override
     public Responsible persist(Responsible entity) {
         entity.setId(null);
         return dao.save(entity);
@@ -70,6 +88,12 @@ public class ResponsibleService implements GenericService<Responsible, Long> {
     public ResponsibleDTO persistDTO(NewResponsibleDTO responsible) {
         Responsible domain = new Responsible();
         domain.setProfessionalIdentity(responsible.getProfessionalIdentity());
-        return persist(domain).getResponsibleDTOFromDomain();
+        domain = persist(domain);
+
+        ResponsibleDTO newResponsible = new ResponsibleDTO();
+        newResponsible.setId(domain.getId());
+        BeanUtils.copyProperties(domain.getPerson(), newResponsible, "id");
+
+        return newResponsible;
     }
 }
