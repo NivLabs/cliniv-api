@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
-import br.com.ft.gdp.models.domain.Responsible;
 import br.com.ft.gdp.models.dto.NewResponsibleDTO;
 import br.com.ft.gdp.models.dto.ResponsibleDTO;
+import br.com.ft.gdp.models.dto.ResponsibleInfoDTO;
 import br.com.ft.gdp.service.ResponsibleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,10 +50,10 @@ public class ResponsibleController {
     @ApiOperation(nickname = "responsible-get", value = "Busca uma página de responsáveis")
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<Page<Responsible>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                      @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                      @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                      @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+    public ResponseEntity<Page<ResponsibleDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                         @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+                                                         @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+                                                         @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
         return ResponseEntity.ok(service.searchEntityPage(pageSettings));
     }
@@ -74,19 +74,19 @@ public class ResponsibleController {
     @ApiOperation(nickname = "responsible-put", value = "Atualiza um responsável na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<ResponsibleDTO> update(@PathVariable("id") Long id,
-                                                 @Validated @RequestBody(required = true) ResponsibleDTO responsible,
-                                                 HttpServletResponse response) {
-        Responsible createdResponsible = service.update(id, responsible.getResponsibleDomainFromDTO());
+    public ResponseEntity<ResponsibleInfoDTO> update(@PathVariable("id") Long id,
+                                                     @Validated @RequestBody(required = true) ResponsibleInfoDTO responsible,
+                                                     HttpServletResponse response) {
+        ResponsibleInfoDTO createdResponsible = service.update(id, responsible);
 
-        return ResponseEntity.ok().body(createdResponsible.getResponsibleDTOFromDomain());
+        return ResponseEntity.ok().body(createdResponsible);
 
     }
 
     @ApiOperation(nickname = "responsible-get-id", value = "Busca um responsável baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<ResponsibleDTO> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findById(id).getResponsibleDTOFromDomain());
+    public ResponseEntity<ResponsibleInfoDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 }

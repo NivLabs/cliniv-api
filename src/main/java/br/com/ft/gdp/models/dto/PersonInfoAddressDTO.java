@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class PatientInfoAddressDTO implements Serializable {
+public class PersonInfoAddressDTO implements Serializable {
 
     private static final long serialVersionUID = 4507712865290776284L;
 
