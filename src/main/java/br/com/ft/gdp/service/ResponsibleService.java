@@ -11,10 +11,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.ObjectNotFoundException;
+import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.Responsible;
+import br.com.ft.gdp.models.dto.DocumentDTO;
 import br.com.ft.gdp.models.dto.NewResponsibleDTO;
+import br.com.ft.gdp.models.dto.PersonInfoAddressDTO;
 import br.com.ft.gdp.models.dto.ResponsibleDTO;
 import br.com.ft.gdp.models.dto.ResponsibleInfoDTO;
+import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.repository.ResponsibleRepository;
 
 /**
@@ -27,73 +31,127 @@ import br.com.ft.gdp.repository.ResponsibleRepository;
 @Service
 public class ResponsibleService {
 
-    @Autowired
-    private ResponsibleRepository dao;
+	@Autowired
+	private ResponsibleRepository dao;
 
-    public Page<ResponsibleDTO> searchEntityPage(Pageable pageRequest) {
-        Page<Responsible> pageOfResponsibles = dao.findAll(pageRequest);
+	@Autowired
+	private PersonService personService;
 
-        List<ResponsibleDTO> listOfResponsibleDTO = new ArrayList<>();
+	public Page<ResponsibleDTO> searchEntityPage(Pageable pageRequest) {
+		Page<Responsible> pageOfResponsibles = dao.findAll(pageRequest);
 
-        pageOfResponsibles.forEach(responsible -> {
-            ResponsibleDTO responsibleConverted = new ResponsibleDTO();
-            responsibleConverted.setId(responsible.getId());
-            BeanUtils.copyProperties(responsible.getPerson(), responsibleConverted, "id");
-            listOfResponsibleDTO.add(responsibleConverted);
-        });
-        return new PageImpl<>(listOfResponsibleDTO, pageRequest, pageOfResponsibles.getTotalElements());
-    }
+		List<ResponsibleDTO> listOfResponsibleDTO = new ArrayList<>();
 
-    public ResponsibleInfoDTO findById(Long id) {
-        Responsible responsibleFromDb = dao.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
+		pageOfResponsibles.forEach(responsible -> {
+			ResponsibleDTO responsibleConverted = new ResponsibleDTO();
+			responsibleConverted.setId(responsible.getId());
+			BeanUtils.copyProperties(responsible.getPerson(), responsibleConverted, "id");
+			listOfResponsibleDTO.add(responsibleConverted);
+		});
+		return new PageImpl<>(listOfResponsibleDTO, pageRequest, pageOfResponsibles.getTotalElements());
+	}
 
-        ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
-        responsibleConverted.setId(responsibleFromDb.getId());
-        BeanUtils.copyProperties(responsibleFromDb.getPerson(), responsibleConverted, "id");
+	public ResponsibleInfoDTO findById(Long id) {
+		Responsible responsibleFromDb = dao.findById(id).orElseThrow(
+				() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
 
-        return responsibleConverted;
-    }
+		Person person = responsibleFromDb.getPerson();
 
-    public ResponsibleInfoDTO update(Long id, ResponsibleInfoDTO responsible) {
-        Responsible responsibleFromDb = dao.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
-        BeanUtils.copyProperties(responsible, responsibleFromDb, "id");
-        dao.save(responsibleFromDb);
-        return responsible;
-    }
+		ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
+		responsibleConverted.setId(responsibleFromDb.getId());
+		BeanUtils.copyProperties(responsibleFromDb.getPerson(), responsibleConverted, "id");
+		responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
-    public void delete(Responsible entity) {
-        deleteById(entity.getId());
-    }
+		if (person.getAddress() != null) {
+			PersonInfoAddressDTO address = new PersonInfoAddressDTO();
+			BeanUtils.copyProperties(person.getAddress(), address);
+			responsibleConverted.setAddress(address);
+		}
 
-    public void deleteById(Long id) {
-        Responsible responsibleFromDb = dao.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
-        dao.delete(responsibleFromDb);
+		responsibleConverted.setId(responsibleFromDb.getId());
 
-    }
+		return responsibleConverted;
+	}
 
-    public Responsible persist(Responsible entity) {
-        entity.setId(null);
-        return dao.save(entity);
-    }
+	public ResponsibleInfoDTO findPersonByCpf(String cpf) {
+		Person personFromDb = personService.findByCpf(cpf);
 
-    /**
-     * Realiza a persistência à partir de um DTO
-     * 
-     * @param responsible
-     * @return
-     */
-    public ResponsibleDTO persistDTO(NewResponsibleDTO responsible) {
-        Responsible domain = new Responsible();
-        domain.setProfessionalIdentity(responsible.getProfessionalIdentity());
-        domain = persist(domain);
+		ResponsibleInfoDTO responsibleInfo = new ResponsibleInfoDTO();
+		BeanUtils.copyProperties(personFromDb, responsibleInfo, "id");
+		responsibleInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
 
-        ResponsibleDTO newResponsible = new ResponsibleDTO();
-        newResponsible.setId(domain.getId());
-        BeanUtils.copyProperties(domain.getPerson(), newResponsible, "id");
+		if (personFromDb.getAddress() != null) {
+			PersonInfoAddressDTO address = new PersonInfoAddressDTO();
+			BeanUtils.copyProperties(personFromDb.getAddress(), address);
+			responsibleInfo.setAddress(address);
+		}
 
-        return newResponsible;
-    }
+		return responsibleInfo;
+	}
+
+	public ResponsibleInfoDTO findByCpf(String cpf) {
+		try {
+			Responsible responsibleFromDb = dao.findByCpf(cpf).orElseThrow(
+					() -> new ObjectNotFoundException(String.format("Responsável com cpf: [%s] não encontrado", cpf)));
+			Person person = responsibleFromDb.getPerson();
+
+			ResponsibleInfoDTO responsibleInfo = new ResponsibleInfoDTO();
+			BeanUtils.copyProperties(person, responsibleInfo, "id");
+			responsibleInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+
+			if (person.getAddress() != null) {
+				PersonInfoAddressDTO address = new PersonInfoAddressDTO();
+				BeanUtils.copyProperties(person.getAddress(), address);
+				responsibleInfo.setAddress(address);
+			}
+
+			responsibleInfo.setId(responsibleFromDb.getId());
+			return responsibleInfo;
+		} catch (ObjectNotFoundException e) {
+			return findPersonByCpf(cpf);
+		}
+
+	}
+
+	public ResponsibleInfoDTO update(Long id, ResponsibleInfoDTO responsible) {
+		Responsible responsibleFromDb = dao.findById(id).orElseThrow(
+				() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
+		BeanUtils.copyProperties(responsible, responsibleFromDb, "id");
+		dao.save(responsibleFromDb);
+		return responsible;
+	}
+
+	public void delete(Responsible entity) {
+		deleteById(entity.getId());
+	}
+
+	public void deleteById(Long id) {
+		Responsible responsibleFromDb = dao.findById(id).orElseThrow(
+				() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
+		dao.delete(responsibleFromDb);
+
+	}
+
+	public Responsible persist(Responsible entity) {
+		entity.setId(null);
+		return dao.save(entity);
+	}
+
+	/**
+	 * Realiza a persistência à partir de um DTO
+	 * 
+	 * @param responsible
+	 * @return
+	 */
+	public ResponsibleDTO persistDTO(NewResponsibleDTO responsible) {
+		Responsible domain = new Responsible();
+		domain.setProfessionalIdentity(responsible.getProfessionalIdentity());
+		domain = persist(domain);
+
+		ResponsibleDTO newResponsible = new ResponsibleDTO();
+		newResponsible.setId(domain.getId());
+		BeanUtils.copyProperties(domain.getPerson(), newResponsible, "id");
+
+		return newResponsible;
+	}
 }
