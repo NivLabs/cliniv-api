@@ -16,6 +16,7 @@ import br.com.ft.gdp.models.domain.Responsible;
 import br.com.ft.gdp.models.dto.DocumentDTO;
 import br.com.ft.gdp.models.dto.NewResponsibleDTO;
 import br.com.ft.gdp.models.dto.PersonInfoAddressDTO;
+import br.com.ft.gdp.models.dto.ProfessionalIdentityDTO;
 import br.com.ft.gdp.models.dto.ResponsibleDTO;
 import br.com.ft.gdp.models.dto.ResponsibleInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
@@ -66,6 +67,14 @@ public class ResponsibleService {
 			PersonInfoAddressDTO address = new PersonInfoAddressDTO();
 			BeanUtils.copyProperties(person.getAddress(), address);
 			responsibleConverted.setAddress(address);
+		}
+		if (responsibleFromDb.getProfessionalIdentity() != null) {
+			ProfessionalIdentityDTO professionalIdentity = new ProfessionalIdentityDTO();
+			professionalIdentity.setRegisterValue(responsibleFromDb.getProfessionalIdentity());
+			if (responsibleFromDb.getInitialsIdentity() != null) {
+				professionalIdentity.setRegisterType(responsibleFromDb.getInitialsIdentity());
+			}
+			responsibleConverted.setProfessionalIdentity(professionalIdentity);
 		}
 
 		responsibleConverted.setId(responsibleFromDb.getId());

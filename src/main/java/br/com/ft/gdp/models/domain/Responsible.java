@@ -43,6 +43,9 @@ public class Responsible extends BaseObject {
 
     @Column(name = "REGISTRO_PROFISSIONAL")
     private String professionalIdentity;
+    
+    @Column(name = "SIGLA_ORGAO")
+    private String initialsIdentity;
 
     public Responsible(Long id) {
         super();

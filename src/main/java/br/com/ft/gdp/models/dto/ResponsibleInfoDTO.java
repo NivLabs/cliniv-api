@@ -14,6 +14,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ResponsibleInfoDTO extends PersonInfoDTO {
 
-    private static final long serialVersionUID = 3558512431533807447L;
+	private static final long serialVersionUID = 3558512431533807447L;
+
+	private ProfessionalIdentityDTO professionalIdentity;
 
 }
