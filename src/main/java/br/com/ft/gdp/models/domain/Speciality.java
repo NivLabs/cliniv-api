@@ -15,6 +15,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,19 +37,20 @@ import lombok.NoArgsConstructor;
 @Table(name = "ESPECIALIDADE")
 public class Speciality implements Serializable {
 
-    private static final long serialVersionUID = 5635833259887178379L;
+	private static final long serialVersionUID = 5635833259887178379L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "NOME")
-    private String name;
+	@Column(name = "NOME")
+	private String name;
 
-    @Column(name = "DESCRICAO")
-    private String description;
+	@Column(name = "DESCRICAO")
+	private String description;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "ESPECIALIDADE_RESPONSAVEL", joinColumns = @JoinColumn(name = "ID_ESPECIALIDADE"), inverseJoinColumns = @JoinColumn(name = "ID_RESPONSAVEL"))
-    private List<Responsible> responsibles = new ArrayList<>();
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ESPECIALIDADE_RESPONSAVEL", joinColumns = @JoinColumn(name = "ID_ESPECIALIDADE"), inverseJoinColumns = @JoinColumn(name = "ID_RESPONSAVEL"))
+	private List<Responsible> responsibles = new ArrayList<>();
 }
