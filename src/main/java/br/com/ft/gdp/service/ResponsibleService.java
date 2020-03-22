@@ -138,7 +138,10 @@ public class ResponsibleService {
 				() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
 
 		BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), "id");
-		responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
+		if (responsible.getProfessionalIdentity() != null) {
+			responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
+			responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());
+		}
 
 		handleSpecializations(responsible, responsibleFromDb);
 		dao.saveAndFlush(responsibleFromDb);
