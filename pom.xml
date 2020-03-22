@@ -85,13 +85,6 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 
-		<!-- H2 DB (For Tests) -->
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
