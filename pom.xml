@@ -11,8 +11,10 @@
 
 	<groupId>br.com.ft</groupId>
 	<artifactId>gestao-de-prontuario</artifactId>
+	<version>1.0.0</version>
 	<name>Gestão de Prontuário</name>
 	<description>API da aplicação de Gestão de Prontuário</description>
+	<packaging>jar</packaging>
 
 	<properties>
 		<java.version>11</java.version>
@@ -94,14 +96,6 @@
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>11</source>
-					<target>11</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
