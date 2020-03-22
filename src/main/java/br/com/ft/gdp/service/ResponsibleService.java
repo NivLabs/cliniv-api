@@ -3,6 +3,8 @@ package br.com.ft.gdp.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,8 +21,10 @@ import br.com.ft.gdp.models.dto.PersonInfoAddressDTO;
 import br.com.ft.gdp.models.dto.ProfessionalIdentityDTO;
 import br.com.ft.gdp.models.dto.ResponsibleDTO;
 import br.com.ft.gdp.models.dto.ResponsibleInfoDTO;
+import br.com.ft.gdp.models.dto.SpecialityDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.repository.ResponsibleRepository;
+import br.com.ft.gdp.repository.SpecialityRepository;
 
 /**
  * Classe ResponsibleService.java
@@ -37,6 +41,10 @@ public class ResponsibleService {
 
 	@Autowired
 	private PersonService personService;
+	@Autowired
+	private SpecialityRepository specDao;
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public Page<ResponsibleDTO> searchEntityPage(Pageable pageRequest) {
 		Page<Responsible> pageOfResponsibles = dao.findAll(pageRequest);
@@ -61,6 +69,7 @@ public class ResponsibleService {
 		ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
 		responsibleConverted.setId(responsibleFromDb.getId());
 		BeanUtils.copyProperties(responsibleFromDb.getPerson(), responsibleConverted, "id");
+		BeanUtils.copyProperties(responsibleFromDb, responsibleConverted);
 		responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
 		if (person.getAddress() != null) {
@@ -106,6 +115,7 @@ public class ResponsibleService {
 
 			ResponsibleInfoDTO responsibleInfo = new ResponsibleInfoDTO();
 			BeanUtils.copyProperties(person, responsibleInfo, "id");
+			BeanUtils.copyProperties(responsibleFromDb, responsibleInfo);
 			responsibleInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
 			if (person.getAddress() != null) {
@@ -123,11 +133,45 @@ public class ResponsibleService {
 	}
 
 	public ResponsibleInfoDTO update(Long id, ResponsibleInfoDTO responsible) {
+		logger.info("Inciando processo de atualização de profissional ou responsável...");
 		Responsible responsibleFromDb = dao.findById(id).orElseThrow(
 				() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
-		BeanUtils.copyProperties(responsible, responsibleFromDb, "id");
-		dao.save(responsibleFromDb);
+
+		BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), "id");
+		responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
+
+		handleSpecializations(responsible, responsibleFromDb);
+		dao.saveAndFlush(responsibleFromDb);
 		return responsible;
+	}
+
+	private void handleSpecializations(ResponsibleInfoDTO responsible, Responsible responsibleFrom) {
+		logger.info("Verificando especializações...");
+		if (responsible.getSpecializations() != null) {
+			logger.info("Alterações encontradas, atualizando especializações do profissional :: {}",
+					responsible.getFirstName());
+			responsibleFrom.setSpecializations(new ArrayList<>());
+			responsible.getSpecializations().stream().map(SpecialityDTO::getId).forEach(specId -> {
+				responsibleFrom.getSpecializations()
+						.add(specDao.findById(specId).orElseThrow(() -> new ObjectNotFoundException(
+								String.format("Especialidade com identificador %s não encontrada", specId))));
+			});
+		}
+	}
+
+	private void handleSpecializations(NewResponsibleDTO responsible, Responsible responsibleFrom) {
+		logger.info("Verificando especializações...");
+		if (responsible.getEspecialityIdsList() != null && !responsible.getEspecialityIdsList().isEmpty()) {
+			logger.info("Especializações encontradas, atualizando especializações do profissional :: {}",
+					responsible.getName());
+			responsibleFrom.setSpecializations(new ArrayList<>());
+			responsible.getEspecialityIdsList().forEach(specId -> {
+				responsibleFrom.getSpecializations()
+						.add(specDao.findById(specId).orElseThrow(() -> new ObjectNotFoundException(
+								String.format("Especialidade com identificador %s não encontrada", specId))));
+
+			});
+		}
 	}
 
 	public void delete(Responsible entity) {
@@ -142,6 +186,7 @@ public class ResponsibleService {
 	}
 
 	public Responsible persist(Responsible entity) {
+		logger.info("Inciando processo de atualização de profissional ou responsável...");
 		entity.setId(null);
 		return dao.save(entity);
 	}
@@ -155,6 +200,7 @@ public class ResponsibleService {
 	public ResponsibleDTO persistDTO(NewResponsibleDTO responsible) {
 		Responsible domain = new Responsible();
 		domain.setProfessionalIdentity(responsible.getProfessionalIdentity());
+		handleSpecializations(responsible, domain);
 		domain = persist(domain);
 
 		ResponsibleDTO newResponsible = new ResponsibleDTO();

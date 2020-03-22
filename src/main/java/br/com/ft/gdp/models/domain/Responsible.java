@@ -1,5 +1,9 @@
 package br.com.ft.gdp.models.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -31,24 +37,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Responsible extends BaseObject {
 
-    private static final long serialVersionUID = 6649135435429790655L;
+	private static final long serialVersionUID = 6649135435429790655L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ID_PESSOA")
-    private Person person;
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ID_PESSOA")
+	private Person person;
 
-    @Column(name = "REGISTRO_PROFISSIONAL")
-    private String professionalIdentity;
-    
-    @Column(name = "SIGLA_ORGAO")
-    private String initialsIdentity;
+	@Column(name = "REGISTRO_PROFISSIONAL")
+	private String professionalIdentity;
 
-    public Responsible(Long id) {
-        super();
-        this.id = id;
-    }
+	@Column(name = "SIGLA_ORGAO")
+	private String initialsIdentity;
+
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@JoinTable(name = "ESPECIALIDADE_RESPONSAVEL", joinColumns = @JoinColumn(name = "ID_RESPONSAVEL"), inverseJoinColumns = @JoinColumn(name = "ID_ESPECIALIDADE"))
+	private List<Speciality> specializations = new ArrayList<>();
+
+	public Responsible(Long id) {
+		super();
+		this.id = id;
+	}
 }
