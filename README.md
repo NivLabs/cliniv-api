@@ -35,6 +35,8 @@ Caso não tenha o Lombok, já existe uma dependência do mesmo no projeto, basta
 - Abrir a IDE novamente
 - Rebuild no projeto
 
+Existe um manual mais detalhado de como instalar o plugin no Eclipse: [Criando uma API Rest de cadastro de contatos em 5 minutos com Spring Boot + Lombok](https://medium.com/@viniciosarodrigues/criando-uma-api-rest-de-cadastro-de-contatos-em-5-minutos-com-spring-boot-ce5ba775d2d8)
+
 ## Como rodar a API?
 Por ser um projeto SpringBoot, não se faz necessário o uso de nenhum servidor externo, pois o framework já disponibiliza um Tomcat embarcado, desta forma basta clicar com o botão direito na raiz do projeto, **Run As** -> **SpringBoot App**.
 Também pode rodar apartir do **ApplicationMain** encontrado no pacote base da aplicação.
