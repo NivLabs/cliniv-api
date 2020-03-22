@@ -46,6 +46,12 @@ public class ResponsibleService {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	/**
+	 * Realiza uma busca paginada de profissionais e responsáveis
+	 * 
+	 * @param pageRequest
+	 * @return
+	 */
 	public Page<ResponsibleDTO> searchEntityPage(Pageable pageRequest) {
 		Page<Responsible> pageOfResponsibles = dao.findAll(pageRequest);
 
@@ -60,38 +66,26 @@ public class ResponsibleService {
 		return new PageImpl<>(listOfResponsibleDTO, pageRequest, pageOfResponsibles.getTotalElements());
 	}
 
+	/**
+	 * Busca um profissional ou responsável pelo identificador
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public ResponsibleInfoDTO findById(Long id) {
 		Responsible responsibleFromDb = dao.findById(id).orElseThrow(
 				() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
-
-		Person person = responsibleFromDb.getPerson();
-
-		ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
-		responsibleConverted.setId(responsibleFromDb.getId());
-		BeanUtils.copyProperties(responsibleFromDb.getPerson(), responsibleConverted, "id");
-		BeanUtils.copyProperties(responsibleFromDb, responsibleConverted);
-		responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
-
-		if (person.getAddress() != null) {
-			PersonInfoAddressDTO address = new PersonInfoAddressDTO();
-			BeanUtils.copyProperties(person.getAddress(), address);
-			responsibleConverted.setAddress(address);
-		}
-		if (responsibleFromDb.getProfessionalIdentity() != null) {
-			ProfessionalIdentityDTO professionalIdentity = new ProfessionalIdentityDTO();
-			professionalIdentity.setRegisterValue(responsibleFromDb.getProfessionalIdentity());
-			if (responsibleFromDb.getInitialsIdentity() != null) {
-				professionalIdentity.setRegisterType(responsibleFromDb.getInitialsIdentity());
-			}
-			responsibleConverted.setProfessionalIdentity(professionalIdentity);
-		}
-
-		responsibleConverted.setId(responsibleFromDb.getId());
-
-		return responsibleConverted;
+		return handelResponsible(responsibleFromDb);
 	}
 
-	public ResponsibleInfoDTO findPersonByCpf(String cpf) {
+	/**
+	 * Busca um cadastro de pessoa ativa pelo CPF, utilizado para cadastro ainda não
+	 * existente de profissional.
+	 * 
+	 * @param cpf
+	 * @return
+	 */
+	private ResponsibleInfoDTO findPersonByCpf(String cpf) {
 		Person personFromDb = personService.findByCpf(cpf);
 
 		ResponsibleInfoDTO responsibleInfo = new ResponsibleInfoDTO();
@@ -107,44 +101,86 @@ public class ResponsibleService {
 		return responsibleInfo;
 	}
 
+	/**
+	 * Trata o objeto de resposta à partir do objeto domínio
+	 * 
+	 * @param responsibleOrigin
+	 * @return
+	 */
+	private ResponsibleInfoDTO handelResponsible(Responsible responsibleOrigin) {
+		Person person = responsibleOrigin.getPerson();
+
+		ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
+		BeanUtils.copyProperties(responsibleOrigin.getPerson(), responsibleConverted, "id");
+		BeanUtils.copyProperties(responsibleOrigin, responsibleConverted);
+		responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+
+		if (person.getAddress() != null) {
+			PersonInfoAddressDTO address = new PersonInfoAddressDTO();
+			BeanUtils.copyProperties(person.getAddress(), address);
+			responsibleConverted.setAddress(address);
+		}
+		if (responsibleOrigin.getProfessionalIdentity() != null) {
+			ProfessionalIdentityDTO professionalIdentity = new ProfessionalIdentityDTO();
+			professionalIdentity.setRegisterValue(responsibleOrigin.getProfessionalIdentity());
+			if (responsibleOrigin.getInitialsIdentity() != null) {
+				professionalIdentity.setRegisterType(responsibleOrigin.getInitialsIdentity());
+			}
+			responsibleConverted.setProfessionalIdentity(professionalIdentity);
+		}
+
+		responsibleConverted.setId(responsibleOrigin.getId());
+
+		return responsibleConverted;
+
+	}
+
+	/**
+	 * Busca um responsável pelo CPF
+	 * 
+	 * @param cpf
+	 * @return
+	 */
 	public ResponsibleInfoDTO findByCpf(String cpf) {
 		try {
 			Responsible responsibleFromDb = dao.findByCpf(cpf).orElseThrow(
 					() -> new ObjectNotFoundException(String.format("Responsável com cpf: [%s] não encontrado", cpf)));
-			Person person = responsibleFromDb.getPerson();
-
-			ResponsibleInfoDTO responsibleInfo = new ResponsibleInfoDTO();
-			BeanUtils.copyProperties(person, responsibleInfo, "id");
-			BeanUtils.copyProperties(responsibleFromDb, responsibleInfo);
-			responsibleInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
-
-			if (person.getAddress() != null) {
-				PersonInfoAddressDTO address = new PersonInfoAddressDTO();
-				BeanUtils.copyProperties(person.getAddress(), address);
-				responsibleInfo.setAddress(address);
-			}
-
-			responsibleInfo.setId(responsibleFromDb.getId());
-			return responsibleInfo;
+			return handelResponsible(responsibleFromDb);
 		} catch (ObjectNotFoundException e) {
 			return findPersonByCpf(cpf);
 		}
 
 	}
 
+	/**
+	 * Atualiza o cadastro de responsável ou profissional
+	 * 
+	 * @param id
+	 * @param responsible
+	 * @return
+	 */
 	public ResponsibleInfoDTO update(Long id, ResponsibleInfoDTO responsible) {
 		logger.info("Inciando processo de atualização de profissional ou responsável...");
 		Responsible responsibleFromDb = dao.findById(id).orElseThrow(
 				() -> new ObjectNotFoundException(String.format("Responsável com ID: [%s] não encontrado", id)));
 
 		BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), "id");
-		responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
+		if (responsible.getProfessionalIdentity() != null) {
+			responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
+			responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());
+		}
 
 		handleSpecializations(responsible, responsibleFromDb);
 		dao.saveAndFlush(responsibleFromDb);
 		return responsible;
 	}
 
+	/**
+	 * Trata as especializações para atualização
+	 * 
+	 * @param responsible
+	 * @param responsibleFrom
+	 */
 	private void handleSpecializations(ResponsibleInfoDTO responsible, Responsible responsibleFrom) {
 		logger.info("Verificando especializações...");
 		if (responsible.getSpecializations() != null) {
@@ -159,6 +195,12 @@ public class ResponsibleService {
 		}
 	}
 
+	/**
+	 * Trata as especializações para persistência
+	 * 
+	 * @param responsible
+	 * @param responsibleFrom
+	 */
 	private void handleSpecializations(NewResponsibleDTO responsible, Responsible responsibleFrom) {
 		logger.info("Verificando especializações...");
 		if (responsible.getEspecialityIdsList() != null && !responsible.getEspecialityIdsList().isEmpty()) {
@@ -174,6 +216,11 @@ public class ResponsibleService {
 		}
 	}
 
+	/**
+	 * Deleta o profissional
+	 * 
+	 * @param entity
+	 */
 	public void delete(Responsible entity) {
 		deleteById(entity.getId());
 	}
@@ -185,6 +232,12 @@ public class ResponsibleService {
 
 	}
 
+	/**
+	 * Insere um profissional à base de dados
+	 * 
+	 * @param entity
+	 * @return
+	 */
 	public Responsible persist(Responsible entity) {
 		logger.info("Inciando processo de atualização de profissional ou responsável...");
 		entity.setId(null);
