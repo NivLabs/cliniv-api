@@ -2,6 +2,10 @@ package br.com.ft.gdp.models.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import br.com.ft.gdp.models.enums.DocumentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,7 +28,13 @@ public class DocumentDTO implements Serializable {
 
     private static final long serialVersionUID = 8977997168527769344L;
 
+    @NotNull(message = "O tipo do documeno deve ser informado")
+    @NotEmpty(message = "O tipo do documeno deve ser informado")
+    @NotBlank(message = "O tipo do documeno deve ser informado")
     private DocumentType type;
 
+    @NotNull(message = "O documeno deve ser informado")
+    @NotEmpty(message = "O documeno deve ser informado")
+    @NotBlank(message = "O documento deve ser informado")
     private String value;
 }
