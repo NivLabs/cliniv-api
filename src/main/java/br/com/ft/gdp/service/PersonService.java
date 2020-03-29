@@ -62,7 +62,7 @@ public class PersonService implements GenericService<Person, Long> {
     @Override
     public Person persist(Person entity) {
         entity.setId(null);
-        return dao.save(entity);
+        return dao.saveAndFlush(entity);
     }
 
     public Person findByCpf(String cpf) {
