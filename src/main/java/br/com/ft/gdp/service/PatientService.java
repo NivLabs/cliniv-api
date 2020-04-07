@@ -17,10 +17,10 @@ import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.PersonAddress;
+import br.com.ft.gdp.models.dto.AddressDTO;
 import br.com.ft.gdp.models.dto.DocumentDTO;
 import br.com.ft.gdp.models.dto.PatientDTO;
 import br.com.ft.gdp.models.dto.PatientInfoDTO;
-import br.com.ft.gdp.models.dto.PersonInfoAddressDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.repository.PatientRepository;
 
@@ -73,7 +73,7 @@ public class PatientService implements GenericService<Patient, Long> {
         patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
         if (person.getAddress() != null) {
-            PersonInfoAddressDTO address = new PersonInfoAddressDTO();
+            AddressDTO address = new AddressDTO();
             BeanUtils.copyProperties(person.getAddress(), address);
             patientInfo.setAddress(address);
         }
@@ -92,7 +92,7 @@ public class PatientService implements GenericService<Patient, Long> {
         patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
 
         if (personFromDb.getAddress() != null) {
-            PersonInfoAddressDTO address = new PersonInfoAddressDTO();
+            AddressDTO address = new AddressDTO();
             BeanUtils.copyProperties(personFromDb.getAddress(), address);
             patientInfo.setAddress(address);
         }
@@ -111,7 +111,7 @@ public class PatientService implements GenericService<Patient, Long> {
             patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
 
             if (personFromDb.getAddress() != null) {
-                PersonInfoAddressDTO address = new PersonInfoAddressDTO();
+                AddressDTO address = new AddressDTO();
                 BeanUtils.copyProperties(personFromDb.getAddress(), address);
                 patientInfo.setAddress(address);
             }
@@ -141,7 +141,7 @@ public class PatientService implements GenericService<Patient, Long> {
 
         if (entity.getAddress() != null) {
             PersonAddress personAddress = null;
-            PersonInfoAddressDTO address = entity.getAddress();
+            AddressDTO address = entity.getAddress();
             if (entityFromDb.getAddress() == null)
                 personAddress = new PersonAddress();
             else
@@ -201,7 +201,7 @@ public class PatientService implements GenericService<Patient, Long> {
 
         logger.info("Verificando e-mail");
         if (entity.getAddress() != null) {
-            PersonInfoAddressDTO address = entity.getAddress();
+            AddressDTO address = entity.getAddress();
             PersonAddress personAddress = new PersonAddress();
             if (personFromDb.getAddress() != null)
                 personAddress = personFromDb.getAddress();
