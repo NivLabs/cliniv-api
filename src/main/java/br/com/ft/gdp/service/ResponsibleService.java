@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.Responsible;
+import br.com.ft.gdp.models.dto.AddressDTO;
 import br.com.ft.gdp.models.dto.DocumentDTO;
-import br.com.ft.gdp.models.dto.PersonInfoAddressDTO;
 import br.com.ft.gdp.models.dto.ProfessionalIdentityDTO;
 import br.com.ft.gdp.models.dto.ResponsibleDTO;
 import br.com.ft.gdp.models.dto.ResponsibleInfoDTO;
@@ -92,7 +92,7 @@ public class ResponsibleService {
         responsibleInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
 
         if (personFromDb.getAddress() != null) {
-            PersonInfoAddressDTO address = new PersonInfoAddressDTO();
+            AddressDTO address = new AddressDTO();
             BeanUtils.copyProperties(personFromDb.getAddress(), address);
             responsibleInfo.setAddress(address);
         }
@@ -115,7 +115,7 @@ public class ResponsibleService {
         responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
         if (person.getAddress() != null) {
-            PersonInfoAddressDTO address = new PersonInfoAddressDTO();
+            AddressDTO address = new AddressDTO();
             BeanUtils.copyProperties(person.getAddress(), address);
             responsibleConverted.setAddress(address);
         }

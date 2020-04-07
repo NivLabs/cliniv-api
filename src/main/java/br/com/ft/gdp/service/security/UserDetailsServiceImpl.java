@@ -7,8 +7,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.config.security.UserOfSystem;
+import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.UserApplication;
-import br.com.ft.gdp.service.UserService;
+import br.com.ft.gdp.repository.UserRepository;
 
 /**
  * Classe UserDetailServiceImpl.java
@@ -21,13 +22,12 @@ import br.com.ft.gdp.service.UserService;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserApplication user = userService.findByUsername(username);
-        if (user == null)
-            throw new UsernameNotFoundException(username);
-        return new UserOfSystem(user.getUsername(), user.getPassword(), user.isActive(), user.getRoles());
+        UserApplication user = userRepository.findByUserName(username).orElseThrow(() -> new ObjectNotFoundException(
+                "Usuário não encontrado! Username: " + username + ", tipo " + UserApplication.class.getName()));
+        return new UserOfSystem(user.getUserName(), user.getPassword(), user.isActive(), user.getRoles());
     }
 }

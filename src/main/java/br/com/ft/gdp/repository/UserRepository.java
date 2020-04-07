@@ -17,11 +17,11 @@ import br.com.ft.gdp.models.domain.UserApplication;
 @Repository
 public interface UserRepository extends JpaRepository<UserApplication, Long> {
 
-    public Optional<UserApplication> findByUsername(String username);
+    public Optional<UserApplication> findByUserName(String username);
 
     /**
      * @param usernameOrEmail
      * @return
      */
-    public Optional<UserApplication> findByUsernameOrEmail(String username, String email);
+    public Optional<UserApplication> findByUserNameOrEmail(String username, String email);
 }

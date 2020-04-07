@@ -1,6 +1,5 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.EnumType;
@@ -27,8 +26,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class PersonInfoDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class PersonInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4735834196671409605L;
 
@@ -62,6 +61,6 @@ public class PersonInfoDTO implements Serializable {
     @Size(min = 8, message = "Informe um número de telefone válido. O número deve conter ao menos 8 dígitos.")
     private String secondaryNumber;
 
-    private PersonInfoAddressDTO address;
+    private AddressDTO address;
 
 }

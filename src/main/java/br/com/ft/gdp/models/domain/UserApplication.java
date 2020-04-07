@@ -15,15 +15,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.springframework.beans.BeanUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
-import br.com.ft.gdp.models.dto.AddressDTO;
-import br.com.ft.gdp.models.dto.DocumentDTO;
-import br.com.ft.gdp.models.dto.ProfileInfoDTO;
-import br.com.ft.gdp.models.enums.DocumentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -58,7 +52,7 @@ public class UserApplication extends BaseObject {
     private String email;
 
     @Column(name = "USUARIO")
-    private String username;
+    private String userName;
 
     @JsonIgnore
     @Column(name = "SENHA", nullable = false, length = 500)
@@ -71,22 +65,6 @@ public class UserApplication extends BaseObject {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USUARIO_PERMISSAO", joinColumns = {@JoinColumn(name = "ID_USUARIO")}, inverseJoinColumns = {@JoinColumn(name = "ID_PERMISSAO")})
     private List<Role> roles = new ArrayList<>();
-
-    @JsonIgnore
-    public ProfileInfoDTO getUserInfoDTO() {
-        ProfileInfoDTO userInfo = new ProfileInfoDTO();
-
-        BeanUtils.copyProperties(this, userInfo, "password", "person");
-        BeanUtils.copyProperties(this.getPerson(), userInfo, "user", "id");
-        if (this.getPerson().getAddress() != null) {
-            userInfo.setAddress(new AddressDTO());
-            BeanUtils.copyProperties(this.getPerson().getAddress(), userInfo.getAddress());
-        }
-        userInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
-        userInfo.setUserName(this.username);
-
-        return userInfo;
-    }
 
     /**
      * @param userId

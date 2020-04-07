@@ -36,7 +36,7 @@ public class AuthService {
      */
     public void createNewPassword(ForgotPasswordRequestDTO newPasswordRequest) {
         UserApplication usuario = userRepo
-                .findByUsernameOrEmail(newPasswordRequest.getUsernameOrEmail(), newPasswordRequest.getUsernameOrEmail())
+                .findByUserNameOrEmail(newPasswordRequest.getUsernameOrEmail(), newPasswordRequest.getUsernameOrEmail())
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Usuário não encontrado para o email/usuário: [%s]",
                                                                              newPasswordRequest.getUsernameOrEmail())));
 
@@ -58,7 +58,7 @@ public class AuthService {
         if (!newPasswordDTO.getNewPassword().equals(newPasswordDTO.getConfirmNewPassword())) {
             throw new ValidationException("A nova senha e a confirmação de nova senha devem ser iguais");
         }
-        UserApplication userFromDb = userRepo.findByUsername(userFromSession.getUsername())
+        UserApplication userFromDb = userRepo.findByUserName(userFromSession.getUsername())
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
 
         if (bc.matches(newPasswordDTO.getOldPassword(), userFromDb.getPassword())) {
