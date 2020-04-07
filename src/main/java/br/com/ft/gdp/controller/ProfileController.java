@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.config.security.UserOfSystem;
 import br.com.ft.gdp.exception.InvalidOperationException;
-import br.com.ft.gdp.models.dto.ProfileInfoDTO;
-import br.com.ft.gdp.service.PersonService;
+import br.com.ft.gdp.models.dto.UserInfoDTO;
 import br.com.ft.gdp.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,26 +35,23 @@ public class ProfileController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private PersonService personService;
-
     @ApiOperation(nickname = "profile-get", value = "Busca dados do perfil do usuário logado")
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<ProfileInfoDTO> getMe() {
+    public ResponseEntity<UserInfoDTO> getMe() {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(userService.findByUsername(userFromSession.getUsername()).getUserInfoDTO());
+        return ResponseEntity.ok(userService.findByUserName(userFromSession.getUsername()));
     }
 
     @ApiOperation(nickname = "profile-put", value = "Atualiza dados do perfil do usuário logado")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<ProfileInfoDTO> updateMe(@PathVariable(name = "id") Long id, @Validated @RequestBody ProfileInfoDTO entity) {
+    public ResponseEntity<UserInfoDTO> updateMe(@PathVariable(name = "id") Long id, @Validated @RequestBody UserInfoDTO entity) {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         validUserToUpdate(entity, userFromSession);
 
-        ProfileInfoDTO userUpdated = personService.updateProfile(id, entity);
+        UserInfoDTO userUpdated = userService.update(id, entity);
         return ResponseEntity.ok(userUpdated);
     }
 
@@ -66,7 +62,7 @@ public class ProfileController {
      * @param entity
      * @param userFromSession
      */
-    private void validUserToUpdate(ProfileInfoDTO entity, UserOfSystem userFromSession) {
+    private void validUserToUpdate(UserInfoDTO entity, UserOfSystem userFromSession) {
         if (!userFromSession.getUsername().equals(entity.getUserName()))
             throw new InvalidOperationException("Operação não permitida, você só pode editar o seu próprio perfil");
     }
