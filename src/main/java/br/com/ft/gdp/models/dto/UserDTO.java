@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.dto;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel("UserSimple")
 public class UserDTO extends PersonDTO {
 
     private static final long serialVersionUID = 2375401831562989624L;

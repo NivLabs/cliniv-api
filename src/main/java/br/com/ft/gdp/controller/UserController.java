@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.controller.utils.FilteredPageable;
-import br.com.ft.gdp.models.dto.DataTransferObjectBase;
 import br.com.ft.gdp.models.dto.UserDTO;
+import br.com.ft.gdp.models.dto.UserInfoDTO;
 import br.com.ft.gdp.service.UserService;
 import io.swagger.annotations.Api;
 
@@ -38,7 +38,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<DataTransferObjectBase> findById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<UserInfoDTO> findById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(userService.findById(id));
     }
 }

@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.dto;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel("Role")
 public class RoleDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -4723369199443894800L;
