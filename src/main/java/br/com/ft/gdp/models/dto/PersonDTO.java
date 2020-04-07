@@ -1,6 +1,5 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,8 +22,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class PersonDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class PersonDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -1442279002298984040L;
 
