@@ -22,7 +22,7 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
      */
     @Override
     public Page<UserDTO> resumedList(UserFilters filters, Pageable pageSettings) {
-        Page<UserApplication> pageFromDatabase = pagination(createRestrictions(filters), pageSettings, UserApplication.class);
+        Page<UserApplication> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
 
         List<UserDTO> newContentToPage = new ArrayList<>();
 
