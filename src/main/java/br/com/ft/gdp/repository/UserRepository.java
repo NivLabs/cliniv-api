@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.ft.gdp.models.domain.UserApplication;
+import br.com.ft.gdp.repository.custom.user.UserRepositoryCustom;
 
 /**
  * Classe UserRepository.java
@@ -15,7 +16,7 @@ import br.com.ft.gdp.models.domain.UserApplication;
  * @since 15 de set de 2019
  */
 @Repository
-public interface UserRepository extends JpaRepository<UserApplication, Long> {
+public interface UserRepository extends JpaRepository<UserApplication, Long>, UserRepositoryCustom {
 
     public Optional<UserApplication> findByUserName(String username);
 
