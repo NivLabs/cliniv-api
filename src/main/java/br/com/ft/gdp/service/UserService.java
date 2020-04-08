@@ -6,9 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.ft.gdp.controller.utils.FilteredPageable;
+import br.com.ft.gdp.controller.filters.UserFilters;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.Person;
@@ -63,9 +64,8 @@ public class UserService {
         return responseDTO;
     }
 
-    public Page<UserDTO> searchEntityPage(FilteredPageable pageRequest) {
-
-        return null;
+    public Page<UserDTO> searchEntityPage(UserFilters filters, Pageable pageSettings) {
+        return userRepo.resumedList(filters, pageSettings);
     }
 
     public UserInfoDTO findById(Long id) {

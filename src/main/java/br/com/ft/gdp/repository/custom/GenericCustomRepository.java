@@ -1,8 +1,6 @@
 package br.com.ft.gdp.repository.custom;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -13,8 +11,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -24,39 +20,11 @@ import org.springframework.data.domain.Pageable;
  * 
  * @author viniciosarodrigues
  *
- * @param <T> Tipo da entidade
- * @param <K> Tipo da chave primária
  */
-public class GenericCustomRepository<T extends Serializable, K extends Serializable> {
+public class GenericCustomRepository<T extends Serializable> {
 
     @PersistenceContext
     protected EntityManager entityManager;
-
-    protected Class<T> persistentClass;
-
-    @Autowired
-    private Logger log;
-
-    @SuppressWarnings("unchecked")
-    private Class<T> getGenericTypeArgument(final Class<?> clazz, final int idx) {
-        final Type type = clazz.getGenericSuperclass();
-
-        ParameterizedType paramType;
-
-        if (type instanceof ParameterizedType) {
-            paramType = (ParameterizedType) type;
-        } else {
-            paramType = (ParameterizedType) ((Class<T>) type).getGenericSuperclass();
-        }
-        return (Class<T>) paramType.getActualTypeArguments()[idx];
-    }
-
-    protected Class<T> getDelegateClass() {
-        if (this.persistentClass == null) {
-            this.persistentClass = this.getGenericTypeArgument(this.getClass(), 0);
-        }
-        return this.persistentClass;
-    }
 
     /**
      * Realiza uma busca paginada baseada em Expressões
@@ -65,8 +33,7 @@ public class GenericCustomRepository<T extends Serializable, K extends Serializa
      * @param pageSettings
      * @return
      */
-    public Page<T> pagination(List<IExpression<T>> attributes, Pageable pageSettings) {
-        log.info("Inicializando paginação de {}", this.persistentClass.getName());
+    public Page<T> pagination(List<IExpression<T>> attributes, Pageable pageSettings, Class<T> persistentClass) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery(persistentClass);
         Root<T> root = criteria.from(persistentClass);
@@ -80,26 +47,12 @@ public class GenericCustomRepository<T extends Serializable, K extends Serializa
         addPageRestrinctions(query, pageSettings.getPageNumber(), pageSettings.getPageSize());
         List<T> resultList = query.getResultList();
 
-        return setPageSettings(attributes, pageSettings, resultList);
+        return setPageSettings(attributes, pageSettings, resultList, persistentClass);
     }
 
-    /**
-     * Seta as configurações de paginação
-     * 
-     * @param attributes
-     * @param pageSettings
-     * @param resultList
-     * @return
-     */
     private Page<T> setPageSettings(List<IExpression<T>> attributes, Pageable pageSettings,
-                                    List<T> resultList) {
-
-        Integer totalPages = ((int) Math.ceil(getCount(attributes) / pageSettings.getPageSize()));
-        log.info(
-                 "Paginação realizada para {}, total de páginas: {}, página atual: {}, quantidade de ítems na página {};",
-                 this.persistentClass.getName(), totalPages, pageSettings.getPageNumber(), resultList.size());
-
-        return new PageImpl<>(resultList, pageSettings, resultList.size());
+                                    List<T> resultList, Class<T> persistentClass) {
+        return new PageImpl<>(resultList, pageSettings, getCount(attributes, persistentClass));
     }
 
     /**
@@ -108,7 +61,7 @@ public class GenericCustomRepository<T extends Serializable, K extends Serializa
      * @param attributes
      * @return
      */
-    private Integer getCount(List<IExpression<T>> attributes) {
+    private Integer getCount(List<IExpression<T>> attributes, Class<T> persistentClass) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
         Root<T> root = criteriaQuery.from(persistentClass);
