@@ -1,17 +1,16 @@
 package br.com.ft.gdp.service;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.com.ft.gdp.controller.filters.ResponsibleFilters;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.Responsible;
@@ -51,18 +50,8 @@ public class ResponsibleService {
      * @param pageRequest
      * @return
      */
-    public Page<ResponsibleDTO> searchEntityPage(Pageable pageRequest) {
-        Page<Responsible> pageOfResponsibles = dao.findAll(pageRequest);
-
-        List<ResponsibleDTO> listOfResponsibleDTO = new ArrayList<>();
-
-        pageOfResponsibles.forEach(responsible -> {
-            ResponsibleDTO responsibleConverted = new ResponsibleDTO();
-            responsibleConverted.setId(responsible.getId());
-            BeanUtils.copyProperties(responsible.getPerson(), responsibleConverted, "id");
-            listOfResponsibleDTO.add(responsibleConverted);
-        });
-        return new PageImpl<>(listOfResponsibleDTO, pageRequest, pageOfResponsibles.getTotalElements());
+    public Page<ResponsibleDTO> searchEntityPage(ResponsibleFilters filters, Pageable pageRequest) {
+        return dao.resumedList(filters, pageRequest);
     }
 
     /**

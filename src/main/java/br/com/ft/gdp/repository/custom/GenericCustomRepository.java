@@ -23,7 +23,7 @@ import org.springframework.data.domain.Pageable;
  * @author viniciosarodrigues
  *
  */
-public class GenericCustomRepository<T extends Serializable> {
+public abstract class GenericCustomRepository<T extends Serializable> {
 
     @PersistenceContext
     protected EntityManager entityManager;
@@ -119,7 +119,7 @@ public class GenericCustomRepository<T extends Serializable> {
     }
 
     /**
-     * Cria as restrições baseadas nas exmpressões
+     * Cria as restrições baseadas em IExpressions
      * 
      * @param attributes
      * @param builder
@@ -134,5 +134,13 @@ public class GenericCustomRepository<T extends Serializable> {
             }
         return predicate;
     }
+
+    /**
+     * Cria restrições baseadas em filtros customizados
+     * 
+     * @param filters
+     * @return
+     */
+    protected abstract List<IExpression<T>> createRestrictions(CustomFilters filters);
 
 }
