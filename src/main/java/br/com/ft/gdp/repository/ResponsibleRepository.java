@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.ft.gdp.models.domain.Responsible;
+import br.com.ft.gdp.repository.custom.responsible.ResponsibleRepositoryCustom;
 
 /**
  * Classe ResponsibleDao.java
@@ -16,13 +17,13 @@ import br.com.ft.gdp.models.domain.Responsible;
  * @since 7 de set de 2019
  */
 @Repository
-public interface ResponsibleRepository extends JpaRepository<Responsible, Long> {
+public interface ResponsibleRepository extends JpaRepository<Responsible, Long>, ResponsibleRepositoryCustom {
 
-	/**
-	 * @param cpf
-	 * @return
-	 */
-	@Query("from Responsible where person.cpf = :cpf")
-	public Optional<Responsible> findByCpf(String cpf);
+    /**
+     * @param cpf
+     * @return
+     */
+    @Query("from Responsible where person.cpf = :cpf")
+    public Optional<Responsible> findByCpf(String cpf);
 
 }
