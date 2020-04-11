@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.ft.gdp.controller.filters.PatientFilters;
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.dto.PatientDTO;
@@ -55,11 +56,12 @@ public class PatientController {
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Page<PatientDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                     @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+                                                     @RequestParam(value = "size", defaultValue = "24") Integer size,
                                                      @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                     @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-        Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        return ResponseEntity.ok(service.getListOfPatientInfo(pageSettings));
+                                                     @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+                                                     PatientFilters patientFilters) {
+        Pageable pageSettings = PageRequest.of(page, size, Direction.valueOf(direction), orderBy);
+        return ResponseEntity.ok(service.getListOfPatientInfo(patientFilters, pageSettings));
     }
 
     @ApiOperation(nickname = "patient-post", value = "Insere um novo paciente na aplicação")
