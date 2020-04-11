@@ -33,7 +33,7 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
         pageFromDatabase.forEach(responsible -> {
             PatientDTO patientConverted = new PatientDTO();
             BeanUtils.copyProperties(responsible.getPerson(), patientConverted, "id");
-            BeanUtils.copyProperties(responsible, patientConverted, "id");
+            BeanUtils.copyProperties(responsible, patientConverted);
             listOfPatientDTO.add(patientConverted);
         });
         return new PageImpl<>(listOfPatientDTO, pageSettings, pageFromDatabase.getTotalElements());
