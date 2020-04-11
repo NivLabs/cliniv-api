@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.ft.gdp.models.domain.Patient;
-import br.com.ft.gdp.repository.custom.patient.PatientRespositoryCustom;
+import br.com.ft.gdp.repository.custom.patient.PatientRepositoryCustom;
 
 /**
  * 
@@ -19,7 +19,7 @@ import br.com.ft.gdp.repository.custom.patient.PatientRespositoryCustom;
  * @since 15 de set de 2019
  */
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Long>, PatientRespositoryCustom {
+public interface PatientRepository extends JpaRepository<Patient, Long>, PatientRepositoryCustom {
 
     /**
      * @param cpf

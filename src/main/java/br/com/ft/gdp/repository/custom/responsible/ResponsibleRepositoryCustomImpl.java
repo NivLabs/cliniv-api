@@ -33,7 +33,7 @@ public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Res
         pageFromDatabase.forEach(responsible -> {
             ResponsibleDTO responsibleConverted = new ResponsibleDTO();
             BeanUtils.copyProperties(responsible.getPerson(), responsibleConverted, "id");
-            BeanUtils.copyProperties(responsible, responsibleConverted, "id");
+            BeanUtils.copyProperties(responsible, responsibleConverted);
             listOfResponsibleDTO.add(responsibleConverted);
         });
         return new PageImpl<>(listOfResponsibleDTO, pageSettings, pageFromDatabase.getTotalElements());

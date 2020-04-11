@@ -22,7 +22,7 @@ import br.com.ft.gdp.util.StringUtils;
  * @author viniciosarodrigues
  *
  */
-public class PatientRespositoryCustomImpl extends GenericCustomRepository<Patient> implements PatientRespositoryCustom {
+public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient> implements PatientRepositoryCustom {
 
     @Override
     public Page<PatientDTO> resumedList(PatientFilters filters, Pageable pageSettings) {
@@ -33,7 +33,7 @@ public class PatientRespositoryCustomImpl extends GenericCustomRepository<Patien
         pageFromDatabase.forEach(responsible -> {
             PatientDTO patientConverted = new PatientDTO();
             BeanUtils.copyProperties(responsible.getPerson(), patientConverted, "id");
-            BeanUtils.copyProperties(responsible, patientConverted, "id");
+            BeanUtils.copyProperties(responsible, patientConverted);
             listOfPatientDTO.add(patientConverted);
         });
         return new PageImpl<>(listOfPatientDTO, pageSettings, pageFromDatabase.getTotalElements());
