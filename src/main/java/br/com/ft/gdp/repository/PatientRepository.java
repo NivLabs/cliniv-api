@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import br.com.ft.gdp.models.domain.Patient;
+import br.com.ft.gdp.repository.custom.patient.PatientRespositoryCustom;
 
 /**
  * 
@@ -18,7 +19,7 @@ import br.com.ft.gdp.models.domain.Patient;
  * @since 15 de set de 2019
  */
 @Repository
-public interface PatientRepository extends JpaRepository<Patient, Long> {
+public interface PatientRepository extends JpaRepository<Patient, Long>, PatientRespositoryCustom {
 
     /**
      * @param cpf
@@ -35,6 +36,5 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
      */
     @Query("from Patient where firstName like :name and motherName like :motherName")
     public List<Patient> findByComposition(String name, String motherName);
-
 
 }
