@@ -1,6 +1,8 @@
 package br.com.ft.gdp.repository.custom;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -21,10 +23,40 @@ import org.springframework.data.domain.Pageable;
  * @author viniciosarodrigues
  *
  */
-public class GenericCustomRepository<T extends Serializable> {
+public abstract class GenericCustomRepository<T extends Serializable> {
 
     @PersistenceContext
     protected EntityManager entityManager;
+
+    protected Class<T> persistentClass;
+
+    @SuppressWarnings("unchecked")
+    private Class<T> getGenericTypeArgument(final Class<?> clazz, final int idx) {
+        final Type type = clazz.getGenericSuperclass();
+
+        ParameterizedType paramType;
+
+        if (type instanceof ParameterizedType) {
+            paramType = (ParameterizedType) type;
+        } else {
+            paramType = (ParameterizedType) ((Class<T>) type).getGenericSuperclass();
+        }
+        return (Class<T>) paramType.getActualTypeArguments()[idx];
+    }
+
+    protected Class<T> getDelegateClass() {
+        if (this.persistentClass == null) {
+            this.persistentClass = this.getGenericTypeArgument(this.getClass(), 0);
+        }
+        return this.persistentClass;
+    }
+
+    /**
+     * Construtor privado Inicializa a estrutura básica do JPA
+     */
+    protected GenericCustomRepository() {
+        this.getDelegateClass();
+    }
 
     /**
      * Realiza uma busca paginada baseada em Expressões
@@ -33,7 +65,7 @@ public class GenericCustomRepository<T extends Serializable> {
      * @param pageSettings
      * @return
      */
-    public Page<T> pagination(List<IExpression<T>> attributes, Pageable pageSettings, Class<T> persistentClass) {
+    public Page<T> pagination(List<IExpression<T>> attributes, Pageable pageSettings) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery(persistentClass);
         Root<T> root = criteria.from(persistentClass);
@@ -47,12 +79,12 @@ public class GenericCustomRepository<T extends Serializable> {
         addPageRestrinctions(query, pageSettings.getPageNumber(), pageSettings.getPageSize());
         List<T> resultList = query.getResultList();
 
-        return setPageSettings(attributes, pageSettings, resultList, persistentClass);
+        return setPageSettings(attributes, pageSettings, resultList);
     }
 
     private Page<T> setPageSettings(List<IExpression<T>> attributes, Pageable pageSettings,
-                                    List<T> resultList, Class<T> persistentClass) {
-        return new PageImpl<>(resultList, pageSettings, getCount(attributes, persistentClass));
+                                    List<T> resultList) {
+        return new PageImpl<>(resultList, pageSettings, getCount(attributes));
     }
 
     /**
@@ -61,7 +93,7 @@ public class GenericCustomRepository<T extends Serializable> {
      * @param attributes
      * @return
      */
-    private Integer getCount(List<IExpression<T>> attributes, Class<T> persistentClass) {
+    private Integer getCount(List<IExpression<T>> attributes) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
         Root<T> root = criteriaQuery.from(persistentClass);
@@ -87,7 +119,7 @@ public class GenericCustomRepository<T extends Serializable> {
     }
 
     /**
-     * Cria as restrições baseadas nas exmpressões
+     * Cria as restrições baseadas em IExpressions
      * 
      * @param attributes
      * @param builder
@@ -102,5 +134,13 @@ public class GenericCustomRepository<T extends Serializable> {
             }
         return predicate;
     }
+
+    /**
+     * Cria restrições baseadas em filtros customizados
+     * 
+     * @param filters
+     * @return
+     */
+    protected abstract List<IExpression<T>> createRestrictions(CustomFilters filters);
 
 }

@@ -50,6 +50,7 @@ public class HandlerExceptions {
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<StandardErrorSpring> objetoNaoEncontrado(ObjectNotFoundException e,
                                                                    HttpServletRequest req) {
+        logger.error("Objeto não encontrado :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(),
                 "Não Encontrado", Arrays.asList(), e.getMessage(), req.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
@@ -64,6 +65,7 @@ public class HandlerExceptions {
      */
     @ExceptionHandler(InvalidOperationException.class)
     public ResponseEntity<StandardErrorSpring> operacaoInvalida(InvalidOperationException e, HttpServletRequest req) {
+        logger.error("Operação inválida :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.METHOD_NOT_ALLOWED.value(),
                 "Operação inválida", Arrays.asList(), e.getMessage(), req.getRequestURI());
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(err);
@@ -79,7 +81,7 @@ public class HandlerExceptions {
     @ExceptionHandler(NewPasswordInvalidException.class)
     public ResponseEntity<StandardErrorSpring> newPasswordInvalidException(NewPasswordInvalidException e,
                                                                            HttpServletRequest req) {
-
+        logger.error("Erro de validação no processo de Nova Senha :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
                 "Informações inválidas", Arrays.asList(), "Você não forneceu as informações necessárias para recuperar a senha",
                 req.getRequestURI());
@@ -97,7 +99,7 @@ public class HandlerExceptions {
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<StandardErrorSpring> validationException(ValidationException e,
                                                                    HttpServletRequest req) {
-
+        logger.error("Erro de validação :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
                 "Informações inválidas", Arrays.asList(), e.getMessage(),
                 req.getRequestURI());
@@ -115,7 +117,7 @@ public class HandlerExceptions {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<StandardErrorSpring> objetoNaoEncontrado(HttpMessageNotReadableException e,
                                                                    HttpServletRequest req) {
-
+        logger.error("Falha interna não esperada :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
                 "Propriedade não reconhecida", Arrays.asList(), getPropertyMessageError(e),
                 req.getRequestURI());
@@ -146,6 +148,7 @@ public class HandlerExceptions {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StandardErrorSpring> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest req) {
+        logger.error("Argumentos inválidos :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
                 "Requisição mal formada", getValidations(e), "Erro de validação", req.getRequestURI());
 
@@ -161,6 +164,7 @@ public class HandlerExceptions {
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<StandardErrorSpring> methodArgumentNotValidException(AccessDeniedException e, HttpServletRequest req) {
+        logger.error("Acesso negado :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.FORBIDDEN.value(),
                 "Sem permissões", Arrays.asList(), "Seu usuário não tem permissão para acessar este recurso", req.getRequestURI());
 

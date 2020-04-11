@@ -1,10 +1,10 @@
 package br.com.ft.gdp.controller.filters;
 
-import java.io.Serializable;
-
 import br.com.ft.gdp.models.enums.Gender;
+import br.com.ft.gdp.repository.custom.CustomFilters;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
@@ -17,8 +17,9 @@ import lombok.Setter;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Setter
-public class UserFilters implements Serializable {
+public class UserFilters extends CustomFilters {
 
     private static final long serialVersionUID = 7760736861571277630L;
 

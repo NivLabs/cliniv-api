@@ -1,6 +1,5 @@
 package br.com.ft.gdp.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.com.ft.gdp.controller.filters.PatientFilters;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.Patient;
@@ -49,18 +48,8 @@ public class PatientService implements GenericService<Patient, Long> {
      * @param pageRequest
      * @return
      */
-    public Page<PatientDTO> getListOfPatientInfo(Pageable pageRequest) {
-        Page<Patient> pageOfPatient = dao.findAll(pageRequest);
-
-        List<PatientDTO> listOfPatientDTO = new ArrayList<>();
-
-        pageOfPatient.forEach(patient -> {
-            PatientDTO patientConverted = new PatientDTO();
-            patientConverted.setId(patient.getId());
-            BeanUtils.copyProperties(patient.getPerson(), patientConverted, "id");
-            listOfPatientDTO.add(patientConverted);
-        });
-        return new PageImpl<>(listOfPatientDTO, pageRequest, pageOfPatient.getTotalElements());
+    public Page<PatientDTO> getListOfPatientInfo(PatientFilters filters, Pageable pageRequest) {
+        return dao.resumedList(filters, pageRequest);
     }
 
     public PatientInfoDTO findByPateintId(Long id) {

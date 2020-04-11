@@ -11,10 +11,17 @@ import org.springframework.data.domain.Pageable;
 import br.com.ft.gdp.controller.filters.UserFilters;
 import br.com.ft.gdp.models.domain.UserApplication;
 import br.com.ft.gdp.models.dto.UserDTO;
+import br.com.ft.gdp.repository.custom.CustomFilters;
 import br.com.ft.gdp.repository.custom.GenericCustomRepository;
 import br.com.ft.gdp.repository.custom.IExpression;
 import br.com.ft.gdp.util.StringUtils;
 
+/**
+ * Repositório de usuário customizado
+ * 
+ * @author viniciosarodrigues
+ *
+ */
 public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplication> implements UserRepositoryCustom {
 
     /**
@@ -22,7 +29,7 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
      */
     @Override
     public Page<UserDTO> resumedList(UserFilters filters, Pageable pageSettings) {
-        Page<UserApplication> pageFromDatabase = pagination(createRestrictions(filters), pageSettings, UserApplication.class);
+        Page<UserApplication> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
 
         List<UserDTO> newContentToPage = new ArrayList<>();
 
@@ -33,16 +40,14 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
             newContentToPage.add(userDTO);
         });
 
-        return new PageImpl<>(newContentToPage, pageSettings, newContentToPage.size());
+        return new PageImpl<>(newContentToPage, pageSettings, pageFromDatabase.getTotalElements());
     }
 
-    /**
-     * Cria restrições baseadas nos filtros
-     * 
-     * @param filters
-     * @return
-     */
-    private List<IExpression<UserApplication>> createRestrictions(UserFilters filters) {
+    @Override
+    protected List<IExpression<UserApplication>> createRestrictions(CustomFilters customFilters) {
+
+        UserFilters filters = (UserFilters) customFilters;
+
         List<IExpression<UserApplication>> attributes = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getUserName())) {

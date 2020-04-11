@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.ft.gdp.controller.filters.PatientFilters;
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.dto.PatientDTO;
@@ -54,12 +54,10 @@ public class PatientController {
     @ApiOperation(nickname = "patient-get", value = "Busca uma página de pacientes")
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<Page<PatientDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                     @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                     @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                     @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-        Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        return ResponseEntity.ok(service.getListOfPatientInfo(pageSettings));
+    public ResponseEntity<Page<PatientDTO>> findPage(PatientFilters filters) {
+        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
+                                               filters.getOrderBy());
+        return ResponseEntity.ok(service.getListOfPatientInfo(filters, pageSettings));
     }
 
     @ApiOperation(nickname = "patient-post", value = "Insere um novo paciente na aplicação")
