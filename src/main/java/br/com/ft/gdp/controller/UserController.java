@@ -2,12 +2,15 @@ package br.com.ft.gdp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.controller.filters.UserFilters;
@@ -35,7 +38,12 @@ public class UserController {
     @ApiOperation(nickname = "user-get", value = "Busca uma página de usuários baseada em filtros")
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<Page<UserDTO>> findPage(UserFilters filters, Pageable pageSettings) {
+    public ResponseEntity<Page<UserDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                  @RequestParam(value = "size", defaultValue = "24") Integer size,
+                                                  @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+                                                  @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+                                                  UserFilters filters) {
+        Pageable pageSettings = PageRequest.of(page, size, Direction.valueOf(direction), orderBy);
         return ResponseEntity.ok(userService.searchEntityPage(filters, pageSettings));
     }
 
