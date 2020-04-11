@@ -27,4 +27,19 @@ public interface StringUtils {
         }
         return strDigits.toString();
     }
+
+    /**
+     * Checa que a String é numérica para gecagem de identificadores
+     * 
+     * @param str
+     * @return
+     */
+    public static boolean isNoFloatNumeric(String str) {
+        try {
+            Long.parseLong(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 }
