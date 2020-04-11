@@ -12,7 +12,7 @@ import br.com.ft.gdp.models.dto.PatientDTO;
  * @author viniciosarodrigues
  *
  */
-public interface PatientRespositoryCustom {
+public interface PatientRepositoryCustom {
 
     /**
      * Realiza a busca paginada reduzida de pacientes

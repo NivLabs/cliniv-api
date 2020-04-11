@@ -22,7 +22,7 @@ import br.com.ft.gdp.util.StringUtils;
  * @author viniciosarodrigues
  *
  */
-public class PatientRespositoryCustomImpl extends GenericCustomRepository<Patient> implements PatientRespositoryCustom {
+public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient> implements PatientRepositoryCustom {
 
     @Override
     public Page<PatientDTO> resumedList(PatientFilters filters, Pageable pageSettings) {
