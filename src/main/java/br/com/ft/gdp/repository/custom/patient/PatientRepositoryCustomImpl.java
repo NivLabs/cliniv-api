@@ -45,6 +45,9 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
 
         List<IExpression<Patient>> attributes = new ArrayList<>();
 
+        if (filters.getId() != null) {
+            attributes.add((cb, from) -> cb.equal(from.get("id"), filters.getId()));
+        }
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
             attributes.add((cb, from) -> cb.equal(from.get("person").get("cpf"), filters.getCpf()));
         }

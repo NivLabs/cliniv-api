@@ -20,7 +20,9 @@ public class PatientFilters extends CustomFilters {
 
     private static final long serialVersionUID = 1647722811566982336L;
 
-    private String cpf;
+    private Long id;
+
+      private String cpf;
 
     private String firstName = "";
 
