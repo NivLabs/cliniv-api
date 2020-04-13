@@ -14,6 +14,8 @@ public class ResponsibleFilters extends CustomFilters {
 
     private static final long serialVersionUID = -8122726857291316469L;
 
+    private String id;
+
     private String professionalIdentity = "";
 
     private String cpf;
