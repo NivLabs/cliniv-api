@@ -69,9 +69,28 @@ public class UserService {
     }
 
     public UserInfoDTO findById(Long id) {
-        userRepo.findById(id).orElseThrow(() -> new ObjectNotFoundException(
+        UserApplication userFromDb = userRepo.findById(id).orElseThrow(() -> new ObjectNotFoundException(
                 "Usuário não encontrado! Id: " + id + ", tipo " + UserApplication.class.getName()));
-        return null;
+
+        UserInfoDTO response = new UserInfoDTO();
+
+        BeanUtils.copyProperties(userFromDb.getPerson(), response);
+
+        if (userFromDb.getPerson().getAddress() != null) {
+            AddressDTO address = new AddressDTO();
+            BeanUtils.copyProperties(userFromDb.getPerson().getAddress(), address);
+            response.setAddress(address);
+        }
+
+        response.setDocument(new DocumentDTO(DocumentType.CPF, userFromDb.getPerson().getCpf()));
+
+        if (userFromDb.getRoles() != null && !userFromDb.getRoles().isEmpty()) {
+            response.setRoles(userFromDb.getRoles().stream().map(this::convertRole).collect(Collectors.toList()));
+        }
+
+        BeanUtils.copyProperties(userFromDb, response);
+
+        return response;
     }
 
     public DataTransferObjectBase persist(UserApplication entity) {
@@ -94,7 +113,7 @@ public class UserService {
 
         entityFromDb.setRoles(Arrays.asList());
         if (entity.getRoles() != null && !entity.getRoles().isEmpty()) {
-            entityFromDb.setRoles(entity.getRoles().stream().map(this::convertRoleDto).collect(Collectors.toList()));
+            entityFromDb.setRoles(entity.getRoles().stream().map(this::convertRole).collect(Collectors.toList()));
         }
 
         userRepo.saveAndFlush(entityFromDb);
@@ -103,13 +122,23 @@ public class UserService {
     }
 
     /**
-     * Converte um papel vinda da requisição em um papel de domínio
+     * Converte um papel vindo da requisição em um papel de domínio
      * 
      * @param roleDTO
      * @return
      */
-    private Role convertRoleDto(RoleDTO roleDTO) {
+    private Role convertRole(RoleDTO roleDTO) {
         return new Role(roleDTO.getId(), roleDTO.getDescription());
+    }
+
+    /**
+     * Convert um papel vindo do banco em um papel de resposta
+     * 
+     * @param role
+     * @return
+     */
+    private RoleDTO convertRole(Role role) {
+        return new RoleDTO(role.getId(), role.getDescription());
     }
 
     /**
