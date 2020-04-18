@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -75,5 +76,9 @@ public class Person extends BaseObject {
 
     @OneToOne(mappedBy = "person", fetch = FetchType.LAZY)
     private UserApplication user;
+
+    @Column(name = "FOTO")
+    @Lob
+    private String profilePhoto;
 
 }
