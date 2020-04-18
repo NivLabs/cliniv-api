@@ -43,4 +43,6 @@ public class PersonDTO extends DataTransferObjectBase {
     private String principalNumber;
 
     private Gender gender;
+
+    private String profilePhoto;
 }

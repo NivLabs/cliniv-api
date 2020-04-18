@@ -65,4 +65,6 @@ public class PersonInfoDTO extends DataTransferObjectBase {
 
     private AddressDTO address;
 
+    private String profilePhoto;
+
 }
