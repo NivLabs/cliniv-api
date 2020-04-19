@@ -3,8 +3,10 @@ package br.com.ft.gdp.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.UserApplication;
 import br.com.ft.gdp.repository.custom.user.UserRepositoryCustom;
 
@@ -25,4 +27,7 @@ public interface UserRepository extends JpaRepository<UserApplication, Long>, Us
      * @return
      */
     public Optional<UserApplication> findByUserNameOrEmail(String username, String email);
+
+    @Query("from UserApplication where person.cpf = :cpf")
+    public Optional<UserApplication> findByCpf(String cpf);
 }
