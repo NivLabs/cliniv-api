@@ -173,18 +173,16 @@ public class PatientService implements GenericService<Patient, Long> {
             throw new ValidationException("Tipo do documento inválido, informe um documento válido.");
         }
         patientCheckIfExists(entity);
-        if (entity.getDocument() != null && entity.getDocument().getValue() != null) {
-            try {
-                logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
-                personFromDb = personService.findByCpf(entity.getDocument().getValue());
-            } catch (ObjectNotFoundException e) {
-                logger.info("Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
-                            entity.getDocument().getType(), entity.getDocument().getValue());
-                personFromDb = new Person();
-            }
+        try {
+            logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
+            personFromDb = personService.findByCpf(entity.getDocument().getValue());
+        } catch (ObjectNotFoundException e) {
+            logger.info("Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
+                        entity.getDocument().getType(), entity.getDocument().getValue());
+            personFromDb = new Person();
         }
 
-        logger.info("Copiando as propriedades da requisição para o obijeto de negócio...");
+        logger.info("Copiando as propriedades da requisição para o objeto de negócio...");
         BeanUtils.copyProperties(entity, personFromDb, "id");
         personFromDb.setCpf(entity.getDocument().getValue());
 
@@ -205,7 +203,6 @@ public class PatientService implements GenericService<Patient, Long> {
             personService.persist(personFromDb);
 
         Patient newPatient = new Patient();
-        newPatient.setId(null);
         newPatient.setPerson(personFromDb);
         dao.save(newPatient);
 
