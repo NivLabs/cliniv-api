@@ -1,5 +1,7 @@
 package br.com.ft.gdp.service.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ import br.com.ft.gdp.repository.UserRepository;
  */
 @Service
 public class AuthService {
+
+    private static Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
     UserRepository userRepo;
@@ -75,8 +79,11 @@ public class AuthService {
      * @param id
      */
     public void resetPassword(Long id) {
+        logger.info("Iniciando busca de paciente para reset de senha :: ID -> {}", id);
         UserApplication userFromDb = userRepo.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+
+        logger.info("Paciente encontrado :: CPF -> {}", userFromDb.getPerson().getCpf());
 
         userFromDb.setPassword(bc.encode(userFromDb.getPerson().getCpf()));
         userRepo.saveAndFlush(userFromDb);
