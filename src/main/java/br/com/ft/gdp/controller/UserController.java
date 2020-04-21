@@ -21,6 +21,7 @@ import br.com.ft.gdp.models.dto.UserDTO;
 import br.com.ft.gdp.models.dto.UserInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.service.UserService;
+import br.com.ft.gdp.service.security.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -38,6 +39,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthService authService;
 
     @ApiOperation(nickname = "user-get", value = "Busca uma página de usuários baseada em filtros")
     @GetMapping
@@ -77,4 +81,11 @@ public class UserController {
         return ResponseEntity.ok(userService.findByCpf(document));
     }
 
+    @ApiOperation(nickname = "user-reset-password", value = "Reseta a senha do usuário")
+    @PutMapping("{id}/reset-password")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public ResponseEntity<?> resetPassword(@PathVariable("id") Long id) {
+        authService.resetPassword(id);
+        return ResponseEntity.noContent().build();
+    }
 }
