@@ -69,4 +69,17 @@ public class AuthService {
         userRepo.saveAndFlush(userFromDb);
     }
 
+    /**
+     * Reseta a senha do usuário
+     * 
+     * @param id
+     */
+    public void resetPassword(Long id) {
+        UserApplication userFromDb = userRepo.findById(id)
+                .orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+
+        userFromDb.setPassword(bc.encode(userFromDb.getPerson().getCpf()));
+        userRepo.saveAndFlush(userFromDb);
+    }
+
 }
