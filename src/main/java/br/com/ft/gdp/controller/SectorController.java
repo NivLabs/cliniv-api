@@ -51,7 +51,7 @@ public class SectorController {
 
     @ApiOperation(nickname = "sector-post", value = "Insere um novo setor na aplicação")
     @PostMapping
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<SectorDTO> persist(@Validated @RequestBody(required = true) SectorDTO newsector,
                                              HttpServletResponse response) {
         SectorDTO createdsector = service.persist(newsector);
@@ -64,7 +64,7 @@ public class SectorController {
 
     @ApiOperation(nickname = "sector-put", value = "Atualiza um setor na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<SectorDTO> update(@PathVariable("id") Long id,
                                             @Validated @RequestBody(required = true) SectorDTO sector,
                                             HttpServletResponse response) {
@@ -76,7 +76,7 @@ public class SectorController {
 
     @ApiOperation(nickname = "sector-get-id", value = "Busca um setor baseado no identificador")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<SectorDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
