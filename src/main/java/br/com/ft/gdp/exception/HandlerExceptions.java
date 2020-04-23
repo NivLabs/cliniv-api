@@ -90,6 +90,24 @@ public class HandlerExceptions {
     }
 
     /**
+     * Trata exceções de propriedades inválidas
+     * 
+     * @param e
+     * @param req
+     * @return
+     */
+    @ExceptionHandler(GenerateReportException.class)
+    public ResponseEntity<StandardErrorSpring> generateReportException(GenerateReportException e,
+                                                                       HttpServletRequest req) {
+        logger.error("Falha ao tentar gerar relatório :: ", e);
+        StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+                "Propriedade não reconhecida", Arrays.asList(), e.getMessage(),
+                req.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    /**
      * Captura erros de requisições mal formadas
      * 
      * @param e
