@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.models.dto.SectorDTO;
+import br.com.ft.gdp.report.ReportFactory;
 import br.com.ft.gdp.service.SectorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
