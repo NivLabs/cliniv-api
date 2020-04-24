@@ -18,6 +18,9 @@ import net.sf.jasperreports.engine.JasperReport;
  */
 public class ReportFactory {
 
+    /**
+     * Construtor privado
+     */
     private ReportFactory() {
     }
 
