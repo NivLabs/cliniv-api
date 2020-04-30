@@ -43,9 +43,11 @@ Atualmente encontra-se na versão 1.0.0
 - [x] Cadastro de Pacientes
 - [x] Cadastro de Responsáveis (Enfermeiro, Médico, Técnico, etc)
 - [x] Cadastro de Eventos (Consultas, exames, prescriçoes, etc)
+- [x] Cadastro de Usuários
+- [x] Controle de Acesso
 - [ ] Armazenamento de documentos (Resultado de exames, radiografia, tumografia, etc)
 - [x] Histórico de visita em forma de timeline
-- [x] Relatórios
+- [ ] Relatórios
 - [ ] Paciente não identificado
 - [ ] Fluxo padrão para atendimento ambulatorial
 - [ ] Fluxo padrão para atendimento emergencial
