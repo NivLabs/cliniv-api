@@ -1,55 +1,202 @@
-[![Heroku](https://heroku-badge.herokuapp.com/?app=heroku-badge&style=flat)](https://gestao-prontuario.herokuapp.com/swagger-ui.html)
-# FT - Gestão de Prontuário - API
+<h1 align="center">
+  <a href="https://gestao-prontuario.herokuapp.com">
+    <img alt="FTGP Logo" src="./readme/logo.png" width="350px" />
+  </a>
+</h1>
+<h2 align="center">
+  FT - Gestão de Prontuário - API
+</h2>
+
 O FT - Gestão de Prontuário - API (FTGP-API) é uma API Rest OpenSource criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no processo de prontuário. O FTGP-API é integrado com um client baseado em Angular, o [FTGP-UI](https://github.com/viniciosarodrigues/gestao-de-prontuario-ui).
 
+<p align="center">
+    <a href="https://github.com/viniciosarodrigues/">
+        <img alt="Made by Vinícios Rodrigues" src="https://img.shields.io/badge/made%20by-Vin%C3%ADcios%20Rodrigues-brightgreen" />
+    </a>
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/viniciosarodrigues/gestao-de-prontuario" />
+    <img alt="Contributors" src="https://img.shields.io/github/contributors/viniciosarodrigues/gestao-de-prontuario" />
+    <img alt="License" src="https://img.shields.io/badge/license-MIT-%2304D361" />
+</p>
 
 Atualmente encontra-se na versão 1.0.0
 [Swagger](https://gestao-prontuario.herokuapp.com/swagger-ui.html)
 
-Funcionalidades da API
-- Cadastro de Pacientes
-- Cadastro de Responsáveis (Enfermeiro, Médico, Técnico, etc)
-- Cadastro de Eventos (Consultas, exames, prescriçoes, etc)
-- Armazenamento de documentos (Resultado de exames, radiografia, tumografia, etc)
-- Histórico de visita em forma de timeline
-- Anamnese
+---
 
-# Como densenvolver?
-Para contribuir com o projeto, existem alguns requisítos mínimos de configurações, são eles?
+## Índice
+
+<ul>
+  <li><a href="#funcionalidades-da-api">Funcionalidades da API</a></li>
+  <li><a href="#mínimo-para-rodar">Mínimo para rodar</a></li>
+  <li><a href="#projeto-lombok">Projeto Lombok</a></li>
+  <li><a href="#mysql-ou-mariadb">Configurando banco de dados</a></li>
+  <li><a href="#como-rodar-a-api">Como rodar a API?</a></li>
+  <li><a href="#como-contribuir">Como contribuir?</a></li>
+  <li><a href="#contato">Contato</a></li>
+  <li><a href="#-license">License</a></li>
+</ul>
+
+---
+
+## Funcionalidades da API
+
+- [x] Cadastro de Pacientes
+- [x] Cadastro de Responsáveis (Enfermeiro, Médico, Técnico, etc)
+- [x] Cadastro de Eventos (Consultas, exames, prescriçoes, etc)
+- [ ] Armazenamento de documentos (Resultado de exames, radiografia, tumografia, etc)
+- [x] Histórico de visita em forma de timeline
+- [x] Relatórios
+- [ ] Paciente não identificado
+- [ ] Fluxo padrão para atendimento ambulatorial
+- [ ] Fluxo padrão para atendimento emergencial
+- [ ] Cadastro de medicamentos 
+
+---
+
+## Mínimo para rodar
+
+Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles?
+
 - Java 11 + **(Obrigatório)**
 - MySql Server (Community) **(Obrigatório)**
 - Lombok 1.16.0 + **(Obrigatório)**
 - Eclipse ou STS **(Obrigatório)**
 - No caso do Eclipse, usar o plugin do Spring Tools *(Opcional)*
 
-## Configurando o Lombok
-Caso não tenha o Lombok, já existe uma dependência do mesmo no projeto, basta importar o projeto no **Eclipse/STS** e aguardar que a dependẽncia seja baixada. Com o Jar do Lombok baixado no repositório local do Maven, siga o passo-a-passo logo abaixo:
+---
 
-- Navegar até o repositório do Lombok
--`C:\users\{usuario}\.m2\repository\org\projectlombok\lombok\{versao_baixada}`
-- Executar o jar do lombok
--`java -jar lombok.{versao}.jar`
+## Projeto Lombok
+
+### O que é o Lombok?
+O [Lombok](https://projectlombok.org/) é uma biblioteca Java focada em produtividade e redução de código boilerplate que por meio de anotações adicionadas ao nosso código ensinamos o compilador (maven ou gradle) durante o processo de compilação a criar código Java.
+
+### Por qual motivo devo configurar minha IDE para usar o Lombok?
+Este projeto foi desenvolvido utilizando o Lombok para criação de POJOs e DTOs, por este motivos, faz-se necessário configurar a sua IDE.
+
+### Como configurar?
+Obs: Este processo só é válido para IDEs baseadas em [Eclipse Project](https://www.eclipse.org/) (Eclipse IDE e STS).
+
+##### Passo 1
+
+- Navegar via terminal para o repositório do Lombok
+- Windows -> cd `C:\users\{usuario}\.m2\repository\org\projectlombok\lombok\{versao_baixada}`
+- Linux e Mac -> cd `~/.m2/repository/org/projectlombok/lombok/{versao_baixada}`
+
+##### Passo 2
+
+- Executar o jar do lombok utilizando o comando `java -jar lombok.{versao}.jar`
+
+##### Passo 3
+
 - Selecionar o Eclipse/STS que irá receber o Lombok
+
+##### Passo 4
+
 - Clicar em Install/Update
+
+##### Passo 5
+
 - Sair do instalador
-- Abrir a IDE novamente
-- Rebuild no projeto
+
+##### Passo 6
+
+- Reiniciar a IDE
+
+##### Passo 7
+
+- Realizar um Maven Update no projeto
+
+##### Mais informações
 
 Existe um manual mais detalhado de como instalar o plugin no Eclipse: [Criando uma API Rest de cadastro de contatos em 5 minutos com Spring Boot + Lombok](https://medium.com/@viniciosarodrigues/criando-uma-api-rest-de-cadastro-de-contatos-em-5-minutos-com-spring-boot-ce5ba775d2d8)
 
-## Como rodar a API?
-Primeiramente deve configurar o banco de dados MySql. Não precisa executar os scripts manualmente, o Flyway realiza o trabalho de migração. Com o MySql configurado, bastar alterar as informações de conexão no **application.properties**.
+---
 
-Por ser um projeto SpringBoot, não se faz necessário o uso de nenhum servidor externo, pois o framework já disponibiliza um Tomcat embarcado, desta forma basta clicar com o botão direito na raiz do projeto, **Run As** -> **SpringBoot App**.
-Também pode rodar apartir do **ApplicationMain** encontrado no pacote base da aplicação.
+## MySql ou MariaDB
+
+Para que seja possível rodar a aplicação, faz-se necessário cofigurar previamente as informações de conexão no arquivo `application.properties` deste projeto.
+
+Um setup inicial válido para uma base nova pode seguir os padrões abaixo:
+
+- URL de conexão da base `spring.datasource.url=jdbc:mysql://localhost:3306/devdb?createDatabaseIfNotExist=TRUE`, o `createDatabaseIfNotExist=TRUE` faz com que o próprio framework crie a base de dados, o `devdb` é o nome da base de desenvolvimento.
+ 
+- Usuário de acesso ao banco de dados `spring.datasource.username=admin`, no meu caso é o root.
+
+- Senha de acesso ao banco de dados `spring.datasource.password=123456dv`, no meu caso também é root.
+
+---
+
+## Como rodar a API?
+
+### Passo 1
+
+- 👯 Clone este repositório na sua máquina local usando `https://github.com/viniciosarodrigues/gestao-de-prontuario.git`
+
+### Passo 2
+
+- ✅ Baixe as dependências do maven no seu repositório local com o comando `mvn install`
+
+### Passo 3
+
+- 🔃 Rode a aplicação com botão direito do mouse no projeto, `run as` > `Spring Boot App`. Também é possível rodar a aplicação à partir da classe `ApplicationMain` dentro do projeto, basca clicar com o botão direito na classe e seguir o mesmo fluxo.
+
+### Dica
+Se você estiver usando o Eclipse, pode ser uma boa ideia baixar o plugin disponibilizado pela Pitoval no marketplace, o `Spring Tools 4 (release)`
+
+---
 
 ## Como contribuir
-Caso queira contribuir, basta realizar um fork do repositório, fazer a implementação desejada, **criar uma issue de push** e realizar pull request para a **master**.
 
-# Arquitetura (Em desenvolvimento...)
+### Passo 1
+
+- 🍴 Realize um Fork deste respositório!
+
+### Passo 2
+
+- 👯 Clone este repositório na sua máquina local usando `https://github.com/viniciosarodrigues/gestao-de-prontuario.git`
+
+### Passo 3
+
+- 🎋 Crie sua branch de funcionalidade usando `git checkout -b minha-funcionalidade`
+
+### Passo 4
+
+- ✅ Realize o commit de suas alterações usando `git commit -m 'feat: Minha nova funcionalidade'`;
+
+### Passo 5
+
+- 📌 Realize o push para a branch usando `git push origin minha-funcionalidade`;
+
+### Passo 6
+
+- 🔃 Crie um novo pull request
+
+Depois que seu Pull Request é aceito e o merge é realizado, você pode deletar a sua branch de funcionalidade.
+
+---
+
+## Arquitetura (Em desenvolvimento...)
 Esta área especifica definições técnicas da aplicação, suas características e comportamentos.
-## Modelagem de dados
+### Modelagem de dados
 ![image](https://user-images.githubusercontent.com/7918549/77848948-8813ec80-719e-11ea-97ce-19fde9aacc42.png)
 
+---
+
 ## Contato
-Qualquer dúvida ou sugestão, favor enviar para o e-mai *viniciosarodrigues@gmail.com* ou enviar mensagem privada pelo próprio GitGub.
+
+> Você pode me encontrar por aqui...
+
+- Linkedin :: [Vinícios Rodrigues](https://www.linkedin.com/in/viniciosrodrigues/)
+- Instagram :: [@viniarodrigues](https://www.instagram.com/viniarodrigues/)
+- Hangouts/Gmail :: [viniciosarodrigues@gmail.com](viniciosarodrigues@gmail.com)
+
+---
+
+## 📝 License
+
+<img alt="License" src="https://img.shields.io/badge/license-MIT-%2304D361">
+
+Este projeto é licenciado por MIT License - Veja a licença no arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+
