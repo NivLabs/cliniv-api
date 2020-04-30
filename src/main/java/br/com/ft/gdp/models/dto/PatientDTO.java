@@ -16,4 +16,6 @@ public class PatientDTO extends PersonDTO {
 
     private static final long serialVersionUID = -1070682704153329772L;
 
+    private String susNumber;
+
 }
