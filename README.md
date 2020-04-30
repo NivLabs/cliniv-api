@@ -57,10 +57,10 @@ Atualmente encontra-se na versão 1.0.0
 
 ## Mínimo para rodar
 
-Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles?
+Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles:
 
 - Java 11 + **(Obrigatório)**
-- MySql Server (Community) **(Obrigatório)**
+- MySql Server ou MariaDB Server **(Obrigatório)**
 - Lombok 1.16.0 + **(Obrigatório)**
 - Eclipse ou STS **(Obrigatório)**
 - No caso do Eclipse, usar o plugin do Spring Tools *(Opcional)*
