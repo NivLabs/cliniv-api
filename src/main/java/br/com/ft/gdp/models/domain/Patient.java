@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 /**
  * Classe Patient.java
@@ -36,6 +36,9 @@ public class Patient extends BaseObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "CODIGO_SUS")
+    private String susNumber;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_PESSOA")

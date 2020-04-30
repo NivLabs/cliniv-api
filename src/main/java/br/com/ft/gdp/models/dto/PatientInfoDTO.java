@@ -14,4 +14,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class PatientInfoDTO extends PersonInfoDTO {
     private static final long serialVersionUID = 1575416178033511932L;
+
+    private String susNumber;
 }
