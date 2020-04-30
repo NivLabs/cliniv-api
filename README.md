@@ -180,7 +180,7 @@ Depois que seu Pull Request é aceito e o merge é realizado, você pode deletar
 ## Arquitetura (Em desenvolvimento...)
 Esta área especifica definições técnicas da aplicação, suas características e comportamentos.
 ### Modelagem de dados
-![image](https://user-images.githubusercontent.com/7918549/77848948-8813ec80-719e-11ea-97ce-19fde9aacc42.png)
+<img alt="Diagrama" src="./readme/Diagrama.png" />
 
 ---
 
