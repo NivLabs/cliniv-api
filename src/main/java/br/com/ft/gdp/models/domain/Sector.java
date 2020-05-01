@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.ft.gdp.models.BaseObject;
 import lombok.AllArgsConstructor;
@@ -48,6 +51,10 @@ public class Sector extends BaseObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SETOR")
     private Sector superSector;
+
+    @Column(name = "DATA_CRIACAO")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "superSector", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Sector> sectors = new ArrayList<>();

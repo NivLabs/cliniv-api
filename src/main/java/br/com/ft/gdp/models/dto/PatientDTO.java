@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.dto;
 
+import br.com.ft.gdp.models.domain.PatientType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -18,4 +19,5 @@ public class PatientDTO extends PersonDTO {
 
     private String susNumber;
 
+    private PatientType type;
 }

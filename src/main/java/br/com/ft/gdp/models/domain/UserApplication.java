@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
@@ -57,6 +59,10 @@ public class UserApplication extends BaseObject {
     @JsonIgnore
     @Column(name = "SENHA", nullable = false, length = 500)
     private String password;
+
+    @Column(name = "DATA_CRIACAO")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private LocalDateTime createdAt;
 
     @Column(name = "ATIVO")
     private boolean active;

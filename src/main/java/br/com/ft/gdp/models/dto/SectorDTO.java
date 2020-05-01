@@ -1,6 +1,7 @@
 package br.com.ft.gdp.models.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class SectorDTO implements Serializable {
     private String description;
 
     private SectorDTO superSector;
+
+    private LocalDateTime createdAt;
 
     @JsonIgnoreProperties({"sectors", "superSector"})
     private List<SectorDTO> sectors = new ArrayList<>();

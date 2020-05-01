@@ -1,7 +1,11 @@
 package br.com.ft.gdp.models.domain;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.ft.gdp.models.BaseObject;
 import lombok.AllArgsConstructor;
@@ -43,6 +49,17 @@ public class Patient extends BaseObject {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_PESSOA")
     private Person person;
+
+    @Column(name = "TIPO_PACIENTE")
+    @Enumerated(EnumType.STRING)
+    private PatientType type;
+
+    @Column(name = "DATA_CRIACAO")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private LocalDateTime createdAt;
+    
+    @Column(name = "ANOTACOES")
+    private String annotations;
 
     public Patient(Long patientId) {
         this.id = patientId;

@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.dto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class ResponsibleInfoDTO extends PersonInfoDTO {
 
-	private static final long serialVersionUID = 3558512431533807447L;
+    private static final long serialVersionUID = 3558512431533807447L;
 
-	private ProfessionalIdentityDTO professionalIdentity;
-	private List<SpecialityDTO> specializations = new ArrayList<>();
+    private ProfessionalIdentityDTO professionalIdentity;
+    private LocalDateTime createdAt;
+    private List<SpecialityDTO> specializations = new ArrayList<>();
 
 }

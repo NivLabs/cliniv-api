@@ -1,5 +1,6 @@
 package br.com.ft.gdp.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -175,6 +176,8 @@ public class PatientService implements GenericService<Patient, Long> {
         }
 
         patient.setSusNumber(entity.getSusNumber());
+        patient.setAnnotations(entity.getAnnotations());
+        patient.setCreatedAt(entity.getCreatedAt());
         personService.update(entityFromDb.getId(), entityFromDb);
         dao.save(patient);
 
@@ -241,6 +244,7 @@ public class PatientService implements GenericService<Patient, Long> {
         Patient newPatient = new Patient();
         newPatient.setPerson(personFromDb);
         newPatient.setSusNumber(entity.getSusNumber());
+        newPatient.setCreatedAt(LocalDateTime.now());
         dao.save(newPatient);
 
         entity.setId(newPatient.getId());
