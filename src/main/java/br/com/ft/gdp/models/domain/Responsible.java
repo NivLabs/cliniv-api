@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.ft.gdp.models.BaseObject;
 import lombok.AllArgsConstructor;
@@ -52,6 +55,10 @@ public class Responsible extends BaseObject {
 
     @Column(name = "SIGLA_ORGAO")
     private String initialsIdentity;
+
+    @Column(name = "DATA_CRIACAO")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private LocalDateTime createdAt;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(name = "ESPECIALIDADE_RESPONSAVEL", joinColumns = @JoinColumn(name = "ID_RESPONSAVEL"), inverseJoinColumns = @JoinColumn(name = "ID_ESPECIALIDADE"))

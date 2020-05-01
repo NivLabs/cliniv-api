@@ -1,5 +1,8 @@
 package br.com.ft.gdp.models.dto;
 
+import java.time.LocalDateTime;
+
+import br.com.ft.gdp.models.domain.PatientType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,4 +19,10 @@ public class PatientInfoDTO extends PersonInfoDTO {
     private static final long serialVersionUID = 1575416178033511932L;
 
     private String susNumber;
+
+    private PatientType type;
+
+    private String annotations;
+
+    private LocalDateTime createdAt;
 }

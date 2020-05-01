@@ -1,5 +1,6 @@
 package br.com.ft.gdp.models.dto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,8 @@ public class UserInfoDTO extends PersonInfoDTO {
     private String userName;
 
     private String email;
+
+    private LocalDateTime createdAt;
 
     private List<RoleDTO> roles = new ArrayList<>();
 

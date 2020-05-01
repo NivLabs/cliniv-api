@@ -1,5 +1,6 @@
 package br.com.ft.gdp.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.slf4j.Logger;
@@ -155,7 +156,7 @@ public class ResponsibleService {
                                                                      () -> new ObjectNotFoundException(
                                                                              String.format("Responsável com ID: [%s] não encontrado", id)));
 
-        BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), "id");
+        BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), "id", "createdAt");
         if (responsible.getProfessionalIdentity() != null) {
             responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
             responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());
@@ -247,6 +248,7 @@ public class ResponsibleService {
             personService.persist(personFromDb);
         }
         responsibleFromDb.setPerson(personFromDb);
+        responsibleFromDb.setCreatedAt(LocalDateTime.now());
         persist(responsibleFromDb);
 
         ResponsibleDTO newResponsible = new ResponsibleDTO();

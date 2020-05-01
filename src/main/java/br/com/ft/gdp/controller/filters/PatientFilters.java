@@ -1,5 +1,6 @@
 package br.com.ft.gdp.controller.filters;
 
+import br.com.ft.gdp.models.domain.PatientType;
 import br.com.ft.gdp.repository.custom.CustomFilters;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,13 +23,15 @@ public class PatientFilters extends CustomFilters {
 
     private String id;
 
-      private String cpf;
+    private String cpf;
 
     private String firstName = "";
 
     private String lastName = "";
-    
+
     private String susNumber = "";
+
+    private PatientType type;
 
     public String getFirstName() {
         return "%".concat(firstName).concat("%");
