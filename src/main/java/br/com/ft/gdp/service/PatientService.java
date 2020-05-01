@@ -67,7 +67,7 @@ public class PatientService implements GenericService<Patient, Long> {
             patientInfo.setAddress(address);
         }
 
-        patientInfo.setId(patient.getId());
+        BeanUtils.copyProperties(patient, patientInfo);
 
         return patientInfo;
 
@@ -104,13 +104,29 @@ public class PatientService implements GenericService<Patient, Long> {
                 BeanUtils.copyProperties(personFromDb.getAddress(), address);
                 patientInfo.setAddress(address);
             }
-
-            patientInfo.setId(patient.getId());
+            BeanUtils.copyProperties(patient, patientInfo);
             return patientInfo;
         } catch (ObjectNotFoundException e) {
             return findPersonByCpf(cpf);
         }
+    }
 
+    public PatientInfoDTO findBySusNumber(String susNumber) {
+        Patient patient = dao.findBySusNumber(susNumber)
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com cpf: [%s] não encontrado", susNumber)));
+        Person personFromDb = patient.getPerson();
+
+        PatientInfoDTO patientInfo = new PatientInfoDTO();
+        BeanUtils.copyProperties(personFromDb, patientInfo, "id");
+        patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+
+        if (personFromDb.getAddress() != null) {
+            AddressDTO address = new AddressDTO();
+            BeanUtils.copyProperties(personFromDb.getAddress(), address);
+            patientInfo.setAddress(address);
+        }
+        BeanUtils.copyProperties(patient, patientInfo);
+        return patientInfo;
     }
 
     /**
@@ -123,10 +139,28 @@ public class PatientService implements GenericService<Patient, Long> {
     public PatientInfoDTO update(Long id, PatientInfoDTO entity) {
         Patient patient = dao.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com ID: [%s] não encontrado", id)));
+
+        if (entity.getSusNumber() != null && !entity.getSusNumber().equals(patient.getSusNumber())) {
+            Patient patientBySusNumber = dao.findBySusNumber(entity.getSusNumber()).orElse(null);
+            if (patientBySusNumber != null && !patient.equals(patientBySusNumber)) {
+                throw new ValidationException(
+                        "Já existe um outro paciente utilizando este código SUS, você não pode utilizar neste cadastro.");
+            }
+        }
+
         Person entityFromDb = patient.getPerson();
 
+        if (entity.getDocument() != null && entity.getDocument().getType().equals(DocumentType.CPF)
+                && entity.getDocument().getValue() != null) {
+            entityFromDb.setCpf(entity.getDocument().getValue());
+            Patient patientByCpf = dao.findByCpf(entity.getDocument().getValue()).orElse(null);
+            if (patientByCpf != null && !patient.equals(patientByCpf)) {
+                throw new ValidationException(
+                        "Já existe um outro paciente utilizando este CPF, você não pode utilizar neste cadastro.");
+            }
+        }
+
         BeanUtils.copyProperties(entity, entityFromDb, "id");
-        entityFromDb.setCpf(entity.getDocument().getValue());
 
         if (entity.getAddress() != null) {
             PersonAddress personAddress = null;
@@ -140,7 +174,9 @@ public class PatientService implements GenericService<Patient, Long> {
             entityFromDb.setAddress(personAddress);
         }
 
+        patient.setSusNumber(entity.getSusNumber());
         personService.update(entityFromDb.getId(), entityFromDb);
+        dao.save(patient);
 
         return entity;
     }
@@ -204,6 +240,7 @@ public class PatientService implements GenericService<Patient, Long> {
 
         Patient newPatient = new Patient();
         newPatient.setPerson(personFromDb);
+        newPatient.setSusNumber(entity.getSusNumber());
         dao.save(newPatient);
 
         entity.setId(newPatient.getId());

@@ -48,6 +48,10 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNoFloatNumeric(filters.getId())) {
             attributes.add((cb, from) -> cb.equal(from.get("id"), Long.parseLong(filters.getId())));
         }
+
+        if (!StringUtils.isNullOrEmpty(filters.getSusNumber()) && StringUtils.isNoFloatNumeric(filters.getSusNumber())) {
+            attributes.add((cb, from) -> cb.equal(from.get("susNumber"), filters.getSusNumber()));
+        }
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
             attributes.add((cb, from) -> cb.equal(from.get("person").get("cpf"), filters.getCpf()));
         }
