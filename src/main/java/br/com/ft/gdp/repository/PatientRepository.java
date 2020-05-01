@@ -37,4 +37,6 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, Patient
     @Query("from Patient where firstName like :name and motherName like :motherName")
     public List<Patient> findByComposition(String name, String motherName);
 
+    public Optional<Patient> findBySusNumber(String susNumber);
+
 }

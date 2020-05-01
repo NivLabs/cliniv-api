@@ -27,6 +27,8 @@ public class PatientFilters extends CustomFilters {
     private String firstName = "";
 
     private String lastName = "";
+    
+    private String susNumber = "";
 
     public String getFirstName() {
         return "%".concat(firstName).concat("%");

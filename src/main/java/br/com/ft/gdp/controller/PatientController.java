@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.controller.filters.PatientFilters;
 import br.com.ft.gdp.event.CreatedResourceEvent;
+import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.dto.PatientDTO;
 import br.com.ft.gdp.models.dto.PatientInfoDTO;
@@ -97,7 +98,14 @@ public class PatientController {
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> findByDocument(@PathVariable("documentType") DocumentType documentType,
                                                          @PathVariable("document") String document) {
-        return ResponseEntity.ok(service.findByCpf(document));
+        switch (documentType) {
+            case CPF:
+                return ResponseEntity.ok(service.findByCpf(document));
+            case SUS:
+                return ResponseEntity.ok(service.findBySusNumber(document));
+            default:
+                throw new ValidationException("Tipo de documento desconhecido, esperados: [CPF | SUS]");
+        }
     }
 
     @ApiOperation(nickname = "patient-get-composite", value = "Busca um paciente baseado no identificador composto")

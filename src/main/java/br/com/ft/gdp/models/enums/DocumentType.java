@@ -8,5 +8,5 @@ package br.com.ft.gdp.models.enums;
  * @since 3 de out de 2019
  */
 public enum DocumentType {
-    CPF, RG, PASSAPORTE, RNE
+    CPF, RG, PASSPORT, RNE, SUS
 }
