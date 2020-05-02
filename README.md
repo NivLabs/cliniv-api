@@ -48,7 +48,7 @@ Atualmente encontra-se na versão 1.0.0
 - [ ] Armazenamento de documentos (Resultado de exames, radiografia, tumografia, etc)
 - [x] Histórico de visita em forma de timeline
 - [ ] Relatórios
-- [ ] Paciente não identificado
+- [x] Paciente não identificado
 - [ ] Fluxo padrão para atendimento ambulatorial
 - [ ] Fluxo padrão para atendimento emergencial
 - [ ] Cadastro de medicamentos 
