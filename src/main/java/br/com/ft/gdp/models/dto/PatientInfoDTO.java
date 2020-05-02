@@ -54,10 +54,8 @@ public class PatientInfoDTO implements Serializable {
 
     private String motherName;
 
-    @Size(min = 8, message = "Informe um número de telefone válido. O número deve conter ao menos 8 dígitos.")
     private String principalNumber;
 
-    @Size(min = 8, message = "Informe um número de telefone válido. O número deve conter ao menos 8 dígitos.")
     private String secondaryNumber;
 
     private AddressDTO address;
