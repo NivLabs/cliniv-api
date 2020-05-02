@@ -15,6 +15,7 @@ import br.com.ft.gdp.controller.filters.PatientFilters;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.exception.ValidationException;
 import br.com.ft.gdp.models.domain.Patient;
+import br.com.ft.gdp.models.domain.PatientType;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.PersonAddress;
 import br.com.ft.gdp.models.dto.AddressDTO;
@@ -23,6 +24,7 @@ import br.com.ft.gdp.models.dto.PatientDTO;
 import br.com.ft.gdp.models.dto.PatientInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.repository.PatientRepository;
+import br.com.ft.gdp.util.StringUtils;
 
 /**
  * 
@@ -93,7 +95,7 @@ public class PatientService implements GenericService<Patient, Long> {
     public PatientInfoDTO findByCpf(String cpf) {
         try {
             Patient patient = dao.findByCpf(cpf)
-                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com cpf: [%s] não encontrado", cpf)));
+                    .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com CPF: [%s] não encontrado", cpf)));
             Person personFromDb = patient.getPerson();
 
             PatientInfoDTO patientInfo = new PatientInfoDTO();
@@ -114,7 +116,7 @@ public class PatientService implements GenericService<Patient, Long> {
 
     public PatientInfoDTO findBySusNumber(String susNumber) {
         Patient patient = dao.findBySusNumber(susNumber)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com cpf: [%s] não encontrado", susNumber)));
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com cartão SUS de número %s não encontrado", susNumber)));
         Person personFromDb = patient.getPerson();
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
@@ -179,6 +181,8 @@ public class PatientService implements GenericService<Patient, Long> {
         patient.setAnnotations(entity.getAnnotations());
         patient.setCreatedAt(entity.getCreatedAt());
         personService.update(entityFromDb.getId(), entityFromDb);
+
+        handlePatientType(patient);
         dao.save(patient);
 
         return entity;
@@ -245,10 +249,22 @@ public class PatientService implements GenericService<Patient, Long> {
         newPatient.setPerson(personFromDb);
         newPatient.setSusNumber(entity.getSusNumber());
         newPatient.setCreatedAt(LocalDateTime.now());
+
+        handlePatientType(newPatient);
         dao.save(newPatient);
 
         entity.setId(newPatient.getId());
         return entity;
+    }
+
+    private void handlePatientType(Patient newPatient) {
+        if (StringUtils.isNullOrEmpty(newPatient.getSusNumber()) && StringUtils.isNullOrEmpty(newPatient.getPerson().getMotherName())
+                && StringUtils.isNullOrEmpty(newPatient.getPerson().getCpf())
+                && StringUtils.isNullOrEmpty(newPatient.getPerson().getLastName())) {
+            newPatient.setType(PatientType.NOT_IDENTIFIED);
+        } else {
+            newPatient.setType(PatientType.IDENTIFIED);
+        }
     }
 
     /**
