@@ -116,7 +116,8 @@ public class PatientService implements GenericService<Patient, Long> {
 
     public PatientInfoDTO findBySusNumber(String susNumber) {
         Patient patient = dao.findBySusNumber(susNumber)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com cartão SUS de número %s não encontrado", susNumber)));
+                .orElseThrow(() -> new ObjectNotFoundException(
+                        String.format("Paciente com cartão SUS de número %s não encontrado", susNumber)));
         Person personFromDb = patient.getPerson();
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
@@ -154,7 +155,7 @@ public class PatientService implements GenericService<Patient, Long> {
         Person entityFromDb = patient.getPerson();
 
         if (entity.getDocument() != null && entity.getDocument().getType().equals(DocumentType.CPF)
-                && entity.getDocument().getValue() != null) {
+                && StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
             entityFromDb.setCpf(entity.getDocument().getValue());
             Patient patientByCpf = dao.findByCpf(entity.getDocument().getValue()).orElse(null);
             if (patientByCpf != null && !patient.equals(patientByCpf)) {
@@ -211,11 +212,16 @@ public class PatientService implements GenericService<Patient, Long> {
     public PatientInfoDTO persist(PatientInfoDTO entity) {
         entity.setId(null);
         Person personFromDb = new Person();
-        if (entity.getDocument() == null || (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF)) {
+        if (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF) {
             logger.error("Tipo do documento inválido, informe um documento válido");
             throw new ValidationException("Tipo do documento inválido, informe um documento válido.");
         }
-        patientCheckIfExists(entity);
+
+        if (entity.getDocument() != null && StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
+            entity.getDocument().setValue(null);
+        } else
+            patientCheckIfExists(entity);
+
         try {
             logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
             personFromDb = personService.findByCpf(entity.getDocument().getValue());
