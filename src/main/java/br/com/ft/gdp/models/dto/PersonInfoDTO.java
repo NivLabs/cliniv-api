@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import br.com.ft.gdp.models.domain.GenderIdeology;
 import br.com.ft.gdp.models.enums.Gender;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -52,6 +53,9 @@ public class PersonInfoDTO extends DataTransferObjectBase {
     @NotNull(message = "O gênero deve ser informado")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @Enumerated(EnumType.STRING)
+    private GenderIdeology genderIdeology;
 
     private String fatherName;
 
