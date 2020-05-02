@@ -32,9 +32,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "PESSOA_FISICA")
 @Data
-@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Person extends BaseObject {
 
     private static final long serialVersionUID = -3719485861961903955L;

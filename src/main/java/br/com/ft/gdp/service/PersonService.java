@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import br.com.ft.gdp.exception.ObjectNotFoundException;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.repository.PersonRepository;
+import br.com.ft.gdp.util.StringUtils;
 
 /**
  * Classe PersonService.java
@@ -37,6 +38,8 @@ public class PersonService implements GenericService<Person, Long> {
     public Person update(Long id, Person entity) {
         Person person = findById(id);
         BeanUtils.copyProperties(entity, person, "id");
+        if (StringUtils.isNullOrEmpty(entity.getCpf()))
+            person.setCpf(null);
         person = dao.save(person);
         return person;
     }
@@ -54,10 +57,15 @@ public class PersonService implements GenericService<Person, Long> {
     @Override
     public Person persist(Person entity) {
         entity.setId(null);
+        if (StringUtils.isNullOrEmpty(entity.getCpf()))
+            entity.setCpf(null);
         return dao.saveAndFlush(entity);
     }
 
     public Person findByCpf(String cpf) {
+        if (StringUtils.isNullOrEmpty(cpf)) {
+            throw new ObjectNotFoundException("O CPF informado é nulo, informe um CPF para que a consulta possa ser realizada");
+        }
         return dao.findByCpf(cpf).orElseThrow(() -> new ObjectNotFoundException(String.format("Pessoa com CPF: [%s] não encontrado", cpf)));
     }
 }
