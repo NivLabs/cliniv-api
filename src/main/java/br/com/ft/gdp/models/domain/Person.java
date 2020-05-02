@@ -56,6 +56,10 @@ public class Person extends BaseObject {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(name = "IDEOLOGIA_GENERO")
+    @Enumerated(EnumType.STRING)
+    private GenderIdeology genderIdeology;
+
     @Column(name = "NOME_COMP_PAI")
     private String fatherName;
 
