@@ -76,7 +76,13 @@ public class PatientService implements GenericService<Patient, Long> {
 
     }
 
-    public PatientInfoDTO findPersonByCpf(String cpf) {
+    /**
+     * Busca informações do cadatro de pessoa e insere no objeto de paciente
+     * 
+     * @param cpf
+     * @return
+     */
+    private PatientInfoDTO findPersonByCpf(String cpf) {
         Person personFromDb = personService.findByCpf(cpf);
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
@@ -92,6 +98,12 @@ public class PatientService implements GenericService<Patient, Long> {
         return patientInfo;
     }
 
+    /**
+     * Busca paciente pelo CPF
+     * 
+     * @param cpf
+     * @return
+     */
     public PatientInfoDTO findByCpf(String cpf) {
         try {
             Patient patient = dao.findByCpf(cpf)
@@ -114,6 +126,12 @@ public class PatientService implements GenericService<Patient, Long> {
         }
     }
 
+    /**
+     * Busca um paciente baseado no código de cadastro do SUS
+     * 
+     * @param susNumber
+     * @return
+     */
     public PatientInfoDTO findBySusNumber(String susNumber) {
         Patient patient = dao.findBySusNumber(susNumber)
                 .orElseThrow(() -> new ObjectNotFoundException(
@@ -144,25 +162,11 @@ public class PatientService implements GenericService<Patient, Long> {
         Patient patient = dao.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com ID: [%s] não encontrado", id)));
 
-        if (entity.getSusNumber() != null && !entity.getSusNumber().equals(patient.getSusNumber())) {
-            Patient patientBySusNumber = dao.findBySusNumber(entity.getSusNumber()).orElse(null);
-            if (patientBySusNumber != null && !patient.equals(patientBySusNumber)) {
-                throw new ValidationException(
-                        "Já existe um outro paciente utilizando este código SUS, você não pode utilizar neste cadastro.");
-            }
-        }
+        checkSusCode(entity, patient);
 
         Person entityFromDb = patient.getPerson();
 
-        if (entity.getDocument() != null && entity.getDocument().getType().equals(DocumentType.CPF)
-                && StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
-            entityFromDb.setCpf(entity.getDocument().getValue());
-            Patient patientByCpf = dao.findByCpf(entity.getDocument().getValue()).orElse(null);
-            if (patientByCpf != null && !patient.equals(patientByCpf)) {
-                throw new ValidationException(
-                        "Já existe um outro paciente utilizando este CPF, você não pode utilizar neste cadastro.");
-            }
-        }
+        checkDocument(entity, patient, entityFromDb);
 
         BeanUtils.copyProperties(entity, entityFromDb, "id");
 
@@ -178,11 +182,9 @@ public class PatientService implements GenericService<Patient, Long> {
             entityFromDb.setAddress(personAddress);
         }
 
-        patient.setSusNumber(entity.getSusNumber());
-        patient.setAnnotations(entity.getAnnotations());
-        patient.setCreatedAt(entity.getCreatedAt());
         personService.update(entityFromDb.getId(), entityFromDb);
 
+        BeanUtils.copyProperties(entity, patient, "id");
         handlePatientType(patient);
         dao.save(patient);
 
@@ -217,10 +219,7 @@ public class PatientService implements GenericService<Patient, Long> {
             throw new ValidationException("Tipo do documento inválido, informe um documento válido.");
         }
 
-        if (entity.getDocument() != null && StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
-            entity.getDocument().setValue(null);
-        } else
-            patientCheckIfExists(entity);
+        checkDocument(entity);
 
         try {
             logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
@@ -263,6 +262,11 @@ public class PatientService implements GenericService<Patient, Long> {
         return entity;
     }
 
+    /**
+     * Trata tipo de paciente -> Identificado ou não identificado
+     * 
+     * @param newPatient
+     */
     private void handlePatientType(Patient newPatient) {
         if (StringUtils.isNullOrEmpty(newPatient.getSusNumber()) && StringUtils.isNullOrEmpty(newPatient.getPerson().getMotherName())
                 && StringUtils.isNullOrEmpty(newPatient.getPerson().getCpf())
@@ -274,21 +278,70 @@ public class PatientService implements GenericService<Patient, Long> {
     }
 
     /**
+     * Checa se o paciente existe baseado no cpf
+     * 
      * @param entity
      */
-    private void patientCheckIfExists(PatientInfoDTO entity) {
+    private void patientCheckIfExistsByCpf(String cpf) {
         try {
             logger.info("Verificando se já há cadastro de paciente na base de dados :: CPF da busca -> {}",
-                        entity.getDocument().getValue());
-            PatientInfoDTO patient = findByCpf(entity.getDocument().getValue());
+                        cpf);
+            PatientInfoDTO patient = findByCpf(cpf);
             if (patient != null && patient.getId() != null) {
-                logger.warn("Paciente com o CPF {} já cadastrado.", entity.getDocument().getValue());
+                logger.warn("Paciente com o CPF {} já cadastrado.", cpf);
                 throw new ValidationException("Paciente com o CPF informado já está cadastrado.");
             }
         } catch (ObjectNotFoundException e) {
             logger.info("Nenhum cadastro de paciente encontrado :: CPF da busca -> {}",
-                        entity.getDocument().getValue());
+                        cpf);
             logger.info("Continuando cadastro de paciente...");
+        }
+    }
+
+    /**
+     * Checa documento para criação de novo paciente
+     * 
+     * @param entity
+     */
+    private void checkDocument(PatientInfoDTO entity) {
+        if (entity.getDocument() != null && StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
+            entity.getDocument().setValue(null);
+        } else if (entity.getDocument() != null && !StringUtils.isNullOrEmpty(entity.getDocument().getValue()))
+            patientCheckIfExistsByCpf(entity.getDocument().getValue());
+    }
+
+    /**
+     * Valida documento para atualização
+     * 
+     * @param entity
+     * @param patient
+     * @param entityFromDb
+     */
+    private void checkDocument(PatientInfoDTO entity, Patient patient, Person entityFromDb) {
+        if (entity.getDocument() != null && entity.getDocument().getType().equals(DocumentType.CPF)
+                && StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
+            entityFromDb.setCpf(entity.getDocument().getValue());
+            Patient patientByCpf = dao.findByCpf(entity.getDocument().getValue()).orElse(null);
+            if (patientByCpf != null && !patient.equals(patientByCpf)) {
+                throw new ValidationException(
+                        "Já existe um outro paciente utilizando este CPF, você não pode utilizar neste cadastro.");
+            }
+        }
+    }
+
+    /**
+     * Valida Código SUS do paciente
+     * 
+     * @param entity
+     * @param patient
+     */
+    private void checkSusCode(PatientInfoDTO entity, Patient patient) {
+        if (entity.getSusNumber() != null && !entity.getSusNumber().equals(patient.getSusNumber())) {
+            Patient patientBySusNumber = dao.findBySusNumber(entity.getSusNumber()).orElse(null);
+            if (patientBySusNumber != null && !patient.equals(patientBySusNumber)) {
+                throw new ValidationException(
+                        "Já existe um outro paciente utilizando este código SUS, você não pode utilizar neste cadastro.");
+            }
         }
     }
 
