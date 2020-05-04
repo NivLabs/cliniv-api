@@ -50,7 +50,7 @@ public class VisitController {
 
     @ApiOperation(nickname = "visit-post", value = "Insere uma nova visita na aplicação")
     @PostMapping
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<VisitInfoDTO> persist(@Validated @RequestBody(required = true) NewPatientVisitDTO visit,
                                                 HttpServletResponse response) {
 
@@ -64,7 +64,7 @@ public class VisitController {
 
     @ApiOperation(nickname = "visit-put-exit", value = "Atualiza hora de saída da visita na aplicação")
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> updateVisitToEnd(@PathVariable("id") Long id) {
         service.closeVisit(id);
         return ResponseEntity.ok().build();
@@ -72,14 +72,14 @@ public class VisitController {
 
     @ApiOperation(nickname = "visit-get-active", value = "Busca a visita ativa do paciente")
     @GetMapping("/actived/{id}/patient")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_LEITURA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<VisitInfoDTO> getActiveVisit(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.getActiveVisit(id));
     }
 
     @ApiOperation(nickname = "visit-get-with-filters", value = "Busca uma visita baseado em filtros")
     @GetMapping
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_LEITURA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<List<VisitDTO>> findWithFilters(@RequestParam(name = "patientId", required = false) Long patientId,
                                                           @RequestParam(name = "documentType", required = false) DocumentType documentType,
                                                           @RequestParam(name = "documentValue", required = false) String documentValue) {
@@ -102,7 +102,7 @@ public class VisitController {
 
     @ApiOperation(nickname = "visit-get-id", value = "Busca uma visita baseado no identificador")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_LEITURA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<VisitInfoDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findInfoById(id));
     }

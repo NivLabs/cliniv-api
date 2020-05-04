@@ -2,7 +2,6 @@ package br.com.ft.gdp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +36,6 @@ public class ProfileController {
 
     @ApiOperation(nickname = "profile-get", value = "Busca dados do perfil do usuário logado")
     @GetMapping
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<UserInfoDTO> getMe() {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(userService.findByUserName(userFromSession.getUsername()));
@@ -45,7 +43,6 @@ public class ProfileController {
 
     @ApiOperation(nickname = "profile-put", value = "Atualiza dados do perfil do usuário logado")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<UserInfoDTO> updateMe(@PathVariable(name = "id") Long id, @Validated @RequestBody UserInfoDTO entity) {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

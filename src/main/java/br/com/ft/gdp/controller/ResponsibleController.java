@@ -49,7 +49,7 @@ public class ResponsibleController {
 
     @ApiOperation(nickname = "responsible-get", value = "Busca uma página de responsáveis")
     @GetMapping
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('PROFISSIONAL_LEITURA', 'PROFISSIONAL_ESCRITA',  'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Page<ResponsibleDTO>> findPage(ResponsibleFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
                                                filters.getOrderBy());
@@ -58,7 +58,7 @@ public class ResponsibleController {
 
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo responsável na aplicação")
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('PROFISSIONAL_ESCRITA', 'ADMIN')")
     public ResponseEntity<ResponsibleDTO> persist(@Validated @RequestBody(required = true) ResponsibleInfoDTO responsible,
                                                   HttpServletResponse response) {
         ResponsibleDTO createdResponsible = service.persistDTO(responsible);
@@ -71,7 +71,7 @@ public class ResponsibleController {
 
     @ApiOperation(nickname = "responsible-put", value = "Atualiza um responsável na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('PROFISSIONAL_ESCRITA', 'ADMIN')")
     public ResponseEntity<ResponsibleInfoDTO> update(@PathVariable("id") Long id,
                                                      @Validated @RequestBody(required = true) ResponsibleInfoDTO responsible,
                                                      HttpServletResponse response) {
@@ -83,14 +83,14 @@ public class ResponsibleController {
 
     @ApiOperation(nickname = "responsible-get-id", value = "Busca um responsável baseado no identificador")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('PROFISSIONAL_LEITURA', 'PROFISSIONAL_ESCRITA', 'ADMIN')")
     public ResponseEntity<ResponsibleInfoDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @ApiOperation(nickname = "responsible-get-by-document", value = "Busca um profissional pelo documento")
     @GetMapping("{documentType}/{document}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('PROFISSIONAL_LEITURA', 'PROFISSIONAL_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<ResponsibleInfoDTO> findByDocument(@PathVariable("documentType") DocumentType documentType,
                                                              @PathVariable("document") String document) {
         return ResponseEntity.ok(service.findByCpf(document));

@@ -37,6 +37,9 @@ public class Role extends BaseObject {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
+    
+    @Column(name = "NOME")
+    private String name;
 
     @Column(name = "DESCRICAO")
     private String description;

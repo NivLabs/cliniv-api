@@ -136,7 +136,7 @@ public class UserService {
      * @return
      */
     private Role convertRole(RoleDTO roleDTO) {
-        return new Role(roleDTO.getId(), roleDTO.getDescription());
+        return new Role(roleDTO.getId(), roleDTO.getName(), roleDTO.getDescription());
     }
 
     /**
@@ -146,7 +146,7 @@ public class UserService {
      * @return
      */
     private RoleDTO convertRole(Role role) {
-        return new RoleDTO(role.getId(), role.getDescription());
+        return new RoleDTO(role.getId(), role.getName(), role.getDescription());
     }
 
     /**

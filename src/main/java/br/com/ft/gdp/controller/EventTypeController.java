@@ -50,7 +50,6 @@ public class EventTypeController {
 
     @ApiOperation(nickname = "eventtype-get", value = "Busca uma página de tipos de eventos")
     @GetMapping
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<List<EventType>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                     @RequestParam(value = "linesPerPage", defaultValue = "100") Integer linesPerPage,
                                                     @RequestParam(value = "orderBy", defaultValue = "description") String orderBy,
@@ -61,7 +60,7 @@ public class EventTypeController {
 
     @ApiOperation(nickname = "eventtype-post", value = "Insere um novo tipo de evento na aplicação")
     @PostMapping
-    @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO', 'MEDICO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('EVENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<EventTypeDTO> persist(@Validated @RequestBody(required = true) EventTypeDTO eventType,
                                                 HttpServletResponse response) {
         EventType createdEventType = service.persist(eventType.getEventTypeDomainFromDTO());
@@ -74,7 +73,7 @@ public class EventTypeController {
 
     @ApiOperation(nickname = "eventtype-put", value = "Atualiza um tipo de evento na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO', 'MEDICO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('EVENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<EventTypeDTO> update(@PathVariable("id") Long id,
                                                @Validated @RequestBody(required = true) EventTypeDTO eventType,
                                                HttpServletResponse response) {
@@ -86,7 +85,6 @@ public class EventTypeController {
 
     @ApiOperation(nickname = "eventtype-get-id", value = "Busca um tipo de evento baseado no identificador")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO', 'MEDICO', 'ADMIN')")
     public ResponseEntity<EventType> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }

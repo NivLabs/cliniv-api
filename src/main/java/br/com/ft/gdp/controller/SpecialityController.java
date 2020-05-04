@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +34,6 @@ public class SpecialityController {
     private SpecialityService specService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<List<SpecialityDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                         @RequestParam(value = "linesPerPage", defaultValue = "100") Integer linesPerPage,
                                                         @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
@@ -45,7 +43,6 @@ public class SpecialityController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<SpecialityInfoDTO> findById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(specService.findById(id));
     }

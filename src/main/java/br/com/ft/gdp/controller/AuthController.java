@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -63,7 +62,6 @@ public class AuthController {
      */
     @ApiOperation(nickname = "auth-new-password", value = "Altera a senha de acesso")
     @PutMapping("/password")
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
     public ResponseEntity<Void> update(@ApiParam(name = "NewPasswordRequest", value = "Objeto de requisição para alteração de senha, o usuário da sessão ativa é utilizado") @Validated @RequestBody(required = true) NewPasswordRequestDTO newPasswordDTO,
                                        HttpServletResponse response) {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

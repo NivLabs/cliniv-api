@@ -22,6 +22,8 @@ public class RoleDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -4723369199443894800L;
 
     private Long id;
+    
+    private String name;
 
     private String description;
 }

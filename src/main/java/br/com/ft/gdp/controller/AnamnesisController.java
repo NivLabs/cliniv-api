@@ -54,7 +54,7 @@ public class AnamnesisController {
 
     @ApiOperation(nickname = "anamnese-get", value = "Busca uma página de Anamnesis")
     @GetMapping
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<Anamnese>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                    @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
                                                    @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
@@ -65,7 +65,7 @@ public class AnamnesisController {
 
     @ApiOperation(nickname = "anamnese-post", value = "Insere uma nova anamnese na aplicação")
     @PostMapping
-    @PreAuthorize("hasAnyRole('TECNICO', 'ENFERMEIRO' ,'MEDICO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<AnamneseDTO> persist(@Validated @RequestBody(required = true) AnamneseDTO anamneseDto,
                                                HttpServletResponse response) {
         Anamnese createdAnamnese = service.persist(anamneseDto.getAnamnesesDomainFromDTO());
@@ -78,7 +78,7 @@ public class AnamnesisController {
 
     @ApiOperation(nickname = "anamnese-put", value = "Atualiza uma anamnese na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ENFERMEIRO', 'MEDICO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<AnamneseDTO> update(@PathVariable("id") Long id,
                                               @Validated @RequestBody(required = true) AnamneseDTO anamneseDTO,
                                               HttpServletResponse response) {
@@ -90,7 +90,7 @@ public class AnamnesisController {
 
     @ApiOperation(nickname = "anamnese-get-id", value = "Busca uma anamnese baseada no identificador")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<Anamnese> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }

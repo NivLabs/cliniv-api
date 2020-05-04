@@ -54,7 +54,7 @@ public class PatientController {
 
     @ApiOperation(nickname = "patient-get", value = "Busca uma página de pacientes")
     @GetMapping
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<PatientDTO>> findPage(PatientFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
                                                filters.getOrderBy());
@@ -63,7 +63,7 @@ public class PatientController {
 
     @ApiOperation(nickname = "patient-post", value = "Insere um novo paciente na aplicação")
     @PostMapping
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> persist(@Validated @RequestBody(required = true) PatientInfoDTO newPatient,
                                                   HttpServletResponse response) {
         PatientInfoDTO createdPatient = service.persist(newPatient);
@@ -76,7 +76,7 @@ public class PatientController {
 
     @ApiOperation(nickname = "patient-put", value = "Atualiza um paciente na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> update(@PathVariable("id") Long id,
                                                  @Validated @RequestBody(required = true) PatientInfoDTO patient,
                                                  HttpServletResponse response) {
@@ -88,14 +88,14 @@ public class PatientController {
 
     @ApiOperation(nickname = "patient-get-id", value = "Busca um paciente baseado no identificador")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findByPateintId(id));
     }
 
     @ApiOperation(nickname = "patient-get-by-document", value = "Busca um paciente pelo documento")
     @GetMapping("{documentType}/{document}")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> findByDocument(@PathVariable("documentType") DocumentType documentType,
                                                          @PathVariable("document") String document) {
         switch (documentType) {
@@ -110,7 +110,7 @@ public class PatientController {
 
     @ApiOperation(nickname = "patient-get-composite", value = "Busca um paciente baseado no identificador composto")
     @GetMapping("/{name}/{motherName}/{bornDate}")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<List<Patient>> findByComposition(@PathVariable("name") String name,
                                                            @PathVariable("motherName") String motherName) {
         return ResponseEntity.ok(service.findByComposition(name, motherName));

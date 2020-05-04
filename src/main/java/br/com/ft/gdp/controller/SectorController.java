@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
 import br.com.ft.gdp.models.dto.SectorDTO;
-import br.com.ft.gdp.report.ReportFactory;
 import br.com.ft.gdp.service.SectorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,14 +44,14 @@ public class SectorController {
 
     @ApiOperation(nickname = "sector-get", value = "Busca uma página de setores")
     @GetMapping
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<List<SectorDTO>> getSectorsGroupedBySuper() {
         return ResponseEntity.ok(service.getSectorsGroupedBySuper());
     }
 
     @ApiOperation(nickname = "sector-post", value = "Insere um novo setor na aplicação")
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<SectorDTO> persist(@Validated @RequestBody(required = true) SectorDTO newsector,
                                              HttpServletResponse response) {
         SectorDTO createdsector = service.persist(newsector);
@@ -65,7 +64,7 @@ public class SectorController {
 
     @ApiOperation(nickname = "sector-put", value = "Atualiza um setor na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<SectorDTO> update(@PathVariable("id") Long id,
                                             @Validated @RequestBody(required = true) SectorDTO sector,
                                             HttpServletResponse response) {
@@ -77,7 +76,7 @@ public class SectorController {
 
     @ApiOperation(nickname = "sector-get-id", value = "Busca um setor baseado no identificador")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<SectorDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }

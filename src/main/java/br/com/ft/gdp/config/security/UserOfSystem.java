@@ -39,7 +39,7 @@ public class UserOfSystem implements UserDetails {
         this.username = username;
         this.password = password;
         this.isExpired = !isExpired;
-        this.authorities = roles.stream().map(x -> new SimpleGrantedAuthority(x.getDescription()))
+        this.authorities = roles.stream().map(x -> new SimpleGrantedAuthority(x.getName()))
                 .collect(Collectors.toList());
     }
 
