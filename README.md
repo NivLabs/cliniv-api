@@ -116,15 +116,13 @@ Existe um manual mais detalhado de como instalar o plugin no Eclipse: [Criando u
 
 ## MySql ou MariaDB
 
-Para que seja possível rodar a aplicação, faz-se necessário cofigurar previamente as informações de conexão no arquivo `application.properties` deste projeto.
+Para que seja possível rodar a aplicação, faz-se necessário cofigurar previamente as informações de conexão no arquivo `application-dev.properties` deste projeto.
 
 Um setup inicial válido para uma base nova pode seguir os padrões abaixo:
 
-- URL de conexão da base `spring.datasource.url=jdbc:mysql://localhost:3306/devdb?createDatabaseIfNotExist=TRUE`, o `createDatabaseIfNotExist=TRUE` faz com que o próprio framework crie a base de dados, o `devdb` é o nome da base de desenvolvimento.
- 
-- Usuário de acesso ao banco de dados `spring.datasource.username=admin`, no meu caso é o root.
+- URL de conexão da base `spring.datasource.url=jdbc:mysql://[USUARIO]:[SENHA]@[SERVIDOR]:[PORTA]/[BASE]?createDatabaseIfNotExist=TRUE`, o `createDatabaseIfNotExist=TRUE` faz com que o próprio framework crie a base de dados.
 
-- Senha de acesso ao banco de dados `spring.datasource.password=123456dv`, no meu caso também é root.
+- No meu caso, a primeira linha do meu `application-dev.properties` fica `spring.datasource.url=jdbc:mysql://admin:123456dv@localhost:3306/devdb?createDatabaseIfNotExist=TRUE`
 
 ---
 
@@ -136,9 +134,13 @@ Um setup inicial válido para uma base nova pode seguir os padrões abaixo:
 
 ### Passo 2
 
-- ✅ Baixe as dependências do maven no seu repositório local com o comando `mvn install`
+- ✅ Importe o projeto na sua IDE
 
 ### Passo 3
+
+- 📝 Altere a primeira linha do `application.properties`para `spring.profiles.active=dev`
+
+### Passo 4
 
 - 🔃 Rode a aplicação com botão direito do mouse no projeto, `run as` > `Spring Boot App`. Também é possível rodar a aplicação à partir da classe `ApplicationMain` dentro do projeto, basca clicar com o botão direito na classe e seguir o mesmo fluxo.
 
