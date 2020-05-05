@@ -1,5 +1,6 @@
 package br.com.ft.gdp.service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -279,6 +280,7 @@ public class UserService {
         BeanUtils.copyProperties(entity, user);
         user.setPerson(personFromDb);
         user.setPassword(bc.encode(entity.getDocument().getValue()));
+        user.setCreatedAt(LocalDateTime.now());
         user.setActive(true);
         if (entity.getRoles() != null && !entity.getRoles().isEmpty()) {
             user.setRoles(entity.getRoles().stream().map(this::convertRole).collect(Collectors.toList()));
