@@ -1,14 +1,19 @@
 package br.com.ft.gdp.models.domain;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.Table;
+
+import org.springframework.beans.BeanUtils;
 
 import br.com.ft.gdp.models.BaseObjectWithCreatedAt;
+import br.com.ft.gdp.models.dto.DigitalDocumentDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,7 +29,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Document extends BaseObjectWithCreatedAt {
+@Entity
+@Table(name = "DOCUMENTO_DIGITAL")
+public class DigitalDocument extends BaseObjectWithCreatedAt {
 
     private static final long serialVersionUID = 4392117344563755949L;
 
@@ -42,5 +49,11 @@ public class Document extends BaseObjectWithCreatedAt {
 
     @Column(name = "NOME")
     private String name;
+
+    public DigitalDocumentDTO getDtoFromDomain() {
+        DigitalDocumentDTO dto = new DigitalDocumentDTO();
+        BeanUtils.copyProperties(this, dto);
+        return dto;
+    }
 
 }
