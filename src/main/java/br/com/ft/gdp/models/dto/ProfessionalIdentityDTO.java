@@ -1,7 +1,6 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
-
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,11 +12,12 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class ProfessionalIdentityDTO implements Serializable {
+@ApiModel("Professional Identity")
+public class ProfessionalIdentityDTO extends DataTransferObjectBase {
 
-	private static final long serialVersionUID = -5712585514927819479L;
+    private static final long serialVersionUID = -5712585514927819479L;
 
-	private String registerType;
+    private String registerType;
 
-	private String registerValue;
+    private String registerValue;
 }

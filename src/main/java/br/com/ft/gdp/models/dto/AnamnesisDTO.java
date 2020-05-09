@@ -1,13 +1,14 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.NotBlank;
 
-import br.com.ft.gdp.models.domain.Anamnese;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import br.com.ft.gdp.models.domain.Anamnesis;
 import br.com.ft.gdp.models.domain.AnamnesisItem;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Visit;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,31 +17,33 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class AnamneseDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("Anamnesis")
+public class AnamnesisDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -7700694137849034946L;
 
     private Long id;
 
     @NotBlank(message = "Informar o VISITANTE é obrigatório.")
-    private Visit visit;
+    private Long visitId;
 
     @NotBlank(message = "Informar o PACIENTE é obrigatório.")
-    private Patient patient;
+    private Long patientId;
 
     @NotBlank(message = "Informar o ITEM ANAMNESIS é obrigatório.")
-    private AnamnesisItem anamnesisItem;
+    private AnamnesisItemDTO anamnesisItem;
 
     @NotBlank(message = "Informar a RESPOSTA é obrigatório.")
     private String response;
 
-    public Anamnese getAnamnesesDomainFromDTO() {
-        Anamnese domain = new Anamnese();
+    @JsonIgnore
+    public Anamnesis getAnamnesesDomainFromDTO() {
+        Anamnesis domain = new Anamnesis();
 
         domain.setId(id);
-        domain.setAnamnesisItem(anamnesisItem);
-        domain.setPatient(patient);
-        domain.setVisit(visit);
+        domain.setAnamnesisItem(new AnamnesisItem(anamnesisItem.getId(), anamnesisItem.getQuestion(), anamnesisItem.getResponse()));
+        domain.setPatient(new Patient(patientId));
+        domain.setVisit(new Visit(visitId));
         domain.setResponse(response);
 
         return domain;

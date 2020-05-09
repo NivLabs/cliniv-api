@@ -1,9 +1,10 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Representa a situação atual da API
@@ -12,7 +13,9 @@ import lombok.Data;
  *
  */
 @Data
-public class ServerStatusDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("API Status")
+public class ServerStatusDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -8293328535500084535L;
 
     private Date currentDate = new Date();

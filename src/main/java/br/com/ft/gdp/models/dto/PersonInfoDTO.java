@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("PesonInformations")
-public class PersonInfoDTO extends DataTransferObjectBase {
+public abstract class PersonInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4735834196671409605L;
 

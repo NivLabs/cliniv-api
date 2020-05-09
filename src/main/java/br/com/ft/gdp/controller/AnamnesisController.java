@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
-import br.com.ft.gdp.models.domain.Anamnese;
-import br.com.ft.gdp.models.dto.AnamneseDTO;
-import br.com.ft.gdp.service.AnamneseService;
+import br.com.ft.gdp.models.domain.Anamnesis;
+import br.com.ft.gdp.models.dto.AnamnesisDTO;
+import br.com.ft.gdp.service.AnamnesisService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -47,7 +47,7 @@ import io.swagger.annotations.ApiOperation;
 public class AnamnesisController {
 
     @Autowired
-    private AnamneseService service;
+    private AnamnesisService service;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -55,20 +55,20 @@ public class AnamnesisController {
     @ApiOperation(nickname = "anamnese-get", value = "Busca uma página de Anamnesis")
     @GetMapping
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-    public ResponseEntity<Page<Anamnese>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                   @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                   @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                   @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+    public ResponseEntity<Page<AnamnesisDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                       @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+                                                       @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+                                                       @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
         Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        return ResponseEntity.ok(service.searchEntityPage(pageSettings));
+        return ResponseEntity.ok(service.searchDTOPage(pageSettings));
     }
 
     @ApiOperation(nickname = "anamnese-post", value = "Insere uma nova anamnese na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
-    public ResponseEntity<AnamneseDTO> persist(@Validated @RequestBody(required = true) AnamneseDTO anamneseDto,
-                                               HttpServletResponse response) {
-        Anamnese createdAnamnese = service.persist(anamneseDto.getAnamnesesDomainFromDTO());
+    public ResponseEntity<AnamnesisDTO> persist(@Validated @RequestBody(required = true) AnamnesisDTO anamneseDto,
+                                                HttpServletResponse response) {
+        Anamnesis createdAnamnese = service.persist(anamneseDto.getAnamnesesDomainFromDTO());
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdAnamnese.getId()));
 
@@ -79,10 +79,10 @@ public class AnamnesisController {
     @ApiOperation(nickname = "anamnese-put", value = "Atualiza uma anamnese na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
-    public ResponseEntity<AnamneseDTO> update(@PathVariable("id") Long id,
-                                              @Validated @RequestBody(required = true) AnamneseDTO anamneseDTO,
-                                              HttpServletResponse response) {
-        Anamnese createdAnamnese = service.update(id, anamneseDTO.getAnamnesesDomainFromDTO());
+    public ResponseEntity<AnamnesisDTO> update(@PathVariable("id") Long id,
+                                               @Validated @RequestBody(required = true) AnamnesisDTO anamneseDTO,
+                                               HttpServletResponse response) {
+        Anamnesis createdAnamnese = service.update(id, anamneseDTO.getAnamnesesDomainFromDTO());
 
         return ResponseEntity.ok().body(createdAnamnese.getAnamneseDTOFromDomain());
 
@@ -91,8 +91,8 @@ public class AnamnesisController {
     @ApiOperation(nickname = "anamnese-get-id", value = "Busca uma anamnese baseada no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-    public ResponseEntity<Anamnese> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<AnamnesisDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findById(id).getAnamneseDTOFromDomain());
     }
 
 }

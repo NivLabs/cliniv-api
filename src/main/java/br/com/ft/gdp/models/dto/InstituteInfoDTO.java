@@ -1,7 +1,6 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
-
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,10 +14,11 @@ import lombok.NoArgsConstructor;
  * @since 30 de nov de 2019
  */
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstituteInfoDTO implements Serializable {
+@ApiModel("Institute Informations")
+public class InstituteInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -3104969606567859458L;
 

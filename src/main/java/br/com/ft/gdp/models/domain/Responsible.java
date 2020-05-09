@@ -1,6 +1,5 @@
 package br.com.ft.gdp.models.domain;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import br.com.ft.gdp.models.BaseObject;
+import br.com.ft.gdp.models.BaseObjectWithCreatedAt;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,7 +35,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Responsible extends BaseObject {
+public class Responsible extends BaseObjectWithCreatedAt {
 
     private static final long serialVersionUID = 6649135435429790655L;
 
@@ -55,10 +52,6 @@ public class Responsible extends BaseObject {
 
     @Column(name = "SIGLA_ORGAO")
     private String initialsIdentity;
-
-    @Column(name = "DATA_CRIACAO")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private LocalDateTime createdAt;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(name = "ESPECIALIDADE_RESPONSAVEL", joinColumns = @JoinColumn(name = "ID_RESPONSAVEL"), inverseJoinColumns = @JoinColumn(name = "ID_ESPECIALIDADE"))

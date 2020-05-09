@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.ft.gdp.models.domain.Anamnese;
+import br.com.ft.gdp.models.domain.Anamnesis;
 
 /**
  * AnamneseDao.java
@@ -16,12 +16,12 @@ import br.com.ft.gdp.models.domain.Anamnese;
  * 
  */
 @Repository
-public interface AnamneseRepository extends JpaRepository<Anamnese, Long> {
+public interface AnamneseRepository extends JpaRepository<Anamnesis, Long> {
 
     /**
      * @param id
      * @return
      */
-    public Optional<Anamnese> findById(Long id);
+    public Optional<Anamnesis> findById(Long id);
 
 }

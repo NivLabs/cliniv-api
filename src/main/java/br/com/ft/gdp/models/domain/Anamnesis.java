@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.ft.gdp.models.BaseObject;
-import br.com.ft.gdp.models.dto.AnamneseDTO;
+import br.com.ft.gdp.models.dto.AnamnesisDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Anamnese extends BaseObject {
+public class Anamnesis extends BaseObject {
     private static final long serialVersionUID = -4203582800741543902L;
 
     @Id
@@ -47,13 +47,13 @@ public class Anamnese extends BaseObject {
     private String response;
 
     @JsonIgnore
-    public AnamneseDTO getAnamneseDTOFromDomain() {
-        AnamneseDTO dto = new AnamneseDTO();
+    public AnamnesisDTO getAnamneseDTOFromDomain() {
+        AnamnesisDTO dto = new AnamnesisDTO();
 
         dto.setId(id);
-        dto.setAnamnesisItem(anamnesisItem);
-        dto.setPatient(patient);
-        dto.setVisit(visit);
+        dto.setAnamnesisItem(anamnesisItem.getAnamnesisItemDTOFromDomain());
+        dto.setPatientId(patient.getId());
+        dto.setVisitId(visit.getId());
         dto.setResponse(response);
 
         return dto;

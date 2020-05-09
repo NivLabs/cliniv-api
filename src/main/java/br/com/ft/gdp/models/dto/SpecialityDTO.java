@@ -1,7 +1,6 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
-
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,8 +16,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class SpecialityDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("Speciality")
+public class SpecialityDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -8113675301888267134L;
 

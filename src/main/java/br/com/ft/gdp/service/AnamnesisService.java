@@ -3,14 +3,19 @@
  */
 package br.com.ft.gdp.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.ObjectNotFoundException;
-import br.com.ft.gdp.models.domain.Anamnese;
+import br.com.ft.gdp.models.domain.Anamnesis;
+import br.com.ft.gdp.models.dto.AnamnesisDTO;
 import br.com.ft.gdp.repository.AnamneseRepository;
 
 /**
@@ -22,18 +27,23 @@ import br.com.ft.gdp.repository.AnamneseRepository;
  * 
  */
 @Service
-public class AnamneseService implements GenericService<Anamnese, Long> {
+public class AnamnesisService implements GenericService<Anamnesis, Long> {
 
     @Autowired
     private AnamneseRepository dao;
 
-    @Override
-    public Page<Anamnese> searchEntityPage(Pageable pageRequest) {
-        return dao.findAll(pageRequest);
+    public Page<AnamnesisDTO> searchDTOPage(Pageable pageSettings) {
+        Page<Anamnesis> page = dao.findAll(pageSettings);
+        List<AnamnesisDTO> newPage = new ArrayList<>();
+        page.getContent().forEach(domain -> {
+            newPage.add(domain.getAnamneseDTOFromDomain());
+        });
+
+        return new PageImpl<>(newPage, pageSettings, page.getTotalElements());
     }
 
     @Override
-    public Anamnese findById(Long id) {
+    public Anamnesis findById(Long id) {
         try {
             return dao.findById(id).orElseThrow(
                                                 () -> new ObjectNotFoundException(
@@ -46,25 +56,25 @@ public class AnamneseService implements GenericService<Anamnese, Long> {
     }
 
     @Override
-    public Anamnese update(Long id, Anamnese entity) {
-        Anamnese anamnese = findById(id);
+    public Anamnesis update(Long id, Anamnesis entity) {
+        Anamnesis anamnese = findById(id);
         BeanUtils.copyProperties(entity, anamnese, "id");
         return anamnese;
     }
 
     @Override
-    public void delete(Anamnese entity) {
+    public void delete(Anamnesis entity) {
         deleteById(entity.getId());
     }
 
     @Override
     public void deleteById(Long id) {
-        Anamnese anamnese = findById(id);
+        Anamnesis anamnese = findById(id);
         dao.delete(anamnese);
     }
 
     @Override
-    public Anamnese persist(Anamnese entity) {
+    public Anamnesis persist(Anamnesis entity) {
         entity.setId(null);
         return dao.save(entity);
     }

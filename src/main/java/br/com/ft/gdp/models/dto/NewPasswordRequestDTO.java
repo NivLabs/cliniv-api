@@ -1,10 +1,10 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Classe NewPasswordRequestDTO.java
@@ -15,7 +15,9 @@ import lombok.Data;
  */
 
 @Data
-public class NewPasswordRequestDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("New Password Request")
+public class NewPasswordRequestDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -173297306237874136L;
 

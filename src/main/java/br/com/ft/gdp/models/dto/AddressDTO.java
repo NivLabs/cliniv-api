@@ -1,7 +1,5 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -22,9 +20,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @ApiModel("Address")
-public class AddressDTO implements Serializable {
+public class AddressDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 5868142007921449692L;
 

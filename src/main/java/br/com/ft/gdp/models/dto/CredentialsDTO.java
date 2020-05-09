@@ -1,11 +1,11 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Classe CredentialsDTO.java
@@ -15,7 +15,9 @@ import lombok.Data;
  * @since 15 de set de 2019
  */
 @Data
-public class CredentialsDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("Credentials")
+public class CredentialsDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -7495190733306523606L;
 
