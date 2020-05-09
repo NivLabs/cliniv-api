@@ -1,8 +1,8 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,8 +18,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class VisitDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("Visit")
+public class VisitDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -7717106082371494163L;
 

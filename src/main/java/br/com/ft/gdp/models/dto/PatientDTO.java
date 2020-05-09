@@ -1,6 +1,7 @@
 package br.com.ft.gdp.models.dto;
 
 import br.com.ft.gdp.models.domain.PatientType;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@ApiModel("Patient")
 public class PatientDTO extends PersonDTO {
 
     private static final long serialVersionUID = -1070682704153329772L;

@@ -1,7 +1,5 @@
 package br.com.ft.gdp.models.domain;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,9 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import br.com.ft.gdp.models.BaseObject;
+import br.com.ft.gdp.models.BaseObjectWithCreatedAt;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,7 +31,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Patient extends BaseObject {
+public class Patient extends BaseObjectWithCreatedAt {
 
     private static final long serialVersionUID = 4873898002597934236L;
 
@@ -54,10 +50,6 @@ public class Patient extends BaseObject {
     @Enumerated(EnumType.STRING)
     private PatientType type;
 
-    @Column(name = "DATA_CRIACAO")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private LocalDateTime createdAt;
-    
     @Column(name = "ANOTACOES")
     private String annotations;
 

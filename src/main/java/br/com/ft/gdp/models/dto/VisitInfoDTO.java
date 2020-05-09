@@ -1,6 +1,5 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.ft.gdp.models.enums.Gender;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,8 +24,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class VisitInfoDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("Visit Informations")
+public class VisitInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6838739544914003033L;
 

@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("UserSimple")
+@ApiModel("User")
 public class UserDTO extends PersonDTO {
 
     private static final long serialVersionUID = 2375401831562989624L;

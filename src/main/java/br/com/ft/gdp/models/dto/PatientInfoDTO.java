@@ -1,6 +1,5 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -15,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import br.com.ft.gdp.models.domain.GenderIdeology;
 import br.com.ft.gdp.models.domain.PatientType;
 import br.com.ft.gdp.models.enums.Gender;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,8 +26,9 @@ import lombok.EqualsAndHashCode;
  * @since 3 de out de 2019
  */
 @Data
-@EqualsAndHashCode
-public class PatientInfoDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("Patient Informations")
+public class PatientInfoDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = 1575416178033511932L;
 
     private Long id;

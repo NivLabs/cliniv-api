@@ -3,7 +3,7 @@ package br.com.ft.gdp.models.dto;
 import java.io.Serializable;
 
 /**
- * Objeto base para todas as requisições e respostas
+ * Objeto base para todas as requisições e respostas da Aplicação (DTO)
  * 
  * @author viniciosarodrigues
  *

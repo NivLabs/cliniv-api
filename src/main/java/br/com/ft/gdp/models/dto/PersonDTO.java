@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class PersonDTO extends DataTransferObjectBase {
+public abstract class PersonDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -1442279002298984040L;
 

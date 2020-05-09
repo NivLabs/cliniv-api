@@ -1,9 +1,8 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
-
 import javax.validation.constraints.NotNull;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 
- * Classe VisitDTO.java
+ * Classe NewPatientVisitDTO.java
  *
  * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
  *
@@ -20,8 +19,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class NewPatientVisitDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("New patient visit request")
+public class NewPatientVisitDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 2370290606342755763L;
 

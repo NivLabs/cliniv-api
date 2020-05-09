@@ -1,11 +1,11 @@
 package br.com.ft.gdp.models.dto;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,8 +22,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-public class MedicineInfoDTO implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@ApiModel("Medicine informations")
+public class MedicineInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -1687147074910399813L;
 

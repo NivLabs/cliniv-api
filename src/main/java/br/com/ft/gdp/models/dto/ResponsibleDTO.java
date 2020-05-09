@@ -3,6 +3,7 @@ package br.com.ft.gdp.models.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ApiModel("Responsible or Professional")
 public class ResponsibleDTO extends PersonDTO {
     private static final long serialVersionUID = -5141572031863436326L;
 

@@ -1,6 +1,5 @@
 package br.com.ft.gdp.models.domain;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +15,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.ft.gdp.models.BaseObject;
+import br.com.ft.gdp.models.BaseObjectWithCreatedAt;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,7 +36,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "USUARIO")
-public class UserApplication extends BaseObject {
+public class UserApplication extends BaseObjectWithCreatedAt {
 
     private static final long serialVersionUID = -4066717030226233952L;
 
@@ -59,10 +57,6 @@ public class UserApplication extends BaseObject {
     @JsonIgnore
     @Column(name = "SENHA", nullable = false, length = 500)
     private String password;
-
-    @Column(name = "DATA_CRIACAO")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private LocalDateTime createdAt;
 
     @Column(name = "ATIVO")
     private boolean active;
