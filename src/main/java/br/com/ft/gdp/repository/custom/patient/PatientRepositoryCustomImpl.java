@@ -62,7 +62,7 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
             attributes.add((cb, from) -> cb.like(from.get("person").get("lastName"), filters.getLastName()));
         }
         if (filters.getType() != null) {
-            attributes.add((cb, from) -> cb.equal(from.get("type"), filters.getType().toString()));
+            attributes.add((cb, from) -> cb.equal(from.get("type"), filters.getType()));
         }
 
         return attributes;
