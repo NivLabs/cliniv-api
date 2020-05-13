@@ -19,13 +19,14 @@ import br.com.ft.gdp.models.domain.EventType;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.Responsible;
-import br.com.ft.gdp.models.dto.AttendanceEventDTO;
 import br.com.ft.gdp.models.dto.AttendanceDTO;
+import br.com.ft.gdp.models.dto.AttendanceEventDTO;
 import br.com.ft.gdp.models.dto.DocumentDTO;
 import br.com.ft.gdp.models.dto.MedicalRecordDTO;
 import br.com.ft.gdp.models.dto.NewAttandenceDTO;
 import br.com.ft.gdp.models.dto.PatientInfoDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
+import br.com.ft.gdp.models.enums.EntryType;
 import br.com.ft.gdp.repository.AttendanceEventRepository;
 import br.com.ft.gdp.repository.AttendanceRepository;
 
@@ -147,6 +148,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
             Attendance convertedAttendance = new Attendance();
             convertedAttendance.setReasonForEntry(visitDto.getEntryCause());
             convertedAttendance.setPatient(new Patient(savedPatient.getId()));
+            convertedAttendance.setEntryType(visitDto.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
             convertedAttendance = persist(convertedAttendance);
             createEntryEvent(convertedAttendance, visitDto);
             attendance = getActiveMedicalRecord(visitDto.getPatientId());
