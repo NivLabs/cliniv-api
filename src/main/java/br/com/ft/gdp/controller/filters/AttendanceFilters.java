@@ -28,7 +28,7 @@ public class AttendanceFilters extends CustomFilters {
     private String cpf;
     private ActiveType activeType;
     private PatientType patientType;
-    private EntryType EntryType;
+    private EntryType entryType;
 
     public ActiveType getActiveType() {
         if (activeType == null)
