@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("Visit Event")
-public class VisitEventDTO extends DataTransferObjectBase {
+public class AttendanceEventDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -5192545539633937184L;
 

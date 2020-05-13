@@ -33,7 +33,7 @@ public class Anamnesis extends BaseObject {
 
     @ManyToOne
     @JoinColumn(name = "ID_VISITA")
-    private Visit visit;
+    private Attendance visit;
 
     @ManyToOne
     @JoinColumn(name = "ID_PACIENTE")

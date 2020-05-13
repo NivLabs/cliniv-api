@@ -39,7 +39,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class VisitEvent extends BaseObject {
+public class AttendanceEvent extends BaseObject {
 
     private static final long serialVersionUID = 8988537898462013276L;
 
@@ -61,7 +61,7 @@ public class VisitEvent extends BaseObject {
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_VISITA")
-    private Visit visit;
+    private Attendance attendance;
 
     @Column(name = "ID_DOCUMENTO_DIGITAL")
     private Long documentId;

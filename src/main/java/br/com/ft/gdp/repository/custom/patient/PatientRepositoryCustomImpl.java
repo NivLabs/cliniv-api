@@ -25,7 +25,7 @@ import br.com.ft.gdp.util.StringUtils;
 public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient> implements PatientRepositoryCustom {
 
     @Override
-    public Page<PatientDTO> resumedList(PatientFilters filters, Pageable pageSettings) {
+    public Page<PatientDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
         Page<Patient> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
 
         List<PatientDTO> listOfPatientDTO = new ArrayList<>();
@@ -62,7 +62,7 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
             attributes.add((cb, from) -> cb.like(from.get("person").get("lastName"), filters.getLastName()));
         }
         if (filters.getType() != null) {
-            attributes.add((cb, from) -> cb.equal(from.get("type"), filters.getType()));
+            attributes.add((cb, from) -> cb.equal(from.get("type"), filters.getType().toString()));
         }
 
         return attributes;

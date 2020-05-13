@@ -25,7 +25,7 @@ import br.com.ft.gdp.util.StringUtils;
 public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Responsible> implements ResponsibleRepositoryCustom {
 
     @Override
-    public Page<ResponsibleDTO> resumedList(ResponsibleFilters filters, Pageable pageSettings) {
+    public Page<ResponsibleDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
         Page<Responsible> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
 
         List<ResponsibleDTO> listOfResponsibleDTO = new ArrayList<>();
@@ -44,7 +44,7 @@ public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Res
         ResponsibleFilters filters = (ResponsibleFilters) customFilters;
 
         List<IExpression<Responsible>> attributes = new ArrayList<>();
-        
+
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNoFloatNumeric(filters.getId())) {
             attributes.add((cb, from) -> cb.equal(from.get("id"), Long.parseLong(filters.getId())));
         }

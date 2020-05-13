@@ -2,6 +2,7 @@ package br.com.ft.gdp.models.dto;
 
 import java.time.LocalDateTime;
 
+import br.com.ft.gdp.models.enums.EntryType;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,16 +20,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Visit")
-public class VisitDTO extends DataTransferObjectBase {
+@ApiModel("Attendance")
+public class AttendanceDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -7717106082371494163L;
 
     private Long id;
+
+    private String firstName;
+
+    private String lastName;
 
     private LocalDateTime entryDatetime;
 
     private String entryCause;
 
     private Boolean isFinished;
+
+    private EntryType type;
+
+    private Long patientId;
+
+    private String susNumber;
+
+    private Long sectorId;
 }

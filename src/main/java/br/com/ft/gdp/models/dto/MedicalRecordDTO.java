@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Classe VisitDTO.java
+ * Classe que representa um prontuário médico
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  * 
@@ -25,8 +25,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Visit Informations")
-public class VisitInfoDTO extends DataTransferObjectBase {
+@ApiModel("Medical record")
+public class MedicalRecordDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6838739544914003033L;
 
@@ -49,7 +49,7 @@ public class VisitInfoDTO extends DataTransferObjectBase {
 
     private Gender gender;
 
-    private List<VisitEventDTO> events = new ArrayList<>();
+    private List<AttendanceEventDTO> events = new ArrayList<>();
 
     private List<MedicineInfoDTO> medicines = new ArrayList<>();
 

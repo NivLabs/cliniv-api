@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import br.com.ft.gdp.models.domain.Anamnesis;
 import br.com.ft.gdp.models.domain.AnamnesisItem;
 import br.com.ft.gdp.models.domain.Patient;
-import br.com.ft.gdp.models.domain.Visit;
+import br.com.ft.gdp.models.domain.Attendance;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,7 +43,7 @@ public class AnamnesisDTO extends DataTransferObjectBase {
         domain.setId(id);
         domain.setAnamnesisItem(new AnamnesisItem(anamnesisItem.getId(), anamnesisItem.getQuestion(), anamnesisItem.getResponse()));
         domain.setPatient(new Patient(patientId));
-        domain.setVisit(new Visit(visitId));
+        domain.setVisit(new Attendance(visitId));
         domain.setResponse(response);
 
         return domain;
