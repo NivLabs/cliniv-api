@@ -62,7 +62,7 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
             attributes.add((cb, from) -> cb.like(from.get("patient").get("person").get("lastName"), filters.getLastName()));
         }
         if (filters.getPatientType() != null) {
-            attributes.add((cb, from) -> cb.equal(from.get("patient").get("person").get("type"), filters.getPatientType()));
+            attributes.add((cb, from) -> cb.equal(from.get("patient").get("type"), filters.getPatientType()));
         }
         if (filters.getEntryType() != null) {
             attributes.add((cb, from) -> cb.equal(from.get("entryType"), filters.getEntryType()));
