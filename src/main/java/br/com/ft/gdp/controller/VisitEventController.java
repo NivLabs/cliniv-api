@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.event.CreatedResourceEvent;
-import br.com.ft.gdp.models.domain.VisitEvent;
+import br.com.ft.gdp.models.domain.AttendanceEvent;
 import br.com.ft.gdp.service.VisitEventService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,7 +48,7 @@ public class VisitEventController {
     @ApiOperation(nickname = "visit-event-get", value = "Busca uma página de eventos de visita")
     @GetMapping
     @PreAuthorize("hasAnyRole('COMUM', 'ADMIN')")
-    public ResponseEntity<Page<VisitEvent>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<Page<AttendanceEvent>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                      @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
                                                      @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
                                                      @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
@@ -59,9 +59,9 @@ public class VisitEventController {
     @ApiOperation(nickname = "visit-event-post", value = "Insere um novo evento de visita")
     @PostMapping
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<VisitEvent> persist(@Validated @RequestBody(required = true) VisitEvent newVisitEvent,
+    public ResponseEntity<AttendanceEvent> persist(@Validated @RequestBody(required = true) AttendanceEvent newVisitEvent,
                                               HttpServletResponse response) {
-        VisitEvent createdVisitEvent = service.persist(newVisitEvent);
+        AttendanceEvent createdVisitEvent = service.persist(newVisitEvent);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdVisitEvent.getId()));
 
@@ -72,9 +72,9 @@ public class VisitEventController {
     @ApiOperation(nickname = "visit-event-put", value = "Atualiza um evento de visita na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<VisitEvent> update(@PathVariable("id") Long id,
-                                             @Validated @RequestBody(required = true) VisitEvent visitEvent, HttpServletResponse response) {
-        VisitEvent createdVisitEvent = service.update(id, visitEvent);
+    public ResponseEntity<AttendanceEvent> update(@PathVariable("id") Long id,
+                                             @Validated @RequestBody(required = true) AttendanceEvent visitEvent, HttpServletResponse response) {
+        AttendanceEvent createdVisitEvent = service.update(id, visitEvent);
 
         return ResponseEntity.ok().body(createdVisitEvent);
 
@@ -83,7 +83,7 @@ public class VisitEventController {
     @ApiOperation(nickname = "visit-event-get-id", value = "Busca um evento de visita baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-    public ResponseEntity<VisitEvent> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<AttendanceEvent> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 

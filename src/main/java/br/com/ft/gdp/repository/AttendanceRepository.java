@@ -6,8 +6,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import br.com.ft.gdp.models.domain.Attendance;
 import br.com.ft.gdp.models.domain.Patient;
-import br.com.ft.gdp.models.domain.Visit;
+import br.com.ft.gdp.repository.custom.attendance.AttendanceRepositoryCustom;
 
 /**
  * 
@@ -18,13 +19,13 @@ import br.com.ft.gdp.models.domain.Visit;
  * @since 8 de set de 2019
  */
 @Repository
-public interface VisitRepository extends JpaRepository<Visit, Long> {
+public interface AttendanceRepository extends JpaRepository<Attendance, Long>, AttendanceRepositoryCustom {
 
     /**
      * @param patientId
      * @return
      */
-	List<Visit> findByPatient(Patient patient);
+    List<Attendance> findByPatient(Patient patient);
 
-    Optional<Visit> findByPatientAndDateTimeExitIsNull(Patient patient);
+    Optional<Attendance> findByPatientAndDateTimeExitIsNull(Patient patient);
 }

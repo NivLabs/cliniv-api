@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.ft.gdp.models.domain.VisitEvent;
+import br.com.ft.gdp.models.domain.AttendanceEvent;
 
 /**
  * Classe VisitEventRepository.java
@@ -15,12 +15,12 @@ import br.com.ft.gdp.models.domain.VisitEvent;
  * @since 08 Sept, 2019
  */
 @Repository
-public interface VisitEventRepository extends JpaRepository<VisitEvent, Long> {
+public interface AttendanceEventRepository extends JpaRepository<AttendanceEvent, Long> {
 
     /**
      * @param visitId
      * @return
      */
-    List<VisitEvent> findByVisitId(Long visitId);
+    List<AttendanceEvent> findByAttendanceId(Long visitId);
 
 }

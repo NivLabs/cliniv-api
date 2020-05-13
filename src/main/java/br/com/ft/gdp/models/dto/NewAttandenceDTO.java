@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("New patient visit request")
-public class NewPatientVisitDTO extends DataTransferObjectBase {
+public class NewAttandenceDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 2370290606342755763L;
 

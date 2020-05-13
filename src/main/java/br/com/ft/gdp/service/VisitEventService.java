@@ -9,8 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.exception.ObjectNotFoundException;
-import br.com.ft.gdp.models.domain.VisitEvent;
-import br.com.ft.gdp.repository.VisitEventRepository;
+import br.com.ft.gdp.models.domain.AttendanceEvent;
+import br.com.ft.gdp.repository.AttendanceEventRepository;
 
 /**
  * Classe VisitEventService.java
@@ -20,43 +20,43 @@ import br.com.ft.gdp.repository.VisitEventRepository;
  * @since 17 Sept, 2019
  */
 @Service
-public class VisitEventService implements GenericService<VisitEvent, Long> {
+public class VisitEventService implements GenericService<AttendanceEvent, Long> {
 
     @Autowired
-    private VisitEventRepository dao;
+    private AttendanceEventRepository dao;
 
     @Override
-    public Page<VisitEvent> searchEntityPage(Pageable pageRequest) {
+    public Page<AttendanceEvent> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
     }
 
     @Override
-    public VisitEvent findById(Long id) {
+    public AttendanceEvent findById(Long id) {
         return dao.findById(id).orElseThrow(
                                             () -> new ObjectNotFoundException(
                                                     String.format("Evento de Visita com o ID: [%s] não encontrado", id)));
     }
 
     @Override
-    public VisitEvent update(Long id, VisitEvent entity) {
-        VisitEvent auxEntity = findById(id);
+    public AttendanceEvent update(Long id, AttendanceEvent entity) {
+        AttendanceEvent auxEntity = findById(id);
         BeanUtils.copyProperties(entity, auxEntity, "id");
         return dao.save(auxEntity);
     }
 
     @Override
-    public void delete(VisitEvent entity) {
+    public void delete(AttendanceEvent entity) {
         deleteById(entity.getId());
     }
 
     @Override
     public void deleteById(Long id) {
-        VisitEvent auxEntity = findById(id);
+        AttendanceEvent auxEntity = findById(id);
         dao.delete(auxEntity);
     }
 
     @Override
-    public VisitEvent persist(VisitEvent entity) {
+    public AttendanceEvent persist(AttendanceEvent entity) {
         return dao.save(entity);
     }
 
@@ -64,8 +64,8 @@ public class VisitEventService implements GenericService<VisitEvent, Long> {
      * @param visitId
      * @return
      */
-    public List<VisitEvent> findByVisitId(Long visitId) {
-        return dao.findByVisitId(visitId);
+    public List<AttendanceEvent> findByVisitId(Long visitId) {
+        return dao.findByAttendanceId(visitId);
     }
 
 }
