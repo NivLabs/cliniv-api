@@ -2,6 +2,7 @@ package br.com.ft.gdp.models.dto;
 
 import java.time.LocalDateTime;
 
+import br.com.ft.gdp.models.domain.PatientType;
 import br.com.ft.gdp.models.enums.EntryType;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -38,6 +39,8 @@ public class AttendanceDTO extends DataTransferObjectBase {
     private Boolean isFinished;
 
     private EntryType type;
+
+    private PatientType patientType;
 
     private Long patientId;
 
