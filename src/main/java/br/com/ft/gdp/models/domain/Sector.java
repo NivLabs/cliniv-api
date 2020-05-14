@@ -59,4 +59,7 @@ public class Sector extends BaseObject {
     @OneToMany(mappedBy = "superSector", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Sector> sectors = new ArrayList<>();
 
+    public Sector(Long id) {
+        this.id = id;
+    }
 }

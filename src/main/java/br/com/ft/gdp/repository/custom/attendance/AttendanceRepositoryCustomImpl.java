@@ -41,6 +41,7 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
             attendanceConverted.setSusNumber(attendance.getPatient().getSusNumber());
             attendanceConverted.setType(attendance.getEntryType());
             attendanceConverted.setIsFinished(attendance.getDateTimeExit() != null);
+            attendanceConverted.setSectorDescription(attendance.getSector().getDescription());
             listOfDTO.add(attendanceConverted);
         });
         return new PageImpl<>(listOfDTO, pageSettings, pageFromDatabase.getTotalElements());
@@ -63,6 +64,9 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         }
         if (filters.getPatientType() != null) {
             attributes.add((cb, from) -> cb.equal(from.get("patient").get("type"), filters.getPatientType()));
+        }
+        if (!StringUtils.isNullOrEmpty(filters.getSectorId()) && !StringUtils.isNullOrEmpty(StringUtils.getDigits(filters.getSectorId()))) {
+            attributes.add((cb, from) -> cb.equal(from.get("sector").get("id"), filters.getSectorId()));
         }
         if (filters.getEntryType() != null) {
             attributes.add((cb, from) -> cb.equal(from.get("entryType"), filters.getEntryType()));

@@ -56,6 +56,10 @@ public class Attendance extends BaseObject {
     @Enumerated(EnumType.STRING)
     private EntryType entryType;
 
+    @ManyToOne
+    @JoinColumn(name = "SETOR_ATUAL")
+    private Sector sector;
+
     @Column(name = "MOTIVO_ENTRADA")
     private String reasonForEntry;
 

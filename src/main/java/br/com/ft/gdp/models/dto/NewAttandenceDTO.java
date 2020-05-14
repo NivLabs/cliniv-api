@@ -34,6 +34,9 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
 
     private Long responsibleId;
 
+    @NotNull(message = "Informar o setor de entrada é obrigatório")
+    private Long sectorId;
+
     @NotNull(message = "Informar o MOTIVO da visita é obrigatório")
     private String entryCause;
 
