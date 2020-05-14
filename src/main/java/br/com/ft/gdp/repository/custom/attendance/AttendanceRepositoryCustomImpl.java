@@ -40,6 +40,7 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
             attendanceConverted.setPatientId(attendance.getPatient().getId());
             attendanceConverted.setSusNumber(attendance.getPatient().getSusNumber());
             attendanceConverted.setType(attendance.getEntryType());
+            attendanceConverted.setPatientType(attendance.getPatient().getType());
             attendanceConverted.setIsFinished(attendance.getDateTimeExit() != null);
             attendanceConverted.setSectorDescription(attendance.getSector().getDescription());
             listOfDTO.add(attendanceConverted);
