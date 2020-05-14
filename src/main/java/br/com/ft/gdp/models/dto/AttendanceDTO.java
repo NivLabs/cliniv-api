@@ -43,5 +43,5 @@ public class AttendanceDTO extends DataTransferObjectBase {
 
     private String susNumber;
 
-    private Long sectorId;
+    private String sectorDescription;
 }

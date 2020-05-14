@@ -19,12 +19,14 @@ import br.com.ft.gdp.models.domain.EventType;
 import br.com.ft.gdp.models.domain.Patient;
 import br.com.ft.gdp.models.domain.Person;
 import br.com.ft.gdp.models.domain.Responsible;
+import br.com.ft.gdp.models.domain.Sector;
 import br.com.ft.gdp.models.dto.AttendanceDTO;
 import br.com.ft.gdp.models.dto.AttendanceEventDTO;
 import br.com.ft.gdp.models.dto.DocumentDTO;
 import br.com.ft.gdp.models.dto.MedicalRecordDTO;
 import br.com.ft.gdp.models.dto.NewAttandenceDTO;
 import br.com.ft.gdp.models.dto.PatientInfoDTO;
+import br.com.ft.gdp.models.dto.SectorDTO;
 import br.com.ft.gdp.models.enums.DocumentType;
 import br.com.ft.gdp.models.enums.EntryType;
 import br.com.ft.gdp.repository.AttendanceEventRepository;
@@ -47,6 +49,8 @@ public class AttendanceService implements GenericService<Attendance, Long> {
     private AttendanceEventRepository attendanceEventRepo;
     @Autowired
     private PatientService patientService;
+    @Autowired
+    private SectorService sectorService;
 
     public Page<AttendanceDTO> getAttendancesPage(AttendanceFilters filters, Pageable pageRequest) {
         return dao.resumedList(filters, pageRequest);
@@ -138,9 +142,9 @@ public class AttendanceService implements GenericService<Attendance, Long> {
      */
     public MedicalRecordDTO persistNewAttendance(NewAttandenceDTO visitDto) {
         MedicalRecordDTO attendance = null;
+        SectorDTO sectorToPatient = sectorService.findById(visitDto.getSectorId());
         try {
             attendance = getActiveMedicalRecord(visitDto.getPatientId());
-
         } catch (ValidationException e) {
 
             PatientInfoDTO savedPatient = patientService.findByPateintId(visitDto.getPatientId());
@@ -149,6 +153,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
             convertedAttendance.setReasonForEntry(visitDto.getEntryCause());
             convertedAttendance.setPatient(new Patient(savedPatient.getId()));
             convertedAttendance.setEntryType(visitDto.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
+            convertedAttendance.setSector(new Sector(sectorToPatient.getId()));
             convertedAttendance = persist(convertedAttendance);
             createEntryEvent(convertedAttendance, visitDto);
             attendance = getActiveMedicalRecord(visitDto.getPatientId());
