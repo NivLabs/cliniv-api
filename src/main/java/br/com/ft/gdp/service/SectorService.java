@@ -43,7 +43,7 @@ public class SectorService implements GenericService<SectorDTO, Long> {
         Sector sector = dao.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Setor com ID: %s não encontrado", id)));
         SectorDTO sectorDTO = new SectorDTO();
-        BeanUtils.copyProperties(sector, sectorDTO, "id");
+        BeanUtils.copyProperties(sector, sectorDTO);
         return sectorDTO;
     }
 
