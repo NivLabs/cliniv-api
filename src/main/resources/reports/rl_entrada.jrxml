@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="typewriter_book_cover" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c50b24eb-eb33-413f-8e75-e7e20a5341fd">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="hospitalLogo" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Logo Base64"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="hospitalName" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Nome do Hospital"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="patientName" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Nome completo do paciente"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="documentType" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Tipo do documento"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="documentValue" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Valor do documento"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="responsibleName" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Nome do responsavel"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="responsibleId" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Matrícula do responsavel"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="entryDateHour" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Data hora de início, ex: 03-04-2020 14:30"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="entryCause" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Informe a causa da entrada"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<title>
+		<band height="841" splitType="Stretch">
+			<image hAlign="Center">
+				<reportElement x="40" y="10" width="535" height="115" uuid="372b8a32-fdf9-4aab-bd54-0d0eab59cc0f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($P{hospitalLogo}.getBytes()))]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement positionType="Float" x="30" y="220" width="534" height="30" uuid="7f58d454-cae0-4ebb-9ccd-c885124eb525"/>
+				<box leftPadding="20" rightPadding="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Monospaced" size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Documento de entrada do paciente"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="811" width="234" height="30" uuid="38fc9afd-edcb-42f3-b6bc-cd258f6507b3"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Data de geração:  " + DATEFORMAT(TODAY( ),"dd/MM/yyyy")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="30" y="141" width="534" height="50" uuid="1a3cc99a-f7aa-4688-b860-40d9d38e0db6"/>
+				<box leftPadding="20" rightPadding="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Monospaced" size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{hospitalName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="300" width="534" height="370" uuid="5e49054b-a095-48d3-92bd-e50004539691"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["- Identificação:\nO paciente " + $P{patientName} + ", cujo " + $P{documentType} + " " + $P{documentValue} + " deu entrada no dia/as  " +$P{entryDateHour}
++ "\n\n- Motivo da entrada:\n"
++ $P{entryCause}
++ "\n\n- Atendente:\n"
++ $P{responsibleName} + " - Matrícula: " + $P{responsibleId}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>
