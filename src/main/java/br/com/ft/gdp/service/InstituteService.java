@@ -50,9 +50,14 @@ public class InstituteService implements GenericService<Institute, String> {
         if (!institutes.isEmpty()) {
             Institute institute = institutes.get(0);
             CustomerInfoDTO customer = new CustomerInfoDTO();
-            BeanUtils.copyProperties(institute, new AddressDTO());
+            AddressDTO address = new AddressDTO();
+            LicenseDTO license = new LicenseDTO();
+            BeanUtils.copyProperties(institute, address);
             BeanUtils.copyProperties(institute, customer);
-            BeanUtils.copyProperties(institute, new LicenseDTO());
+            BeanUtils.copyProperties(institute, license);
+
+            customer.setAddress(address);
+            customer.setLicense(license);
             response.setCustomerInfo(customer);
         }
         if (!parameters.isEmpty()) {
