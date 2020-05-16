@@ -53,6 +53,7 @@ public class InstituteService implements GenericService<Institute, String> {
             BeanUtils.copyProperties(institute, new AddressDTO());
             BeanUtils.copyProperties(institute, customer);
             BeanUtils.copyProperties(institute, new LicenseDTO());
+            response.setCustomerInfo(customer);
         }
         if (!parameters.isEmpty()) {
             parameters.forEach(parameter -> {
