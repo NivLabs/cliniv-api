@@ -2,11 +2,13 @@ package br.com.ft.gdp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.ft.gdp.models.dto.InstituteInfoDTO;
+import br.com.ft.gdp.models.dto.SettingsDTO;
 import br.com.ft.gdp.service.InstituteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,5 +33,12 @@ public class InstituteController {
     @GetMapping("/about")
     public ResponseEntity<InstituteInfoDTO> getInfo() {
         return ResponseEntity.ok(service.getInstitute());
+    }
+
+    @ApiOperation(nickname = "institute-get-settings", value = "Busca as informações do estabelecimento")
+    @GetMapping
+    @PreAuthorize("hasAnyRole('INSTINTUTO_LEITURA', 'INSTITUTO_ESCRITA', 'ADMIN')")
+    private ResponseEntity<SettingsDTO> getSetting() {
+        return ResponseEntity.ok(service.getSettings());
     }
 }
