@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.models.domain.Institute;
 import br.com.ft.gdp.models.dto.InstituteInfoDTO;
+import br.com.ft.gdp.models.dto.SettingsDTO;
 import br.com.ft.gdp.repository.InstituteRepository;
 
 /**
@@ -45,5 +46,9 @@ public class InstituteService implements GenericService<Institute, String> {
         }
 
         return instituteInfo;
+    }
+
+    public SettingsDTO getSettings() {
+        return null;
     }
 }
