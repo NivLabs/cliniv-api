@@ -9,9 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.ft.gdp.models.domain.Institute;
-import br.com.ft.gdp.models.dto.InstituteInfoDTO;
-import br.com.ft.gdp.models.dto.SettingsDTO;
+import br.com.ft.gdp.models.domain.Parameter;
+import br.com.ft.gdp.models.dto.AddressDTO;
+import br.com.ft.gdp.models.dto.CustomerInfoDTO;
+import br.com.ft.gdp.models.dto.InstituteDTO;
+import br.com.ft.gdp.models.dto.LicenseDTO;
+import br.com.ft.gdp.models.dto.ParameterDTO;
 import br.com.ft.gdp.repository.InstituteRepository;
+import br.com.ft.gdp.repository.ParameterRepository;
 
 /**
  * 
@@ -29,26 +34,33 @@ public class InstituteService implements GenericService<Institute, String> {
     @Autowired
     private InstituteRepository instituteRepo;
 
-    /**
-     * Busca informações da instituição
-     * 
-     * @return
-     */
-    public InstituteInfoDTO getInstitute() {
+    @Autowired
+    private ParameterRepository paramRepo;
+
+    public InstituteDTO getSettings() {
+
+        InstituteDTO response = new InstituteDTO();
+
+        logger.info("Buscando informações de configurações...");
+        List<Parameter> parameters = paramRepo.findAll();
+
         logger.info("Buscando informações da instituição...");
         List<Institute> institutes = instituteRepo.findAll();
 
-        InstituteInfoDTO instituteInfo = new InstituteInfoDTO();
-
         if (!institutes.isEmpty()) {
-            BeanUtils.copyProperties(institutes.get(0), instituteInfo);
-            logger.info("Informações encontradas para o CNPJ {} com nome de {}...", instituteInfo.getCnpj(), instituteInfo.getName());
+            Institute institute = institutes.get(0);
+            CustomerInfoDTO customer = new CustomerInfoDTO();
+            BeanUtils.copyProperties(institute, new AddressDTO());
+            BeanUtils.copyProperties(institute, customer);
+            BeanUtils.copyProperties(institute, new LicenseDTO());
+        }
+        if (!parameters.isEmpty()) {
+            parameters.forEach(parameter -> {
+                response.getParameters().add(new ParameterDTO(parameter.getId(), parameter.getName(), parameter.getGroup(),
+                        parameter.getMetaType(), parameter.getValue()));
+            });
         }
 
-        return instituteInfo;
-    }
-
-    public SettingsDTO getSettings() {
-        return null;
+        return response;
     }
 }

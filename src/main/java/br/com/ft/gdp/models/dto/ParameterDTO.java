@@ -30,4 +30,6 @@ public class ParameterDTO extends DataTransferObjectBase {
 
     private MetaType metaType;
 
+    private String value;
+
 }

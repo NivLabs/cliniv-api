@@ -1,0 +1,13 @@
+CREATE TABLE `APP_PARAM` (
+  `ID` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `NOME` VARCHAR(80) NOT NULL,
+  `GRUPO` VARCHAR(45) NOT NULL,
+  `TIPO` VARCHAR(45) NOT NULL,
+  `VALOR` VARCHAR(1000) NULL,
+  `VALORES_DE_GRUPO` VARCHAR(1000) NULL,
+  PRIMARY KEY (`ID`));
+
+INSERT INTO `APP_PARAM` VALUES (1, 'Liga | Desliga integração com busca de CEP', 'INTEGRAÇÃO CEP', 'bool', 'liga', NULL);
+INSERT INTO `APP_PARAM` VALUES (2, 'URL base da API de CEP', 'INTEGRAÇÃO CEP', 'string', 'https://viacep.com.br', NULL);
+INSERT INTO `APP_PARAM` VALUES (3, 'Usuário da API de CEP', 'INTEGRAÇÃO CEP', 'string', '', NULL);
+INSERT INTO `APP_PARAM` VALUES (4, 'Senha da API de CEP', 'INTEGRAÇÃO CEP', 'string', '', NULL);
