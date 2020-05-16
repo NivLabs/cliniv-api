@@ -7,8 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.ft.gdp.models.dto.InstituteInfoDTO;
-import br.com.ft.gdp.models.dto.SettingsDTO;
+import br.com.ft.gdp.models.dto.InstituteDTO;
 import br.com.ft.gdp.service.InstituteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,19 +25,13 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/institute")
 public class InstituteController {
 
-    @Autowired()
-    private InstituteService service;
-
-    @ApiOperation(nickname = "institute-get-about", value = "Busca as informações intitucionais do estabelecimento")
-    @GetMapping("/about")
-    public ResponseEntity<InstituteInfoDTO> getInfo() {
-        return ResponseEntity.ok(service.getInstitute());
-    }
+    @Autowired
+    private InstituteService instituteService;
 
     @ApiOperation(nickname = "institute-get-settings", value = "Busca as informações do estabelecimento")
     @GetMapping
     @PreAuthorize("hasAnyRole('INSTINTUTO_LEITURA', 'INSTITUTO_ESCRITA', 'ADMIN')")
-    private ResponseEntity<SettingsDTO> getSetting() {
-        return ResponseEntity.ok(service.getSettings());
+    public ResponseEntity<InstituteDTO> getInstitute() {
+        return ResponseEntity.ok(instituteService.getSettings());
     }
 }
