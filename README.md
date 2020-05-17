@@ -1,13 +1,13 @@
 <h1 align="center">
   <a href="https://gestao-prontuario.herokuapp.com">
-    <img alt="FTGP Logo" src="./readme/logo.png" width="350px" />
+    <img alt="TLGP Logo" src="./readme/logo.png" width="350px" />
   </a>
 </h1>
 <h2 align="center">
-  FT - Gestão de Prontuário - API
+  TL - Gestão de Prontuário - API
 </h2>
 
-O FT - Gestão de Prontuário - API (FTGP-API) é uma API Rest OpenSource criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no processo de prontuário. O FTGP-API é integrado com um client baseado em Angular, o [FTGP-UI](https://github.com/viniciosarodrigues/gestao-de-prontuario-ui).
+O TL - Gestão de Prontuário - API (TLGP-API) é uma API Rest OpenSource criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no processo de prontuário. O TLGP-API é integrado com um client baseado em Angular, o [TLGP-UI](https://github.com/viniciosarodrigues/gestao-de-prontuario-ui).
 
 <p align="center">
     <a href="https://github.com/viniciosarodrigues/">
