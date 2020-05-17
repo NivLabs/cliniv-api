@@ -63,7 +63,8 @@ public class InstituteService implements GenericService<Institute, String> {
         if (!parameters.isEmpty()) {
             parameters.forEach(parameter -> {
                 response.getParameters().add(new ParameterDTO(parameter.getId(), parameter.getName(), parameter.getGroup(),
-                        parameter.getMetaType(), parameter.getValue(), parameter.getGroupValues().split(";")));
+                        parameter.getMetaType(), parameter.getValue(),
+                        parameter.getGroupValues() != null ? parameter.getGroupValues().split(";") : null));
             });
         }
 
