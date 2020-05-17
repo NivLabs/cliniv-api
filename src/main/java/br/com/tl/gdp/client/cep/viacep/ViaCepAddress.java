@@ -1,6 +1,6 @@
-package br.com.tl.gdp.rest.client.cep.viacep;
+package br.com.tl.gdp.client.cep.viacep;
 
-import br.com.tl.gdp.rest.client.RestClientObject;
+import br.com.tl.gdp.client.RestClientObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

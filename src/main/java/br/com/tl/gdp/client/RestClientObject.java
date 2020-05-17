@@ -1,4 +1,4 @@
-package br.com.tl.gdp.rest.client;
+package br.com.tl.gdp.client;
 
 import java.io.Serializable;
 

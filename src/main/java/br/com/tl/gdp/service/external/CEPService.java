@@ -2,9 +2,9 @@ package br.com.tl.gdp.service.external;
 
 import org.springframework.stereotype.Service;
 
+import br.com.tl.gdp.client.cep.viacep.ViaCepAddress;
+import br.com.tl.gdp.client.cep.viacep.ViaCepClient;
 import br.com.tl.gdp.models.dto.AddressDTO;
-import br.com.tl.gdp.rest.client.cep.viacep.ViaCepAddress;
-import br.com.tl.gdp.rest.client.cep.viacep.ViaCepClient;
 
 @Service
 public class CEPService {
