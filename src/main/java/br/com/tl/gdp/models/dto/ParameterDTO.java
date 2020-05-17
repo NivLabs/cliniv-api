@@ -32,6 +32,6 @@ public class ParameterDTO extends DataTransferObjectBase {
 
     private String value;
 
-    private String groupValues;
+    private String[] groupValues;
 
 }
