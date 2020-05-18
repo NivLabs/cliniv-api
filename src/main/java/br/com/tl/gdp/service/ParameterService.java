@@ -68,6 +68,9 @@ public class ParameterService implements GenericService<Parameter, Long> {
                 if (StringUtils.isNullOrEmpty(newValue) || checkGroupParameter(param, newValue))
                     throw new ValidationException("O valor do parâmetro deve existir no grupo de valores possíveis");
                 break;
+            case string:
+            case password:
+                break;
             default:
                 throw new ValidationException("O valor do parâmetro é inválido para o tipo de parâmetro");
         }
