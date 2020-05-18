@@ -45,11 +45,11 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
 
         List<IExpression<Patient>> attributes = new ArrayList<>();
 
-        if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNoFloatNumeric(filters.getId())) {
+        if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
             attributes.add((cb, from) -> cb.equal(from.get("id"), Long.parseLong(filters.getId())));
         }
 
-        if (!StringUtils.isNullOrEmpty(filters.getSusNumber()) && StringUtils.isNoFloatNumeric(filters.getSusNumber())) {
+        if (!StringUtils.isNullOrEmpty(filters.getSusNumber()) && StringUtils.isNumeric(filters.getSusNumber())) {
             attributes.add((cb, from) -> cb.equal(from.get("susNumber"), filters.getSusNumber()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {

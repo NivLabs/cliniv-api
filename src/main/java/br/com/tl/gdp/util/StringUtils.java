@@ -34,7 +34,7 @@ public interface StringUtils {
      * @param str
      * @return
      */
-    public static boolean isNoFloatNumeric(String str) {
+    public static boolean isNumeric(String str) {
         try {
             Long.parseLong(str);
             return true;

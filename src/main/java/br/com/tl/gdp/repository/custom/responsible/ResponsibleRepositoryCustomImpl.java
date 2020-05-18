@@ -45,7 +45,7 @@ public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Res
 
         List<IExpression<Responsible>> attributes = new ArrayList<>();
 
-        if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNoFloatNumeric(filters.getId())) {
+        if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
             attributes.add((cb, from) -> cb.equal(from.get("id"), Long.parseLong(filters.getId())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getProfessionalIdentity())) {
