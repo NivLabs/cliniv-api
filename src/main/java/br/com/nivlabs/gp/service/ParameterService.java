@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.exception.ObjectNotFoundException;
 import br.com.nivlabs.gp.exception.ValidationException;
 import br.com.nivlabs.gp.models.domain.Parameter;
+import br.com.nivlabs.gp.models.dto.NewParameterValueDTO;
 import br.com.nivlabs.gp.models.enums.MetaType;
 import br.com.nivlabs.gp.repository.ParameterRepository;
 import br.com.nivlabs.gp.util.StringUtils;
@@ -32,13 +33,16 @@ public class ParameterService implements GenericService<Parameter, Long> {
      * @param id
      * @param newValue
      */
-    public void changeValueParameter(Long id, String newValue) {
+    public void changeValueParameter(Long id, NewParameterValueDTO newValue) {
+        if (newValue == null) {
+            throw new ValidationException("O novo valor não pode ser nulo");
+        }
         logger.info("Iniciando busca de parâmetro para o ID :: {}", id);
         Parameter parameter = repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException(String.format("Parâmetro com identificador %s não encontrado", id)));
         logger.info("Parãmetro encontrado :: {}", parameter.getName());
-        checkParameterValue(parameter, newValue);
-        parameter.setValue(newValue);
+        checkParameterValue(parameter, newValue.getNewValue());
+        parameter.setValue(newValue.getNewValue());
         if (!parameter.getMetaType().equals(MetaType.password))
             logger.info("Novo valor do parâmetro :: {}", newValue);
         else
