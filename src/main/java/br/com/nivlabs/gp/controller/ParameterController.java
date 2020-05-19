@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
+import br.com.nivlabs.gp.models.dto.NewParameterValueDTO;
 import br.com.nivlabs.gp.service.ParameterService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,9 +32,9 @@ public class ParameterController {
     private ParameterService service;
 
     @ApiOperation(nickname = "parameter-put-parameter", value = "Atualiza valor de parâmetro de aplicação")
-    @PutMapping("/{id}/{newValue}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('PARAMETRO_ESCRITA', 'ADMIN')")
-    public ResponseEntity<InstituteDTO> getInstitute(@PathVariable("id") Long id, @PathVariable("newValue") String newValue) {
+    public ResponseEntity<InstituteDTO> updateParameter(@PathVariable("id") Long id, @RequestBody NewParameterValueDTO newValue) {
         service.changeValueParameter(id, newValue);
         return ResponseEntity.noContent().build();
     }
