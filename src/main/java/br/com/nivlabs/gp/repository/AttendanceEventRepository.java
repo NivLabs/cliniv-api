@@ -17,10 +17,6 @@ import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 @Repository
 public interface AttendanceEventRepository extends JpaRepository<AttendanceEvent, Long> {
 
-    /**
-     * @param visitId
-     * @return
-     */
-    List<AttendanceEvent> findByAttendanceId(Long visitId);
+    public List<AttendanceEvent> findByAttendanceId(Long id);
 
 }
