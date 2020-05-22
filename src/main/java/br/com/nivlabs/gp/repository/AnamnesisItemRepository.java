@@ -3,8 +3,6 @@
  */
 package br.com.nivlabs.gp.repository;
 
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.nivlabs.gp.models.domain.AnamnesisItem;
@@ -17,11 +15,6 @@ import br.com.nivlabs.gp.models.domain.AnamnesisItem;
  * @since 12 de set de 2019
  * 
  */
-public interface AnamnesisItemRepository extends JpaRepository<AnamnesisItem, Long>{
-	
-	/**
-	 * @param id
-	 * @return
-	 */
-	public Optional<AnamnesisItem> findById(Long id);	
+public interface AnamnesisItemRepository extends JpaRepository<AnamnesisItem, Long> {
+
 }

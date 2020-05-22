@@ -1,7 +1,5 @@
 package br.com.nivlabs.gp.repository;
 
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,11 +15,5 @@ import br.com.nivlabs.gp.models.domain.Anamnesis;
  */
 @Repository
 public interface AnamneseRepository extends JpaRepository<Anamnesis, Long> {
-
-    /**
-     * @param id
-     * @return
-     */
-    public Optional<Anamnesis> findById(Long id);
 
 }
