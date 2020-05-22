@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.controller.filters;
 
-import br.com.nivlabs.gp.models.domain.PatientType;
+import br.com.nivlabs.gp.models.enums.PatientType;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import lombok.AllArgsConstructor;
 import lombok.Data;

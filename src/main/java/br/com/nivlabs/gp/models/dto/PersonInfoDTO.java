@@ -10,8 +10,8 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.gp.models.domain.GenderIdeology;
 import br.com.nivlabs.gp.models.enums.Gender;
+import br.com.nivlabs.gp.models.enums.GenderIdeology;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

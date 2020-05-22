@@ -2,7 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
 
-import br.com.nivlabs.gp.models.domain.DigitalDocumentType;
+import br.com.nivlabs.gp.models.enums.DigitalDocumentType;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

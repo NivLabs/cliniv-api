@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 
 import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
+import br.com.nivlabs.gp.models.enums.DigitalDocumentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
