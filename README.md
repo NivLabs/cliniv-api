@@ -45,13 +45,13 @@ Atualmente encontra-se na versão 1.0.0
 - [x] Cadastro de Eventos (Consultas, exames, prescriçoes, etc)
 - [x] Cadastro de Usuários
 - [x] Controle de Acesso
-- [ ] Armazenamento de documentos (Resultado de exames, radiografia, tumografia, etc)
+- [x] Armazenamento de documentos (Resultado de exames, radiografia, tumografia, etc)
 - [x] Histórico de visita em forma de timeline
-- [ ] Relatórios
+- [x] Relatórios
 - [x] Paciente não identificado
-- [ ] Fluxo padrão para atendimento ambulatorial
-- [ ] Fluxo padrão para atendimento emergencial
-- [ ] Cadastro de medicamentos 
+- [x] Fluxo padrão para atendimento ambulatorial
+- [x] Fluxo padrão para atendimento emergencial
+- [ ] Cadastro de medicamentos e materiais
 
 ---
 
@@ -59,11 +59,10 @@ Atualmente encontra-se na versão 1.0.0
 
 Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles:
 
-- Java 11 + **(Obrigatório)**
-- MySql Server ou MariaDB Server **(Obrigatório)**
-- Lombok 1.16.0 + **(Obrigatório)**
+- Java 14 + **(Obrigatório)**
+- MariaDB Server 10.3+ **(Obrigatório)**
+- Lombok 1.18.0 + **(Obrigatório)**
 - Eclipse ou STS **(Obrigatório)**
-- No caso do Eclipse, usar o plugin do Spring Tools *(Opcional)*
 
 ---
 
@@ -190,6 +189,8 @@ Esta área especifica definições técnicas da aplicação, suas característic
 
 > Você pode me encontrar por aqui...
 
+- NiV Labs :: [NiV Labs](http://www.nivlabs.com.br)
+- Atendimento :: [atendimento@nivlabs.com.br](atendimento@nivlabs.com.br)
 - Linkedin :: [Vinícios Rodrigues](https://www.linkedin.com/in/viniciosrodrigues/)
 - Instagram :: [@viniarodrigues](https://www.instagram.com/viniarodrigues/)
 - Hangouts/Gmail :: [viniciosarodrigues@gmail.com](viniciosarodrigues@gmail.com)
