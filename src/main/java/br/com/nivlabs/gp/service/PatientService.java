@@ -15,7 +15,6 @@ import br.com.nivlabs.gp.controller.filters.PatientFilters;
 import br.com.nivlabs.gp.exception.ObjectNotFoundException;
 import br.com.nivlabs.gp.exception.ValidationException;
 import br.com.nivlabs.gp.models.domain.Patient;
-import br.com.nivlabs.gp.models.domain.PatientType;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
@@ -23,6 +22,7 @@ import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
 import br.com.nivlabs.gp.models.enums.DocumentType;
+import br.com.nivlabs.gp.models.enums.PatientType;
 import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.util.StringUtils;
 

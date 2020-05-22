@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.models.domain;
+package br.com.nivlabs.gp.models.enums;
 
 /**
  * Enum que define as possíveis ideologias de gênero, sendo elas: B -> Biológico | T -> Transgênero.

@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.models.domain;
+package br.com.nivlabs.gp.models.enums;
 
 public enum PatientType {
 
