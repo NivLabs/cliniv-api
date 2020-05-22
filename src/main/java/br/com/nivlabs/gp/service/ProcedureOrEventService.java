@@ -24,41 +24,47 @@ import br.com.nivlabs.gp.repository.ProcedureOrEventRepository;
 @Service
 public class ProcedureOrEventService implements GenericService<ProcedureOrEvent, Long> {
 
-    @Autowired
-    private ProcedureOrEventRepository dao;
+	@Autowired
+	private ProcedureOrEventRepository dao;
 
-    public Page<ProcedureOrEventDTO> getResumedPage(ProcedureOrEventFilters filters, Pageable pageRequest) {
-        return dao.resumedList(filters, pageRequest);
-    }
+	public Page<ProcedureOrEventDTO> getResumedPage(ProcedureOrEventFilters filters, Pageable pageRequest) {
+		return dao.resumedList(filters, pageRequest);
+	}
 
-    @Override
-    public ProcedureOrEvent findById(Long id) {
-        return dao.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Procedimento com código %s não encontrado!", id)));
-    }
+	@Override
+	public ProcedureOrEvent findById(Long id) {
+		return dao.findById(id).orElseThrow(
+				() -> new ObjectNotFoundException(String.format("Procedimento com código %s não encontrado!", id)));
+	}
 
-    @Override
-    public ProcedureOrEvent update(Long id, ProcedureOrEvent entity) {
-        ProcedureOrEvent procedureOrEvent = findById(id);
-        BeanUtils.copyProperties(entity, procedureOrEvent, "id");
-        return dao.save(procedureOrEvent);
-    }
+	@Override
+	public ProcedureOrEvent update(Long id, ProcedureOrEvent entity) {
+		ProcedureOrEvent procedureOrEvent = findById(id);
+		BeanUtils.copyProperties(entity, procedureOrEvent, "id");
+		return dao.save(procedureOrEvent);
+	}
 
-    @Override
-    public void delete(ProcedureOrEvent entity) {
-        deleteById(entity.getId());
-    }
+	@Override
+	public void delete(ProcedureOrEvent entity) {
+		deleteById(entity.getId());
+	}
 
-    @Override
-    public void deleteById(Long id) {
-        ProcedureOrEvent procedureOrEvent = findById(id);
-        dao.delete(procedureOrEvent);
-    }
+	@Override
+	public void deleteById(Long id) {
+		ProcedureOrEvent procedureOrEvent = findById(id);
+		dao.delete(procedureOrEvent);
+	}
 
-    @Override
-    public ProcedureOrEvent persist(ProcedureOrEvent entity) {
-        entity.setId(null);
-        return dao.save(entity);
-    }
+	@Override
+	public ProcedureOrEvent persist(ProcedureOrEvent entity) {
+		entity.setId(null);
+		return dao.save(entity);
+	}
+
+	public void enableDisable(Long id) {
+		ProcedureOrEvent procedure = findById(id);
+		procedure.setActive(!procedure.isActive());
+		update(id, procedure);
+	}
 
 }

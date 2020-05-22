@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,15 +31,22 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/procedure")
 public class ProcedureOrEventController {
 
-    @Autowired
-    private ProcedureOrEventService service;
+	@Autowired
+	private ProcedureOrEventService service;
 
-    @ApiOperation(nickname = "procedure-get", value = "Busca uma página de procedimentos")
-    @GetMapping
-    public ResponseEntity<Page<ProcedureOrEventDTO>> findPage(ProcedureOrEventFilters filters) {
-        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
-                                               filters.getOrderBy());
-        return ResponseEntity.ok(service.getResumedPage(filters, pageSettings));
-    }
+	@ApiOperation(nickname = "procedure-get", value = "Busca uma página de procedimentos")
+	@GetMapping
+	public ResponseEntity<Page<ProcedureOrEventDTO>> findPage(ProcedureOrEventFilters filters) {
+		Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
+				Direction.valueOf(filters.getDirection()), filters.getOrderBy());
+		return ResponseEntity.ok(service.getResumedPage(filters, pageSettings));
+	}
+
+	@ApiOperation(nickname = "procedure-put-enable-disable", value = "Realiza uma atualização de atividade do procedimento")
+	@PutMapping("/{id}")
+	public ResponseEntity<Void> enableDisable(@PathVariable("id") Long id) {
+		service.enableDisable(id);
+		return ResponseEntity.noContent().build();
+	}
 
 }
