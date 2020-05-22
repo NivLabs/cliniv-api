@@ -13,21 +13,15 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class ProcedureOrEventFilters extends CustomFilters {
 
-    private static final long serialVersionUID = -8122726857291316469L;
+	private static final long serialVersionUID = -8122726857291316469L;
 
-    private String id;
+	private String id;
 
-    private String description = "";
+	private String description = "";
 
-    private ActiveType activeType;
+	private ActiveType activeType;
 
-    public ActiveType getActiveType() {
-        if (activeType == null)
-            this.activeType = ActiveType.ACTIVE;
-        return this.activeType;
-    }
-
-    public String getDescription() {
-        return "%".concat(this.description).concat("%");
-    }
+	public String getDescription() {
+		return "%".concat(this.description).concat("%");
+	}
 }
