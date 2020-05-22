@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import br.com.nivlabs.gp.controller.filters.ProcedureOrEventFilters;
 import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent;
 import br.com.nivlabs.gp.models.dto.ProcedureOrEventDTO;
-import br.com.nivlabs.gp.models.enums.ActiveType;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.gp.repository.custom.IExpression;
