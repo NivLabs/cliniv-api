@@ -53,10 +53,7 @@ public class ProcedureOrEventRepositoryCustomImpl extends GenericCustomRepositor
 			attributes.add((cb, from) -> cb.equal(from.get("description"), filters.getDescription()));
 		}
 		if (filters.getActiveType() != null) {
-			if (filters.getActiveType() == ActiveType.ACTIVE)
-				attributes.add((cb, from) -> cb.isNull(from.get("dateTimeExit")));
-			else
-				attributes.add((cb, from) -> cb.isNotNull(from.get("dateTimeExit")));
+			attributes.add((cb, from) -> cb.equal(from.get("active"), filters.getActiveType() == ActiveType.ACTIVE));
 		}
 		return attributes;
 	}
