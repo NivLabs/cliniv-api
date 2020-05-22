@@ -11,7 +11,6 @@ import org.springframework.data.domain.Pageable;
 import br.com.nivlabs.gp.controller.filters.ProcedureOrEventFilters;
 import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent;
 import br.com.nivlabs.gp.models.dto.ProcedureOrEventDTO;
-import br.com.nivlabs.gp.models.enums.ActiveType;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.gp.repository.custom.IExpression;
@@ -53,10 +52,7 @@ public class ProcedureOrEventRepositoryCustomImpl extends GenericCustomRepositor
 			attributes.add((cb, from) -> cb.equal(from.get("description"), filters.getDescription()));
 		}
 		if (filters.getActiveType() != null) {
-			if (filters.getActiveType() == ActiveType.ACTIVE)
-				attributes.add((cb, from) -> cb.isNull(from.get("dateTimeExit")));
-			else
-				attributes.add((cb, from) -> cb.isNotNull(from.get("dateTimeExit")));
+			attributes.add((cb, from) -> cb.equal(from.get("active"), filters.getActiveType()));
 		}
 		return attributes;
 	}
