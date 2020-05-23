@@ -1,20 +1,20 @@
 <h1 align="center">
   <a href="https://gestao-prontuario.herokuapp.com">
-    <img alt="TLGP Logo" src="./readme/logo.png" width="350px" />
+    <img alt="NLGP Logo" src="./readme/logo.png" width="350px" />
   </a>
 </h1>
 <h2 align="center">
-  TL - Gestão de Prontuário - API
+  NiV Labs - Gestão de Prontuário - API
 </h2>
 
-O TL - Gestão de Prontuário - API (TLGP-API) é uma API Rest OpenSource criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no processo de prontuário. O TLGP-API é integrado com um client baseado em Angular, o [TLGP-UI](https://github.com/viniciosarodrigues/gestao-de-prontuario-ui).
+O NLGP-API é uma API Rest criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no processo de prontuário. O NLGP-API é integrado com um client baseado em Angular, o [NLGP-UI](https://github.com/niv-labs/gestao-de-prontuario-ui).
 
 <p align="center">
-    <a href="https://github.com/viniciosarodrigues/">
-        <img alt="Made by Vinícios Rodrigues" src="https://img.shields.io/badge/made%20by-Vin%C3%ADcios%20Rodrigues-brightgreen" />
+    <a href="https://github.com/niv-labs/">
+        <img alt="Made by NiV Labs" src="https://img.shields.io/badge/made%20by-NiV%20Labs-brightgreen" />
     </a>
-    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/viniciosarodrigues/gestao-de-prontuario" />
-    <img alt="Contributors" src="https://img.shields.io/github/contributors/viniciosarodrigues/gestao-de-prontuario" />
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/niv-labs/gestao-de-prontuario" />
+    <img alt="Contributors" src="https://img.shields.io/github/contributors/niv-labs/gestao-de-prontuario" />
     <img alt="License" src="https://img.shields.io/badge/license-MIT-%2304D361" />
 </p>
 
@@ -45,13 +45,13 @@ Atualmente encontra-se na versão 1.0.0
 - [x] Cadastro de Eventos (Consultas, exames, prescriçoes, etc)
 - [x] Cadastro de Usuários
 - [x] Controle de Acesso
-- [ ] Armazenamento de documentos (Resultado de exames, radiografia, tumografia, etc)
+- [x] Armazenamento de documentos (Resultado de exames, radiografia, tumografia, etc)
 - [x] Histórico de visita em forma de timeline
-- [ ] Relatórios
+- [x] Relatórios
 - [x] Paciente não identificado
-- [ ] Fluxo padrão para atendimento ambulatorial
-- [ ] Fluxo padrão para atendimento emergencial
-- [ ] Cadastro de medicamentos 
+- [x] Fluxo padrão para atendimento ambulatorial
+- [x] Fluxo padrão para atendimento emergencial
+- [ ] Cadastro de medicamentos e materiais
 
 ---
 
@@ -59,11 +59,10 @@ Atualmente encontra-se na versão 1.0.0
 
 Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles:
 
-- Java 11 + **(Obrigatório)**
-- MySql Server ou MariaDB Server **(Obrigatório)**
-- Lombok 1.16.0 + **(Obrigatório)**
+- Java 14 + **(Obrigatório)**
+- MariaDB Server 10.3+ **(Obrigatório)**
+- Lombok 1.18.0 + **(Obrigatório)**
 - Eclipse ou STS **(Obrigatório)**
-- No caso do Eclipse, usar o plugin do Spring Tools *(Opcional)*
 
 ---
 
@@ -190,9 +189,8 @@ Esta área especifica definições técnicas da aplicação, suas característic
 
 > Você pode me encontrar por aqui...
 
-- Linkedin :: [Vinícios Rodrigues](https://www.linkedin.com/in/viniciosrodrigues/)
-- Instagram :: [@viniarodrigues](https://www.instagram.com/viniarodrigues/)
-- Hangouts/Gmail :: [viniciosarodrigues@gmail.com](viniciosarodrigues@gmail.com)
+- NiV Labs :: [NiV Labs](http://www.nivlabs.com.br)
+- Atendimento :: [atendimento@nivlabs.com.br](atendimento@nivlabs.com.br)
 
 ---
 
