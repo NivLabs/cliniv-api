@@ -44,7 +44,7 @@ public class VisitEventService implements GenericService<AttendanceEvent, Long> 
         return dao.save(auxEntity);
     }
 
-    @Override
+	@Override
     public void delete(AttendanceEvent entity) {
         deleteById(entity.getId());
     }

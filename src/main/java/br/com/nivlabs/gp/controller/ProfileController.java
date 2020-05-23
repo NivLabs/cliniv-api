@@ -48,7 +48,7 @@ public class ProfileController {
 
         validUserToUpdate(entity, userFromSession);
 
-        UserInfoDTO userUpdated = userService.update(id, entity);
+        UserInfoDTO userUpdated = userService.updateFromDto(id, entity);
         return ResponseEntity.ok(userUpdated);
     }
 

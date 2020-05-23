@@ -56,14 +56,14 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UserInfoDTO> findById(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(userService.findById(id));
+        return ResponseEntity.ok(userService.findUserDtoById(id));
     }
 
     @ApiOperation(nickname = "user-put", value = "Atualiza dados do usuário selecionado")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UserInfoDTO> update(@PathVariable(name = "id") Long id, @Validated @RequestBody UserInfoDTO entity) {
-        return ResponseEntity.ok(userService.update(id, entity));
+        return ResponseEntity.ok(userService.updateFromDto(id, entity));
     }
 
     @ApiOperation(nickname = "user-post", value = "Cria o cadastro de usuário")
