@@ -36,48 +36,47 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/sector")
 public class SectorController {
 
-    @Autowired
-    private SectorService service;
+	@Autowired
+	private SectorService service;
 
-    @Autowired
-    private ApplicationEventPublisher publisher;
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
-    @ApiOperation(nickname = "sector-get", value = "Busca uma página de setores")
-    @GetMapping
-    @PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
-    public ResponseEntity<List<SectorDTO>> getSectorsGroupedBySuper() {
-        return ResponseEntity.ok(service.getSectorsGroupedBySuper());
-    }
+	@ApiOperation(nickname = "sector-get", value = "Busca uma página de setores")
+	@GetMapping("/list")
+	@PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
+	public ResponseEntity<List<SectorDTO>> getSectorsGroupedBySuper() {
+		return ResponseEntity.ok(service.getSectorsGroupedBySuper());
+	}
 
-    @ApiOperation(nickname = "sector-post", value = "Insere um novo setor na aplicação")
-    @PostMapping
-    @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-    public ResponseEntity<SectorDTO> persist(@Validated @RequestBody(required = true) SectorDTO newsector,
-                                             HttpServletResponse response) {
-        SectorDTO createdsector = service.persist(newsector);
+	@ApiOperation(nickname = "sector-post", value = "Insere um novo setor na aplicação")
+	@PostMapping
+	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+	public ResponseEntity<SectorDTO> persist(@Validated @RequestBody(required = true) SectorDTO newsector,
+			HttpServletResponse response) {
+		SectorDTO createdsector = service.persist(newsector);
 
-        publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
+		publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdsector);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdsector);
 
-    }
+	}
 
-    @ApiOperation(nickname = "sector-put", value = "Atualiza um setor na aplicação")
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-    public ResponseEntity<SectorDTO> update(@PathVariable("id") Long id,
-                                            @Validated @RequestBody(required = true) SectorDTO sector,
-                                            HttpServletResponse response) {
-        SectorDTO createdResponsible = service.update(id, sector);
+	@ApiOperation(nickname = "sector-put", value = "Atualiza um setor na aplicação")
+	@PutMapping("/{id}")
+	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+	public ResponseEntity<SectorDTO> update(@PathVariable("id") Long id,
+			@Validated @RequestBody(required = true) SectorDTO sector, HttpServletResponse response) {
+		SectorDTO createdResponsible = service.update(id, sector);
 
-        return ResponseEntity.ok().body(createdResponsible);
+		return ResponseEntity.ok().body(createdResponsible);
 
-    }
+	}
 
-    @ApiOperation(nickname = "sector-get-id", value = "Busca um setor baseado no identificador")
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
-    public ResponseEntity<SectorDTO> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findById(id));
-    }
+	@ApiOperation(nickname = "sector-get-id", value = "Busca um setor baseado no identificador")
+	@GetMapping("/{id}")
+	@PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
+	public ResponseEntity<SectorDTO> findById(@PathVariable("id") Long id) {
+		return ResponseEntity.ok(service.findById(id));
+	}
 }
