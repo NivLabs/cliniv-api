@@ -11,7 +11,7 @@
 
 	<groupId>br.com.ft</groupId>
 	<artifactId>gestao-de-prontuario</artifactId>
-	<version>1.0.0</version>
+	<version>beta-v1.0.0</version>
 	<name>Gestão de Prontuário</name>
 	<description>API da aplicação de Gestão de Prontuário</description>
 	<packaging>jar</packaging>
@@ -47,8 +47,8 @@
 
 		<!-- MYSQL Driver -->
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -70,11 +70,6 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>0.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<!-- Migração DB com Flyway -->
 		<dependency>

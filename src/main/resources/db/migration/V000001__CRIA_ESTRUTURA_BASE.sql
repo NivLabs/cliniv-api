@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.27, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: devdb
+-- Host: 127.0.0.1    Database: PROD
 -- ------------------------------------------------------
 -- Server version	5.7.27-0ubuntu0.18.04.1
 
