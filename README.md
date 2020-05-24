@@ -13,8 +13,6 @@ O NLGP-API é uma API Rest criada inicialmente como doação para hospitais que 
     <a href="https://github.com/niv-labs/">
         <img alt="Made by NiV Labs" src="https://img.shields.io/badge/made%20by-NiV%20Labs-brightgreen" />
     </a>
-    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/niv-labs/gestao-de-prontuario" />
-    <img alt="Contributors" src="https://img.shields.io/github/contributors/niv-labs/gestao-de-prontuario" />
     <img alt="License" src="https://img.shields.io/badge/license-MIT-%2304D361" />
 </p>
 
