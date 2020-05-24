@@ -6,24 +6,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@ConfigurationProperties("spring.datasource.url")
+@ConfigurationProperties("spring.datasource")
 public class DatabaseProfileConfiguration {
 
-    @Profile("heroku")
+    @Profile("prod")
     @Bean
     public String getHerokuDb() {
-        return "DB Connection for HEROKU deploy";
+        return "DB Connection for Production deploy";
     }
 
     @Profile("dev")
     @Bean
     public String getDevDb() {
-        return "DB Connection for DEV deploy";
+        return "DB Connection for Development deploy";
     }
 
-    @Profile("local")
-    @Bean
-    public String getLocalDb() {
-        return "DB Connection for LOCAL deploy";
-    }
 }

@@ -107,19 +107,19 @@ Obs: Este processo só é válido para IDEs baseadas em [Eclipse Project](https:
 
 ##### Mais informações
 
-Existe um manual mais detalhado de como instalar o plugin no Eclipse: [Criando uma API Rest de cadastro de contatos em 5 minutos com Spring Boot + Lombok](https://medium.com/@viniciosarodrigues/criando-uma-api-rest-de-cadastro-de-contatos-em-5-minutos-com-spring-boot-ce5ba775d2d8)
+Existe um manual mais detalhado de como instalar o plugin no Eclipse: [Criando uma API Rest de cadastro de contatos em 5 minutos com Spring Boot + Lombok](https://medium.com/@niv-labs/criando-uma-api-rest-de-cadastro-de-contatos-em-5-minutos-com-spring-boot-ce5ba775d2d8)
 
 ---
 
-## MySql ou MariaDB
+## MariaDB
 
-Para que seja possível rodar a aplicação, faz-se necessário cofigurar previamente as informações de conexão no arquivo `application-dev.properties` deste projeto.
+Para que seja possível rodar a aplicação, faz-se necessário configurar previamente as informações de conexão no arquivo `application-dev.properties` deste projeto.
 
 Um setup inicial válido para uma base nova pode seguir os padrões abaixo:
 
-- URL de conexão da base `spring.datasource.url=jdbc:mysql://[USUARIO]:[SENHA]@[SERVIDOR]:[PORTA]/[BASE]?createDatabaseIfNotExist=TRUE`, o `createDatabaseIfNotExist=TRUE` faz com que o próprio framework crie a base de dados.
+- URL de conexão da base `spring.datasource.url=jdbc:mariadb://[SERVIDOR]:[PORTA]/[BASE]?user=[NOME_USUARIO]&password=[SENHA]&createDatabaseIfNotExist=TRUE`, o `createDatabaseIfNotExist=TRUE` faz com que o próprio framework crie a base de dados.
 
-- No meu caso, a primeira linha do meu `application-dev.properties` fica `spring.datasource.url=jdbc:mysql://admin:123456dv@localhost:3306/devdb?createDatabaseIfNotExist=TRUE`
+- No meu caso, a primeira linha do meu `application-dev.properties` fica `spring.datasource.url=jdbc:mariadb://localhost:3306/devdb?user=admin&password=123456dv&createDatabaseIfNotExist=TRUE`
 
 ---
 
@@ -127,7 +127,7 @@ Um setup inicial válido para uma base nova pode seguir os padrões abaixo:
 
 ### Passo 1
 
-- 👯 Clone este repositório na sua máquina local usando `https://github.com/viniciosarodrigues/gestao-de-prontuario.git`
+- 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/gestao-de-prontuario.git`
 
 ### Passo 2
 
@@ -154,7 +154,7 @@ Se você estiver usando o Eclipse, pode ser uma boa ideia baixar o plugin dispon
 
 ### Passo 2
 
-- 👯 Clone este repositório na sua máquina local usando `https://github.com/viniciosarodrigues/gestao-de-prontuario.git`
+- 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/gestao-de-prontuario.git`
 
 ### Passo 3
 
