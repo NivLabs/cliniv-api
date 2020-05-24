@@ -1,7 +1,5 @@
 package br.com.nivlabs.gp.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,13 +44,6 @@ public class SectorController {
 
 	@Autowired
 	private ApplicationEventPublisher publisher;
-
-	@ApiOperation(nickname = "sector-get-list", value = "Busca uma lista completa de setores")
-	@GetMapping("/list")
-	@PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
-	public ResponseEntity<List<SectorDTO>> getSectorsGroupedBySuper() {
-		return ResponseEntity.ok(service.getSectorsGroupedBySuper());
-	}
 
 	@ApiOperation(nickname = "sector-get", value = "Busca uma página de setores")
 	@GetMapping

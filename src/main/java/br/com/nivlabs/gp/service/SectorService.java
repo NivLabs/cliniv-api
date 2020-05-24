@@ -1,8 +1,5 @@
 package br.com.nivlabs.gp.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,20 +27,6 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 
 	public Page<SectorDTO> getPageWithFilter(SectorFilters filters, Pageable pageRequest) {
 		return dao.resumedList(filters, pageRequest);
-	}
-
-	public List<SectorDTO> getSectorsGroupedBySuper() {
-
-		List<Sector> pageOfSector = dao.findBySuperSectorIsNull();
-
-		List<SectorDTO> listOfSectorDTO = new ArrayList<>();
-
-		pageOfSector.forEach(sector -> {
-			SectorDTO sectorConverted = new SectorDTO();
-			BeanUtils.copyProperties(sector, sectorConverted);
-			listOfSectorDTO.add(sectorConverted);
-		});
-		return listOfSectorDTO;
 	}
 
 	public SectorDTO findById(Long id) {
