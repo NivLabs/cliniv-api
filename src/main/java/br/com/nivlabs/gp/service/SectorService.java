@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.controller.filters.SectorFilters;
 import br.com.nivlabs.gp.exception.ObjectNotFoundException;
 import br.com.nivlabs.gp.models.domain.Sector;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
@@ -22,61 +25,65 @@ import br.com.nivlabs.gp.repository.SectorRepository;
 @Service
 public class SectorService implements GenericService<SectorDTO, Long> {
 
-    @Autowired
-    private SectorRepository dao;
+	@Autowired
+	private SectorRepository dao;
 
-    public List<SectorDTO> getSectorsGroupedBySuper() {
+	public Page<SectorDTO> getPageWithFilter(SectorFilters filters, Pageable pageRequest) {
+		return dao.resumedList(filters, pageRequest);
+	}
 
-        List<Sector> pageOfSector = dao.findBySuperSectorIsNull();
+	public List<SectorDTO> getSectorsGroupedBySuper() {
 
-        List<SectorDTO> listOfSectorDTO = new ArrayList<>();
+		List<Sector> pageOfSector = dao.findBySuperSectorIsNull();
 
-        pageOfSector.forEach(sector -> {
-            SectorDTO sectorConverted = new SectorDTO();
-            BeanUtils.copyProperties(sector, sectorConverted);
-            listOfSectorDTO.add(sectorConverted);
-        });
-        return listOfSectorDTO;
-    }
+		List<SectorDTO> listOfSectorDTO = new ArrayList<>();
 
-    public SectorDTO findById(Long id) {
-        Sector sector = dao.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Setor com ID: %s não encontrado", id)));
-        SectorDTO sectorDTO = new SectorDTO();
-        BeanUtils.copyProperties(sector, sectorDTO);
-        return sectorDTO;
-    }
+		pageOfSector.forEach(sector -> {
+			SectorDTO sectorConverted = new SectorDTO();
+			BeanUtils.copyProperties(sector, sectorConverted);
+			listOfSectorDTO.add(sectorConverted);
+		});
+		return listOfSectorDTO;
+	}
 
-    public SectorDTO update(Long id, SectorDTO sectorDTO) {
-        Sector sector = dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(
-                String.format("Setor com o ID: [%s] não encontrado", id)));
-        BeanUtils.copyProperties(sectorDTO, sector, "id");
-        sector = dao.save(sector);
-        BeanUtils.copyProperties(sector, sectorDTO, "id");
-        return sectorDTO;
-    }
+	public SectorDTO findById(Long id) {
+		Sector sector = dao.findById(id)
+				.orElseThrow(() -> new ObjectNotFoundException(String.format("Setor com ID: %s não encontrado", id)));
+		SectorDTO sectorDTO = new SectorDTO();
+		BeanUtils.copyProperties(sector, sectorDTO);
+		return sectorDTO;
+	}
 
-    @Override
-    public void delete(SectorDTO entity) {
-        deleteById(entity.getId());
-    }
+	public SectorDTO update(Long id, SectorDTO sectorDTO) {
+		Sector sector = dao.findById(id).orElseThrow(
+				() -> new ObjectNotFoundException(String.format("Setor com o ID: [%s] não encontrado", id)));
+		BeanUtils.copyProperties(sectorDTO, sector, "id");
+		sector = dao.save(sector);
+		BeanUtils.copyProperties(sector, sectorDTO, "id");
+		return sectorDTO;
+	}
 
-    @Override
-    public void deleteById(Long id) {
-        Sector auxEntity = dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(
-                String.format("Setor com o ID: [%s] não encontrado", id)));
-        dao.delete(auxEntity);
-    }
+	@Override
+	public void delete(SectorDTO entity) {
+		deleteById(entity.getId());
+	}
 
-    @Override
-    public SectorDTO persist(SectorDTO sectorDTO) {
-        Sector sector = new Sector();
-        sector.setDescription(sectorDTO.getDescription());
-        sector = dao.save(sector);
+	@Override
+	public void deleteById(Long id) {
+		Sector auxEntity = dao.findById(id).orElseThrow(
+				() -> new ObjectNotFoundException(String.format("Setor com o ID: [%s] não encontrado", id)));
+		dao.delete(auxEntity);
+	}
 
-        sectorDTO.setId(sector.getId());
+	@Override
+	public SectorDTO persist(SectorDTO sectorDTO) {
+		Sector sector = new Sector();
+		sector.setDescription(sectorDTO.getDescription());
+		sector = dao.save(sector);
 
-        return sectorDTO;
-    }
+		sectorDTO.setId(sector.getId());
+
+		return sectorDTO;
+	}
 
 }

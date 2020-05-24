@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.nivlabs.gp.models.domain.Sector;
+import br.com.nivlabs.gp.repository.custom.sector.SectorRepositoryCustom;
 
 /**
  * Classe SectorRepository.java
@@ -15,7 +16,8 @@ import br.com.nivlabs.gp.models.domain.Sector;
  * @since 13 Dez, 2019
  */
 @Repository
-public interface SectorRepository extends JpaRepository<Sector, Long> {
+public interface SectorRepository extends JpaRepository<Sector, Long>, SectorRepositoryCustom {
 
-    List<Sector> findBySuperSectorIsNull();
+	List<Sector> findBySuperSectorIsNull();
+
 }
