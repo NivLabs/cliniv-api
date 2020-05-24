@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,17 +24,16 @@ import lombok.NoArgsConstructor;
 @ApiModel("Sector")
 public class SectorDTO extends DataTransferObjectBase {
 
-    private static final long serialVersionUID = -8018406138528606923L;
+	private static final long serialVersionUID = -8018406138528606923L;
 
-    private Long id;
+	private Long id;
 
-    private String description;
+	private String description;
 
-    private SectorDTO superSector;
+	private SectorDTO superSector;
 
-    private LocalDateTime createdAt;
+	private LocalDateTime createdAt;
 
-    @JsonIgnoreProperties({"sectors", "superSector"})
-    private List<SectorDTO> sectors = new ArrayList<>();
+	private List<RoomOrBedDTO> roomsOrBeds = new ArrayList<>();
 
 }
