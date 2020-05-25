@@ -1,12 +1,16 @@
 package br.com.nivlabs.gp.models.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -44,6 +48,9 @@ public class Sector extends BaseObject {
 	@Column(name = "DATA_CRIACAO")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private LocalDateTime createdAt;
+
+	@OneToMany(mappedBy = "sector", fetch = FetchType.EAGER)
+	private List<RoomOrBed> listOfRoomsOrBeds = new ArrayList<>();
 
 	public Sector(Long id) {
 		this.id = id;
