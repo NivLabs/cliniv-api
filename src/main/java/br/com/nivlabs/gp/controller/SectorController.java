@@ -86,6 +86,18 @@ public class SectorController {
 		return ResponseEntity.ok().body(service.updateRoomOrBedDTO(id, request));
 	}
 
+	@ApiOperation(nickname = "room-or-bet-post", value = "Cria uma sala (ambulatório) ou leito na aplicação")
+	@PostMapping("/room-or-bed")
+	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+	public ResponseEntity<RoomOrBedDTO> persist(@Validated @RequestBody(required = true) RoomOrBedDTO request,
+			HttpServletResponse response) {
+		RoomOrBedDTO createdsector = service.persist(request);
+
+		publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
+
+		return ResponseEntity.ok().body(service.persist(request));
+	}
+
 	@ApiOperation(nickname = "room-or-bet-delete", value = "Deleta uma sala (ambulatório) ou leito na aplicação")
 	@DeleteMapping("/room-or-bed/{id}")
 	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")

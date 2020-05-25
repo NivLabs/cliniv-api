@@ -20,6 +20,9 @@ public class RoomOrBedDTO extends DataTransferObjectBase {
 
 	private Long id;
 
+	@NotNull(message = "Informe o identificador do setor de cadastro")
+	private Long sectorId;
+
 	@NotNull(message = "Informe a descrição da sala ou leito")
 	private String description;
 
