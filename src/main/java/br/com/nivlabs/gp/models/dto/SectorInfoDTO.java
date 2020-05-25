@@ -1,5 +1,12 @@
 package br.com.nivlabs.gp.models.dto;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,13 +24,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Sector")
-public class SectorDTO extends DataTransferObjectBase {
+@ApiModel("Informações do Sector")
+public class SectorInfoDTO extends DataTransferObjectBase {
 
 	private static final long serialVersionUID = -8018406138528606923L;
 
 	private Long id;
 
 	private String description;
+
+	private List<RoomOrBedDTO> roomsOrBeds = new ArrayList<>();
+
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDateTime createdAt;
 
 }
