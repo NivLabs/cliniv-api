@@ -108,7 +108,7 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 	@Override
 	public void deleteById(Long id) {
 		Sector auxEntity = dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Setor com o ID: [%s] não encontrado", id)));
+				() -> new ObjectNotFoundException(String.format("Setor com o identificado %s não encontrado", id)));
 		dao.delete(auxEntity);
 	}
 
@@ -122,6 +122,18 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 		sectorDTO.setId(sector.getId());
 
 		return sectorDTO;
+	}
+
+	public RoomOrBedDTO persist(RoomOrBedDTO request) {
+		RoomOrBed roomOrBad = new RoomOrBed();
+		roomOrBad.setSector(new Sector(request.getSectorId()));
+		roomOrBad.setDescription(request.getDescription());
+		roomOrBad.setType(request.getType());
+		roomOrBad = roomOrBedRepository.save(roomOrBad);
+
+		request.setId(roomOrBad.getId());
+
+		return request;
 	}
 
 }

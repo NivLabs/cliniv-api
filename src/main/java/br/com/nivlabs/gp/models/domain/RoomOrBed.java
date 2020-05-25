@@ -44,7 +44,7 @@ public class RoomOrBed extends BaseObject {
 	private RoomOrBedType type;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "SECTOR_ID")
 	private Sector sector;
 }
