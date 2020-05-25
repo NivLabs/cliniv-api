@@ -1,8 +1,5 @@
 package br.com.nivlabs.gp.models.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +25,5 @@ public class SectorDTO extends DataTransferObjectBase {
 	private Long id;
 
 	private String description;
-
-	private List<RoomOrBedDTO> listOfRoomsOrBeds = new ArrayList<>();
 
 }

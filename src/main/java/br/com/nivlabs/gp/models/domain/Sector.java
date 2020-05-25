@@ -50,7 +50,7 @@ public class Sector extends BaseObject {
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private LocalDateTime createdAt;
 
-	@OneToMany(mappedBy = "sector", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@OneToMany(mappedBy = "sector", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
 	private List<RoomOrBed> listOfRoomsOrBeds = new ArrayList<>();
 
 	public Sector(Long id) {
