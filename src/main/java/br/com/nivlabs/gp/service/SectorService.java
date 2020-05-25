@@ -48,12 +48,16 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 	/**
 	 * Busca setor por id
 	 */
-	public SectorDTO findById(Long id) {
+	public SectorInfoDTO findInfoById(Long id) {
 		Sector sector = dao.findById(id).orElseThrow(
 				() -> new ObjectNotFoundException(String.format("Setor com o identificador %s não encontrado", id)));
-		SectorDTO sectorDTO = new SectorDTO();
-		BeanUtils.copyProperties(sector, sectorDTO);
-		return sectorDTO;
+		SectorInfoDTO sectorInfoDTO = new SectorInfoDTO();
+		BeanUtils.copyProperties(sector, sectorInfoDTO, "listOfRoomsOrBeds");
+		sector.getListOfRoomsOrBeds().forEach(item -> {
+			sectorInfoDTO.getListOfRoomsOrBeds()
+					.add(new RoomOrBedDTO(item.getId(), sector.getId(), item.getDescription(), item.getType()));
+		});
+		return sectorInfoDTO;
 	}
 
 	/**
