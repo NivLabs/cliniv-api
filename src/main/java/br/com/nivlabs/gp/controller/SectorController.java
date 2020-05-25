@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.SectorFilters;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
+import br.com.nivlabs.gp.models.dto.RoomOrBedDTO;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
+import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
 import br.com.nivlabs.gp.service.SectorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -70,12 +73,25 @@ public class SectorController {
 	@ApiOperation(nickname = "sector-put", value = "Atualiza um setor na aplicação")
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-	public ResponseEntity<SectorDTO> update(@PathVariable("id") Long id,
-			@Validated @RequestBody(required = true) SectorDTO sector, HttpServletResponse response) {
-		SectorDTO createdResponsible = service.update(id, sector);
+	public ResponseEntity<SectorInfoDTO> update(@PathVariable("id") Long id,
+			@Validated @RequestBody(required = true) SectorInfoDTO sector) {
+		return ResponseEntity.ok().body(service.update(id, sector));
+	}
 
-		return ResponseEntity.ok().body(createdResponsible);
+	@ApiOperation(nickname = "room-or-bet-put", value = "Atualiza uma sala (ambulatório) ou leito na aplicação")
+	@PutMapping("/room-or-bed/{id}")
+	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+	public ResponseEntity<RoomOrBedDTO> updateRoomOrBed(@PathVariable("id") Long id,
+			@Validated @RequestBody(required = true) RoomOrBedDTO request) {
+		return ResponseEntity.ok().body(service.updateRoomOrBedDTO(id, request));
+	}
 
+	@ApiOperation(nickname = "room-or-bet-delete", value = "Deleta uma sala (ambulatório) ou leito na aplicação")
+	@DeleteMapping("/room-or-bed/{id}")
+	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+	public ResponseEntity<Void> deleteRoomOrBed(@PathVariable("id") Long id) {
+		service.deleteRoomOrBed(id);
+		return ResponseEntity.noContent().build();
 	}
 
 	@ApiOperation(nickname = "sector-get-id", value = "Busca um setor baseado no identificador")

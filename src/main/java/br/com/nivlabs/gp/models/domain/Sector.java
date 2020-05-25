@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,7 +50,7 @@ public class Sector extends BaseObject {
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private LocalDateTime createdAt;
 
-	@OneToMany(mappedBy = "sector", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "sector", fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	private List<RoomOrBed> listOfRoomsOrBeds = new ArrayList<>();
 
 	public Sector(Long id) {

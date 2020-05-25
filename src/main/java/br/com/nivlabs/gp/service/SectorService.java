@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.SectorFilters;
 import br.com.nivlabs.gp.exception.ObjectNotFoundException;
+import br.com.nivlabs.gp.models.domain.RoomOrBed;
 import br.com.nivlabs.gp.models.domain.Sector;
+import br.com.nivlabs.gp.models.dto.RoomOrBedDTO;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
+import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
+import br.com.nivlabs.gp.repository.RoomOrBedRepository;
 import br.com.nivlabs.gp.repository.SectorRepository;
 
 /**
@@ -27,25 +31,73 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 	@Autowired
 	private SectorRepository dao;
 
+	@Autowired
+	private RoomOrBedRepository roomOrBedRepository;
+
+	/**
+	 * Realiza a busca pagina de setores
+	 * 
+	 * @param filters
+	 * @param pageRequest
+	 * @return
+	 */
 	public Page<SectorDTO> getPageWithFilter(SectorFilters filters, Pageable pageRequest) {
 		return dao.resumedList(filters, pageRequest);
 	}
 
+	/**
+	 * Busca setor por id
+	 */
 	public SectorDTO findById(Long id) {
-		Sector sector = dao.findById(id)
-				.orElseThrow(() -> new ObjectNotFoundException(String.format("Setor com ID: %s não encontrado", id)));
+		Sector sector = dao.findById(id).orElseThrow(
+				() -> new ObjectNotFoundException(String.format("Setor com o identificador %s não encontrado", id)));
 		SectorDTO sectorDTO = new SectorDTO();
 		BeanUtils.copyProperties(sector, sectorDTO);
 		return sectorDTO;
 	}
 
-	public SectorDTO update(Long id, SectorDTO sectorDTO) {
+	/**
+	 * Atualiza informações do setor
+	 * 
+	 * @param id
+	 * @param sectorInfoDTO
+	 * @return
+	 */
+	public SectorInfoDTO update(Long id, SectorInfoDTO sectorInfoDTO) {
 		Sector sector = dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Setor com o ID: [%s] não encontrado", id)));
-		BeanUtils.copyProperties(sectorDTO, sector, "id");
+				() -> new ObjectNotFoundException(String.format("Setor com o identificador %s não encontrado", id)));
+		BeanUtils.copyProperties(sectorInfoDTO, sector, "id", "createdAt");
 		sector = dao.save(sector);
-		BeanUtils.copyProperties(sector, sectorDTO, "id");
-		return sectorDTO;
+		BeanUtils.copyProperties(sector, sectorInfoDTO);
+		return sectorInfoDTO;
+	}
+
+	/**
+	 * Realiza a atualização de uma Sala ou Leito
+	 * 
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	public RoomOrBedDTO updateRoomOrBedDTO(Long id, RoomOrBedDTO request) {
+		RoomOrBed entity = roomOrBedRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
+				String.format("Sala ou leito com o identificador %s não encontrado", id)));
+		BeanUtils.copyProperties(request, entity, "id");
+		entity = roomOrBedRepository.save(entity);
+		BeanUtils.copyProperties(entity, request);
+		return request;
+	}
+
+	/**
+	 * Deleta uma sala ou leito
+	 * 
+	 * @param id
+	 */
+	public void deleteRoomOrBed(Long id) {
+		RoomOrBed entity = roomOrBedRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format(
+				"Sala ou leito com o identificado %s não encontrado, não é possível deletar um registro inexistente.",
+				id)));
+		roomOrBedRepository.delete(entity);
 	}
 
 	@Override

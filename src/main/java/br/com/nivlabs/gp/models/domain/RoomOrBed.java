@@ -1,5 +1,6 @@
 package br.com.nivlabs.gp.models.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -43,7 +44,7 @@ public class RoomOrBed extends BaseObject {
 	private RoomOrBedType type;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "SECTOR_ID")
 	private Sector sector;
 }

@@ -25,22 +25,22 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public abstract class PersonDTO extends DataTransferObjectBase {
 
-    private static final long serialVersionUID = -1442279002298984040L;
+	private static final long serialVersionUID = -1442279002298984040L;
 
-    private Long id;
+	private Long id;
 
-    private String firstName;
+	private String firstName;
 
-    private String lastName;
+	private String lastName;
 
-    private String rg;
+	private String rg;
 
-    private String cpf;
+	private String cpf;
 
-    @DateTimeFormat(iso = ISO.DATE)
-    private Date bornDate;
+	@DateTimeFormat(iso = ISO.DATE)
+	private Date bornDate;
 
-    private String principalNumber;
+	private String principalNumber;
 
-    private Gender gender;
+	private Gender gender;
 }
