@@ -109,7 +109,7 @@ public class SectorController {
 	@ApiOperation(nickname = "sector-get-id", value = "Busca um setor baseado no identificador")
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
-	public ResponseEntity<SectorDTO> findById(@PathVariable("id") Long id) {
-		return ResponseEntity.ok(service.findById(id));
+	public ResponseEntity<SectorInfoDTO> findById(@PathVariable("id") Long id) {
+		return ResponseEntity.ok(service.findInfoById(id));
 	}
 }
