@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -62,6 +64,7 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 	public SectorDTO persist(SectorDTO sectorDTO) {
 		Sector sector = new Sector();
 		sector.setDescription(sectorDTO.getDescription());
+		sector.setCreatedAt(LocalDateTime.now());
 		sector = dao.save(sector);
 
 		sectorDTO.setId(sector.getId());

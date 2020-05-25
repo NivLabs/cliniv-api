@@ -48,7 +48,7 @@ public class SectorRepositoryCustomImpl extends GenericCustomRepository<Sector> 
 			attributes.add((cb, from) -> cb.equal(from.get("id"), Long.parseLong(filters.getId())));
 		}
 		if (!StringUtils.isNullOrEmpty(filters.getDescription())) {
-			attributes.add((cb, from) -> cb.equal(from.get("description"), filters.getDescription()));
+			attributes.add((cb, from) -> cb.like(from.get("description"), filters.getDescription()));
 		}
 
 		return attributes;

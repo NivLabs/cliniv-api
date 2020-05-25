@@ -19,6 +19,6 @@ public class SectorFilters extends CustomFilters {
 	private String description;
 
 	public String getDescription() {
-		return "%".concat(this.description).concat("%");
+		return "%".concat(this.description != null ? this.description : "").concat("%");
 	}
 }
