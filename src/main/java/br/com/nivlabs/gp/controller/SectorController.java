@@ -95,7 +95,7 @@ public class SectorController {
 
 		publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
 
-		return ResponseEntity.ok().body(service.persist(request));
+		return ResponseEntity.ok().body(createdsector);
 	}
 
 	@ApiOperation(nickname = "room-or-bet-delete", value = "Deleta uma sala (ambulatório) ou leito na aplicação")
