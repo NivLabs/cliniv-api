@@ -31,7 +31,7 @@ public class PersonService implements GenericService<Person, Long> {
 
     @Override
     public Person findById(Long id) {
-        return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Pessoa com ID: [%s] não encontrado", id)));
+        return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Pessoa com o identificador %s não encontrado", id)));
     }
 
     @Override

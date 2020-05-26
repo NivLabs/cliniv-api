@@ -31,7 +31,7 @@ public class EventTypeService implements GenericService<EventType, Long> {
 
     @Override
     public EventType findById(Long id) {
-        return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Tipo de evento com ID: [%s] não encontrado", id)));
+        return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Tipo de evento com o identificador %s não encontrado", id)));
 
     }
 
