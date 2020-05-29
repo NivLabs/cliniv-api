@@ -41,9 +41,9 @@ import io.swagger.annotations.ApiOperation;
  * 
  */
 
-@Api(value = "Endpoint - Anamnese")
+@Api(value = "Endpoint - Anamnese do paciente")
 @RestController
-@RequestMapping("/anamnese")
+@RequestMapping("/attendance/anamnesis")
 public class AnamnesisController {
 
     @Autowired
