@@ -57,7 +57,7 @@ public class PatientService implements GenericService<Patient, Long> {
 
     public PatientInfoDTO findByPateintId(Long id) {
         Patient patient = dao.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com ID: [%s] não encontrado", id)));
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com o identificador %s não encontrado", id)));
         Person person = patient.getPerson();
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
@@ -160,7 +160,7 @@ public class PatientService implements GenericService<Patient, Long> {
      */
     public PatientInfoDTO update(Long id, PatientInfoDTO entity) {
         Patient patient = dao.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com ID: [%s] não encontrado", id)));
+                .orElseThrow(() -> new ObjectNotFoundException(String.format("Paciente com o identificador %s não encontrado", id)));
 
         checkSusCode(entity, patient);
 

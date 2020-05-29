@@ -32,7 +32,7 @@ public class PersonAddressService implements GenericService<PersonAddress, Long>
 
     @Override
     public PersonAddress findById(Long id) {
-        return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Endereço com ID: [%s] não encontrado", id)));
+        return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Endereço com o identificador %s não encontrado", id)));
     }
 
     @Override

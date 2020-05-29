@@ -64,7 +64,7 @@ public class ResponsibleService {
     public ResponsibleInfoDTO findById(Long id) {
         Responsible responsibleFromDb = dao.findById(id).orElseThrow(
                                                                      () -> new ObjectNotFoundException(
-                                                                             String.format("Responsável com ID: [%s] não encontrado", id)));
+                                                                             String.format("Responsável com o identificador %s não encontrado", id)));
         return handelResponsible(responsibleFromDb);
     }
 
@@ -154,7 +154,7 @@ public class ResponsibleService {
         logger.info("Inciando processo de atualização de profissional ou responsável...");
         Responsible responsibleFromDb = dao.findById(id).orElseThrow(
                                                                      () -> new ObjectNotFoundException(
-                                                                             String.format("Responsável com ID: [%s] não encontrado", id)));
+                                                                             String.format("Responsável com o identificador %s não encontrado", id)));
 
         BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), "id", "createdAt");
         if (responsible.getProfessionalIdentity() != null) {
@@ -199,7 +199,7 @@ public class ResponsibleService {
     public void deleteById(Long id) {
         Responsible responsibleFromDb = dao.findById(id).orElseThrow(
                                                                      () -> new ObjectNotFoundException(
-                                                                             String.format("Responsável com ID: [%s] não encontrado", id)));
+                                                                             String.format("Responsável com o identificador %s não encontrado", id)));
         dao.delete(responsibleFromDb);
 
     }
