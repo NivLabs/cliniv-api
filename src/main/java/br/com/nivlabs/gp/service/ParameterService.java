@@ -3,10 +3,11 @@ package br.com.nivlabs.gp.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.exception.ObjectNotFoundException;
-import br.com.nivlabs.gp.exception.ValidationException;
 import br.com.nivlabs.gp.models.domain.Parameter;
 import br.com.nivlabs.gp.models.dto.NewParameterValueDTO;
 import br.com.nivlabs.gp.models.enums.MetaType;
@@ -35,7 +36,7 @@ public class ParameterService implements GenericService<Parameter, Long> {
      */
     public void changeValueParameter(Long id, NewParameterValueDTO newValue) {
         if (newValue == null) {
-            throw new ValidationException("O novo valor não pode ser nulo");
+			throw new HttpException(HttpStatus.BAD_REQUEST, "O novo valor não pode ser nulo");
         }
         logger.info("Iniciando busca de parâmetro para o ID :: {}", id);
         Parameter parameter = repository.findById(id)
@@ -61,22 +62,22 @@ public class ParameterService implements GenericService<Parameter, Long> {
         switch (param.getMetaType()) {
             case number:
                 if (!StringUtils.isNumeric(newValue))
-                    throw new ValidationException("O valor do parâmetro deve ser numérico");
+                    throw new HttpException(HttpStatus.BAD_REQUEST, "O valor do parâmetro deve ser numérico");
                 break;
             case bool:
                 if (StringUtils.isNullOrEmpty(newValue)
                         || (!newValue.toLowerCase().equals("true") && !newValue.toLowerCase().equals("false")))
-                    throw new ValidationException("O valor do parâmetro só pode ser true ou false");
+                    throw new HttpException(HttpStatus.BAD_REQUEST, "O valor do parâmetro só pode ser true ou false");
                 break;
             case group:
                 if (StringUtils.isNullOrEmpty(newValue) || checkGroupParameter(param, newValue))
-                    throw new ValidationException("O valor do parâmetro deve existir no grupo de valores possíveis");
+                    throw new HttpException(HttpStatus.BAD_REQUEST, "O valor do parâmetro deve existir no grupo de valores possíveis");
                 break;
             case string:
             case password:
                 break;
             default:
-                throw new ValidationException("O valor do parâmetro é inválido para o tipo de parâmetro");
+                throw new HttpException(HttpStatus.BAD_REQUEST, "O valor do parâmetro é inválido para o tipo de parâmetro");
         }
         logger.info("Chegagem realizada com sucesso, o novo valor é válido para subistituição");
     }

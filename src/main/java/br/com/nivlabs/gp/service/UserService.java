@@ -10,12 +10,13 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.UserFilters;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.exception.ObjectNotFoundException;
-import br.com.nivlabs.gp.exception.ValidationException;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.models.domain.Role;
@@ -165,7 +166,7 @@ public class UserService {
 		}
 
 		if (entity.getDocument().getType() != DocumentType.CPF) {
-			throw new ValidationException("O tipo do documento deve ser CPF");
+			throw new HttpException(HttpStatus.BAD_REQUEST, "O tipo do documento deve ser CPF");
 		}
 		personToUpdate.setCpf(entity.getDocument().getValue());
 
@@ -219,14 +220,15 @@ public class UserService {
 			UserInfoDTO user = findByCpf(entity.getDocument().getValue());
 			if (user != null && user.getId() != null) {
 				logger.warn("Usuário com o CPF {} já cadastrado.", entity.getDocument().getValue());
-				throw new ValidationException(
+				throw new HttpException(HttpStatus.BAD_REQUEST,
 						String.format("Usuário com o CPF %s já cadastrado.", entity.getDocument().getValue()));
 			}
 			user = findByUserName(entity.getUserName());
 
 			if (user != null && user.getId() != null) {
 				logger.warn("Nome de usuário {} já cadastrado.", entity.getUserName());
-				throw new ValidationException(String.format("Nome de usuário %s já cadastrado.", entity.getUserName()));
+				throw new HttpException(HttpStatus.BAD_REQUEST,
+						String.format("Nome de usuário %s já cadastrado.", entity.getUserName()));
 			}
 		} catch (ObjectNotFoundException e) {
 			logger.info("Nenhum cadastro de usuário encontrado :: CPF da busca -> {}", entity.getDocument().getValue());
@@ -241,7 +243,7 @@ public class UserService {
 		if (entity.getDocument() == null
 				|| (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF)) {
 			logger.error("Tipo do documento inválido, informe um documento válido");
-			throw new ValidationException("Tipo do documento inválido, informe um documento válido.");
+			throw new HttpException(HttpStatus.BAD_REQUEST, "Tipo do documento inválido, informe um documento válido.");
 		}
 		userCheckIfExists(entity);
 		try {

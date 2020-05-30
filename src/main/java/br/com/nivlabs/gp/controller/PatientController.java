@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.PatientFilters;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
-import br.com.nivlabs.gp.exception.ValidationException;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
@@ -104,7 +104,7 @@ public class PatientController {
             case SUS:
                 return ResponseEntity.ok(service.findBySusNumber(document));
             default:
-                throw new ValidationException("Tipo de documento desconhecido, esperados: [CPF | SUS]");
+                throw new HttpException(HttpStatus.BAD_REQUEST, "Tipo de documento desconhecido, esperados: [CPF | SUS]");
         }
     }
 

@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class AttendanceStatement extends ReportParam {
+public class AttendanceParams extends ReportParam {
 
     private static final long serialVersionUID = 5738508744853919737L;
 
