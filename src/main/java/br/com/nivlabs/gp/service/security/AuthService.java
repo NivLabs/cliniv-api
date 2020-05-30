@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.exception.NewPasswordInvalidException;
-import br.com.nivlabs.gp.exception.ObjectNotFoundException;
 import br.com.nivlabs.gp.models.domain.UserApplication;
 import br.com.nivlabs.gp.models.dto.ForgotPasswordRequestDTO;
 import br.com.nivlabs.gp.models.dto.NewPasswordRequestDTO;
@@ -42,7 +41,7 @@ public class AuthService {
 	public void createNewPassword(ForgotPasswordRequestDTO newPasswordRequest) {
 		UserApplication usuario = userRepo
 				.findByUserNameOrEmail(newPasswordRequest.getUsernameOrEmail(), newPasswordRequest.getUsernameOrEmail())
-				.orElseThrow(() -> new ObjectNotFoundException(String.format(
+				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
 						"Usuário não encontrado para o email/usuário: [%s]", newPasswordRequest.getUsernameOrEmail())));
 
 		if (!usuario.getPerson().getBornDate().equals(newPasswordRequest.getBornDate())
@@ -65,7 +64,7 @@ public class AuthService {
 					"A nova senha e a confirmação de nova senha devem ser iguais");
 		}
 		UserApplication userFromDb = userRepo.findByUserName(userFromSession.getUsername())
-				.orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
 		if (bc.matches(newPasswordDTO.getOldPassword(), userFromDb.getPassword())) {
 			userFromDb.setPassword(bc.encode(newPasswordDTO.getNewPassword()));
@@ -83,7 +82,7 @@ public class AuthService {
 	public void resetPassword(Long id) {
 		logger.info("Iniciando busca de paciente para reset de senha :: ID -> {}", id);
 		UserApplication userFromDb = userRepo.findById(id)
-				.orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
 		logger.info("Paciente encontrado :: CPF -> {}", userFromDb.getPerson().getCpf());
 

@@ -41,21 +41,6 @@ public class HandlerExceptions {
 	}
 
 	/**
-	 * Capura e trata erro de objetos não encontrados
-	 * 
-	 * @param e
-	 * @param req
-	 * @return
-	 */
-	@ExceptionHandler(ObjectNotFoundException.class)
-	public ResponseEntity<StandardErrorSpring> objetoNaoEncontrado(ObjectNotFoundException e, HttpServletRequest req) {
-		logger.error("Objeto não encontrado :: ", e);
-		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(),
-				"Não Encontrado", Arrays.asList(), e.getMessage(), req.getRequestURI());
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
-	}
-
-	/**
 	 * Captura operações inválidas
 	 * 
 	 * @param e

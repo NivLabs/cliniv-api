@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.PatientFilters;
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.exception.ObjectNotFoundException;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
@@ -57,8 +56,8 @@ public class PatientService implements GenericService<Patient, Long> {
 	}
 
 	public PatientInfoDTO findByPateintId(Long id) {
-		Patient patient = dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Paciente com o identificador %s não encontrado", id)));
+		Patient patient = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+				String.format("Paciente com o identificador %s não encontrado", id)));
 		Person person = patient.getPerson();
 
 		PatientInfoDTO patientInfo = new PatientInfoDTO();
@@ -107,8 +106,8 @@ public class PatientService implements GenericService<Patient, Long> {
 	 */
 	public PatientInfoDTO findByCpf(String cpf) {
 		try {
-			Patient patient = dao.findByCpf(cpf).orElseThrow(
-					() -> new ObjectNotFoundException(String.format("Paciente com CPF: [%s] não encontrado", cpf)));
+			Patient patient = dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+					String.format("Paciente com CPF: [%s] não encontrado", cpf)));
 			Person personFromDb = patient.getPerson();
 
 			PatientInfoDTO patientInfo = new PatientInfoDTO();
@@ -122,7 +121,7 @@ public class PatientService implements GenericService<Patient, Long> {
 			}
 			BeanUtils.copyProperties(patient, patientInfo);
 			return patientInfo;
-		} catch (ObjectNotFoundException e) {
+		} catch (HttpException e) {
 			return findPersonByCpf(cpf);
 		}
 	}
@@ -134,7 +133,7 @@ public class PatientService implements GenericService<Patient, Long> {
 	 * @return
 	 */
 	public PatientInfoDTO findBySusNumber(String susNumber) {
-		Patient patient = dao.findBySusNumber(susNumber).orElseThrow(() -> new ObjectNotFoundException(
+		Patient patient = dao.findBySusNumber(susNumber).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
 				String.format("Paciente com cartão SUS de número %s não encontrado", susNumber)));
 		Person personFromDb = patient.getPerson();
 
@@ -159,8 +158,8 @@ public class PatientService implements GenericService<Patient, Long> {
 	 * @return
 	 */
 	public PatientInfoDTO update(Long id, PatientInfoDTO entity) {
-		Patient patient = dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Paciente com o identificador %s não encontrado", id)));
+		Patient patient = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+				String.format("Paciente com o identificador %s não encontrado", id)));
 
 		checkSusCode(entity, patient);
 
@@ -224,7 +223,7 @@ public class PatientService implements GenericService<Patient, Long> {
 		try {
 			logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
 			personFromDb = personService.findByCpf(entity.getDocument().getValue());
-		} catch (ObjectNotFoundException e) {
+		} catch (HttpException e) {
 			logger.info(
 					"Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
 					entity.getDocument().getType(), entity.getDocument().getValue());
@@ -292,7 +291,7 @@ public class PatientService implements GenericService<Patient, Long> {
 				logger.warn("Paciente com o CPF {} já cadastrado.", cpf);
 				throw new HttpException(HttpStatus.BAD_REQUEST, "Paciente com o CPF informado já está cadastrado.");
 			}
-		} catch (ObjectNotFoundException e) {
+		} catch (HttpException e) {
 			logger.info("Nenhum cadastro de paciente encontrado :: CPF da busca -> {}", cpf);
 			logger.info("Continuando cadastro de paciente...");
 		}

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.exception.ObjectNotFoundException;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 import br.com.nivlabs.gp.models.domain.EventType;
@@ -67,7 +66,8 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 		List<Attendance> list = dao.findByPatient(new Patient(patientId));
 
 		if (list.isEmpty())
-			throw new ObjectNotFoundException(String.format("Não existe atendimento para o paciente %s", patientId));
+			throw new HttpException(HttpStatus.NOT_FOUND,
+					String.format("Não existe atendimento para o paciente %s", patientId));
 
 		List<AttendanceDTO> listOfDto = new ArrayList<>();
 		list.forEach(attendance -> {
@@ -88,8 +88,8 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 	 * @return MedicalRecordDTO
 	 */
 	public MedicalRecordDTO findMedicalRecordByAttendanceId(Long id) {
-		Attendance objectFromDb = dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Prontuário com código %s não encontrad", id)));
+		Attendance objectFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+				String.format("Prontuário com código %s não encontrad", id)));
 		Person person = objectFromDb.getPatient().getPerson();
 		MedicalRecordDTO medicalRecord = new MedicalRecordDTO();
 		BeanUtils.copyProperties(person, medicalRecord);
