@@ -41,40 +41,6 @@ public class HandlerExceptions {
 	}
 
 	/**
-	 * Captura operações inválidas
-	 * 
-	 * @param e
-	 * @param req
-	 * @return
-	 */
-	@ExceptionHandler(InvalidOperationException.class)
-	public ResponseEntity<StandardErrorSpring> operacaoInvalida(InvalidOperationException e, HttpServletRequest req) {
-		logger.error("Operação inválida :: ", e);
-		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(),
-				HttpStatus.METHOD_NOT_ALLOWED.value(), "Operação inválida", Arrays.asList(), e.getMessage(),
-				req.getRequestURI());
-		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(err);
-	}
-
-	/**
-	 * Captura tentativa de resgate de senha inválido
-	 * 
-	 * @param e
-	 * @param req
-	 * @return
-	 */
-	@ExceptionHandler(NewPasswordInvalidException.class)
-	public ResponseEntity<StandardErrorSpring> newPasswordInvalidException(NewPasswordInvalidException e,
-			HttpServletRequest req) {
-		logger.error("Erro de validação no processo de Nova Senha :: ", e);
-		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
-				"Informações inválidas", Arrays.asList(),
-				"Você não forneceu as informações necessárias para recuperar a senha", req.getRequestURI());
-
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
-	}
-
-	/**
 	 * Trata exceções de propriedades inválidas
 	 * 
 	 * @param e
@@ -147,9 +113,10 @@ public class HandlerExceptions {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<StandardErrorSpring> methodArgumentNotValidException(MethodArgumentNotValidException e,
 			HttpServletRequest req) {
-		logger.error("Argumentos inválidos :: ", e);
-		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
-				"Requisição mal formada", getValidations(e), "Erro de validação", req.getRequestURI());
+		logger.error("Erro de validação :: ", e);
+		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(),
+				HttpStatus.UNPROCESSABLE_ENTITY.value(), "Requisição mal formada", getValidations(e),
+				"Erro de validação", req.getRequestURI());
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
