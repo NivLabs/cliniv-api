@@ -7,10 +7,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.ProcedureOrEventFilters;
-import br.com.nivlabs.gp.exception.ObjectNotFoundException;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent;
 import br.com.nivlabs.gp.models.dto.ProcedureOrEventDTO;
 import br.com.nivlabs.gp.repository.ProcedureOrEventRepository;
@@ -33,8 +34,8 @@ public class ProcedureOrEventService implements GenericService<ProcedureOrEvent,
 
 	@Override
 	public ProcedureOrEvent findById(Long id) {
-		return dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Procedimento com código %s não encontrado!", id)));
+		return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+				String.format("Procedimento com código %s não encontrado!", id)));
 	}
 
 	@Override

@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.nivlabs.gp.exception.ObjectNotFoundException;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.AnamnesisItem;
 import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
 import br.com.nivlabs.gp.repository.AnamnesisItemRepository;
@@ -46,8 +47,8 @@ public class AnamnesisItemService implements GenericService<AnamnesisItem, Long>
 
 	@Override
 	public AnamnesisItem findById(Long id) {
-		return dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Anamnesis Item ID: [%s] não encontrado!", id)));
+		return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+				String.format("Anamnesis Item ID: [%s] não encontrado!", id)));
 	}
 
 	@Override

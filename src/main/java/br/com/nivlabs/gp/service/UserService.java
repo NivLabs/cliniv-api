@@ -10,12 +10,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.UserFilters;
-import br.com.nivlabs.gp.exception.ObjectNotFoundException;
-import br.com.nivlabs.gp.exception.ValidationException;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.models.domain.Role;
@@ -53,8 +53,9 @@ public class UserService {
 	 * @return
 	 */
 	public UserInfoDTO findByUserName(String username) {
-		UserApplication entityFromDb = userRepo.findByUserName(username).orElseThrow(() -> new ObjectNotFoundException(
-				"Usuário não encontrado! Username: " + username + ", tipo " + UserApplication.class.getName()));
+		UserApplication entityFromDb = userRepo.findByUserName(username)
+				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+						"Usuário não encontrado! Username: " + username + ", tipo " + UserApplication.class.getName()));
 
 		UserInfoDTO responseDTO = new UserInfoDTO();
 
@@ -77,7 +78,7 @@ public class UserService {
 	}
 
 	public UserInfoDTO findUserDtoById(Long id) {
-		UserApplication userFromDb = userRepo.findById(id).orElseThrow(() -> new ObjectNotFoundException(
+		UserApplication userFromDb = userRepo.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
 				"Usuário não encontrado! Id: " + id + ", tipo " + UserApplication.class.getName()));
 
 		UserInfoDTO response = new UserInfoDTO();
@@ -110,7 +111,7 @@ public class UserService {
 	 */
 	public UserInfoDTO updateFromDto(Long userId, UserInfoDTO entity) {
 		UserApplication entityFromDb = userRepo.findByUserName(entity.getUserName())
-				.orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado! Username: "
+				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado! Username: "
 						+ entity.getUserName() + ", tipo " + UserApplication.class.getName()));
 
 		entityFromDb.setPerson(getPersonFromUserInfo(entityFromDb.getPerson(), entity));
@@ -165,7 +166,7 @@ public class UserService {
 		}
 
 		if (entity.getDocument().getType() != DocumentType.CPF) {
-			throw new ValidationException("O tipo do documento deve ser CPF");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O tipo do documento deve ser CPF");
 		}
 		personToUpdate.setCpf(entity.getDocument().getValue());
 
@@ -190,8 +191,8 @@ public class UserService {
 
 	public UserInfoDTO findByCpf(String cpf) {
 		try {
-			UserApplication user = userRepo.findByCpf(cpf).orElseThrow(
-					() -> new ObjectNotFoundException(String.format("Usuário com cpf: [%s] não encontrado", cpf)));
+			UserApplication user = userRepo.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+					String.format("Usuário com cpf: [%s] não encontrado", cpf)));
 			Person personFromDb = user.getPerson();
 
 			UserInfoDTO userInfo = new UserInfoDTO();
@@ -207,7 +208,7 @@ public class UserService {
 
 			userInfo.setId(userInfo.getId());
 			return userInfo;
-		} catch (ObjectNotFoundException e) {
+		} catch (HttpException e) {
 			return findPersonByCpf(cpf);
 		}
 	}
@@ -219,16 +220,17 @@ public class UserService {
 			UserInfoDTO user = findByCpf(entity.getDocument().getValue());
 			if (user != null && user.getId() != null) {
 				logger.warn("Usuário com o CPF {} já cadastrado.", entity.getDocument().getValue());
-				throw new ValidationException(
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 						String.format("Usuário com o CPF %s já cadastrado.", entity.getDocument().getValue()));
 			}
 			user = findByUserName(entity.getUserName());
 
 			if (user != null && user.getId() != null) {
 				logger.warn("Nome de usuário {} já cadastrado.", entity.getUserName());
-				throw new ValidationException(String.format("Nome de usuário %s já cadastrado.", entity.getUserName()));
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+						String.format("Nome de usuário %s já cadastrado.", entity.getUserName()));
 			}
-		} catch (ObjectNotFoundException e) {
+		} catch (HttpException e) {
 			logger.info("Nenhum cadastro de usuário encontrado :: CPF da busca -> {}", entity.getDocument().getValue());
 			logger.info("Continuando cadastro de usuário...");
 		}
@@ -241,13 +243,13 @@ public class UserService {
 		if (entity.getDocument() == null
 				|| (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF)) {
 			logger.error("Tipo do documento inválido, informe um documento válido");
-			throw new ValidationException("Tipo do documento inválido, informe um documento válido.");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo do documento inválido, informe um documento válido.");
 		}
 		userCheckIfExists(entity);
 		try {
 			logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
 			personFromDb = personService.findByCpf(entity.getDocument().getValue());
-		} catch (ObjectNotFoundException e) {
+		} catch (HttpException e) {
 			logger.info(
 					"Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
 					entity.getDocument().getType(), entity.getDocument().getValue());

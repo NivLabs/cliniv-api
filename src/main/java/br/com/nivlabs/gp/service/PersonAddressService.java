@@ -6,9 +6,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.nivlabs.gp.exception.ObjectNotFoundException;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.repository.PersonAddressRepository;
 
@@ -22,49 +23,50 @@ import br.com.nivlabs.gp.repository.PersonAddressRepository;
 @Service
 public class PersonAddressService implements GenericService<PersonAddress, Long> {
 
-    @Autowired
-    private PersonAddressRepository dao;
+	@Autowired
+	private PersonAddressRepository dao;
 
-    @Override
-    public Page<PersonAddress> searchEntityPage(Pageable pageRequest) {
-        return dao.findAll(pageRequest);
-    }
+	@Override
+	public Page<PersonAddress> searchEntityPage(Pageable pageRequest) {
+		return dao.findAll(pageRequest);
+	}
 
-    @Override
-    public PersonAddress findById(Long id) {
-        return dao.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format("Endereço com o identificador %s não encontrado", id)));
-    }
+	@Override
+	public PersonAddress findById(Long id) {
+		return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+				String.format("Endereço com o identificador %s não encontrado", id)));
+	}
 
-    @Override
-    public PersonAddress update(Long id, PersonAddress entity) {
-        PersonAddress auxEntity = findById(id);
-        BeanUtils.copyProperties(entity, auxEntity, "id");
-        return dao.save(auxEntity);
-    }
+	@Override
+	public PersonAddress update(Long id, PersonAddress entity) {
+		PersonAddress auxEntity = findById(id);
+		BeanUtils.copyProperties(entity, auxEntity, "id");
+		return dao.save(auxEntity);
+	}
 
-    @Override
-    public void delete(PersonAddress entity) {
-        deleteById(entity.getId());
-    }
+	@Override
+	public void delete(PersonAddress entity) {
+		deleteById(entity.getId());
+	}
 
-    @Override
-    public void deleteById(Long id) {
-        PersonAddress auxEntity = findById(id);
-        dao.delete(auxEntity);
-    }
+	@Override
+	public void deleteById(Long id) {
+		PersonAddress auxEntity = findById(id);
+		dao.delete(auxEntity);
+	}
 
-    @Override
-    public PersonAddress persist(PersonAddress entity) {
-        entity.setId(null);
-        return dao.save(entity);
-    }
+	@Override
+	public PersonAddress persist(PersonAddress entity) {
+		entity.setId(null);
+		return dao.save(entity);
+	}
 
-    /**
-     * @param id
-     */
-    public void deleteByPersonId(Long id) {
-        List<PersonAddress> listToDelete = dao.findByPersonId(id);
-        dao.deleteAll(listToDelete);
-    }
+	/**
+	 * @param id
+	 */
+	public void deleteByPersonId(Long id) {
+		List<PersonAddress> listToDelete = dao.findByPersonId(id);
+		dao.deleteAll(listToDelete);
+	}
 
 }

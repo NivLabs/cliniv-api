@@ -6,10 +6,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.SectorFilters;
-import br.com.nivlabs.gp.exception.ObjectNotFoundException;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.RoomOrBed;
 import br.com.nivlabs.gp.models.domain.Sector;
 import br.com.nivlabs.gp.models.dto.RoomOrBedDTO;
@@ -49,8 +50,8 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 	 * Busca setor por id
 	 */
 	public SectorInfoDTO findInfoById(Long id) {
-		Sector sector = dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Setor com o identificador %s não encontrado", id)));
+		Sector sector = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+				String.format("Setor com o identificador %s não encontrado", id)));
 		SectorInfoDTO sectorInfoDTO = new SectorInfoDTO();
 		BeanUtils.copyProperties(sector, sectorInfoDTO, "listOfRoomsOrBeds");
 		sector.getListOfRoomsOrBeds().forEach(item -> {
@@ -68,8 +69,8 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 	 * @return
 	 */
 	public SectorInfoDTO update(Long id, SectorInfoDTO sectorInfoDTO) {
-		Sector sector = dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Setor com o identificador %s não encontrado", id)));
+		Sector sector = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+				String.format("Setor com o identificador %s não encontrado", id)));
 		BeanUtils.copyProperties(sectorInfoDTO, sector, "id", "createdAt");
 		sector = dao.save(sector);
 		BeanUtils.copyProperties(sector, sectorInfoDTO);
@@ -84,7 +85,7 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 	 * @return
 	 */
 	public RoomOrBedDTO updateRoomOrBedDTO(Long id, RoomOrBedDTO request) {
-		RoomOrBed entity = roomOrBedRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
+		RoomOrBed entity = roomOrBedRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
 				String.format("Sala ou leito com o identificador %s não encontrado", id)));
 		BeanUtils.copyProperties(request, entity, "id");
 		entity = roomOrBedRepository.save(entity);
@@ -98,9 +99,10 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 	 * @param id
 	 */
 	public void deleteRoomOrBed(Long id) {
-		RoomOrBed entity = roomOrBedRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(String.format(
-				"Sala ou leito com o identificado %s não encontrado, não é possível deletar um registro inexistente.",
-				id)));
+		RoomOrBed entity = roomOrBedRepository.findById(id)
+				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
+						"Sala ou leito com o identificado %s não encontrado, não é possível deletar um registro inexistente.",
+						id)));
 		roomOrBedRepository.delete(entity);
 	}
 
@@ -111,8 +113,8 @@ public class SectorService implements GenericService<SectorDTO, Long> {
 
 	@Override
 	public void deleteById(Long id) {
-		Sector auxEntity = dao.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException(String.format("Setor com o identificado %s não encontrado", id)));
+		Sector auxEntity = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+				String.format("Setor com o identificado %s não encontrado", id)));
 		dao.delete(auxEntity);
 	}
 
