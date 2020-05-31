@@ -49,9 +49,9 @@ public class HandlerExceptions {
 	 */
 	@ExceptionHandler(HttpException.class)
 	public ResponseEntity<StandardErrorSpring> validationException(HttpException e, HttpServletRequest req) {
-		logger.error("Erro da API :: ", e.toString());
+		logger.error("Erro da requisição :: ", e.toString());
 		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), e.getStatus().value(),
-				"Erro da API", Arrays.asList(), e.getMessage(), req.getRequestURI());
+				"Erro da requisição", Arrays.asList(), e.getMessage(), req.getRequestURI());
 
 		return ResponseEntity.status(e.getStatus()).body(err);
 	}
