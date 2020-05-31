@@ -4,7 +4,6 @@ import java.io.InputStream;
 
 import org.springframework.http.HttpStatus;
 
-import br.com.nivlabs.gp.exception.GenerateReportException;
 import br.com.nivlabs.gp.exception.HttpException;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -59,7 +58,7 @@ public class ReportFactory {
 	 * @param type
 	 */
 	private void throwParamsDoNotMatch(ReportType type) {
-		throw new GenerateReportException(
+		throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 				String.format("Os parâmetros enviados não pertencem ao relatório solicitado :: %s :: %s", type,
 						type.getDescription()));
 
