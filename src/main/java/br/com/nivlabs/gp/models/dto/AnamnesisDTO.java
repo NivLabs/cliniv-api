@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.nivlabs.gp.models.domain.Anamnesis;
-import br.com.nivlabs.gp.models.domain.AnamnesisItem;
+import br.com.nivlabs.gp.models.domain.Attendance;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,13 +22,13 @@ public class AnamnesisDTO extends DataTransferObjectBase {
 
 	private Long id;
 
-	@NotBlank(message = "Informar o ATENDIMENTO é obrigatório.")
+	@NotBlank(message = "Informar o atendimento é obrigatório.")
 	private Long attendanceId;
 
-	@NotBlank(message = "Informar o ITEM ANAMNESIS é obrigatório.")
+	@NotBlank(message = "Informar o item da pergunta da anamnese é obrigatório.")
 	private AnamnesisItemDTO anamnesisItem;
 
-	@NotBlank(message = "Informar a RESPOSTA é obrigatório.")
+	@NotBlank(message = "Informar a resposta é obrigatório.")
 	private String response;
 
 	@JsonIgnore
@@ -36,8 +36,8 @@ public class AnamnesisDTO extends DataTransferObjectBase {
 		Anamnesis domain = new Anamnesis();
 
 		domain.setId(id);
-		domain.setAnamnesisItem(
-				new AnamnesisItem(anamnesisItem.getId(), anamnesisItem.getQuestion(), anamnesisItem.getMetaType()));
+		domain.setAttendance(new Attendance(attendanceId));
+		domain.setQuestion(anamnesisItem.getQuestion());
 		domain.setResponse(response);
 
 		return domain;
