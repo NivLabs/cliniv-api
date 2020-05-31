@@ -41,7 +41,6 @@ public class HandlerExceptions {
 	}
 
 	/**
-	 * Trata exceções de propriedades inválidas
 	 * 
 	 * @param e
 	 * @param req
