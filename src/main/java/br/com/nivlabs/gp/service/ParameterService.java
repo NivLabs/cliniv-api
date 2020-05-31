@@ -35,7 +35,7 @@ public class ParameterService implements GenericService<Parameter, Long> {
 	 */
 	public void changeValueParameter(Long id, NewParameterValueDTO newValue) {
 		if (newValue == null) {
-			throw new HttpException(HttpStatus.BAD_REQUEST, "O novo valor não pode ser nulo");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O novo valor não pode ser nulo");
 		}
 		logger.info("Iniciando busca de parâmetro para o ID :: {}", id);
 		Parameter parameter = repository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
@@ -61,23 +61,25 @@ public class ParameterService implements GenericService<Parameter, Long> {
 		switch (param.getMetaType()) {
 		case number:
 			if (!StringUtils.isNumeric(newValue))
-				throw new HttpException(HttpStatus.BAD_REQUEST, "O valor do parâmetro deve ser numérico");
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O valor do parâmetro deve ser numérico");
 			break;
 		case bool:
 			if (StringUtils.isNullOrEmpty(newValue)
 					|| (!newValue.toLowerCase().equals("true") && !newValue.toLowerCase().equals("false")))
-				throw new HttpException(HttpStatus.BAD_REQUEST, "O valor do parâmetro só pode ser true ou false");
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+						"O valor do parâmetro só pode ser true ou false");
 			break;
 		case group:
 			if (StringUtils.isNullOrEmpty(newValue) || checkGroupParameter(param, newValue))
-				throw new HttpException(HttpStatus.BAD_REQUEST,
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 						"O valor do parâmetro deve existir no grupo de valores possíveis");
 			break;
 		case string:
 		case password:
 			break;
 		default:
-			throw new HttpException(HttpStatus.BAD_REQUEST, "O valor do parâmetro é inválido para o tipo de parâmetro");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+					"O valor do parâmetro é inválido para o tipo de parâmetro");
 		}
 		logger.info("Chegagem realizada com sucesso, o novo valor é válido para subistituição");
 	}

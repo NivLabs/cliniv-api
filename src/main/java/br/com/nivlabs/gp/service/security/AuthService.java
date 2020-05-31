@@ -60,7 +60,7 @@ public class AuthService {
 	 */
 	public void updatePassword(NewPasswordRequestDTO newPasswordDTO, UserOfSystem userFromSession) {
 		if (!newPasswordDTO.getNewPassword().equals(newPasswordDTO.getConfirmNewPassword())) {
-			throw new HttpException(HttpStatus.BAD_REQUEST,
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 					"A nova senha e a confirmação de nova senha devem ser iguais");
 		}
 		UserApplication userFromDb = userRepo.findByUserName(userFromSession.getUsername())
@@ -69,7 +69,7 @@ public class AuthService {
 		if (bc.matches(newPasswordDTO.getOldPassword(), userFromDb.getPassword())) {
 			userFromDb.setPassword(bc.encode(newPasswordDTO.getNewPassword()));
 		} else {
-			throw new HttpException(HttpStatus.BAD_REQUEST, "A senha atual não está correta");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A senha atual não está correta");
 		}
 		userRepo.saveAndFlush(userFromDb);
 	}

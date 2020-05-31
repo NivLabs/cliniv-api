@@ -47,7 +47,7 @@ public class ReportFactory {
 		case AttendanceStatement:
 			return generateAttendanceStatement(params);
 		default:
-			throw new HttpException(HttpStatus.BAD_REQUEST, "Tipo de relatório inexistente");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo de relatório inexistente");
 		}
 
 	}

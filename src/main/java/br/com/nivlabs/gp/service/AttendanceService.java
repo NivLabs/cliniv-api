@@ -146,7 +146,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 		try {
 			attendance = getActiveMedicalRecord(visitDto.getPatientId());
 		} catch (HttpException e) {
-			if (e.getStatus().equals(HttpStatus.BAD_REQUEST)) {
+			if (e.getStatus().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
 				PatientInfoDTO savedPatient = patientService.findByPateintId(visitDto.getPatientId());
 
 				Attendance convertedAttendance = new Attendance();
@@ -163,7 +163,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 			}
 		}
 		if (attendance != null) {
-			throw new HttpException(HttpStatus.BAD_REQUEST, String.format(
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
 					"O paciente de código %s e nome %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
 					attendance.getPatientId(), attendance.getFirstName()));
 		}
@@ -185,7 +185,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 			entryEvent.setResponsible(new Responsible(request.getResponsibleId()));
 
 		if (request.getEventTypeId() != 1L && request.getEventTypeId() != 2L && request.getEventTypeId() != 3L)
-			throw new HttpException(HttpStatus.BAD_REQUEST,
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 					"O tipo de evento informado é inválido. Tipos de eventos esperados: Entrada de paciente (1 - Entrada, 2 - Entrada Emergência ou 3 - Entrada Ambulatório)");
 		// Verificar Tipo do evento
 		entryEvent.setEventType(new EventType(request.getEventTypeId()));
@@ -212,7 +212,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 	public MedicalRecordDTO getActiveMedicalRecord(Long patientId) {
 		PatientInfoDTO patient = patientService.findByPateintId(patientId);
 		Attendance attendanceFromDb = dao.findByPatientAndDateTimeExitIsNull(new Patient(patient.getId()))
-				.orElseThrow(() -> new HttpException(HttpStatus.BAD_REQUEST, String.format(
+				.orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
 						"Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
 						patient.getFirstName())));
 		MedicalRecordDTO medicalRecord = new MedicalRecordDTO();

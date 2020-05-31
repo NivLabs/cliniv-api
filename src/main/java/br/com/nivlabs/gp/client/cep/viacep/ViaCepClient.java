@@ -39,9 +39,9 @@ public class ViaCepClient extends RestClient {
 		} else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
 			logger.info("Não foi possível encontrado endereço para o CEP {}", cep);
 			throw new HttpException(HttpStatus.NOT_FOUND, "Cep não encontrado");
-		} else if (response.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+		} else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
 			logger.warn("O CEP {} é inválido", cep);
-			throw new HttpException(HttpStatus.BAD_REQUEST, "CEP inválido, informe um CEP válido para a busca.");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "CEP inválido, informe um CEP válido para a busca.");
 		} else {
 			logger.error("Falha na busca da API externa ViaCepAPI");
 			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar endereço na API Externa");

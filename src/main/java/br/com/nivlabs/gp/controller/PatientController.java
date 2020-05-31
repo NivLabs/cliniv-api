@@ -104,7 +104,7 @@ public class PatientController {
             case SUS:
                 return ResponseEntity.ok(service.findBySusNumber(document));
             default:
-                throw new HttpException(HttpStatus.BAD_REQUEST, "Tipo de documento desconhecido, esperados: [CPF | SUS]");
+                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo de documento desconhecido, esperados: [CPF | SUS]");
         }
     }
 

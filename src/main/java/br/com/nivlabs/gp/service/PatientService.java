@@ -215,7 +215,7 @@ public class PatientService implements GenericService<Patient, Long> {
 		Person personFromDb = new Person();
 		if (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF) {
 			logger.error("Tipo do documento inválido, informe um documento válido");
-			throw new HttpException(HttpStatus.BAD_REQUEST, "Tipo do documento inválido, informe um documento válido.");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo do documento inválido, informe um documento válido.");
 		}
 
 		checkDocument(entity);
@@ -289,7 +289,7 @@ public class PatientService implements GenericService<Patient, Long> {
 			PatientInfoDTO patient = findByCpf(cpf);
 			if (patient != null && patient.getId() != null) {
 				logger.warn("Paciente com o CPF {} já cadastrado.", cpf);
-				throw new HttpException(HttpStatus.BAD_REQUEST, "Paciente com o CPF informado já está cadastrado.");
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Paciente com o CPF informado já está cadastrado.");
 			}
 		} catch (HttpException e) {
 			logger.info("Nenhum cadastro de paciente encontrado :: CPF da busca -> {}", cpf);
@@ -322,7 +322,7 @@ public class PatientService implements GenericService<Patient, Long> {
 			entityFromDb.setCpf(entity.getDocument().getValue());
 			Patient patientByCpf = dao.findByCpf(entity.getDocument().getValue()).orElse(null);
 			if (patientByCpf != null && !patient.equals(patientByCpf)) {
-				throw new HttpException(HttpStatus.BAD_REQUEST,
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 						"Já existe um outro paciente utilizando este CPF, você não pode utilizar neste cadastro.");
 			}
 		}
@@ -338,7 +338,7 @@ public class PatientService implements GenericService<Patient, Long> {
 		if (entity.getSusNumber() != null && !entity.getSusNumber().equals(patient.getSusNumber())) {
 			Patient patientBySusNumber = dao.findBySusNumber(entity.getSusNumber()).orElse(null);
 			if (patientBySusNumber != null && !patient.equals(patientBySusNumber)) {
-				throw new HttpException(HttpStatus.BAD_REQUEST,
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 						"Já existe um outro paciente utilizando este código SUS, você não pode utilizar neste cadastro.");
 			}
 		}

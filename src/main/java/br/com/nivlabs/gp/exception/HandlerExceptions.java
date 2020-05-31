@@ -67,10 +67,11 @@ public class HandlerExceptions {
 	public ResponseEntity<StandardErrorSpring> objetoNaoEncontrado(HttpMessageNotReadableException e,
 			HttpServletRequest req) {
 		logger.error("Falha interna não esperada :: ", e);
-		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
-				"Propriedade não reconhecida", Arrays.asList(), getPropertyMessageError(e), req.getRequestURI());
+		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(),
+				HttpStatus.UNPROCESSABLE_ENTITY.value(), "Propriedade não reconhecida", Arrays.asList(),
+				getPropertyMessageError(e), req.getRequestURI());
 
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class HandlerExceptions {
 				HttpStatus.UNPROCESSABLE_ENTITY.value(), "Requisição mal formada", getValidations(e),
 				"Erro de validação", req.getRequestURI());
 
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+		return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
 	}
 
 	/**

@@ -166,7 +166,7 @@ public class UserService {
 		}
 
 		if (entity.getDocument().getType() != DocumentType.CPF) {
-			throw new HttpException(HttpStatus.BAD_REQUEST, "O tipo do documento deve ser CPF");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O tipo do documento deve ser CPF");
 		}
 		personToUpdate.setCpf(entity.getDocument().getValue());
 
@@ -220,14 +220,14 @@ public class UserService {
 			UserInfoDTO user = findByCpf(entity.getDocument().getValue());
 			if (user != null && user.getId() != null) {
 				logger.warn("Usuário com o CPF {} já cadastrado.", entity.getDocument().getValue());
-				throw new HttpException(HttpStatus.BAD_REQUEST,
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 						String.format("Usuário com o CPF %s já cadastrado.", entity.getDocument().getValue()));
 			}
 			user = findByUserName(entity.getUserName());
 
 			if (user != null && user.getId() != null) {
 				logger.warn("Nome de usuário {} já cadastrado.", entity.getUserName());
-				throw new HttpException(HttpStatus.BAD_REQUEST,
+				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 						String.format("Nome de usuário %s já cadastrado.", entity.getUserName()));
 			}
 		} catch (HttpException e) {
@@ -243,7 +243,7 @@ public class UserService {
 		if (entity.getDocument() == null
 				|| (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF)) {
 			logger.error("Tipo do documento inválido, informe um documento válido");
-			throw new HttpException(HttpStatus.BAD_REQUEST, "Tipo do documento inválido, informe um documento válido.");
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo do documento inválido, informe um documento válido.");
 		}
 		userCheckIfExists(entity);
 		try {
