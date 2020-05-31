@@ -49,7 +49,7 @@ public class HandlerExceptions {
 	 */
 	@ExceptionHandler(HttpException.class)
 	public ResponseEntity<StandardErrorSpring> validationException(HttpException e, HttpServletRequest req) {
-		logger.error("Erro da requisição :: ", e.toString());
+		logger.error("Erro da requisição :: {}", e.toString());
 		StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), e.getStatus().value(),
 				"Erro da requisição", Arrays.asList(), e.getMessage(), req.getRequestURI());
 
@@ -84,7 +84,7 @@ public class HandlerExceptions {
 		String message = e.getMostSpecificCause().getMessage();
 		message = message.substring(message.indexOf(" \"") + 2);
 		message = message.substring(0, message.indexOf("\" "));
-		return String.format("A propriedade [%s] é desconhecida", message);
+		return String.format("A propriedade '%s' não é reconhecida", message);
 	}
 
 	/**
