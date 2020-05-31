@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -42,6 +44,8 @@ import br.com.nivlabs.gp.repository.AttendanceRepository;
  */
 @Service
 public class AttendanceService implements GenericService<Attendance, Long> {
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private AttendanceRepository dao;
@@ -88,6 +92,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 	 * @return MedicalRecordDTO
 	 */
 	public MedicalRecordDTO findMedicalRecordByAttendanceId(Long id) {
+		logger.info("Verificando se o atendimento informado existe. Atendimento :: {}", id);
 		Attendance objectFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
 				String.format("Prontuário com código %s não encontrad", id)));
 		Person person = objectFromDb.getPatient().getPerson();

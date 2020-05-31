@@ -7,12 +7,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+
+import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.BaseObject;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
+import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -35,9 +40,8 @@ public class Anamnesis extends BaseObject {
 	@JoinColumn(name = "ID_VISITA")
 	private Attendance attendance;
 
-	@ManyToOne
-	@JoinColumn(name = "ID_ANAMNESE_ITEM")
-	private AnamnesisItem anamnesisItem;
+	@Column(name = "PERGUNTA")
+	private String question;
 
 	@Column(name = "RESPOSTA")
 	private String response;
@@ -47,10 +51,16 @@ public class Anamnesis extends BaseObject {
 		AnamnesisDTO dto = new AnamnesisDTO();
 
 		dto.setId(id);
-		dto.setAnamnesisItem(anamnesisItem.getAnamnesisItemDTOFromDomain());
+		dto.setAnamnesisItem(new AnamnesisItemDTO(null, question, null));
 		dto.setAttendanceId(attendance.getId());
 		dto.setResponse(response);
 
 		return dto;
+	}
+
+	@PreUpdate
+	protected void blockUpdate() {
+		throw new HttpException(HttpStatus.METHOD_NOT_ALLOWED,
+				"Método não autorizado -> Não é permitido alterar uma anamnese");
 	}
 }
