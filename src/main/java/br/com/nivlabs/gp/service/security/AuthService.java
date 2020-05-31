@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.exception.NewPasswordInvalidException;
 import br.com.nivlabs.gp.models.domain.UserApplication;
 import br.com.nivlabs.gp.models.dto.ForgotPasswordRequestDTO;
 import br.com.nivlabs.gp.models.dto.NewPasswordRequestDTO;
@@ -42,11 +41,12 @@ public class AuthService {
 		UserApplication usuario = userRepo
 				.findByUserNameOrEmail(newPasswordRequest.getUsernameOrEmail(), newPasswordRequest.getUsernameOrEmail())
 				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
-						"Usuário não encontrado para o email/usuário: [%s]", newPasswordRequest.getUsernameOrEmail())));
+						"Usuário não encontrado para o email/usuário: %s", newPasswordRequest.getUsernameOrEmail())));
 
 		if (!usuario.getPerson().getBornDate().equals(newPasswordRequest.getBornDate())
 				&& !usuario.getPerson().getMotherName().equals(newPasswordRequest.getMotherName()))
-			throw new NewPasswordInvalidException();
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+					"Você não forneceu as informações necessárias para recuperar a senha");
 
 		usuario.setPassword(bc.encode(newPasswordRequest.getNewPassword()));
 		userRepo.save(usuario);
