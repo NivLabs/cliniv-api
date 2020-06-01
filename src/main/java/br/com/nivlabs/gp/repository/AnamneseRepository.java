@@ -1,9 +1,12 @@
 package br.com.nivlabs.gp.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.nivlabs.gp.models.domain.Anamnesis;
+import br.com.nivlabs.gp.models.domain.Attendance;
 
 /**
  * AnamneseDao.java
@@ -15,5 +18,7 @@ import br.com.nivlabs.gp.models.domain.Anamnesis;
  */
 @Repository
 public interface AnamneseRepository extends JpaRepository<Anamnesis, Long> {
+
+	public List<Anamnesis> findByAttendance(Attendance attendance);
 
 }

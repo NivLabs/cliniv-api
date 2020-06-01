@@ -10,6 +10,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Classe que representa os parâmetros de um relatório de anamnese
+ * 
+ * @author viniciosarodrigues
+ *
+ */
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
@@ -19,8 +25,6 @@ public class AnamnesisParams extends ReportParam {
 	private static final long serialVersionUID = -7425109036420315805L;
 
 	private Long attendanceId;
-
-	private Long patientId;
 
 	private String patientName;
 

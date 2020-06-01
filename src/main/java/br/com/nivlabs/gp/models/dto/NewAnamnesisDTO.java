@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +22,7 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
 	private static final long serialVersionUID = 1489473679769549274L;
 
 	@NotNull(message = "Informe o código do atendimento")
+	@ApiModelProperty("Identificador do atendimento")
 	private Long attendanceId;
 
 	private Set<AnamnesisDTO> listOfResponse = new HashSet<>();
