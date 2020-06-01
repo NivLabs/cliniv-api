@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,6 +76,15 @@ public class AnamnesisController {
 		Anamnesis createdAnamnese = service.update(id, anamneseDTO.getAnamnesesDomainFromDTO());
 
 		return ResponseEntity.ok().body(createdAnamnese.getAnamneseDTOFromDomain());
+
+	}
+
+	@ApiOperation(nickname = "anamnese-delete", value = "Deleta uma anamnese na aplicação")
+	@DeleteMapping("/{id}")
+	@PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
+	public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+		service.deleteAnamnesisFromAttendance(id);
+		return ResponseEntity.noContent().build();
 
 	}
 

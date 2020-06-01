@@ -5,6 +5,7 @@ package br.com.nivlabs.gp.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
+import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
 import br.com.nivlabs.gp.repository.AnamneseRepository;
@@ -50,6 +52,10 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
 		return new PageImpl<>(newPage, pageSettings, page.getTotalElements());
 	}
 
+	public List<Anamnesis> findByAttendance(Attendance attendance) {
+		return dao.findByAttendance(attendance);
+	}
+
 	@Override
 	public Anamnesis findById(Long id) {
 		try {
@@ -80,9 +86,39 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
 		dao.delete(anamnese);
 	}
 
+	/**
+	 * Deleta um questionário respondido de anamnese baseado no identificador do
+	 * atendimento
+	 * 
+	 * @param attendanceId
+	 */
+	public void deleteAnamnesisFromAttendance(Long attendanceId) {
+		logger.info("Solicitação de exclução de anamnese recebida, código do atendimento :: {}", attendanceId);
+		List<Long> listOfAnamesesis = findByAttendance(new Attendance(attendanceId)).stream().map(Anamnesis::getId)
+				.collect(Collectors.toList());
+		if (listOfAnamesesis.isEmpty())
+			logger.info("Não há anamnese para exclusão");
+		else
+			logger.info("Foram encontradas um total de {} questões respondidas, inicializando exclusão dos itens...",
+					listOfAnamesesis.size());
+		listOfAnamesesis.forEach(id -> dao.deleteById(id));
+		logger.info("Processo finalizado com sucesso");
+
+	}
+
+	/**
+	 * Cria um novo questionário respondido de anamnese
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public NewAnamnesisDTO newAnamnesisResponse(NewAnamnesisDTO request) {
 		logger.info("Iniciando o preenchimento de um novo questionário de anamnese...");
 		attendanceService.findMedicalRecordByAttendanceId(request.getAttendanceId());
+		if (!findByAttendance(new Attendance(request.getAttendanceId())).isEmpty()) {
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+					"Este atendimento já possui um relatório de anamnese, não é possível responder novamente");
+		}
 		request.getListOfResponse().forEach(item -> {
 			validateQuestions(item);
 			item.setAttendanceId(request.getAttendanceId());
@@ -91,30 +127,41 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
 		return request;
 	}
 
-	private void validateQuestions(AnamnesisDTO item) {
+	/**
+	 * Valita as questões
+	 * 
+	 * @param anamnese
+	 */
+	private void validateQuestions(AnamnesisDTO anamnese) {
 		logger.info("Iniciando validação do questionário...");
-		if (item.getAnamnesisItem() == null)
+		if (anamnese.getAnamnesisItem() == null)
 			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Seu questionário está com questão nula");
-		else if (StringUtils.isNullOrEmpty(item.getAnamnesisItem().getQuestion())
-				|| item.getAnamnesisItem().getMetaType() == null)
+		else if (StringUtils.isNullOrEmpty(anamnese.getAnamnesisItem().getQuestion())
+				|| anamnese.getAnamnesisItem().getMetaType() == null)
 			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 					"Seu questionário não está nulo mas está incompleto. Informe a questão e o tipo da questão");
-		else if (StringUtils.isNullOrEmpty(item.getResponse()))
+		else if (StringUtils.isNullOrEmpty(anamnese.getResponse()))
 			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 					"Você possui questão sem resposta, revise seu questionário");
-		checkMetaTypes(item);
+		checkMetaTypes(anamnese);
 	}
 
-	private void checkMetaTypes(AnamnesisDTO item) {
+	/**
+	 * Valida os tipos das respostas
+	 * 
+	 * @param anamnese
+	 */
+	private void checkMetaTypes(AnamnesisDTO anamnese) {
 		logger.info("Verificando meta tipos das respostas");
-		switch (item.getAnamnesisItem().getMetaType()) {
+		switch (anamnese.getAnamnesisItem().getMetaType()) {
 		case number:
-			if (!StringUtils.isNumeric(item.getResponse()))
+			if (!StringUtils.isNumeric(anamnese.getResponse()))
 				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O valor da resposta deve ser numérica");
 			break;
 		case bool:
-			if (StringUtils.isNullOrEmpty(item.getResponse()) || (!item.getResponse().toLowerCase().equals("true")
-					&& !item.getResponse().toLowerCase().equals("false")))
+			if (StringUtils.isNullOrEmpty(anamnese.getResponse())
+					|| (!anamnese.getResponse().toLowerCase().equals("true")
+							&& !anamnese.getResponse().toLowerCase().equals("false")))
 				throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
 						"O valor da resposta só pode ser true ou false");
 			break;

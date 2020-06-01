@@ -90,7 +90,7 @@ public class ReportFactory {
 		if (!(params instanceof AttendanceParams))
 			throwParamsDoNotMatch(ReportType.AttendanceStatement);
 		return getPrinterByStream((AttendanceParams) params,
-				getClass().getResourceAsStream(_ReportPathFiles.AttendanceStatementFile));
+				getClass().getResourceAsStream(_ReportPathFiles.AttendanceStatementReportFile));
 	}
 
 	/**
@@ -100,6 +100,7 @@ public class ReportFactory {
 	 *
 	 */
 	interface _ReportPathFiles {
-		public static final String AttendanceStatementFile = "/reports/dec_omparecimento.jrxml";
+		public static final String AttendanceStatementReportFile = "/reports/dec_comparecimento.jrxml";
+		public static final String AnamnesisReportFile = "/reports/anamnesis_report.jrxml";
 	}
 }
