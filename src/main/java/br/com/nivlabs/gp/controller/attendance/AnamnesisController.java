@@ -2,7 +2,7 @@
 /**
  * 
  */
-package br.com.nivlabs.gp.controller;
+package br.com.nivlabs.gp.controller.attendance;
 
 import javax.servlet.http.HttpServletResponse;
 

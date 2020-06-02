@@ -21,7 +21,7 @@ import br.com.nivlabs.gp.repository.AttendanceEventRepository;
  * @since 17 Sept, 2019
  */
 @Service
-public class VisitEventService implements GenericService<AttendanceEvent, Long> {
+public class AttendanceEventService implements GenericService<AttendanceEvent, Long> {
 
 	@Autowired
 	private AttendanceEventRepository dao;
