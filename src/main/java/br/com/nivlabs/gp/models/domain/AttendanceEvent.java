@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.nivlabs.gp.models.BaseObject;
+import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,45 +42,45 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AttendanceEvent extends BaseObject {
 
-    private static final long serialVersionUID = 8988537898462013276L;
+	private static final long serialVersionUID = 8988537898462013276L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_PACIENTE")
-    private Patient patient;
+	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+	@JoinColumn(name = "ID_TIPO_EVENTO")
+	private EventType eventType;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ID_TIPO_EVENTO")
-    private EventType eventType;
+	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_RESPONSAVEL")
+	private Responsible responsible;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_RESPONSAVEL")
-    private Responsible responsible;
+	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_VISITA")
+	private Attendance attendance;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_VISITA")
-    private Attendance attendance;
+	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_PROCEDIMENTO")
+	private ProcedureOrEvent procedureOrEvent;
 
-    @Column(name = "ID_DOCUMENTO_DIGITAL")
-    private Long documentId;
+	@Column(name = "ID_DOCUMENTO_DIGITAL")
+	private Long documentId;
 
-    @Column(name = "TITULO")
-    private String title;
+	@Column(name = "TITULO")
+	private String title;
 
-    @Column(name = "OBSERVACOES")
-    private String observations;
+	@Column(name = "OBSERVACOES")
+	private String observations;
 
-    @Column(name = "DH_EVENTO")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private LocalDateTime eventDateTime;
+	@Column(name = "DH_EVENTO")
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	private LocalDateTime eventDateTime;
 
-    @PrePersist
-    public void prePersist() {
-        final LocalDateTime now = LocalDateTime.now();
-        this.eventDateTime = now;
-    }
+	@PrePersist
+	public void prePersist() {
+		final LocalDateTime now = LocalDateTime.now();
+		this.eventDateTime = now;
+	}
 
 }

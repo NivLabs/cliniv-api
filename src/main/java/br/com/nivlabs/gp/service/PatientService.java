@@ -318,7 +318,7 @@ public class PatientService implements GenericService<Patient, Long> {
 	 */
 	private void checkDocument(PatientInfoDTO entity, Patient patient, Person entityFromDb) {
 		if (entity.getDocument() != null && entity.getDocument().getType().equals(DocumentType.CPF)
-				&& StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
+				&& !StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
 			entityFromDb.setCpf(entity.getDocument().getValue());
 			Patient patientByCpf = dao.findByCpf(entity.getDocument().getValue()).orElse(null);
 			if (patientByCpf != null && !patient.equals(patientByCpf)) {

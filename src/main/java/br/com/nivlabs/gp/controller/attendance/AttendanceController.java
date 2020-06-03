@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.controller;
+package br.com.nivlabs.gp.controller.attendance;
 
 import java.util.List;
 

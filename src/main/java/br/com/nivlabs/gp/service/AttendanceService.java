@@ -109,25 +109,6 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 	}
 
 	@Override
-	public Attendance update(Long id, Attendance entity) {
-		Attendance auxEntity = findById(id);
-		BeanUtils.copyProperties(entity, auxEntity, "id");
-		return dao.save(auxEntity);
-	}
-
-	@Override
-	public void delete(Attendance entity) {
-		deleteById(entity.getId());
-	}
-
-	@Override
-	public void deleteById(Long id) {
-		Attendance auxEntity = findById(id);
-		dao.delete(auxEntity);
-
-	}
-
-	@Override
 	public Attendance persist(Attendance entity) {
 		entity.setId(null);
 		return dao.save(entity);
@@ -180,7 +161,6 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 	 */
 	private void createEntryEvent(Attendance convertedAtendance, NewAttandenceDTO request) {
 		AttendanceEvent entryEvent = new AttendanceEvent();
-		entryEvent.setPatient(new Patient(convertedAtendance.getPatient().getId()));
 		entryEvent.setEventDateTime(convertedAtendance.getDateTimeEntry());
 		entryEvent.setTitle(convertedAtendance.getReasonForEntry());
 		entryEvent.setAttendance(new Attendance(convertedAtendance.getId()));
