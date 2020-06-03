@@ -1,11 +1,7 @@
 package br.com.nivlabs.gp.repository.custom.patient;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import br.com.nivlabs.gp.models.dto.PatientDTO;
-import br.com.nivlabs.gp.repository.custom.CustomFilters;
+import br.com.nivlabs.gp.repository.custom.CustomRepository;
 
-public interface PatientRepositoryCustom {
-    public Page<PatientDTO> resumedList(CustomFilters filters, Pageable pageSettings);
+public interface PatientRepositoryCustom extends CustomRepository<PatientDTO> {
 }
