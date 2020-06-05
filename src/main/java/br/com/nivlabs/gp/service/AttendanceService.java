@@ -148,12 +148,9 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 				return attendance;
 			}
 		}
-		if (attendance != null) {
-			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
-					"O paciente de código %s e nome %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
-					attendance.getPatientId(), attendance.getFirstName()));
-		}
-		return attendance;
+		throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
+				"O paciente de código %s e nome %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
+				attendance.getPatientId(), attendance.getFirstName()));
 	}
 
 	/**
