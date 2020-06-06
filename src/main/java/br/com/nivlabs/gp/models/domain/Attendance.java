@@ -57,16 +57,16 @@ public class Attendance extends BaseObject {
 	@Column(name = "DH_SAIDA")
 	private LocalDateTime dateTimeExit;
 
+	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+	@JoinColumn(name = "SETOR_ATUAL")
+	private Sector currentSector;
+
 	@Column(name = "TIPO_ENTRADA")
 	@Enumerated(EnumType.STRING)
 	private EntryType entryType;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH, mappedBy = "attendance")
 	private List<AttendanceEvent> events = new ArrayList<>();
-
-	@ManyToOne
-	@JoinColumn(name = "SETOR_ATUAL")
-	private Sector sector;
 
 	@Column(name = "MOTIVO_ENTRADA")
 	private String reasonForEntry;

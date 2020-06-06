@@ -54,6 +54,9 @@ public class AttendanceDTO extends DataTransferObjectBase {
 	@ApiModelProperty("Identificador do paciente")
 	private Long patientId;
 
+	@ApiModelProperty("Setor atual em que o paciente se encontra")
+	private String sectorDescription;
+
 	@ApiModelProperty("Código SUS")
 	private String susNumber;
 

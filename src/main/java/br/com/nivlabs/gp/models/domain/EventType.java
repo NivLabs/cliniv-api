@@ -47,7 +47,7 @@ public class EventType extends BaseObject {
 	private EventType superEventType;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-	@JoinColumn(name = "ID_PROCEDIMENTO")
+	@JoinColumn(name = "PROCEDIMENTO_EQ_ID")
 	private ProcedureOrEvent procedure;
 
 	@Column(name = "NOME")

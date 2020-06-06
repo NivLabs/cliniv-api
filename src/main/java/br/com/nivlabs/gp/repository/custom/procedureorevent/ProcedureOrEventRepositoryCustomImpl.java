@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.controller.filters.ProcedureOrEventFilters;
 import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent;
+import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent_;
 import br.com.nivlabs.gp.models.dto.ProcedureOrEventDTO;
 import br.com.nivlabs.gp.models.enums.ActiveType;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
@@ -47,13 +48,14 @@ public class ProcedureOrEventRepositoryCustomImpl extends GenericCustomRepositor
 		List<IExpression<ProcedureOrEvent>> attributes = new ArrayList<>();
 
 		if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-			attributes.add((cb, from) -> cb.equal(from.get("id"), Long.parseLong(filters.getId())));
+			attributes.add((cb, from) -> cb.equal(from.get(ProcedureOrEvent_.id), Long.parseLong(filters.getId())));
 		}
 		if (!StringUtils.isNullOrEmpty(filters.getDescription())) {
-			attributes.add((cb, from) -> cb.like(from.get("description"), filters.getDescription()));
+			attributes.add((cb, from) -> cb.like(from.get(ProcedureOrEvent_.description), filters.getDescription()));
 		}
 		if (filters.getActiveType() != null) {
-			attributes.add((cb, from) -> cb.equal(from.get("active"), filters.getActiveType() == ActiveType.ACTIVE));
+			attributes.add((cb, from) -> cb.equal(from.get(ProcedureOrEvent_.active),
+					filters.getActiveType() == ActiveType.ACTIVE));
 		}
 		return attributes;
 	}

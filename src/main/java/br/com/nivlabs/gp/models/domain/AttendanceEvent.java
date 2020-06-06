@@ -67,6 +67,10 @@ public class AttendanceEvent extends BaseObject {
 	@Column(name = "ID_DOCUMENTO_DIGITAL")
 	private Long documentId;
 
+	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_SETOR")
+	private Sector sector;
+
 	@Column(name = "TITULO")
 	private String title;
 
