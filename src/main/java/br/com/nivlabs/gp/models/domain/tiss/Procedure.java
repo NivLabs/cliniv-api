@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProcedureOrEvent extends BaseObject {
+public class Procedure extends BaseObject {
 
 	private static final long serialVersionUID = -7145671144200832961L;
 

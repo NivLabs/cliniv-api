@@ -15,7 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
+import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
+import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.service.AttendanceEventService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,24 +61,14 @@ public class AttendanceEventController {
 	@ApiOperation(nickname = "attendance-event-post", value = "Insere um novo evento de atendimento")
 	@PostMapping
 	@PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-	public ResponseEntity<AttendanceEvent> persist(
-			@Validated @RequestBody(required = true) AttendanceEvent newAttendanceEvent, HttpServletResponse response) {
-		AttendanceEvent createdAttendanceEvent = service.persist(newAttendanceEvent);
+	public ResponseEntity<AttendanceEventDTO> persist(
+			@Validated @RequestBody(required = true) NewAttendanceEventDTO newAttendanceEvent,
+			HttpServletResponse response) {
+		AttendanceEventDTO createdAttendanceEvent = service.persistNewAttendance(newAttendanceEvent);
 
 		publisher.publishEvent(new CreatedResourceEvent(this, response, createdAttendanceEvent.getId()));
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdAttendanceEvent);
-
-	}
-
-	@ApiOperation(nickname = "attendance-event-put", value = "Atualiza um evento de atendimento na aplicação")
-	@PutMapping("/{id}")
-	@PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
-	public ResponseEntity<AttendanceEvent> update(@PathVariable("id") Long id,
-			@Validated @RequestBody(required = true) AttendanceEvent visitEvent, HttpServletResponse response) {
-		AttendanceEvent createdVisitEvent = service.update(id, visitEvent);
-
-		return ResponseEntity.ok().body(createdVisitEvent);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 
 	}
 

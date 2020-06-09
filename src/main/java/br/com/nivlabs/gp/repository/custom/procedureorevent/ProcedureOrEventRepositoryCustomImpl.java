@@ -9,9 +9,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.controller.filters.ProcedureOrEventFilters;
-import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent;
+import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent_;
-import br.com.nivlabs.gp.models.dto.ProcedureOrEventDTO;
+import br.com.nivlabs.gp.models.dto.ProcedureDTO;
 import br.com.nivlabs.gp.models.enums.ActiveType;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
@@ -24,17 +24,17 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @author viniciosarodrigues
  *
  */
-public class ProcedureOrEventRepositoryCustomImpl extends GenericCustomRepository<ProcedureOrEvent>
+public class ProcedureOrEventRepositoryCustomImpl extends GenericCustomRepository<Procedure>
 		implements ProcedureOrEventRepositoryCustom {
 
 	@Override
-	public Page<ProcedureOrEventDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
-		Page<ProcedureOrEvent> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
+	public Page<ProcedureDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+		Page<Procedure> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
 
-		List<ProcedureOrEventDTO> listOfDTO = new ArrayList<>();
+		List<ProcedureDTO> listOfDTO = new ArrayList<>();
 
 		pageFromDatabase.forEach(entity -> {
-			ProcedureOrEventDTO dtoConverted = new ProcedureOrEventDTO();
+			ProcedureDTO dtoConverted = new ProcedureDTO();
 			BeanUtils.copyProperties(entity, dtoConverted);
 			listOfDTO.add(dtoConverted);
 		});
@@ -42,10 +42,10 @@ public class ProcedureOrEventRepositoryCustomImpl extends GenericCustomRepositor
 	}
 
 	@Override
-	protected List<IExpression<ProcedureOrEvent>> createRestrictions(CustomFilters customFilters) {
+	protected List<IExpression<Procedure>> createRestrictions(CustomFilters customFilters) {
 		ProcedureOrEventFilters filters = (ProcedureOrEventFilters) customFilters;
 
-		List<IExpression<ProcedureOrEvent>> attributes = new ArrayList<>();
+		List<IExpression<Procedure>> attributes = new ArrayList<>();
 
 		if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
 			attributes.add((cb, from) -> cb.equal(from.get(ProcedureOrEvent_.id), Long.parseLong(filters.getId())));

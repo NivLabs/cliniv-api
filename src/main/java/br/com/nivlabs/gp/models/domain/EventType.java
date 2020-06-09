@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.nivlabs.gp.models.BaseObject;
-import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent;
+import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -48,7 +48,7 @@ public class EventType extends BaseObject {
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
 	@JoinColumn(name = "PROCEDIMENTO_EQ_ID")
-	private ProcedureOrEvent procedure;
+	private Procedure procedure;
 
 	@Column(name = "NOME")
 	private String name;

@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.nivlabs.gp.models.BaseObject;
-import br.com.nivlabs.gp.models.domain.tiss.ProcedureOrEvent;
+import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -62,7 +62,7 @@ public class AttendanceEvent extends BaseObject {
 
 	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_PROCEDIMENTO")
-	private ProcedureOrEvent procedureOrEvent;
+	private Procedure procedureOrEvent;
 
 	@Column(name = "ID_DOCUMENTO_DIGITAL")
 	private Long documentId;
@@ -80,6 +80,8 @@ public class AttendanceEvent extends BaseObject {
 	@Column(name = "DH_EVENTO")
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private LocalDateTime eventDateTime;
+	
+	
 
 	@PrePersist
 	public void prePersist() {
