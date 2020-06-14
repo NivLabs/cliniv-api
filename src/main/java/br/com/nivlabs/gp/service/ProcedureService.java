@@ -10,11 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.nivlabs.gp.controller.filters.ProcedureOrEventFilters;
+import br.com.nivlabs.gp.controller.filters.ProcedureFilters;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
-import br.com.nivlabs.gp.repository.ProcedureOrEventRepository;
+import br.com.nivlabs.gp.repository.ProcedureRepository;
 
 /**
  * Camada de serviço para procedimentos e eventos clínicos/hospitalares
@@ -23,12 +23,12 @@ import br.com.nivlabs.gp.repository.ProcedureOrEventRepository;
  *
  */
 @Service
-public class ProcedureOrEventService implements GenericService<Procedure, Long> {
+public class ProcedureService implements GenericService<Procedure, Long> {
 
 	@Autowired
-	private ProcedureOrEventRepository dao;
+	private ProcedureRepository dao;
 
-	public Page<ProcedureDTO> getResumedPage(ProcedureOrEventFilters filters, Pageable pageRequest) {
+	public Page<ProcedureDTO> getResumedPage(ProcedureFilters filters, Pageable pageRequest) {
 		return dao.resumedList(filters, pageRequest);
 	}
 

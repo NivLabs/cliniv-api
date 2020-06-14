@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class ProcedureOrEventFilters extends CustomFilters {
+public class ProcedureFilters extends CustomFilters {
 
 	private static final long serialVersionUID = -8122726857291316469L;
 

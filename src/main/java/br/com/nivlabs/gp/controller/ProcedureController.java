@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nivlabs.gp.controller.filters.ProcedureOrEventFilters;
+import br.com.nivlabs.gp.controller.filters.ProcedureFilters;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
-import br.com.nivlabs.gp.service.ProcedureOrEventService;
+import br.com.nivlabs.gp.service.ProcedureService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -29,14 +29,14 @@ import io.swagger.annotations.ApiOperation;
 @Api("Endpoint - Procedimento ou Evento")
 @RestController
 @RequestMapping(value = "/procedure")
-public class ProcedureOrEventController {
+public class ProcedureController {
 
 	@Autowired
-	private ProcedureOrEventService service;
+	private ProcedureService service;
 
 	@ApiOperation(nickname = "procedure-get", value = "Busca uma página de procedimentos")
 	@GetMapping
-	public ResponseEntity<Page<ProcedureDTO>> findPage(ProcedureOrEventFilters filters) {
+	public ResponseEntity<Page<ProcedureDTO>> findPage(ProcedureFilters filters) {
 		Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
 				Direction.valueOf(filters.getDirection()), filters.getOrderBy());
 		return ResponseEntity.ok(service.getResumedPage(filters, pageSettings));
