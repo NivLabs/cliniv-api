@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.controller.filters.CBOFilters;
 import br.com.nivlabs.gp.models.domain.CBOTable;
+import br.com.nivlabs.gp.models.domain.CBOTable_;
 import br.com.nivlabs.gp.models.dto.CBOTableDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
@@ -46,10 +47,10 @@ public class CBOTableRepositoryCustomImpl extends GenericCustomRepository<CBOTab
 		List<IExpression<CBOTable>> attributes = new ArrayList<>();
 
 		if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-			attributes.add((cb, from) -> cb.equal(from.get("id"), Long.parseLong(filters.getId())));
+			attributes.add((cb, from) -> cb.equal(from.get(CBOTable_.id), Long.parseLong(filters.getId())));
 		}
 		if (!StringUtils.isNullOrEmpty(filters.getDescription())) {
-			attributes.add((cb, from) -> cb.like(from.get("description"), filters.getDescription()));
+			attributes.add((cb, from) -> cb.like(from.get(CBOTable_.description), filters.getDescription()));
 		}
 		return attributes;
 	}

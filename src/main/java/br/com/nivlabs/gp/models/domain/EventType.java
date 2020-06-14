@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.nivlabs.gp.models.BaseObject;
+import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,34 +36,38 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventType extends BaseObject {
 
-    private static final long serialVersionUID = -8716334303463572525L;
+	private static final long serialVersionUID = -8716334303463572525L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_TIPO_EVENTO")
-    private EventType superEventType;
+	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+	@JoinColumn(name = "ID_TIPO_EVENTO")
+	private EventType superEventType;
 
-    @Column(name = "NOME")
-    private String name;
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
+	@JoinColumn(name = "PROCEDIMENTO_EQ_ID")
+	private Procedure procedure;
 
-    @Column(name = "DESCRICAO")
-    private String description;
+	@Column(name = "NOME")
+	private String name;
 
-    public EventType(long id) {
-        this.id = id;
-    }
+	@Column(name = "DESCRICAO")
+	private String description;
 
-    @JsonIgnore
-    public EventTypeDTO getEventTypeDTOFromDomain() {
-        EventTypeDTO dtoEntity = new EventTypeDTO();
+	public EventType(long id) {
+		this.id = id;
+	}
 
-        dtoEntity.setId(getId());
-        dtoEntity.setName(getName());
-        dtoEntity.setDescription(getDescription());
-        return dtoEntity;
-    }
+	@JsonIgnore
+	public EventTypeDTO getEventTypeDTOFromDomain() {
+		EventTypeDTO dtoEntity = new EventTypeDTO();
+
+		dtoEntity.setId(getId());
+		dtoEntity.setName(getName());
+		dtoEntity.setDescription(getDescription());
+		return dtoEntity;
+	}
 
 }

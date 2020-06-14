@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("Procedimento ou Evento")
-public class ProcedureOrEventDTO extends DataTransferObjectBase {
+public class ProcedureDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4991985626952633251L;
 

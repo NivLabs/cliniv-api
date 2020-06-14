@@ -21,14 +21,12 @@ import br.com.nivlabs.gp.models.domain.EventType;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.Responsible;
-import br.com.nivlabs.gp.models.domain.Sector;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.models.dto.SectorDTO;
 import br.com.nivlabs.gp.models.enums.DocumentType;
 import br.com.nivlabs.gp.models.enums.EntryType;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
@@ -53,8 +51,6 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 	private AttendanceEventRepository attendanceEventRepo;
 	@Autowired
 	private PatientService patientService;
-	@Autowired
-	private SectorService sectorService;
 
 	public Page<AttendanceDTO> getAttendancesPage(AttendanceFilters filters, Pageable pageRequest) {
 		return dao.resumedList(filters, pageRequest);
@@ -128,7 +124,6 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 	 */
 	public MedicalRecordDTO persistNewAttendance(NewAttandenceDTO visitDto) {
 		MedicalRecordDTO attendance = null;
-		SectorDTO sectorToPatient = sectorService.findById(visitDto.getSectorId());
 		try {
 			attendance = getActiveMedicalRecord(visitDto.getPatientId());
 		} catch (HttpException e) {
@@ -140,7 +135,6 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 				convertedAttendance.setPatient(new Patient(savedPatient.getId()));
 				convertedAttendance.setEntryType(
 						visitDto.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
-				convertedAttendance.setSector(new Sector(sectorToPatient.getId()));
 				convertedAttendance = persist(convertedAttendance);
 				createEntryEvent(convertedAttendance, visitDto);
 				attendance = getActiveMedicalRecord(visitDto.getPatientId());
@@ -148,12 +142,9 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 				return attendance;
 			}
 		}
-		if (attendance != null) {
-			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
-					"O paciente de código %s e nome %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
-					attendance.getPatientId(), attendance.getFirstName()));
-		}
-		return attendance;
+		throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
+				"O paciente de código %s e nome %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
+				attendance.getPatientId(), attendance.getFirstName()));
 	}
 
 	/**

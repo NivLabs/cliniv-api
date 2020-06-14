@@ -3,6 +3,7 @@ package br.com.nivlabs.gp.models.dto;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,21 +24,24 @@ import lombok.NoArgsConstructor;
 @ApiModel("New patient visit request")
 public class NewAttandenceDTO extends DataTransferObjectBase {
 
-    private static final long serialVersionUID = 2370290606342755763L;
+	private static final long serialVersionUID = 2370290606342755763L;
 
-    @NotNull(message = "Informar o código do paciente é obrigatório")
-    private Long patientId;
+	@ApiModelProperty("Código do paciente")
+	@NotNull(message = "Informar o código do paciente é obrigatório")
+	private Long patientId;
 
-    private Long eventTypeId;
+	@ApiModelProperty("Códgido do tipo do Evento")
+	private Long eventTypeId;
 
-    private Long specialitityId;
+	@ApiModelProperty("Código do profissional responsável pela entrada")
+	private Long responsibleId;
 
-    private Long responsibleId;
+	@ApiModelProperty("Código do setor de origem do atendimento, ex: Recepção")
+	@NotNull(message = "Informar o setor de origem é obrigatório")
+	private Long sectorId;
 
-    @NotNull(message = "Informar o setor de entrada é obrigatório")
-    private Long sectorId;
-
-    @NotNull(message = "Informar o MOTIVO da visita é obrigatório")
-    private String entryCause;
+	@ApiModelProperty("Breve descrição do motivo da entrada|visita do paciente")
+	@NotNull(message = "Informar o motivo da visita é obrigatório")
+	private String entryCause;
 
 }

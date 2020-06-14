@@ -43,6 +43,7 @@ public class InstituteService implements GenericService<Institute, String> {
 
         logger.info("Buscando informações de configurações...");
         List<Parameter> parameters = paramRepo.findAll();
+        parameters.sort((primary, scondary) -> primary.getId().compareTo(scondary.getId()));
 
         logger.info("Buscando informações da instituição...");
         List<Institute> institutes = instituteRepo.findAll();
@@ -61,11 +62,12 @@ public class InstituteService implements GenericService<Institute, String> {
             response.setCustomerInfo(customer);
         }
 
-        if (!parameters.isEmpty())
+        if (!parameters.isEmpty()) {
             for (Parameter parameter : parameters)
                 response.getParameters().add(new ParameterDTO(parameter.getId(), parameter.getName(), parameter.getGroup(),
                         parameter.getMetaType(), parameter.getValue(),
                         parameter.getGroupValues() != null ? parameter.getGroupValues().split(";") : null));
+        }
 
         return response;
     }

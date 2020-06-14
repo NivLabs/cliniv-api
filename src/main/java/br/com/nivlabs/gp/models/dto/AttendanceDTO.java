@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import br.com.nivlabs.gp.models.enums.EntryType;
 import br.com.nivlabs.gp.models.enums.PatientType;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,27 +25,41 @@ import lombok.NoArgsConstructor;
 @ApiModel("Attendance")
 public class AttendanceDTO extends DataTransferObjectBase {
 
-    private static final long serialVersionUID = -7717106082371494163L;
+	private static final long serialVersionUID = -7717106082371494163L;
 
-    private Long id;
+	@ApiModelProperty("Identificador único do atendimento")
+	private Long id;
 
-    private String firstName;
+	@ApiModelProperty("Primeiro nome")
+	private String firstName;
 
-    private String lastName;
+	@ApiModelProperty("Último nome")
+	private String lastName;
 
-    private LocalDateTime entryDatetime;
+	@ApiModelProperty("Data da entrada")
+	private LocalDateTime entryDatetime;
 
-    private String entryCause;
+	@ApiModelProperty("Causa da Entrada")
+	private String entryCause;
 
-    private Boolean isFinished;
+	@ApiModelProperty("Retorna true se já estiver sido finalizada")
+	private Boolean isFinished;
 
-    private EntryType type;
+	@ApiModelProperty("Tipo da entrada")
+	private EntryType type;
 
-    private PatientType patientType;
+	@ApiModelProperty("Tipo do paciente")
+	private PatientType patientType;
 
-    private Long patientId;
+	@ApiModelProperty("Identificador do paciente")
+	private Long patientId;
 
-    private String susNumber;
+	@ApiModelProperty("Setor atual em que o paciente se encontra")
+	private String sectorDescription;
 
-    private String sectorDescription;
+	@ApiModelProperty("Código SUS")
+	private String susNumber;
+
+	@ApiModelProperty("Descrição|nome do setor")
+	private String sectorDescripton;
 }

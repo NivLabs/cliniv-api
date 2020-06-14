@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.controller.filters.SectorFilters;
 import br.com.nivlabs.gp.models.domain.Sector;
+import br.com.nivlabs.gp.models.domain.Sector_;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
@@ -45,10 +46,10 @@ public class SectorRepositoryCustomImpl extends GenericCustomRepository<Sector> 
 		List<IExpression<Sector>> attributes = new ArrayList<>();
 
 		if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-			attributes.add((cb, from) -> cb.equal(from.get("id"), Long.parseLong(filters.getId())));
+			attributes.add((cb, from) -> cb.equal(from.get(Sector_.id), Long.parseLong(filters.getId())));
 		}
 		if (!StringUtils.isNullOrEmpty(filters.getDescription())) {
-			attributes.add((cb, from) -> cb.like(from.get("description"), filters.getDescription()));
+			attributes.add((cb, from) -> cb.like(from.get(Sector_.description), filters.getDescription()));
 		}
 
 		return attributes;
