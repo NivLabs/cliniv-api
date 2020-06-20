@@ -1,5 +1,5 @@
 package br.com.nivlabs.gp.client;
 
-public class RestClient {
+public interface RestClient {
 
 }

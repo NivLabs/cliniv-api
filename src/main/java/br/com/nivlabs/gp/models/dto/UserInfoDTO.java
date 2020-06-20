@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("User informations")
+@ApiModel("Informações detalhadas do usuário")
 public class UserInfoDTO extends PersonInfoDTO {
 
     private static final long serialVersionUID = 2270108536170182840L;

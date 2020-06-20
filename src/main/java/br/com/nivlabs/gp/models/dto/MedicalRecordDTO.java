@@ -25,38 +25,38 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Medical record")
+@ApiModel("Prontuário")
 public class MedicalRecordDTO extends DataTransferObjectBase {
 
-	private static final long serialVersionUID = -6838739544914003033L;
+    private static final long serialVersionUID = -6838739544914003033L;
 
-	private Long id;
+    private Long id;
 
-	private Long patientId;
+    private Long patientId;
 
-	private DocumentDTO document;
+    private DocumentDTO document;
 
-	private Long anamnesisDigitalDocuentId;
+    private Long anamnesisDigitalDocuentId;
 
-	private String firstName;
+    private String firstName;
 
-	private String lastName;
+    private String lastName;
 
-	private String principalNumber;
+    private String principalNumber;
 
-	private String susNumber;
+    private String susNumber;
 
-	@DateTimeFormat(iso = ISO.DATE)
-	private Date bornDate;
+    @DateTimeFormat(iso = ISO.DATE)
+    private Date bornDate;
 
-	private Gender gender;
+    private Gender gender;
 
-	private List<AttendanceEventDTO> events = new ArrayList<>();
+    private List<AttendanceEventDTO> events = new ArrayList<>();
 
-	private List<MedicineInfoDTO> medicines = new ArrayList<>();
+    private List<MedicineInfoDTO> medicines = new ArrayList<>();
 
-	private List<EvolutionInfoDTO> evolutions = new ArrayList<>();
+    private List<EvolutionInfoDTO> evolutions = new ArrayList<>();
 
-	private List<String> allergies = new ArrayList<>();
+    private List<String> allergies = new ArrayList<>();
 
 }

@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Digital Document")
+@ApiModel("Documento Digital")
 public class DigitalDocumentDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -870502165996369141L;

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("License")
+@ApiModel("Licença de uso")
 public class LicenseDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 5513329730873896353L;

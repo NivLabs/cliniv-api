@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Anamnesis")
+@ApiModel("Anamnese")
 public class AnamnesisDTO extends DataTransferObjectBase {
 	private static final long serialVersionUID = -7700694137849034946L;
 

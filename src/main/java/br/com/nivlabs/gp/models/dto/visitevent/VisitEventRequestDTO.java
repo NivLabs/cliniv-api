@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.models.dto.visitEvent;
+package br.com.nivlabs.gp.models.dto.visitevent;
 
 import java.io.Serializable;
 

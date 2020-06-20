@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Responsible or Professional")
+@ApiModel("Profissional ou responsável")
 public class ResponsibleDTO extends PersonDTO {
     private static final long serialVersionUID = -5141572031863436326L;
 
@@ -28,5 +28,5 @@ public class ResponsibleDTO extends PersonDTO {
 
     private String initialsIdentity;
 
-    private List<SpecialityDTO> specializations = new ArrayList<SpecialityDTO>();
+    private List<SpecialityDTO> specializations = new ArrayList<>();
 }

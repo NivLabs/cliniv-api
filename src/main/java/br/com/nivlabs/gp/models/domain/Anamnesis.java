@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.BaseObject;
+import br.com.nivlabs.gp.models.BaseObjectWithId;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Anamnesis extends BaseObject {
+public class Anamnesis extends BaseObjectWithId {
 	private static final long serialVersionUID = -4203582800741543902L;
 
 	@Id

@@ -63,7 +63,7 @@ public class UserController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UserInfoDTO> update(@PathVariable(name = "id") Long id, @Validated @RequestBody UserInfoDTO entity) {
-        return ResponseEntity.ok(userService.updateFromDto(id, entity));
+        return ResponseEntity.ok(userService.userUpdate(id, entity));
     }
 
     @ApiOperation(nickname = "user-post", value = "Cria o cadastro de usuário")
@@ -84,7 +84,7 @@ public class UserController {
     @ApiOperation(nickname = "user-reset-password", value = "Reseta a senha do usuário")
     @PutMapping("{id}/reset-password")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<?> resetPassword(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> resetPassword(@PathVariable("id") Long id) {
         authService.resetPassword(id);
         return ResponseEntity.noContent().build();
     }

@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Informações do Sector")
+@ApiModel("Informações do Setor")
 public class SectorInfoDTO extends DataTransferObjectBase {
 
 	private static final long serialVersionUID = -8018406138528606923L;

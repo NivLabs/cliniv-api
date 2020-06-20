@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Medicine informations")
+@ApiModel("Informações de medicamento")
 public class MedicineInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -1687147074910399813L;

@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Patient")
+@ApiModel("Informações do Paciente")
 public class PatientDTO extends PersonDTO {
 
     private static final long serialVersionUID = -1070682704153329772L;

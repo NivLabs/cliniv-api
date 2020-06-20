@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Sector")
+@ApiModel("Setor")
 public class SectorDTO extends DataTransferObjectBase {
 
 	private static final long serialVersionUID = -8018406138528606923L;
