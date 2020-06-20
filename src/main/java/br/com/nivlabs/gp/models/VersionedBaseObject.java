@@ -7,7 +7,7 @@ package br.com.nivlabs.gp.models;
  * 
  * @since 6 de set de 2019
  */
-public abstract class VersionedBaseObject extends BaseObject {
+public abstract class VersionedBaseObject extends BaseObjectWithId {
 
     /**
      * 

@@ -15,7 +15,7 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import br.com.nivlabs.gp.models.BaseObject;
+import br.com.nivlabs.gp.models.BaseObjectWithId;
 import br.com.nivlabs.gp.models.enums.Gender;
 import br.com.nivlabs.gp.models.enums.GenderIdeology;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class Person extends BaseObject {
+public class Person extends BaseObjectWithId {
 
     private static final long serialVersionUID = -3719485861961903955L;
 

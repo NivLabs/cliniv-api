@@ -18,7 +18,7 @@ import lombok.Setter;
  * @since 6 de set de 2019
  */
 @MappedSuperclass
-public abstract class BaseObjectWithCreatedAt extends BaseObject {
+public abstract class BaseObjectWithCreatedAt extends BaseObjectWithId {
 
     private static final long serialVersionUID = -230648426246848016L;
 

@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.BaseObject;
+import br.com.nivlabs.gp.models.BaseObjectWithId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Procedure extends BaseObject {
+public class Procedure extends BaseObjectWithId {
 
 	private static final long serialVersionUID = -7145671144200832961L;
 

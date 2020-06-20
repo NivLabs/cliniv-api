@@ -16,15 +16,13 @@ import lombok.NoArgsConstructor;
 @ApiModel("Allergy")
 public class AllergyDTO extends DataTransferObjectBase {
 
-	private static final long serialVersionUID = 8445432329934001912L;
+    private static final long serialVersionUID = 8445432329934001912L;
 
-	@ApiModelProperty("Identificador único da alergia")
-	private Long id;
+    @ApiModelProperty("Identificador único da alergia")
+    private Long id;
 
-	@ApiModelProperty("Componente alérgico")
-	@NotNull(message = "Você deve informa o nome do componente que você tem alergia")
-	private String allergicComponent;
+    @ApiModelProperty("Componente alérgico")
+    @NotNull(message = "O nome do componente da alergia deve ser informado")
+    private String description;
 
-	@ApiModelProperty("Observação sobre a alergia")
-	private String observation;
 }

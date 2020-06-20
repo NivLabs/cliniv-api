@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import br.com.nivlabs.gp.models.BaseObject;
+import br.com.nivlabs.gp.models.BaseObjectWithId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonAddress extends BaseObject {
+public class PersonAddress extends BaseObjectWithId {
 
     private static final long serialVersionUID = 8579264573046115498L;
 

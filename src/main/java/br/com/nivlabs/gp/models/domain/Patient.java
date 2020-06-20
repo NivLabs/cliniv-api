@@ -1,5 +1,9 @@
 package br.com.nivlabs.gp.models.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt;
@@ -53,6 +58,10 @@ public class Patient extends BaseObjectWithCreatedAt {
 
     @Column(name = "ANOTACOES")
     private String annotations;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_PACIENTE", referencedColumnName = "ID")
+    private List<PatientAllergy> allergies = new ArrayList<>();
 
     public Patient(Long patientId) {
         this.id = patientId;

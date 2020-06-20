@@ -19,7 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
-import br.com.nivlabs.gp.models.BaseObject;
+import br.com.nivlabs.gp.models.BaseObjectWithId;
 import br.com.nivlabs.gp.models.enums.EntryType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,7 +39,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Attendance extends BaseObject {
+public class Attendance extends BaseObjectWithId {
 
 	private static final long serialVersionUID = -2728953699232281599L;
 

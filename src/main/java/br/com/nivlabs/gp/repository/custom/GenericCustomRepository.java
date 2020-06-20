@@ -141,6 +141,6 @@ public abstract class GenericCustomRepository<T extends Serializable> {
      * @param filters
      * @return
      */
-    protected abstract List<IExpression<T>> createRestrictions(CustomFilters filters);
+    protected abstract List<IExpression<T>> createRestrictions(CustomFilters customFilters);
 
 }

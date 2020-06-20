@@ -1,7 +1,9 @@
 package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,8 +17,10 @@ import br.com.nivlabs.gp.models.enums.Gender;
 import br.com.nivlabs.gp.models.enums.GenderIdeology;
 import br.com.nivlabs.gp.models.enums.PatientType;
 import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * Classe NewPatientDTO.java
@@ -26,6 +30,8 @@ import lombok.EqualsAndHashCode;
  * @since 3 de out de 2019
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("Patient Informations")
 public class PatientInfoDTO extends DataTransferObjectBase {
@@ -72,4 +78,6 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     private String annotations;
 
     private LocalDateTime createdAt;
+
+    private List<String> allergies = new ArrayList<>();
 }

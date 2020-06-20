@@ -17,7 +17,7 @@ import br.com.nivlabs.gp.exception.HttpException;
  */
 public class ViaCepClient extends RestClient {
 
-	private static final String baseUrl = "https://viaCEP.com.br/ws";
+	private static final String BASE_URL = "https://viaCEP.com.br/ws";
 	private static Logger logger = LoggerFactory.getLogger(ViaCepClient.class);
 
 	/**
@@ -31,7 +31,7 @@ public class ViaCepClient extends RestClient {
 		logger.info("Iniciando busca por CEP na ViaCep API...");
 		logger.info("Cep da busca :: {}", cep);
 		ResponseEntity<ViaCepAddress> response = restTemplate
-				.getForEntity(baseUrl.concat("/").concat(cep).concat("/json"), ViaCepAddress.class);
+				.getForEntity(BASE_URL.concat("/").concat(cep).concat("/json"), ViaCepAddress.class);
 
 		if (response.getStatusCode().equals(HttpStatus.OK)) {
 			logger.info("Endereço encontrado para o CEP {}", cep);

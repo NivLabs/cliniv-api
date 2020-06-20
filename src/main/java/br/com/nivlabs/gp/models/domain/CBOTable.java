@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import br.com.nivlabs.gp.models.BaseObject;
+import br.com.nivlabs.gp.models.BaseObjectWithId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class CBOTable extends BaseObject {
+public class CBOTable extends BaseObjectWithId {
 
 	private static final long serialVersionUID = -6730805701015543750L;
 

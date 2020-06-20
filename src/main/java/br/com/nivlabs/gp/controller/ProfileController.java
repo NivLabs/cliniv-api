@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,41 +31,40 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/profile")
 public class ProfileController {
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	@ApiOperation(nickname = "profile-get", value = "Busca dados do perfil do usuário logado")
-	@GetMapping
-	public ResponseEntity<UserInfoDTO> getMe() {
-		UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-		return ResponseEntity.ok(userService.findByUserName(userFromSession.getUsername()));
-	}
+    @ApiOperation(nickname = "profile-get", value = "Busca dados do perfil do usuário logado")
+    @GetMapping
+    public ResponseEntity<UserInfoDTO> getMe() {
+        UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+        return ResponseEntity.ok(userService.findByUserName(userFromSession.getUsername()));
+    }
 
-	@ApiOperation(nickname = "profile-put", value = "Atualiza dados do perfil do usuário logado")
-	@PutMapping("/{id}")
-	public ResponseEntity<UserInfoDTO> updateMe(@PathVariable(name = "id") Long id,
-			@Validated @RequestBody UserInfoDTO entity) {
-		UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
+    @ApiOperation(nickname = "profile-put", value = "Atualiza dados do perfil do usuário logado")
+    @PutMapping
+    public ResponseEntity<UserInfoDTO> updateMe(@Validated @RequestBody UserInfoDTO entity) {
+        UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
 
-		validUserToUpdate(entity, userFromSession);
+        validUserToUpdate(entity, userFromSession);
 
-		UserInfoDTO userUpdated = userService.updateFromDto(id, entity);
-		return ResponseEntity.ok(userUpdated);
-	}
+        UserInfoDTO userUpdated = userService.updateProfile(entity);
+        return ResponseEntity.ok(userUpdated);
+    }
 
-	/**
-	 * 
-	 * Verifica se o usuário que está sendo alterado é o mesmo da sessão
-	 * 
-	 * @param entity
-	 * @param userFromSession
-	 */
-	private void validUserToUpdate(UserInfoDTO entity, UserOfSystem userFromSession) {
-		if (!userFromSession.getUsername().equals(entity.getUserName()))
-			throw new HttpException(HttpStatus.METHOD_NOT_ALLOWED,
-					"Operação não permitida, você só pode editar o seu próprio perfil");
-	}
+    /**
+     * 
+     * Verifica se o usuário que está sendo alterado é o mesmo da sessão
+     * 
+     * @param entity
+     * @param userFromSession
+     */
+    private void validUserToUpdate(UserInfoDTO entity, UserOfSystem userFromSession) {
+        if (!userFromSession.getUsername().equals(entity.getUserName()))
+            throw new HttpException(HttpStatus.METHOD_NOT_ALLOWED,
+                    "Operação não permitida, você só pode editar o seu próprio perfil");
+    }
 
 }
