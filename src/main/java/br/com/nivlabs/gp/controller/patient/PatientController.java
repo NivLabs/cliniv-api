@@ -1,7 +1,5 @@
 package br.com.nivlabs.gp.controller.patient;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.gp.controller.filters.PatientFilters;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
 import br.com.nivlabs.gp.models.enums.DocumentType;
@@ -107,13 +104,4 @@ public class PatientController {
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo de documento desconhecido, esperados: [CPF | SUS]");
         }
     }
-
-    @ApiOperation(nickname = "patient-get-composite", value = "Busca um paciente baseado no identificador composto")
-    @GetMapping("/{name}/{motherName}/{bornDate}")
-    @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-    public ResponseEntity<List<Patient>> findByComposition(@PathVariable("name") String name,
-                                                           @PathVariable("motherName") String motherName) {
-        return ResponseEntity.ok(service.findByComposition(name, motherName));
-    }
-
 }

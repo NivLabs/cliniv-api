@@ -84,7 +84,7 @@ public class UserController {
     @ApiOperation(nickname = "user-reset-password", value = "Reseta a senha do usuário")
     @PutMapping("{id}/reset-password")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<?> resetPassword(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> resetPassword(@PathVariable("id") Long id) {
         authService.resetPassword(id);
         return ResponseEntity.noContent().build();
     }
