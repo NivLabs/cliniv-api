@@ -59,7 +59,7 @@ public class Patient extends BaseObjectWithCreatedAt {
     @Column(name = "ANOTACOES")
     private String annotations;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_PACIENTE", referencedColumnName = "ID")
     private List<PatientAllergy> allergies = new ArrayList<>();
 

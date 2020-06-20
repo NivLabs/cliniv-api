@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Document")
+@ApiModel("Documento")
 public class DocumentDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8977997168527769344L;

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Parameter of application")
+@ApiModel("Parâmetro da apliação")
 public class ParameterDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 647659232405015211L;

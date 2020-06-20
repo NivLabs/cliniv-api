@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NotEmpty
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Patient allergies")
+@ApiModel("Alergias do paciente")
 public class PatientAllergiesDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 7849783306168301683L;

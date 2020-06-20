@@ -179,10 +179,10 @@ public class PatientService implements GenericService<Patient, Long> {
         checkSusCode(entity, patient);
         Person entityFromDb = patient.getPerson();
         checkDocument(entity, patient, entityFromDb);
-        BeanUtils.copyProperties(entity, entityFromDb, Patient_.ID);
+        BeanUtils.copyProperties(entity, entityFromDb, Patient_.ID, Patient_.ALLERGIES);
         addressProcess(entity, entityFromDb);
         personService.update(entityFromDb.getId(), entityFromDb);
-        BeanUtils.copyProperties(entity, patient, "id");
+        BeanUtils.copyProperties(entity, patient, Patient_.ID, Patient_.ALLERGIES);
         handlePatientType(patient);
         dao.save(patient);
 

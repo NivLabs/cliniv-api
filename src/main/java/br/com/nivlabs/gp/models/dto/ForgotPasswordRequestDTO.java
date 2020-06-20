@@ -19,7 +19,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Forgot Password Request")
+@ApiModel("Requisição de Senha perdida")
 public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8663867905476131957L;

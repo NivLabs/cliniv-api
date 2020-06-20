@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("Institute Informations")
+@ApiModel("Informações detalhadas da instituição")
 public class InstituteInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -3104969606567859458L;

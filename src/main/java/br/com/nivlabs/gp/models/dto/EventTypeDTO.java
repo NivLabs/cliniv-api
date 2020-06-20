@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Event Type")
+@ApiModel("Tipo de Evento")
 public class EventTypeDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 2370290606342755763L;

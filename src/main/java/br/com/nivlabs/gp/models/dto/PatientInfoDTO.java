@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Patient Informations")
+@ApiModel("Informações detalhadas do paciente")
 public class PatientInfoDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = 1575416178033511932L;
 

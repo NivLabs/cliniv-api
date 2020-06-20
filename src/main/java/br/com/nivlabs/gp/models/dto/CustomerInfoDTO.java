@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Customer Informations")
+@ApiModel("Informações do cliente")
 public class CustomerInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 6019817310193995713L;

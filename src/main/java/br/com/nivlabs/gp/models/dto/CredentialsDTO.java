@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Credentials")
+@ApiModel("Credenciais")
 public class CredentialsDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -7495190733306523606L;

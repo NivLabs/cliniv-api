@@ -22,44 +22,44 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Attendance")
+@ApiModel("Atendimento")
 public class AttendanceDTO extends DataTransferObjectBase {
 
-	private static final long serialVersionUID = -7717106082371494163L;
+    private static final long serialVersionUID = -7717106082371494163L;
 
-	@ApiModelProperty("Identificador único do atendimento")
-	private Long id;
+    @ApiModelProperty("Identificador único do atendimento")
+    private Long id;
 
-	@ApiModelProperty("Primeiro nome")
-	private String firstName;
+    @ApiModelProperty("Primeiro nome")
+    private String firstName;
 
-	@ApiModelProperty("Último nome")
-	private String lastName;
+    @ApiModelProperty("Último nome")
+    private String lastName;
 
-	@ApiModelProperty("Data da entrada")
-	private LocalDateTime entryDatetime;
+    @ApiModelProperty("Data da entrada")
+    private LocalDateTime entryDatetime;
 
-	@ApiModelProperty("Causa da Entrada")
-	private String entryCause;
+    @ApiModelProperty("Causa da Entrada")
+    private String entryCause;
 
-	@ApiModelProperty("Retorna true se já estiver sido finalizada")
-	private Boolean isFinished;
+    @ApiModelProperty("Retorna true se já estiver sido finalizada")
+    private Boolean isFinished;
 
-	@ApiModelProperty("Tipo da entrada")
-	private EntryType type;
+    @ApiModelProperty("Tipo da entrada")
+    private EntryType type;
 
-	@ApiModelProperty("Tipo do paciente")
-	private PatientType patientType;
+    @ApiModelProperty("Tipo do paciente")
+    private PatientType patientType;
 
-	@ApiModelProperty("Identificador do paciente")
-	private Long patientId;
+    @ApiModelProperty("Identificador do paciente")
+    private Long patientId;
 
-	@ApiModelProperty("Setor atual em que o paciente se encontra")
-	private String sectorDescription;
+    @ApiModelProperty("Setor atual em que o paciente se encontra")
+    private String sectorDescription;
 
-	@ApiModelProperty("Código SUS")
-	private String susNumber;
+    @ApiModelProperty("Código SUS")
+    private String susNumber;
 
-	@ApiModelProperty("Descrição|nome do setor")
-	private String sectorDescripton;
+    @ApiModelProperty("Descrição|nome do setor")
+    private String sectorDescripton;
 }

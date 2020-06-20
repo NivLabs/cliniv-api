@@ -14,20 +14,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Anamnesis Item")
+@ApiModel("Item da Anamnese")
 public class AnamnesisItemDTO extends DataTransferObjectBase {
-	private static final long serialVersionUID = -1666755500493520346L;
+    private static final long serialVersionUID = -1666755500493520346L;
 
-	@NotNull
-	@ApiModelProperty("Identificador único do item da anamnese")
-	private Long id;
+    @NotNull
+    @ApiModelProperty("Identificador único do item da anamnese")
+    private Long id;
 
-	@ApiModelProperty("Questão do item da anamnese")
-	@NotNull(message = "Informe a questão")
-	private String question;
+    @ApiModelProperty("Questão do item da anamnese")
+    @NotNull(message = "Informe a questão")
+    private String question;
 
-	@ApiModelProperty("Tipo da questão")
-	@NotNull(message = "Informe o tipo da questão")
-	private MetaType metaType;
+    @ApiModelProperty("Tipo da questão")
+    @NotNull(message = "Informe o tipo da questão")
+    private MetaType metaType;
 
 }

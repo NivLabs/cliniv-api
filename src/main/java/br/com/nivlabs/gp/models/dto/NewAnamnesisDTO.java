@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("New Anamnesis Request")
+@ApiModel("Requisição de Anamnese")
 public class NewAnamnesisDTO extends DataTransferObjectBase {
 
-	private static final long serialVersionUID = 1489473679769549274L;
+    private static final long serialVersionUID = 1489473679769549274L;
 
-	@NotNull(message = "Informe o código do atendimento")
-	@ApiModelProperty("Identificador do atendimento")
-	private Long attendanceId;
+    @NotNull(message = "Informe o código do atendimento")
+    @ApiModelProperty("Identificador do atendimento")
+    private Long attendanceId;
 
-	private Set<AnamnesisDTO> listOfResponse = new HashSet<>();
+    private Set<AnamnesisDTO> listOfResponse = new HashSet<>();
 }

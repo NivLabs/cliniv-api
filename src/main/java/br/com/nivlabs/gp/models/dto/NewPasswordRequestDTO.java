@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("New Password Request")
+@ApiModel("Requisição de nova senha")
 public class NewPasswordRequestDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -173297306237874136L;
