@@ -55,7 +55,7 @@ public class UserService {
     public UserInfoDTO findByUserName(String username) {
         UserApplication entityFromDb = userRepo.findByUserName(username)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                        "Usuário não encontrado! Username: " + username + ", tipo " + UserApplication.class.getName()));
+                        "Usuário '" + username + "' não existe"));
 
         UserInfoDTO responseDTO = new UserInfoDTO();
 
@@ -79,7 +79,7 @@ public class UserService {
 
     public UserInfoDTO findUserDtoById(Long id) {
         UserApplication userFromDb = userRepo.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                "Usuário não encontrado! Id: " + id + ", tipo " + UserApplication.class.getName()));
+                "Usuário con o identificado " + id + " não existe"));
 
         UserInfoDTO response = new UserInfoDTO();
 
@@ -111,8 +111,8 @@ public class UserService {
      */
     public UserInfoDTO updateProfile(UserInfoDTO entity) {
         UserApplication entityFromDb = userRepo.findByUserName(entity.getUserName())
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado! Username: "
-                        + entity.getUserName() + ", tipo " + UserApplication.class.getName()));
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                        entity.getUserName() + " não encontrado, não é possível atualizar o perfil"));
 
         entityFromDb.setPerson(getPersonFromUserInfo(entityFromDb.getPerson(), entity));
         BeanUtils.copyProperties(entity, entityFromDb);

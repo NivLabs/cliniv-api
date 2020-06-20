@@ -5,6 +5,6 @@ import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.models.dto.DataTransferObjectBase;
 
-public interface CustomRepository<DTO extends DataTransferObjectBase> {
-	public Page<DTO> resumedList(CustomFilters filters, Pageable pageSettings);
+public interface CustomRepository<E extends DataTransferObjectBase> {
+    public Page<E> resumedList(CustomFilters filters, Pageable pageSettings);
 }

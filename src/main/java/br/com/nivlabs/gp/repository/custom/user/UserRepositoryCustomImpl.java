@@ -9,7 +9,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.controller.filters.UserFilters;
+import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.UserApplication;
+import br.com.nivlabs.gp.models.domain.UserApplication_;
 import br.com.nivlabs.gp.models.dto.UserDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
@@ -51,19 +53,19 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
         List<IExpression<UserApplication>> attributes = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getUserName())) {
-            attributes.add((cb, from) -> cb.like(from.get("userName"), filters.getUserName()));
+            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.userName), filters.getUserName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
-            attributes.add((cb, from) -> cb.equal(from.get("person").get("cpf"), filters.getCpf()));
+            attributes.add((cb, from) -> cb.equal(from.get(UserApplication_.person).get(Person_.cpf), filters.getCpf()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getFirstName())) {
-            attributes.add((cb, from) -> cb.like(from.get("person").get("firstName"), filters.getFirstName()));
+            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.person).get(Person_.firstName), filters.getFirstName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getLastName())) {
-            attributes.add((cb, from) -> cb.like(from.get("person").get("lastName"), filters.getLastName()));
+            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.person).get(Person_.lastName), filters.getLastName()));
         }
         if (filters.getGender() != null) {
-            attributes.add((cb, from) -> cb.equal(from.get("person").get("gender"), filters.getGender()));
+            attributes.add((cb, from) -> cb.equal(from.get(UserApplication_.person).get(Person_.gender), filters.getGender()));
         }
 
         return attributes;

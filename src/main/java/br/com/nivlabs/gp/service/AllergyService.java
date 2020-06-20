@@ -12,6 +12,7 @@ import br.com.nivlabs.gp.models.domain.Allergy;
 import br.com.nivlabs.gp.models.dto.AllergyDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;
 import br.com.nivlabs.gp.repository.AllergyRepository;
+import br.com.nivlabs.gp.util.StringUtils;
 
 @Service
 public class AllergyService implements GenericService<Allergy, Long> {
@@ -48,9 +49,12 @@ public class AllergyService implements GenericService<Allergy, Long> {
      * @param allergyDescription
      */
     public void createIfNotExists(String allergyDescription) {
-        if (!principalRepository.findByDescriptionIgnoreCase(allergyDescription).isPresent()) {
-            logger.info(allergyDescription.concat(" não existe na base, persistindo a mesma."));
+        if (!StringUtils.isNullOrEmpty(allergyDescription)
+                && !principalRepository.findByDescriptionIgnoreCase(allergyDescription).isPresent()) {
+            logger.info("Alergia a '{}' não existe na base de alergias, persistindo nova alergia.", allergyDescription);
             principalRepository.save(new Allergy(allergyDescription));
+        } else {
+            logger.warn("A alergia informada está sem descrição, ignorando processo...");
         }
     }
 

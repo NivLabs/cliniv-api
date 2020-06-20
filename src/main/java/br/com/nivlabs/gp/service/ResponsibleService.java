@@ -36,222 +36,221 @@ import br.com.nivlabs.gp.repository.SpecialityRepository;
 @Service
 public class ResponsibleService {
 
-	@Autowired
-	private ResponsibleRepository dao;
+    private static final String RESPONSIBLE_NOT_FOUND = "Responsável com o identificador %s não encontrado";
 
-	@Autowired
-	private PersonService personService;
-	@Autowired
-	private SpecialityRepository specDao;
+    @Autowired
+    private ResponsibleRepository dao;
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private PersonService personService;
+    @Autowired
+    private SpecialityRepository specDao;
 
-	/**
-	 * Realiza uma busca paginada de profissionais e responsáveis
-	 * 
-	 * @param pageRequest
-	 * @return
-	 */
-	public Page<ResponsibleDTO> searchEntityPage(ResponsibleFilters filters, Pageable pageRequest) {
-		return dao.resumedList(filters, pageRequest);
-	}
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	/**
-	 * Busca um profissional ou responsável pelo identificador
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public ResponsibleInfoDTO findById(Long id) {
-		Responsible responsibleFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-				String.format("Responsável com o identificador %s não encontrado", id)));
-		return handelResponsible(responsibleFromDb);
-	}
+    /**
+     * Realiza uma busca paginada de profissionais e responsáveis
+     * 
+     * @param pageRequest
+     * @return
+     */
+    public Page<ResponsibleDTO> searchEntityPage(ResponsibleFilters filters, Pageable pageRequest) {
+        return dao.resumedList(filters, pageRequest);
+    }
 
-	/**
-	 * Busca um cadastro de pessoa ativa pelo CPF, utilizado para cadastro ainda não
-	 * existente de profissional.
-	 * 
-	 * @param cpf
-	 * @return
-	 */
-	private ResponsibleInfoDTO findPersonByCpf(String cpf) {
-		Person personFromDb = personService.findByCpf(cpf);
+    /**
+     * Busca um profissional ou responsável pelo identificador
+     * 
+     * @param id
+     * @return
+     */
+    public ResponsibleInfoDTO findById(Long id) {
+        Responsible responsibleFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format(RESPONSIBLE_NOT_FOUND, id)));
+        return handelResponsible(responsibleFromDb);
+    }
 
-		ResponsibleInfoDTO responsibleInfo = new ResponsibleInfoDTO();
-		BeanUtils.copyProperties(personFromDb, responsibleInfo, "id");
-		responsibleInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+    /**
+     * Busca um cadastro de pessoa ativa pelo CPF, utilizado para cadastro ainda não existente de profissional.
+     * 
+     * @param cpf
+     * @return
+     */
+    private ResponsibleInfoDTO findPersonByCpf(String cpf) {
+        Person personFromDb = personService.findByCpf(cpf);
 
-		if (personFromDb.getAddress() != null) {
-			AddressDTO address = new AddressDTO();
-			BeanUtils.copyProperties(personFromDb.getAddress(), address);
-			responsibleInfo.setAddress(address);
-		}
+        ResponsibleInfoDTO responsibleInfo = new ResponsibleInfoDTO();
+        BeanUtils.copyProperties(personFromDb, responsibleInfo, "id");
+        responsibleInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
 
-		return responsibleInfo;
-	}
+        if (personFromDb.getAddress() != null) {
+            AddressDTO address = new AddressDTO();
+            BeanUtils.copyProperties(personFromDb.getAddress(), address);
+            responsibleInfo.setAddress(address);
+        }
 
-	/**
-	 * Trata o objeto de resposta à partir do objeto domínio
-	 * 
-	 * @param responsibleOrigin
-	 * @return
-	 */
-	private ResponsibleInfoDTO handelResponsible(Responsible responsibleOrigin) {
-		Person person = responsibleOrigin.getPerson();
+        return responsibleInfo;
+    }
 
-		ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
-		BeanUtils.copyProperties(responsibleOrigin.getPerson(), responsibleConverted, "id");
-		BeanUtils.copyProperties(responsibleOrigin, responsibleConverted);
-		responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+    /**
+     * Trata o objeto de resposta à partir do objeto domínio
+     * 
+     * @param responsibleOrigin
+     * @return
+     */
+    private ResponsibleInfoDTO handelResponsible(Responsible responsibleOrigin) {
+        Person person = responsibleOrigin.getPerson();
 
-		if (person.getAddress() != null) {
-			AddressDTO address = new AddressDTO();
-			BeanUtils.copyProperties(person.getAddress(), address);
-			responsibleConverted.setAddress(address);
-		}
-		if (responsibleOrigin.getProfessionalIdentity() != null) {
-			ProfessionalIdentityDTO professionalIdentity = new ProfessionalIdentityDTO();
-			professionalIdentity.setRegisterValue(responsibleOrigin.getProfessionalIdentity());
-			if (responsibleOrigin.getInitialsIdentity() != null) {
-				professionalIdentity.setRegisterType(responsibleOrigin.getInitialsIdentity());
-			}
-			responsibleConverted.setProfessionalIdentity(professionalIdentity);
-		}
+        ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
+        BeanUtils.copyProperties(responsibleOrigin.getPerson(), responsibleConverted, "id");
+        BeanUtils.copyProperties(responsibleOrigin, responsibleConverted);
+        responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
-		responsibleConverted.setId(responsibleOrigin.getId());
+        if (person.getAddress() != null) {
+            AddressDTO address = new AddressDTO();
+            BeanUtils.copyProperties(person.getAddress(), address);
+            responsibleConverted.setAddress(address);
+        }
+        if (responsibleOrigin.getProfessionalIdentity() != null) {
+            ProfessionalIdentityDTO professionalIdentity = new ProfessionalIdentityDTO();
+            professionalIdentity.setRegisterValue(responsibleOrigin.getProfessionalIdentity());
+            if (responsibleOrigin.getInitialsIdentity() != null) {
+                professionalIdentity.setRegisterType(responsibleOrigin.getInitialsIdentity());
+            }
+            responsibleConverted.setProfessionalIdentity(professionalIdentity);
+        }
 
-		return responsibleConverted;
+        responsibleConverted.setId(responsibleOrigin.getId());
 
-	}
+        return responsibleConverted;
 
-	/**
-	 * Busca um responsável pelo CPF
-	 * 
-	 * @param cpf
-	 * @return
-	 */
-	public ResponsibleInfoDTO findByCpf(String cpf) {
-		try {
-			Responsible responsibleFromDb = dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-					String.format("Responsável com cpf: [%s] não encontrado", cpf)));
-			return handelResponsible(responsibleFromDb);
-		} catch (HttpException e) {
-			return findPersonByCpf(cpf);
-		}
+    }
 
-	}
+    /**
+     * Busca um responsável pelo CPF
+     * 
+     * @param cpf
+     * @return
+     */
+    public ResponsibleInfoDTO findByCpf(String cpf) {
+        try {
+            Responsible responsibleFromDb = dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                    String.format("Responsável portador do cpf %s não encontrado", cpf)));
+            return handelResponsible(responsibleFromDb);
+        } catch (HttpException e) {
+            return findPersonByCpf(cpf);
+        }
 
-	/**
-	 * Atualiza o cadastro de responsável ou profissional
-	 * 
-	 * @param id
-	 * @param responsible
-	 * @return
-	 */
-	public ResponsibleInfoDTO update(Long id, ResponsibleInfoDTO responsible) {
-		logger.info("Inciando processo de atualização de profissional ou responsável...");
-		Responsible responsibleFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-				String.format("Responsável com o identificador %s não encontrado", id)));
+    }
 
-		BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), "id", "createdAt");
-		if (responsible.getProfessionalIdentity() != null) {
-			responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
-			responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());
-		}
+    /**
+     * Atualiza o cadastro de responsável ou profissional
+     * 
+     * @param id
+     * @param responsible
+     * @return
+     */
+    public ResponsibleInfoDTO update(Long id, ResponsibleInfoDTO responsible) {
+        logger.info("Inciando processo de atualização de profissional ou responsável...");
+        Responsible responsibleFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format(RESPONSIBLE_NOT_FOUND, id)));
 
-		handleSpecializations(responsible, responsibleFromDb);
-		dao.saveAndFlush(responsibleFromDb);
-		return responsible;
-	}
+        BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), "id", "createdAt");
+        if (responsible.getProfessionalIdentity() != null) {
+            responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
+            responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());
+        }
 
-	/**
-	 * Trata as especializações para atualização
-	 * 
-	 * @param responsible
-	 * @param responsibleFrom
-	 */
-	private void handleSpecializations(ResponsibleInfoDTO responsible, Responsible responsibleFrom) {
-		logger.info("Verificando especializações...");
-		if (responsible.getSpecializations() != null) {
-			logger.info("Alterações encontradas, atualizando especializações do profissional :: {}",
-					responsible.getFirstName());
-			responsibleFrom.setSpecializations(new ArrayList<>());
-			responsible.getSpecializations().stream().map(SpecialityDTO::getId).forEach(specId -> {
-				responsibleFrom.getSpecializations()
-						.add(specDao.findById(specId).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-								String.format("Especialidade com identificador %s não encontrada", specId))));
-			});
-		}
-	}
+        handleSpecializations(responsible, responsibleFromDb);
+        dao.saveAndFlush(responsibleFromDb);
+        return responsible;
+    }
 
-	/**
-	 * Deleta o profissional
-	 * 
-	 * @param entity
-	 */
-	public void delete(Responsible entity) {
-		deleteById(entity.getId());
-	}
+    /**
+     * Trata as especializações para atualização
+     * 
+     * @param responsible
+     * @param responsibleFrom
+     */
+    private void handleSpecializations(ResponsibleInfoDTO responsible, Responsible responsibleFrom) {
+        logger.info("Verificando especializações...");
+        if (responsible.getSpecializations() != null) {
+            logger.info("Alterações encontradas, atualizando especializações do profissional :: {}",
+                        responsible.getFirstName());
+            responsibleFrom.setSpecializations(new ArrayList<>());
+            responsible.getSpecializations().stream().map(SpecialityDTO::getId).forEach(specId -> responsibleFrom.getSpecializations()
+                    .add(specDao.findById(specId).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                            String.format("Especialidade com identificador %s não encontrada", specId)))));
+        }
+    }
 
-	public void deleteById(Long id) {
-		Responsible responsibleFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-				String.format("Responsável com o identificador %s não encontrado", id)));
-		dao.delete(responsibleFromDb);
+    /**
+     * Deleta o profissional
+     * 
+     * @param entity
+     */
+    public void delete(Responsible entity) {
+        deleteById(entity.getId());
+    }
 
-	}
+    public void deleteById(Long id) {
+        Responsible responsibleFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format(RESPONSIBLE_NOT_FOUND, id)));
+        dao.delete(responsibleFromDb);
 
-	/**
-	 * Insere um profissional à base de dados
-	 * 
-	 * @param entity
-	 * @return
-	 */
-	public Responsible persist(Responsible entity) {
-		logger.info("Inciando processo de atualização de profissional ou responsável...");
-		entity.setId(null);
-		return dao.save(entity);
-	}
+    }
 
-	/**
-	 * Realiza a persistência à partir de um DTO
-	 * 
-	 * @param responsible
-	 * @return
-	 */
-	public ResponsibleDTO persistDTO(ResponsibleInfoDTO responsible) {
-		logger.info("Inciando processo de criação de profissional ou responsável...");
-		Responsible responsibleFromDb = new Responsible();
+    /**
+     * Insere um profissional à base de dados
+     * 
+     * @param entity
+     * @return
+     */
+    public Responsible persist(Responsible entity) {
+        logger.info("Inciando processo de atualização de profissional ou responsável...");
+        entity.setId(null);
+        return dao.save(entity);
+    }
 
-		Person personFromDb;
-		try {
-			personFromDb = personService.findByCpf(responsible.getDocument().getValue());
-		} catch (HttpException e) {
-			personFromDb = new Person();
-		}
+    /**
+     * Realiza a persistência à partir de um DTO
+     * 
+     * @param responsible
+     * @return
+     */
+    public ResponsibleDTO persistDTO(ResponsibleInfoDTO responsible) {
+        logger.info("Inciando processo de criação de profissional ou responsável...");
+        Responsible responsibleFromDb = new Responsible();
 
-		BeanUtils.copyProperties(responsible, personFromDb, "id");
-		if (responsible.getProfessionalIdentity() != null) {
-			responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
-			responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());
-		}
-		if (responsible.getDocument() != null && responsible.getDocument().getType().equals(DocumentType.CPF)) {
-			personFromDb.setCpf(responsible.getDocument().getValue());
-		}
+        Person personFromDb;
+        try {
+            personFromDb = personService.findByCpf(responsible.getDocument().getValue());
+        } catch (HttpException e) {
+            personFromDb = new Person();
+        }
 
-		handleSpecializations(responsible, responsibleFromDb);
+        BeanUtils.copyProperties(responsible, personFromDb, "id");
+        if (responsible.getProfessionalIdentity() != null) {
+            responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
+            responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());
+        }
+        if (responsible.getDocument() != null && responsible.getDocument().getType().equals(DocumentType.CPF)) {
+            personFromDb.setCpf(responsible.getDocument().getValue());
+        }
 
-		if (personFromDb.getId() == null) {
-			personService.persist(personFromDb);
-		}
-		responsibleFromDb.setPerson(personFromDb);
-		responsibleFromDb.setCreatedAt(LocalDateTime.now());
-		persist(responsibleFromDb);
+        handleSpecializations(responsible, responsibleFromDb);
 
-		ResponsibleDTO newResponsible = new ResponsibleDTO();
-		newResponsible.setId(responsibleFromDb.getId());
-		BeanUtils.copyProperties(responsibleFromDb.getPerson(), newResponsible, "id");
+        if (personFromDb.getId() == null) {
+            personService.persist(personFromDb);
+        }
+        responsibleFromDb.setPerson(personFromDb);
+        responsibleFromDb.setCreatedAt(LocalDateTime.now());
+        persist(responsibleFromDb);
 
-		return newResponsible;
-	}
+        ResponsibleDTO newResponsible = new ResponsibleDTO();
+        newResponsible.setId(responsibleFromDb.getId());
+        BeanUtils.copyProperties(responsibleFromDb.getPerson(), newResponsible, "id");
+
+        return newResponsible;
+    }
 }

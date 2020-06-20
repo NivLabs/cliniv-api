@@ -84,9 +84,7 @@ public class PatientService implements GenericService<Patient, Long> {
 
         BeanUtils.copyProperties(patient, patientInfo, Patient_.ALLERGIES);
 
-        patient.getAllergies().forEach(allergy -> {
-            patientInfo.getAllergies().add(allergy.getDescription());
-        });
+        patient.getAllergies().forEach(allergy -> patientInfo.getAllergies().add(allergy.getDescription()));
 
         return patientInfo;
 
@@ -211,7 +209,7 @@ public class PatientService implements GenericService<Patient, Long> {
      */
     public PatientInfoDTO persist(PatientInfoDTO entity) {
         entity.setId(null);
-        Person personFromDb = new Person();
+        Person personFromDb;
         if (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF) {
             logger.error("Tipo do documento inválido, informe um documento válido");
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo do documento inválido, informe um documento válido.");

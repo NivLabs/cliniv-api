@@ -15,7 +15,7 @@ public class ReportParam implements Serializable {
 
     private String hospitalName;
 
-    private Map<String, Object> params = new HashMap<String, Object>();
+    private Map<String, Object> params = new HashMap<>();
 
     public Map<String, Object> getParams() {
         params.put("hospitalLogo", this.getHospitalLogo());
