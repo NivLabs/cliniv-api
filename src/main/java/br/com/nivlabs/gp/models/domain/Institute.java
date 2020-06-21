@@ -87,7 +87,7 @@ public class Institute implements Serializable {
     private String userOfRegister;
 
     @Column(name = "CHAVE_ACESSO")
-    private String Key;
+    private String key;
 
     @Column(name = "DATA_INICIO")
     private Date startDate;
