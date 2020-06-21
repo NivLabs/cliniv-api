@@ -125,7 +125,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
     public MedicalRecordDTO persistNewAttendance(NewAttandenceDTO visitDto) {
         MedicalRecordDTO attendance = null;
         try {
-            attendance = getActiveMedicalRecord(visitDto.getPatientId());
+            getActiveMedicalRecord(visitDto.getPatientId());
         } catch (HttpException e) {
             if (e.getStatus().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
                 PatientInfoDTO savedPatient = patientService.findByPateintId(visitDto.getPatientId());
@@ -142,9 +142,11 @@ public class AttendanceService implements GenericService<Attendance, Long> {
                 return attendance;
             }
         }
+
         throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
-                                                                               "O paciente de código %s e nome %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
-                                                                               attendance.getPatientId(), attendance.getFirstName()));
+                                                                               "O paciente de código %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
+                                                                               visitDto.getPatientId()));
+
     }
 
     /**

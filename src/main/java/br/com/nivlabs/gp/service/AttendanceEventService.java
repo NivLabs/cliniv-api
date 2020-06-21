@@ -23,30 +23,29 @@ import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 @Service
 public class AttendanceEventService implements GenericService<AttendanceEvent, Long> {
 
-	@Autowired
-	private AttendanceEventRepository dao;
+    @Autowired
+    private AttendanceEventRepository dao;
 
-	@Override
-	public Page<AttendanceEvent> searchEntityPage(Pageable pageRequest) {
-		return dao.findAll(pageRequest);
-	}
+    @Override
+    public Page<AttendanceEvent> searchEntityPage(Pageable pageRequest) {
+        return dao.findAll(pageRequest);
+    }
 
-	@Override
-	public AttendanceEvent findById(Long id) {
-		return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-				String.format("Evento de Visita com o ID: [%s] não encontrado", id)));
-	}
+    @Override
+    public AttendanceEvent findById(Long id) {
+        return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format("Evento de Visita com o ID: [%s] não encontrado", id)));
+    }
 
-	@Override
-	public AttendanceEvent update(Long id, AttendanceEvent entity) {
-		AttendanceEvent auxEntity = findById(id);
-		BeanUtils.copyProperties(entity, auxEntity, "id");
-		return dao.save(auxEntity);
-	}
+    @Override
+    public AttendanceEvent update(Long id, AttendanceEvent entity) {
+        AttendanceEvent auxEntity = findById(id);
+        BeanUtils.copyProperties(entity, auxEntity, "id");
+        return dao.save(auxEntity);
+    }
 
-	public AttendanceEventDTO persistNewAttendance(NewAttendanceEventDTO newAttendanceEvent) {
-		
-		return null;
-	}
+    public AttendanceEventDTO persistNewAttendance(NewAttendanceEventDTO newAttendanceEvent) {
+        return null;
+    }
 
 }

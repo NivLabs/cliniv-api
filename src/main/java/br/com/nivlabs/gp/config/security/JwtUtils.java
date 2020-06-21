@@ -37,7 +37,7 @@ public class JwtUtils {
      * @param token
      * @return
      */
-    public Boolean tokenValido(String token) {
+    public boolean isValidToken(String token) {
         Claims claims = getClaims(token);
         if (claims != null) {
             String userName = claims.getSubject();
