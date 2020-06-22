@@ -21,23 +21,20 @@ import br.com.nivlabs.gp.repository.AttendanceEventRepository;
  * @since 17 Sept, 2019
  */
 @Service
-public class AttendanceEventService implements GenericService<AttendanceEvent, Long> {
+public class AttendanceEventService implements GenericService {
 
     @Autowired
     private AttendanceEventRepository dao;
 
-    @Override
     public Page<AttendanceEvent> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
     }
 
-    @Override
     public AttendanceEvent findById(Long id) {
         return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Evento de Visita com o ID: [%s] não encontrado", id)));
     }
 
-    @Override
     public AttendanceEvent update(Long id, AttendanceEvent entity) {
         AttendanceEvent auxEntity = findById(id);
         BeanUtils.copyProperties(entity, auxEntity, "id");

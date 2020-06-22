@@ -42,7 +42,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @since 15 de set de 2019
  */
 @Service
-public class PatientService implements GenericService<Patient, Long> {
+public class PatientService implements GenericService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -185,23 +185,6 @@ public class PatientService implements GenericService<Patient, Long> {
         dao.save(patient);
 
         return entity;
-    }
-
-    /**
-     * Deleta paciente
-     */
-    @Override
-    public void delete(Patient entity) {
-        deleteById(entity.getId());
-    }
-
-    /**
-     * Deleta Paciente por ID
-     */
-    @Override
-    public void deleteById(Long id) {
-        Patient auxEntity = findById(id);
-        dao.delete(auxEntity);
     }
 
     /**

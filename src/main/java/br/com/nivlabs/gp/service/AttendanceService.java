@@ -1,6 +1,5 @@
 package br.com.nivlabs.gp.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,7 @@ import br.com.nivlabs.gp.repository.AttendanceRepository;
  * @since 8 de set de 2019
  */
 @Service
-public class AttendanceService implements GenericService<Attendance, Long> {
+public class AttendanceService implements GenericService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -104,16 +103,9 @@ public class AttendanceService implements GenericService<Attendance, Long> {
         return medicalRecord;
     }
 
-    @Override
     public Attendance persist(Attendance entity) {
         entity.setId(null);
         return dao.save(entity);
-    }
-
-    public void closeAttendance(Long id) {
-        Attendance auxEntity = findById(id);
-        auxEntity.setDateTimeExit(LocalDateTime.now());
-        update(id, auxEntity);
     }
 
     /**

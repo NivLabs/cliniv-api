@@ -32,7 +32,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  *
  */
 @Service
-public class AnamnesisService implements GenericService<Anamnesis, Long> {
+public class AnamnesisService implements GenericService {
 
     private static final String FALSE = "false";
     private static final String TRUE = "true";
@@ -57,7 +57,6 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
         return dao.findByAttendance(attendance);
     }
 
-    @Override
     public Anamnesis findById(Long id) {
         try {
             return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
@@ -69,19 +68,12 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
         return null;
     }
 
-    @Override
     public Anamnesis update(Long id, Anamnesis entity) {
         Anamnesis anamnese = findById(id);
         BeanUtils.copyProperties(entity, anamnese, "id");
         return anamnese;
     }
 
-    @Override
-    public void delete(Anamnesis entity) {
-        deleteById(entity.getId());
-    }
-
-    @Override
     public void deleteById(Long id) {
         Anamnesis anamnese = findById(id);
         dao.delete(anamnese);
@@ -173,7 +165,6 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
         }
     }
 
-    @Override
     public Anamnesis persist(Anamnesis entity) {
         entity.setId(null);
         return dao.save(entity);

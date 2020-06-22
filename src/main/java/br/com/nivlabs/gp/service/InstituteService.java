@@ -27,7 +27,7 @@ import br.com.nivlabs.gp.repository.ParameterRepository;
  * @since 30 de nov de 2019
  */
 @Service
-public class InstituteService implements GenericService<Institute, String> {
+public class InstituteService implements GenericService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
