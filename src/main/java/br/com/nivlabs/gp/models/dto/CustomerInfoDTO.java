@@ -26,4 +26,5 @@ public class CustomerInfoDTO extends DataTransferObjectBase {
     private String management;
     private LicenseDTO license;
     private AddressDTO address;
+    private String logoBase64;
 }

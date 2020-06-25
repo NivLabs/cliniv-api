@@ -3,7 +3,11 @@
  */
 package br.com.nivlabs.gp.service;
 
+import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +25,15 @@ import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
+import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
+import br.com.nivlabs.gp.models.dto.EventTypeDTO;
+import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
+import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
+import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
+import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
+import br.com.nivlabs.gp.models.dto.UserInfoDTO;
+import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.AnamneseRepository;
 import br.com.nivlabs.gp.util.StringUtils;
 
@@ -32,10 +44,15 @@ import br.com.nivlabs.gp.util.StringUtils;
  *
  */
 @Service
-public class AnamnesisService implements GenericService<Anamnesis, Long> {
+public class AnamnesisService implements GenericService {
 
+    private static final String TODAY = "TODAY";
+    private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
+    private static final String READER_NAME = "READER_NAME";
+    private static final String VISIT_ID = "VISIT_ID";
     private static final String FALSE = "false";
     private static final String TRUE = "true";
+    private static final InputStream REPORT_SOURCE = ClassLoader.getSystemResourceAsStream("reports/Anamnese.jrxml");
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -43,7 +60,22 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
     private AnamneseRepository dao;
 
     @Autowired
+    private ReportService reportService;
+
+    @Autowired
     private AttendanceService attendanceService;
+
+    @Autowired
+    private InstituteService instituteServive;
+
+    @Autowired
+    private AttendanceEventService eventService;
+
+    @Autowired
+    private UserService userSerive;
+
+    @Autowired
+    private ResponsibleService responsibleService;
 
     public Page<AnamnesisDTO> searchDTOPage(Pageable pageSettings) {
         Page<Anamnesis> page = dao.findAll(pageSettings);
@@ -57,11 +89,10 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
         return dao.findByAttendance(attendance);
     }
 
-    @Override
     public Anamnesis findById(Long id) {
         try {
             return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                    String.format("Anamnesis Item ID: [%s] não encontrado!", id)));
+                    String.format("Item da anamnese com o identificador %s não encontrado!", id)));
 
         } catch (HttpException e) {
             e.printStackTrace();
@@ -69,19 +100,12 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
         return null;
     }
 
-    @Override
     public Anamnesis update(Long id, Anamnesis entity) {
         Anamnesis anamnese = findById(id);
         BeanUtils.copyProperties(entity, anamnese, "id");
         return anamnese;
     }
 
-    @Override
-    public void delete(Anamnesis entity) {
-        deleteById(entity.getId());
-    }
-
-    @Override
     public void deleteById(Long id) {
         Anamnesis anamnese = findById(id);
         dao.delete(anamnese);
@@ -112,19 +136,112 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
      * @param request
      * @return
      */
-    public NewAnamnesisDTO newAnamnesisResponse(NewAnamnesisDTO request) {
+    public NewAnamnesisDTO newAnamnesisResponse(NewAnamnesisDTO request, String requestOwner) {
         logger.info("Iniciando o preenchimento de um novo questionário de anamnese...");
         attendanceService.findMedicalRecordByAttendanceId(request.getAttendanceId());
         if (!findByAttendance(new Attendance(request.getAttendanceId())).isEmpty()) {
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Este atendimento já possui um relatório de anamnese, não é possível responder novamente");
+            logger.warn("Este atendimento já possui um questionário de anamnese respondido, deletando formulário anterior para sobreescrita..");
+            undoProcess(request);
+            logger.info("Formulário anterio excluído, iniciando um novo processo de anamnese...");
         }
+        logger.info("Verificando o usuário da solicitação");
+        UserInfoDTO user = userSerive.findByUserName(requestOwner);
+
+        logger.info("Processand respostas");
         request.getListOfResponse().forEach(item -> {
             validateQuestions(item);
             item.setAttendanceId(request.getAttendanceId());
             persist(item.getAnamnesesDomainFromDTO());
         });
+
+        logger.info("Preparando documento de anamnese...");
+        DigitalDocumentDTO document = reportService
+                .createDocumentFromReport("Relatório de Anamnese",
+                                          getAnamnesisReportParams(request, user), REPORT_SOURCE);
+
+        createAnamneseDocumentEvent(request, document, user);
+
         return request;
+    }
+
+    /**
+     * Cria um evento de documento para anamnese
+     * 
+     * @param request
+     * @param document
+     * @param requestOwner
+     */
+    private void createAnamneseDocumentEvent(NewAnamnesisDTO request, DigitalDocumentDTO document, UserInfoDTO requestOwner) {
+        logger.info("Iniciando criação de Evento de atendimento para anamnese...");
+        NewAttendanceEventDTO event = new NewAttendanceEventDTO();
+        event.setEventType(new EventTypeDTO(4L, "ANAMNESE", "Geração de Anamnese"));
+        event.setAttendanceId(request.getAttendanceId());
+        event.setDocuments(Arrays.asList(document));
+        event.setEventDateTime(LocalDateTime.now());
+        event.setObservations("Criação da anamnese");
+        event.setResponsible(getResponsibleFromUser(requestOwner));
+        event.setRoomOrBed(request.getRoomOrBed());
+        logger.info("Evento processado, inserindo evento na base de dados...");
+
+        try {
+            eventService.persistNewAttendanceEvent(event);
+            logger.info("Evento inserido com sucesso!");
+        } catch (Exception e) {
+            logger.error("Faha ao tentar inserir evento de anamnese na base de dados!", e);
+            logger.info("Desfazendo registros de Anamnese...");
+            undoProcess(request);
+            logger.info("Desfazimento concluído com sucesso!");
+        }
+    }
+
+    /**
+     * Desfaz o processamento de registros de anamnese do atendimento
+     * 
+     * @param request
+     */
+    private void undoProcess(NewAnamnesisDTO request) {
+        dao.findByAttendance(new Attendance(request.getAttendanceId())).stream().map(Anamnesis::getId).forEach(dao::deleteById);
+    }
+
+    /**
+     * Busca o responsável pela requisição da anamnese baseado no usuário
+     * 
+     * @param requestOwner
+     * @return
+     */
+    private ResponsibleDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
+        logger.info("Iniciando busca de responsável pelo usuário da requisição...");
+        ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
+        logger.info("Profissional encontrado :: {}", responsibleInformations.getFirstName());
+
+        logger.info("Realizando processamento do profissional para a requisição de anamnese");
+        ResponsibleDTO responsible = new ResponsibleDTO();
+        BeanUtils.copyProperties(responsibleInformations, responsible);
+        return responsible;
+    }
+
+    /**
+     * Monta os parâmetros do relatório
+     * 
+     * @param request
+     * @param requestOwner
+     * @return
+     */
+    private ReportParam getAnamnesisReportParams(NewAnamnesisDTO request, UserInfoDTO requestOwner) {
+        logger.info("Buscando informações da instituição :: Logo em base 64 + Nome da instituição...");
+        InstituteDTO instituteDTO = instituteServive.getSettings();
+        String logoBase64 = instituteDTO.getCustomerInfo().getLogoBase64();
+
+        logger.info("Separando parâmetros e valores do relatório...");
+        ReportParam params = new ReportParam();
+        params.getParams().put(VISIT_ID, request.getAttendanceId());
+        params.getParams().put(READER_NAME, requestOwner.getFirstName() + " " + requestOwner.getLastName());
+        params.getParams().put(HOSPITAL_LOGO, logoBase64);
+        params.getParams().put(TODAY, new Date());
+
+        logger.info("Parâmetros configurados e prontos para a criação do documento");
+
+        return params;
     }
 
     /**
@@ -133,7 +250,7 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
      * @param anamnese
      */
     private void validateQuestions(AnamnesisDTO anamnese) {
-        logger.info("Iniciando validação do questionário...");
+        logger.info("Iniciando validação da questão...");
         if (anamnese.getAnamnesisItem() == null)
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Seu questionário está com questão nula");
         else if (StringUtils.isNullOrEmpty(anamnese.getAnamnesisItem().getQuestion())
@@ -143,6 +260,7 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
         else if (StringUtils.isNullOrEmpty(anamnese.getResponse()))
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Você possui questão sem resposta, revise seu questionário");
+        logger.info("Pergunta :: -> {}", anamnese.getAnamnesisItem().getQuestion());
         checkMetaTypes(anamnese);
     }
 
@@ -173,7 +291,12 @@ public class AnamnesisService implements GenericService<Anamnesis, Long> {
         }
     }
 
-    @Override
+    /**
+     * Insere na base de dados
+     * 
+     * @param entity
+     * @return
+     */
     public Anamnesis persist(Anamnesis entity) {
         entity.setId(null);
         return dao.save(entity);

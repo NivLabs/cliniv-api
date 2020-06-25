@@ -21,52 +21,46 @@ import br.com.nivlabs.gp.repository.PersonAddressRepository;
  * @since 19 de out de 2019
  */
 @Service
-public class PersonAddressService implements GenericService<PersonAddress, Long> {
+public class PersonAddressService implements GenericService {
 
-	@Autowired
-	private PersonAddressRepository dao;
+    @Autowired
+    private PersonAddressRepository dao;
 
-	@Override
-	public Page<PersonAddress> searchEntityPage(Pageable pageRequest) {
-		return dao.findAll(pageRequest);
-	}
+    public Page<PersonAddress> searchEntityPage(Pageable pageRequest) {
+        return dao.findAll(pageRequest);
+    }
 
-	@Override
-	public PersonAddress findById(Long id) {
-		return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-				String.format("Endereço com o identificador %s não encontrado", id)));
-	}
+    public PersonAddress findById(Long id) {
+        return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format("Endereço com o identificador %s não encontrado", id)));
+    }
 
-	@Override
-	public PersonAddress update(Long id, PersonAddress entity) {
-		PersonAddress auxEntity = findById(id);
-		BeanUtils.copyProperties(entity, auxEntity, "id");
-		return dao.save(auxEntity);
-	}
+    public PersonAddress update(Long id, PersonAddress entity) {
+        PersonAddress auxEntity = findById(id);
+        BeanUtils.copyProperties(entity, auxEntity, "id");
+        return dao.save(auxEntity);
+    }
 
-	@Override
-	public void delete(PersonAddress entity) {
-		deleteById(entity.getId());
-	}
+    public void delete(PersonAddress entity) {
+        deleteById(entity.getId());
+    }
 
-	@Override
-	public void deleteById(Long id) {
-		PersonAddress auxEntity = findById(id);
-		dao.delete(auxEntity);
-	}
+    public void deleteById(Long id) {
+        PersonAddress auxEntity = findById(id);
+        dao.delete(auxEntity);
+    }
 
-	@Override
-	public PersonAddress persist(PersonAddress entity) {
-		entity.setId(null);
-		return dao.save(entity);
-	}
+    public PersonAddress persist(PersonAddress entity) {
+        entity.setId(null);
+        return dao.save(entity);
+    }
 
-	/**
-	 * @param id
-	 */
-	public void deleteByPersonId(Long id) {
-		List<PersonAddress> listToDelete = dao.findByPersonId(id);
-		dao.deleteAll(listToDelete);
-	}
+    /**
+     * @param id
+     */
+    public void deleteByPersonId(Long id) {
+        List<PersonAddress> listToDelete = dao.findByPersonId(id);
+        dao.deleteAll(listToDelete);
+    }
 
 }

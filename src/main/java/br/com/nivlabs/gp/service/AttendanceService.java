@@ -1,8 +1,8 @@
 package br.com.nivlabs.gp.service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +17,15 @@ import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
+import br.com.nivlabs.gp.models.domain.DigitalDocument;
 import br.com.nivlabs.gp.models.domain.EventType;
 import br.com.nivlabs.gp.models.domain.Patient;
+import br.com.nivlabs.gp.models.domain.PatientAllergy;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
+import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
@@ -41,7 +44,7 @@ import br.com.nivlabs.gp.repository.AttendanceRepository;
  * @since 8 de set de 2019
  */
 @Service
-public class AttendanceService implements GenericService<Attendance, Long> {
+public class AttendanceService implements GenericService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -90,7 +93,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
     public MedicalRecordDTO findMedicalRecordByAttendanceId(Long id) {
         logger.info("Verificando se o atendimento informado existe. Atendimento :: {}", id);
         Attendance objectFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Prontuário com código %s não encontrad", id)));
+                String.format("Prontuário com código %s não encontrado", id)));
         Person person = objectFromDb.getPatient().getPerson();
         MedicalRecordDTO medicalRecord = new MedicalRecordDTO();
         BeanUtils.copyProperties(person, medicalRecord);
@@ -100,20 +103,25 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 
         List<AttendanceEvent> listOfEventsFromDb = attendanceEventRepo.findByAttendanceId(objectFromDb.getId());
         listOfEventsFromDb.forEach(event -> medicalRecord.getEvents().add(new AttendanceEventDTO(event.getId(),
-                event.getEventDateTime(), event.getEventType().getDescription(), event.getDocumentId())));
+                event.getEventDateTime(), event.getEventType().getDescription(), convertDocuments(event.getDocuments()))));
+        medicalRecord.getAllergies()
+                .addAll(objectFromDb.getPatient().getAllergies().stream().map(PatientAllergy::getDescription).collect(Collectors.toList()));
         return medicalRecord;
     }
 
-    @Override
+    private List<DigitalDocumentDTO> convertDocuments(List<DigitalDocument> documents) {
+        List<DigitalDocumentDTO> returnList = new ArrayList<>();
+        documents.forEach(doc -> {
+            DigitalDocumentDTO docToList = new DigitalDocumentDTO();
+            BeanUtils.copyProperties(doc, docToList, "base64");
+            returnList.add(docToList);
+        });
+        return returnList;
+    }
+
     public Attendance persist(Attendance entity) {
         entity.setId(null);
         return dao.save(entity);
-    }
-
-    public void closeAttendance(Long id) {
-        Attendance auxEntity = findById(id);
-        auxEntity.setDateTimeExit(LocalDateTime.now());
-        update(id, auxEntity);
     }
 
     /**
@@ -190,7 +198,7 @@ public class AttendanceService implements GenericService<Attendance, Long> {
 
         List<AttendanceEvent> listOfEventsFromDb = attendanceEventRepo.findByAttendanceId(attendanceFromDb.getId());
         listOfEventsFromDb.forEach(event -> medicalRecord.getEvents().add(new AttendanceEventDTO(event.getId(),
-                event.getEventDateTime(), event.getEventType().getDescription(), event.getDocumentId())));
+                event.getEventDateTime(), event.getEventType().getDescription(), convertDocuments(event.getDocuments()))));
         return medicalRecord;
     }
 

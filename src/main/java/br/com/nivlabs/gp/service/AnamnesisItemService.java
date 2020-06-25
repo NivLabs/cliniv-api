@@ -28,51 +28,32 @@ import br.com.nivlabs.gp.repository.AnamnesisItemRepository;
  * 
  */
 @Service
-public class AnamnesisItemService implements GenericService<AnamnesisItem, Long> {
+public class AnamnesisItemService implements GenericService {
 
-	@Autowired
-	private AnamnesisItemRepository dao;
+    @Autowired
+    private AnamnesisItemRepository dao;
 
-	public Page<AnamnesisItemDTO> searchDTOPage(Pageable pageRequest) {
-		Page<AnamnesisItem> pageFromDb = searchEntityPage(pageRequest);
-		List<AnamnesisItemDTO> responseList = new ArrayList<>();
-		pageFromDb.getContent().stream().map(AnamnesisItem::getAnamnesisItemDTOFromDomain).forEach(responseList::add);
-		return new PageImpl<>(responseList, pageRequest, pageFromDb.getTotalElements());
-	}
+    public Page<AnamnesisItemDTO> searchDTOPage(Pageable pageRequest) {
+        Page<AnamnesisItem> pageFromDb = dao.findAll(pageRequest);
+        List<AnamnesisItemDTO> responseList = new ArrayList<>();
+        pageFromDb.getContent().stream().map(AnamnesisItem::getAnamnesisItemDTOFromDomain).forEach(responseList::add);
+        return new PageImpl<>(responseList, pageRequest, pageFromDb.getTotalElements());
+    }
 
-	@Override
-	public Page<AnamnesisItem> searchEntityPage(Pageable pageRequest) {
-		return dao.findAll(pageRequest);
-	}
+    public AnamnesisItem findById(Long id) {
+        return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format("Anamnesis Item ID: [%s] não encontrado!", id)));
+    }
 
-	@Override
-	public AnamnesisItem findById(Long id) {
-		return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-				String.format("Anamnesis Item ID: [%s] não encontrado!", id)));
-	}
+    public AnamnesisItem update(Long id, AnamnesisItem entity) {
+        AnamnesisItem anamnesisItem = findById(id);
+        BeanUtils.copyProperties(entity, anamnesisItem, "id");
+        return dao.save(anamnesisItem);
+    }
 
-	@Override
-	public AnamnesisItem update(Long id, AnamnesisItem entity) {
-		AnamnesisItem anamnesisItem = findById(id);
-		BeanUtils.copyProperties(entity, anamnesisItem, "id");
-		return dao.save(anamnesisItem);
-	}
-
-	@Override
-	public void delete(AnamnesisItem entity) {
-		deleteById(entity.getId());
-	}
-
-	@Override
-	public void deleteById(Long id) {
-		AnamnesisItem anamnesisItem = findById(id);
-		dao.delete(anamnesisItem);
-	}
-
-	@Override
-	public AnamnesisItem persist(AnamnesisItem entity) {
-		entity.setId(null);
-		return dao.save(entity);
-	}
+    public AnamnesisItem persist(AnamnesisItem entity) {
+        entity.setId(null);
+        return dao.save(entity);
+    }
 
 }

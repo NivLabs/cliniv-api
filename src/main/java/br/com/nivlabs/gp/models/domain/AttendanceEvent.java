@@ -1,6 +1,8 @@
 package br.com.nivlabs.gp.models.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,12 +13,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.nivlabs.gp.models.BaseObjectWithId;
+import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -59,12 +63,16 @@ public class AttendanceEvent extends BaseObjectWithId {
     @JoinColumn(name = "ID_VISITA")
     private Attendance attendance;
 
-    @Column(name = "ID_DOCUMENTO_DIGITAL")
-    private Long documentId;
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_PROCEDIMENTO")
+    private Procedure procedure;
+
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "attendanceEvent")
+    private List<DigitalDocument> documents = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_SETOR")
-    private Sector sector;
+    @JoinColumn(name = "ID_SALA_LEITO")
+    private RoomOrBed roomOrBed;
 
     @Column(name = "TITULO")
     private String title;

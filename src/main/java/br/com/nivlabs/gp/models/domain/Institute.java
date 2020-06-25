@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -37,6 +38,10 @@ public class Institute implements Serializable {
 
     @Column(name = "CNES")
     private String cnes;
+
+    @Lob
+    @Column(name = "LOGO")
+    private String logoBase64;
 
     @Column(name = "NOME")
     private String name;

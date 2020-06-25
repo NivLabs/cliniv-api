@@ -20,56 +20,50 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @since 19 de out de 2019
  */
 @Service
-public class PersonService implements GenericService<Person, Long> {
+public class PersonService implements GenericService {
 
-	@Autowired
-	private PersonRepository dao;
+    @Autowired
+    private PersonRepository dao;
 
-	@Override
-	public Page<Person> searchEntityPage(Pageable pageRequest) {
-		return dao.findAll(pageRequest);
-	}
+    public Page<Person> searchEntityPage(Pageable pageRequest) {
+        return dao.findAll(pageRequest);
+    }
 
-	@Override
-	public Person findById(Long id) {
-		return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-				String.format("Pessoa com o identificador %s não encontrado", id)));
-	}
+    public Person findById(Long id) {
+        return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format("Pessoa com o identificador %s não encontrado", id)));
+    }
 
-	@Override
-	public Person update(Long id, Person entity) {
-		Person person = findById(id);
-		BeanUtils.copyProperties(entity, person, "id");
-		if (StringUtils.isNullOrEmpty(entity.getCpf()))
-			person.setCpf(null);
-		person = dao.save(person);
-		return person;
-	}
+    public Person update(Long id, Person entity) {
+        Person person = findById(id);
+        BeanUtils.copyProperties(entity, person, "id");
+        if (StringUtils.isNullOrEmpty(entity.getCpf()))
+            person.setCpf(null);
+        person = dao.save(person);
+        return person;
+    }
 
-	@Override
-	public void delete(Person entity) {
-		deleteById(entity.getId());
-	}
+    public void delete(Person entity) {
+        deleteById(entity.getId());
+    }
 
-	@Override
-	public void deleteById(Long id) {
-		dao.deleteById(id);
-	}
+    public void deleteById(Long id) {
+        dao.deleteById(id);
+    }
 
-	@Override
-	public Person persist(Person entity) {
-		entity.setId(null);
-		if (StringUtils.isNullOrEmpty(entity.getCpf()))
-			entity.setCpf(null);
-		return dao.saveAndFlush(entity);
-	}
+    public Person persist(Person entity) {
+        entity.setId(null);
+        if (StringUtils.isNullOrEmpty(entity.getCpf()))
+            entity.setCpf(null);
+        return dao.saveAndFlush(entity);
+    }
 
-	public Person findByCpf(String cpf) {
-		if (StringUtils.isNullOrEmpty(cpf)) {
-			throw new HttpException(HttpStatus.NOT_FOUND,
-					"O CPF informado é nulo, informe um CPF para que a consulta possa ser realizada");
-		}
-		return dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-				String.format("Pessoa com CPF: [%s] não encontrado", cpf)));
-	}
+    public Person findByCpf(String cpf) {
+        if (StringUtils.isNullOrEmpty(cpf)) {
+            throw new HttpException(HttpStatus.NOT_FOUND,
+                    "O CPF informado é nulo, informe um CPF para que a consulta possa ser realizada");
+        }
+        return dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format("Pessoa com CPF: [%s] não encontrado", cpf)));
+    }
 }

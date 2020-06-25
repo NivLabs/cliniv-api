@@ -27,7 +27,7 @@ import br.com.nivlabs.gp.repository.SectorRepository;
  * @since 13 Dez, 2019
  */
 @Service
-public class SectorService implements GenericService<SectorDTO, Long> {
+public class SectorService implements GenericService {
 
     @Autowired
     private SectorRepository dao;
@@ -104,19 +104,16 @@ public class SectorService implements GenericService<SectorDTO, Long> {
         roomOrBedRepository.delete(entity);
     }
 
-    @Override
     public void delete(SectorDTO entity) {
         deleteById(entity.getId());
     }
 
-    @Override
     public void deleteById(Long id) {
         Sector auxEntity = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Setor com o identificado %s não encontrado", id)));
         dao.delete(auxEntity);
     }
 
-    @Override
     public SectorDTO persist(SectorDTO sectorDTO) {
         Sector sector = new Sector();
         sector.setDescription(sectorDTO.getDescription());

@@ -15,7 +15,7 @@ import br.com.nivlabs.gp.repository.AllergyRepository;
 import br.com.nivlabs.gp.util.StringUtils;
 
 @Service
-public class AllergyService implements GenericService<Allergy, Long> {
+public class AllergyService implements GenericService {
 
     @Autowired
     private AllergyRepository principalRepository;

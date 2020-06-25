@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Anamnese" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="68c5ae44-61b1-41d2-8da8-418815b473fe">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ProdDb"/>
+	<subDataset name="ProdDb" uuid="e728a847-0768-47ee-8483-3cc4246c57fc">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ProdDb"/>
+		<queryString language="SQL">
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="VISIT_ID" class="java.lang.Long" nestedType="java.lang.Long">
+		<parameterDescription><![CDATA[CÓDIGO DO ATENDIMENTO]]></parameterDescription>
+	</parameter>
+	<parameter name="HOSPITAL_LOGO" class="java.lang.String"/>
+	<parameter name="READER_NAME" class="java.lang.String"/>
+	<parameter name="TODAY" class="java.util.Date"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+	
+	-- CABEÇALHO DO PACIENTE
+	PACIENTE.ID AS ID_PACIENTE,
+    CASE
+		WHEN PACIENTE.CODIGO_SUS IS NOT NULL THEN PACIENTE.CODIGO_SUS
+		ELSE 'N/I'
+	END AS CNS,
+    CONCAT(PESSOA.NOME, ' ', PESSOA.SOBRENOME) AS NOME_COMPLETO,
+    CASE 
+		WHEN PESSOA.DATA_NASCIMENTO IS NOT NULL THEN PESSOA.DATA_NASCIMENTO
+        ELSE 'N/I'
+	END AS DATA_NASCIMENTO,
+    CASE
+		WHEN PESSOA.RG IS NOT NULL THEN PESSOA.RG
+        ELSE 'N/I'
+	END AS RG,
+    CASE
+		WHEN PESSOA.CPF IS NOT NULL THEN PESSOA.CPF
+        ELSE 'N/I'
+	END AS CPF,
+    CASE
+		WHEN PESSOA.SEXO = 'M' THEN 'MASCULINO'
+        ELSE 'FEMININO'
+	END AS SEXO,
+    CASE 
+		WHEN PESSOA.IDEOLOGIA_GENERO LIKE 'B' THEN 'BIOLÓGICO'
+        ELSE 'TRANSGÊNERO'
+	END AS IDEOLOGIA,
+    CASE
+		WHEN PESSOA.NOME_COMP_MAE IS NOT NULL THEN PESSOA.NOME_COMP_MAE
+        ELSE 'N/I'
+	END AS NOME_COMP_MAE,
+    
+    -- INFORMAÇÕES DO ATENDIMENTO
+    VISITA.ID AS ID_VISITA,
+    VISITA.TIPO_ENTRADA,
+    VISITA.DH_ENTRADA,
+    CASE
+		WHEN VISITA.DH_SAIDA IS NOT NULL THEN VISITA.DH_SAIDA
+        ELSE 'N/I'
+	END DH_SAIDA,
+    
+    -- INFORMAÇÕES DA ANAMNESE
+    ANAMNESE.PERGUNTA,
+    CASE ANAMNESE.RESPOSTA
+		WHEN 'true' THEN 'SIM'
+        WHEN 'false' THEN 'NÃO'
+        ELSE ANAMNESE.RESPOSTA
+	END RESPOSTA
+FROM ANAMNESE ANAMNESE
+	INNER JOIN VISITA VISITA ON VISITA.ID = ANAMNESE.ID_VISITA
+	INNER JOIN PACIENTE PACIENTE ON PACIENTE.ID = VISITA.ID_PACIENTE
+	INNER JOIN PESSOA_FISICA PESSOA ON PESSOA.ID = PACIENTE.ID_PESSOA
+WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
+	</queryString>
+	<field name="ID_PACIENTE" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="ID_PACIENTE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PACIENTE"/>
+	</field>
+	<field name="CNS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CNS"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PACIENTE"/>
+	</field>
+	<field name="NOME_COMPLETO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOME_COMPLETO"/>
+	</field>
+	<field name="DATA_NASCIMENTO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DATA_NASCIMENTO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PESSOA_FISICA"/>
+	</field>
+	<field name="RG" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="RG"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PESSOA_FISICA"/>
+	</field>
+	<field name="CPF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CPF"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PESSOA_FISICA"/>
+	</field>
+	<field name="SEXO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SEXO"/>
+	</field>
+	<field name="IDEOLOGIA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="IDEOLOGIA"/>
+	</field>
+	<field name="NOME_COMP_MAE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOME_COMP_MAE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PESSOA_FISICA"/>
+	</field>
+	<field name="ID_VISITA" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="ID_VISITA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
+	</field>
+	<field name="TIPO_ENTRADA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TIPO_ENTRADA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
+	</field>
+	<field name="DH_ENTRADA" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="DH_ENTRADA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
+	</field>
+	<field name="DH_SAIDA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DH_SAIDA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
+	</field>
+	<field name="PERGUNTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PERGUNTA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ANAMNESE"/>
+	</field>
+	<field name="RESPOSTA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="RESPOSTA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ANAMNESE"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="185" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="93" backcolor="#5273F7" uuid="e0f0b887-59b4-4697-9f0d-4bded09ed140"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="93" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="79bcac18-85f3-4af6-90f6-63e56b2a5332"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[RELATÓRIO DE ANAMNESE DO PACIENTE]]></text>
+			</staticText>
+			<image hAlign="Center">
+				<reportElement x="0" y="93" width="555" height="92" uuid="893db2f2-5d90-4191-985f-f2cca18b90ec">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($P{HOSPITAL_LOGO}.getBytes()))]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="33" y="20" width="489" height="4" forecolor="#FFFFFF" uuid="ca7b94aa-46cb-453e-8823-9464fd845d75"/>
+			</line>
+			<textField evaluationTime="Column">
+				<reportElement x="33" y="0" width="488" height="20" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" uuid="b6eaa73a-4c6e-4825-87ab-5b3b66db8cd9"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["COD. PACIENTE: " + $F{ID_PACIENTE} + " - PACIENTE: " + $F{NOME_COMPLETO} + " -  DATA/HORA ENTRADA: " + $F{DH_ENTRADA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="143" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="60" width="120" height="15" uuid="2ec96511-8e05-4c1e-b830-360b0e581be5"/>
+				<textElement textAlignment="Left">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<text><![CDATA[Nome do Paciente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="75" width="120" height="15" uuid="0c0b8f05-732f-4404-9517-f890e5c9f2fb"/>
+				<textElement textAlignment="Left">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<text><![CDATA[CNS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="120" height="15" uuid="05ab2939-a506-4ef0-8c14-3020267c2f11"/>
+				<textElement textAlignment="Left">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<text><![CDATA[Dt de nascimento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="45" width="120" height="15" uuid="b7ac8625-3d6b-4ee9-b50d-b84ad8b59de4"/>
+				<textElement textAlignment="Left">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<text><![CDATA[Código do paciente:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="45" width="180" height="15" isRemoveLineWhenBlank="true" uuid="f5960242-4fc2-4888-9310-0b5466acc809"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ID_PACIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="60" width="180" height="15" isRemoveLineWhenBlank="true" uuid="591f340d-9069-4b7d-b675-f07565119d64"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOME_COMPLETO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="75" width="180" height="15" isRemoveLineWhenBlank="true" uuid="cfdc6fb1-8103-41c5-b7de-9d51fdf87129"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CNS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="90" width="180" height="15" isRemoveLineWhenBlank="true" uuid="c37f0b87-b590-42e8-aa7d-a7dfc3e69124"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DATA_NASCIMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="310" y="45" width="140" height="15" uuid="40243bd0-80d8-4daf-8f56-c336d082aff0"/>
+				<textElement textAlignment="Left">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<text><![CDATA[Código do atendimento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="60" width="140" height="15" uuid="7dda9fe5-ed2b-4666-82d9-2541cd1b6359"/>
+				<textElement textAlignment="Left">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<text><![CDATA[Data/hora entrada:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="75" width="140" height="15" uuid="d2278333-7a1a-462a-bc64-3b4865f3accb"/>
+				<textElement textAlignment="Left">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<text><![CDATA[Data/hora saída:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="450" y="45" width="100" height="15" isRemoveLineWhenBlank="true" uuid="fa330578-b8f7-4f96-9fb0-55a62d28c29b"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ID_VISITA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="60" width="100" height="15" isRemoveLineWhenBlank="true" uuid="39f4939c-696d-412e-9fb7-91d60ce8b758"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DH_ENTRADA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="75" width="100" height="15" isRemoveLineWhenBlank="true" uuid="37604a3a-7880-4ce1-ad8c-004003b026f9"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DH_SAIDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="105" width="180" height="15" isRemoveLineWhenBlank="true" uuid="a5b21ce4-65d3-41da-8f9d-a1c3fcdc8304"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPF}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="105" width="120" height="15" uuid="163ed959-5cef-4e88-87da-30feb7c3f753"/>
+				<textElement textAlignment="Left">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<text><![CDATA[CPF:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="120" width="180" height="15" isRemoveLineWhenBlank="true" uuid="fab09465-9063-4174-bc8a-43d0421d60c4"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOME_COMP_MAE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="120" width="120" height="15" uuid="bd2a0d33-caac-4f9d-a78f-a923a3224c0e"/>
+				<textElement textAlignment="Left">
+					<font fontName="Monospaced" size="9"/>
+				</textElement>
+				<text><![CDATA[Nome da mãe:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23">
+			<line>
+				<reportElement x="0" y="19" width="553" height="4" uuid="e6541cc6-d46f-46c0-b36c-c2ec0dbe8445"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="57" splitType="Stretch">
+			<textField>
+				<reportElement x="60" y="10" width="492" height="19" uuid="d9f6a75a-536d-46bc-a57f-0cee5e635d24"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PERGUNTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="10" width="60" height="18" uuid="ceb0abb3-0490-462b-acce-d316f5f06491"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PERGUNTA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="30" width="492" height="18" uuid="35f8aa13-bfbe-4b44-8356-3faf807f9a36"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RESPOSTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="30" width="60" height="19" uuid="de8d1f51-b07b-45db-b4bc-4a92faa35af1"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[RESPOSTA]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="81" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="59" backcolor="#5273F7" uuid="92890eaa-bda8-4597-aac4-f79947d25128"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="6" width="110" height="10" forecolor="#FFFFFF" uuid="767684d0-cce9-4f54-8adc-c11bd3a9c291"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<text><![CDATA[Criador:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="16" width="110" height="10" forecolor="#FFFFFF" uuid="d69a9f25-a50d-43b6-8bca-ddbb8a8da26d"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<text><![CDATA[Registro Profissional:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="265" y="60" width="290" height="19" forecolor="#000000" uuid="d53bb85a-f1fe-4df4-bf03-f9c485f1f13d"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="35" width="110" height="10" forecolor="#FFFFFF" uuid="ecdcfc03-0882-48c7-ab8b-487ded168706"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<text><![CDATA[Leitor:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="44" width="110" height="10" forecolor="#FFFFFF" uuid="ec7b8917-220c-4515-8655-6f29167bcb75"/>
+				<textElement>
+					<font fontName="Monospaced" size="8"/>
+				</textElement>
+				<text><![CDATA[Data da leitura:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="44" width="100" height="10" forecolor="#FFFFFF" uuid="baa9dfbe-6254-480d-a9e5-765ee1b26eff"/>
+				<textElement>
+					<font fontName="&#xA;Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TODAY}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="35" width="100" height="10" forecolor="#FFFFFF" uuid="00b0dacb-08de-431d-8b43-18a9206890f6"/>
+				<textElement>
+					<font fontName="&#xA;Monospaced" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{READER_NAME}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

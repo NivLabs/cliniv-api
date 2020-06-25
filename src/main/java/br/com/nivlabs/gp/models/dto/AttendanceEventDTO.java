@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -35,5 +36,5 @@ public class AttendanceEventDTO extends DataTransferObjectBase {
 
     private String description;
 
-    private Long documentId;
+    private List<DigitalDocumentDTO> documents;
 }

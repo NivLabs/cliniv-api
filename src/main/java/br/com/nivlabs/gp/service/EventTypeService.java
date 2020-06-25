@@ -20,46 +20,40 @@ import br.com.nivlabs.gp.repository.EventTypeRepository;
  * @since 8 de set de 2019
  */
 @Service
-public class EventTypeService implements GenericService<EventType, Long> {
+public class EventTypeService implements GenericService {
 
-	@Autowired
-	private EventTypeRepository dao;
+    @Autowired
+    private EventTypeRepository dao;
 
-	@Override
-	public Page<EventType> searchEntityPage(Pageable pageRequest) {
-		return dao.findAll(pageRequest);
-	}
+    public Page<EventType> searchEntityPage(Pageable pageRequest) {
+        return dao.findAll(pageRequest);
+    }
 
-	@Override
-	public EventType findById(Long id) {
-		return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-				String.format("Tipo de evento com o identificador %s não encontrado", id)));
+    public EventType findById(Long id) {
+        return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format("Tipo de evento com o identificador %s não encontrado", id)));
 
-	}
+    }
 
-	@Override
-	public EventType update(Long id, EventType entity) {
-		EventType auxEntity = findById(id);
-		BeanUtils.copyProperties(entity, auxEntity, "id");
-		return dao.save(auxEntity);
-	}
+    public EventType update(Long id, EventType entity) {
+        EventType auxEntity = findById(id);
+        BeanUtils.copyProperties(entity, auxEntity, "id");
+        return dao.save(auxEntity);
+    }
 
-	@Override
-	public void delete(EventType entity) {
-		deleteById(entity.getId());
-	}
+    public void delete(EventType entity) {
+        deleteById(entity.getId());
+    }
 
-	@Override
-	public void deleteById(Long id) {
-		EventType auxEntity = findById(id);
-		dao.delete(auxEntity);
+    public void deleteById(Long id) {
+        EventType auxEntity = findById(id);
+        dao.delete(auxEntity);
 
-	}
+    }
 
-	@Override
-	public EventType persist(EventType entity) {
-		entity.setId(null);
-		return dao.save(entity);
-	}
+    public EventType persist(EventType entity) {
+        entity.setId(null);
+        return dao.save(entity);
+    }
 
 }
