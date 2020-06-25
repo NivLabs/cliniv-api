@@ -51,10 +51,10 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
             attendanceConverted.setIsFinished(attendance.getDateTimeExit() != null);
             if (!attendance.getEvents().isEmpty()) {
                 List<AttendanceEvent> eventsWithSector = attendance.getEvents().stream()
-                        .filter(event -> event.getSector() != null).collect(Collectors.toList());
+                        .filter(event -> event.getRoomOrBed() != null).collect(Collectors.toList());
                 if (!eventsWithSector.isEmpty()) {
                     eventsWithSector.sort((first, second) -> first.getId().compareTo(second.getId()));
-                    attendanceConverted.setSectorDescription(eventsWithSector.get(0).getSector().getDescription());
+                    attendanceConverted.setSectorDescription(eventsWithSector.get(0).getRoomOrBed().getDescription());
                 }
             }
 

@@ -25,6 +25,10 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 9069758427814475745L;
 
+    @ApiModelProperty("Identificador do Atendimento")
+    @NotNull(message = "O código do atendimeno é obrigatório")
+    private Long attendanceId;
+
     @ApiModelProperty("Data/Hora do evento")
     @DateTimeFormat(iso = ISO.DATE)
     @NotNull(message = "A data do evento não pode ser nula")
@@ -47,8 +51,8 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
     @NotNull(message = "Obrigado informar um responsável")
     private ResponsibleDTO responsible;
 
-    @NotNull(message = "Informar o setor em que o evento foi realizado é obrigatório")
-    @ApiModelProperty("Setor em que o evento ocorreu")
-    private SectorDTO sector;
+    @NotNull(message = "Informar a sala ou leito em que o evento foi realizado é obrigatório")
+    @ApiModelProperty("Sala ou leito em que o evento ocorreu")
+    private RoomOrBedDTO roomOrBed;
 
 }

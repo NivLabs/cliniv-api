@@ -1,13 +1,19 @@
 package br.com.nivlabs.gp.models.domain;
 
+import java.time.LocalDateTime;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.beans.BeanUtils;
@@ -40,6 +46,10 @@ public class DigitalDocument extends BaseObjectWithCreatedAt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_VISITA_EVENTO")
+    private AttendanceEvent attendanceEvent;
+
     @Column(name = "TIPO")
     @Enumerated(EnumType.STRING)
     private DigitalDocumentType type;
@@ -50,6 +60,9 @@ public class DigitalDocument extends BaseObjectWithCreatedAt {
 
     @Column(name = "NOME")
     private String name;
+
+    @Column(name = "DATA_CRIACAO")
+    private LocalDateTime createdAt;
 
     public DigitalDocumentDTO getDtoFromDomain() {
         DigitalDocumentDTO dto = new DigitalDocumentDTO();
