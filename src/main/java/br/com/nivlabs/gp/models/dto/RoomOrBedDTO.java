@@ -16,16 +16,22 @@ import lombok.NoArgsConstructor;
 @ApiModel("Sala (ambulatório) ou Leito")
 public class RoomOrBedDTO extends DataTransferObjectBase {
 
-	private static final long serialVersionUID = 1574668174638044648L;
+    private static final long serialVersionUID = 1574668174638044648L;
 
-	private Long id;
+    private Long id;
 
-	@NotNull(message = "Informe o identificador do setor de cadastro")
-	private Long sectorId;
+    @NotNull(message = "Informe o identificador do setor de cadastro")
+    private Long sectorId;
 
-	@NotNull(message = "Informe a descrição da sala ou leito")
-	private String description;
+    @NotNull(message = "Informe a descrição da sala ou leito")
+    private String description;
 
-	@NotNull(message = "Informe se é sala (ambulatório) ou leito")
-	private RoomOrBedType type;
+    @NotNull(message = "Informe se é sala (ambulatório) ou leito")
+    private RoomOrBedType type;
+
+    public RoomOrBedDTO(Long id) {
+        super();
+        this.id = id;
+    }
+
 }

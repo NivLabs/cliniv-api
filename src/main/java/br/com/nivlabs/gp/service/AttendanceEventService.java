@@ -1,7 +1,6 @@
 package br.com.nivlabs.gp.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
-import br.com.nivlabs.gp.models.domain.DigitalDocument;
 import br.com.nivlabs.gp.models.domain.EventType;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.domain.RoomOrBed;
@@ -45,6 +43,8 @@ public class AttendanceEventService implements GenericService {
 
     @Autowired
     private AttendanceEventRepository dao;
+    @Autowired
+    private DigitalDocumentService docService;
 
     public Page<AttendanceEvent> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
@@ -70,7 +70,6 @@ public class AttendanceEventService implements GenericService {
 
         AttendanceEvent newAttendanceEvent = new AttendanceEvent();
         newAttendanceEvent.setAttendance(new Attendance(request.getAttendanceId()));
-        newAttendanceEvent.setDocuments(convertDocuments(request.getDocuments()));
         newAttendanceEvent.setEventDateTime(LocalDateTime.now());
         newAttendanceEvent.setEventType(convertEventType(request.getEventType()));
         newAttendanceEvent.setObservations(request.getObservations());
@@ -79,7 +78,8 @@ public class AttendanceEventService implements GenericService {
         newAttendanceEvent.setTitle(request.getEventType().getDescription());
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
 
-        dao.save(newAttendanceEvent);
+        Long newEventId = dao.save(newAttendanceEvent).getId();
+        insertDocuments(newEventId, request.getDocuments());
 
     }
 
@@ -118,19 +118,15 @@ public class AttendanceEventService implements GenericService {
         return eventTypeReturn;
     }
 
-    private List<DigitalDocument> convertDocuments(List<DigitalDocumentDTO> documents) {
-        logger.info("Convertendo documentos digitais...");
-        List<DigitalDocument> returnList = new ArrayList<>();
+    private void insertDocuments(Long attendanceEventId, List<DigitalDocumentDTO> documents) {
+        logger.info("Inserindo documentos digitais...");
         documents.forEach(doc -> {
-            logger.info("Documento sendo processado :: Identificador -> {} | Nome -> {}", doc.getId(), doc.getName());
-            DigitalDocument docToList = new DigitalDocument();
-            BeanUtils.copyProperties(doc, docToList);
-            returnList.add(docToList);
+            logger.info("Documento sendo processado :: Código do evento -> {} | Nome -> {}", attendanceEventId, doc.getName());
+            doc.setAttendanceEventId(attendanceEventId);
+            docService.persist(doc);
+            logger.info("Documentos criados com sucesso!");
         });
-
-        logger.info(SUCCESS_CONVERTION_MESSAGE);
-
-        return returnList;
+        logger.info("Processamento de documentos finalizado com sucesso!");
     }
 
 }

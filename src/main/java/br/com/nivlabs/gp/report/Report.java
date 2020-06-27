@@ -1,5 +1,6 @@
 package br.com.nivlabs.gp.report;
 
+import java.awt.GraphicsEnvironment;
 import java.io.InputStream;
 import java.sql.SQLException;
 
@@ -26,6 +27,12 @@ public class Report {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private ReportConnectionConfiguration connection;
+
+    public Report(ReportConnectionConfiguration connection) {
+        this.connection = connection;
+    }
+
     /**
      * Gera o Jasper Print
      * 
@@ -37,6 +44,7 @@ public class Report {
     public JasperPrint getJasperPrint(ReportParam params, InputStream reportInputStream) throws JRException {
         return getPrinterByStream(params, reportInputStream);
     }
+    
 
     /**
      * Trata o Jasper Print com os parâmetros
@@ -48,9 +56,9 @@ public class Report {
      */
     private JasperPrint getPrinterByStream(ReportParam paramsToReport, InputStream reportStream)
             throws JRException {
-        ReportConnection connection = new ReportConnection();
+        JasperReport reportCompiled = null;
         try {
-            JasperReport reportCompiled = JasperCompileManager.compileReport(reportStream);
+            reportCompiled = JasperCompileManager.compileReport(reportStream);
             return JasperFillManager.fillReport(reportCompiled, paramsToReport.getParams(), connection.getConnection());
         } catch (Exception e) {
             logger.error("Falha ao tentar criar um datasource para o Jasper", e);
@@ -58,11 +66,13 @@ public class Report {
         } finally {
             try {
                 connection.closeConnection();
+                reportCompiled = null;
+                reportStream = null;
             } catch (SQLException e) {
                 logger.error("Falha ao encerrar conexão com Datasource de relatórios", e);
             }
 
         }
-
     }
+
 }

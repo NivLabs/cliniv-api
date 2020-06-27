@@ -150,10 +150,6 @@
 				<configuration>
 					<annotationProcessorPaths>
 						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
-						<path>
 							<groupId>org.hibernate</groupId>
 							<artifactId>hibernate-jpamodelgen</artifactId>
 						</path>
