@@ -67,6 +67,7 @@ public class DigitalDocument extends BaseObjectWithCreatedAt {
     public DigitalDocumentDTO getDtoFromDomain() {
         DigitalDocumentDTO dto = new DigitalDocumentDTO();
         BeanUtils.copyProperties(this, dto);
+        dto.setAttendanceEventId(attendanceEvent.getId());
         return dto;
     }
 

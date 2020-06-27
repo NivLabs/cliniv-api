@@ -67,7 +67,7 @@ public class AttendanceEvent extends BaseObjectWithId {
     @JoinColumn(name = "ID_PROCEDIMENTO")
     private Procedure procedure;
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "attendanceEvent")
+    @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY, mappedBy = "attendanceEvent")
     private List<DigitalDocument> documents = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
@@ -88,6 +88,11 @@ public class AttendanceEvent extends BaseObjectWithId {
     public void prePersist() {
         final LocalDateTime now = LocalDateTime.now();
         this.eventDateTime = now;
+    }
+
+    public AttendanceEvent(Long id) {
+        super();
+        this.id = id;
     }
 
 }

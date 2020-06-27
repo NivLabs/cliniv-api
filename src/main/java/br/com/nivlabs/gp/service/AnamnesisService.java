@@ -32,6 +32,7 @@ import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
+import br.com.nivlabs.gp.models.dto.RoomOrBedDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.AnamneseRepository;
@@ -156,8 +157,8 @@ public class AnamnesisService implements GenericService {
 
         logger.info("Preparando documento de anamnese...");
         DigitalDocumentDTO document = reportService
-                .createDocumentFromReport("Relatório de Anamnese",
-                                          getAnamnesisReportParams(request, user), REPORT_SOURCE);
+                .createDocumentFromReport(request.getAttendanceId(), "Relatório de Anamnese", getAnamnesisReportParams(request, user),
+                                          REPORT_SOURCE);
 
         createAnamneseDocumentEvent(request, document, user);
 
@@ -180,7 +181,7 @@ public class AnamnesisService implements GenericService {
         event.setEventDateTime(LocalDateTime.now());
         event.setObservations("Criação da anamnese");
         event.setResponsible(getResponsibleFromUser(requestOwner));
-        event.setRoomOrBed(request.getRoomOrBed());
+        event.setRoomOrBed(new RoomOrBedDTO(request.getRoomOrBedId()));
         logger.info("Evento processado, inserindo evento na base de dados...");
 
         try {

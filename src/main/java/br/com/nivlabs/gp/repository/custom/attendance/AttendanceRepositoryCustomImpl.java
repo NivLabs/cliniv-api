@@ -28,8 +28,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @author viniciosarodrigues
  *
  */
-public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Attendance>
-        implements AttendanceRepositoryCustom {
+public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Attendance> implements AttendanceRepositoryCustom {
 
     @Override
     public Page<AttendanceDTO> resumedList(CustomFilters filters, Pageable pageSettings) {

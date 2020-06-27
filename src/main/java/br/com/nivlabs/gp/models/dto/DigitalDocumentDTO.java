@@ -16,6 +16,8 @@ public class DigitalDocumentDTO extends DataTransferObjectBase {
 
     private Long id;
 
+    private Long attendanceEventId;
+
     private DigitalDocumentType type;
 
     private String base64;

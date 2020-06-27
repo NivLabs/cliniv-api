@@ -2,8 +2,8 @@ package br.com.nivlabs.gp.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.LocalDateTime;
+import java.util.Base64;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +37,15 @@ public class ReportService implements GenericService {
     @Autowired
     private DigitalDocumentService docService;
 
-    public DigitalDocumentDTO createDocumentFromReport(String reportName, ReportParam params, InputStream reportInputStream) {
-        Report report = new Report();
+    @Autowired
+    private Report report;
+
+    public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
+                                                       InputStream reportInputStream) {
         try {
             logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento");
             JasperPrint jasperPrint = report.getJasperPrint(params, reportInputStream);
-            OutputStream outputStream = new ByteArrayOutputStream();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
             logger.info("Documento criado com sucesso!");
 
@@ -51,11 +54,8 @@ public class ReportService implements GenericService {
             document.setCreatedAt(LocalDateTime.now());
             document.setName(reportName);
             document.setType(DigitalDocumentType.PDF);
-            document.setBase64(outputStream.toString());
-
-            logger.info("Inserindo documento na base de dados...");
-            document = docService.persist(document);
-            logger.info("Documento inserido com sucesso!");
+            document.setBase64(Base64.getEncoder().withoutPadding().encodeToString(outputStream.toByteArray()));
+            document.setAttendanceEventId(attendanceEventId);
 
             return document;
 

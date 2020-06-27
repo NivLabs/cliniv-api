@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 /**
  * Classe que realiza a criação de datasource para geração de relatórios com Jasper
@@ -18,16 +20,28 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-public class ReportConnection {
+public class ReportConnectionConfiguration {
 
-    private static Logger logger = LoggerFactory.getLogger(ReportConnection.class);
+    private static Logger logger = LoggerFactory.getLogger(ReportConnectionConfiguration.class);
 
     private static final String DRIVER_NAME = "org.mariadb.jdbc.Driver";
 
-    @Value("report.connection-string")
-    private String stringConnection;
-
     private Connection connectionInstance;
+
+    @Profile("prod")
+    @Bean
+    public String getHerokuDatasource() {
+        return "Datasource Report Connection for production deploy";
+    }
+
+    @Profile("dev")
+    @Bean
+    public String getDevDatasource() {
+        return "Datasource Report for Development deploy";
+    }
+
+    @Value("${report.connection-string}")
+    private String stringConnection;
 
     /**
      * Cria a conexão para o Jasper
@@ -36,7 +50,7 @@ public class ReportConnection {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
+    protected Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName(DRIVER_NAME);
         if (connectionInstance == null) {
             logger.info("Ainda não existe uma conexão, estamos criando uma...");
@@ -46,10 +60,16 @@ public class ReportConnection {
         return connectionInstance;
     }
 
-    public void closeConnection() throws SQLException {
+    protected void closeConnection() throws SQLException {
         logger.info("Fechando conexão");
         if (connectionInstance != null && !connectionInstance.isClosed())
             connectionInstance.close();
+        connectionInstance = null;
+    }
+
+    @Bean
+    public Report reportProvider() {
+        return new Report(this);
     }
 
 }

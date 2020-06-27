@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 import br.com.nivlabs.gp.models.domain.DigitalDocument;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.repository.DigitalDocumentRepository;
@@ -24,8 +25,11 @@ public class DigitalDocumentService implements GenericService {
     private DigitalDocumentRepository dao;
 
     public DigitalDocumentDTO persist(DigitalDocumentDTO request) {
+        if (request.getAttendanceEventId() == null)
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Não é possível inserir um documento de evento de atendimento");
         DigitalDocument document = new DigitalDocument();
         BeanUtils.copyProperties(request, document, "id");
+        document.setAttendanceEvent(new AttendanceEvent(request.getAttendanceEventId()));
         dao.save(document);
         return document.getDtoFromDomain();
     }
