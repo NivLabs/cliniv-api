@@ -236,6 +236,7 @@ public class AnamnesisService implements GenericService {
         logger.info("Separando parâmetros e valores do relatório...");
         ReportParam params = new ReportParam();
         params.getParams().put(VISIT_ID, request.getAttendanceId());
+        params.getParams().put("DOC_TITLE", "RELATÓRIO DE ANAMNESE DO PACIENTE");
         params.getParams().put(READER_NAME, requestOwner.getFirstName() + " " + requestOwner.getLastName());
         params.getParams().put(HOSPITAL_LOGO, logoBase64);
         params.getParams().put(TODAY, new Date());

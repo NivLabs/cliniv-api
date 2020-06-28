@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.enums.DigitalDocumentType;
-import br.com.nivlabs.gp.report.Report;
+import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -38,13 +38,13 @@ public class ReportService implements GenericService {
     private DigitalDocumentService docService;
 
     @Autowired
-    private Report report;
+    private JasperReportsCreator report;
 
     public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
                                                        InputStream reportInputStream) {
         try {
             logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento");
-            JasperPrint jasperPrint = report.getJasperPrint(params, reportInputStream);
+            JasperPrint jasperPrint = report.create(params, reportInputStream);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
             logger.info("Documento criado com sucesso!");

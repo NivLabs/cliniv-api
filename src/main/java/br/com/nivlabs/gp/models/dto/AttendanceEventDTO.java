@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,12 +30,16 @@ public class AttendanceEventDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -5192545539633937184L;
 
+    @ApiModelProperty("Identificador único do evento do atendimento")
     private Long id;
 
+    @ApiModelProperty("Data e hora do evento do atendimento")
     @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime datetime;
 
+    @ApiModelProperty("Descrição do evento do atendimento")
     private String description;
 
+    @ApiModelProperty("Documentos gerados pelo evento do atendimento")
     private List<DigitalDocumentDTO> documents;
 }
