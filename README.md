@@ -58,9 +58,10 @@ Atualmente encontra-se na versão 1.0.0
 Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles:
 
 - Java 14 + **(Obrigatório)**
-- MariaDB Server 10.3+ **(Obrigatório)**
+- MariaDB Server 10.3+ **(Obrigatório se não for rodar via docker)**
 - Lombok 1.18.0 + **(Obrigatório)**
 - Eclipse ou STS **(Obrigatório)**
+- Docker **(Obrigatório se for rodar via script)
 
 ---
 
@@ -112,6 +113,7 @@ Existe um manual mais detalhado de como instalar o plugin no Eclipse: [Criando u
 ---
 
 ## MariaDB
+### Sem Docker
 
 Para que seja possível rodar a aplicação, faz-se necessário configurar previamente as informações de conexão no arquivo `application-dev.properties` deste projeto.
 
@@ -121,27 +123,42 @@ Um setup inicial válido para uma base nova pode seguir os padrões abaixo:
 
 - No meu caso, a primeira linha do meu `application-dev.properties` fica `spring.datasource.url=jdbc:mariadb://localhost:3306/devdb?user=admin&password=123456dv&createDatabaseIfNotExist=TRUE`
 
+### Com Docker
+O projeto possui um build pronto do MariaDB em Docker, neste caso não precisamos alterar nada, basta executar o shellscript `./run-mariadb.sh` e seguir para o próximo passo.
+
+OBS: Obrigatório ter o Docker instalado.
+
 ---
 
 ## Como rodar a API?
 
-### Passo 1
+### Usando Docker
+#### Passo 1
+- 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/gestao-de-prontuario.git`
+
+#### Passo 1
+- 🔃 Rode o script `./startWithDocker.sh`
+
+OBS: Obrigatório ter o Docker instalado.
+
+### Usando o Eclipse ou STS
+#### Passo 1
 
 - 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/gestao-de-prontuario.git`
 
-### Passo 2
+#### Passo 2
 
 - ✅ Importe o projeto na sua IDE
 
-### Passo 3
+#### Passo 3
 
 - 📝 Altere a primeira linha do `application.properties`para `spring.profiles.active=dev`
 
-### Passo 4
+#### Passo 4
 
 - 🔃 Rode a aplicação com botão direito do mouse no projeto, `run as` > `Spring Boot App`. Também é possível rodar a aplicação à partir da classe `ApplicationMain` dentro do projeto, basca clicar com o botão direito na classe e seguir o mesmo fluxo.
 
-### Dica
+#### Dica
 Se você estiver usando o Eclipse, pode ser uma boa ideia baixar o plugin disponibilizado pela Pitoval no marketplace, o `Spring Tools 4 (release)`
 
 ---
