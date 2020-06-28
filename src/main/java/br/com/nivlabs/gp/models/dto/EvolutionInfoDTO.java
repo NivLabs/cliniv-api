@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,8 +29,13 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6201888790941764512L;
 
+    @ApiModelProperty("Identificador únimco da evolução clínica")
     private Long id;
 
+    @ApiModelProperty("Anotações da evolução")
+    private String annotation;
+
+    @ApiModelProperty("Data/Hora da leitura da evolução")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime datetime;
 

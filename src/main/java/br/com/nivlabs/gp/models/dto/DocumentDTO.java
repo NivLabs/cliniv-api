@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.nivlabs.gp.models.enums.DocumentType;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,11 +29,13 @@ public class DocumentDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8977997168527769344L;
 
+    @ApiModelProperty("Tipo do documento pessoal, ex: CPF, CNPJ, RG")
     @NotNull(message = "O tipo do documeno deve ser informado")
     @NotEmpty(message = "O tipo do documeno deve ser informado")
     @NotBlank(message = "O tipo do documeno deve ser informado")
     private DocumentType type;
 
+    @ApiModelProperty("Valor do documento pessoal")
     @NotNull(message = "O documeno deve ser informado")
     @NotEmpty(message = "O documeno deve ser informado")
     @NotBlank(message = "O documento deve ser informado")

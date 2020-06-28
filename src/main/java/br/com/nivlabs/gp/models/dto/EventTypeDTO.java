@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.nivlabs.gp.models.domain.EventType;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,13 +30,16 @@ public class EventTypeDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 2370290606342755763L;
 
+    @ApiModelProperty("Identificador único do tipo de evento")
     private Long id;
 
-    @NotBlank(message = "Informar o NOME  do evento é obrigatório")
+    @ApiModelProperty("Nome do tipo de evento")
+    @NotBlank(message = "Informar o NOME  do tipo de evento é obrigatório")
     @Size(min = 3, max = 45, message = "O nome do evento deve conter ao menos três letras")
     private String name;
 
-    @Size(min = 3, max = 200, message = "A descricao do evento deve conter ao menos três letras")
+    @ApiModelProperty("Descrição do tipo de evento")
+    @Size(min = 3, max = 200, message = "A descricao do tipo de evento deve conter ao menos três letras")
     private String description;
 
     @JsonIgnore
