@@ -1,11 +1,12 @@
 package br.com.nivlabs.gp.report;
 
-import java.awt.GraphicsEnvironment;
 import java.io.InputStream;
-import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.gp.exception.HttpException;
@@ -17,41 +18,38 @@ import net.sf.jasperreports.engine.JasperReport;
 
 /**
  * 
+ * Gerador de relatórios Jasper
+ * 
  * @author Vinícios Rodrigues (viniciosarodrigues@gmail.com)
  * @since 21 de jun de 2020
  *
- * @param <P> - Parâmetros do relatório
  *
  */
-public class Report {
+public class JasperReportsCreator {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private ReportConnectionConfiguration connection;
-
-    public Report(ReportConnectionConfiguration connection) {
-        this.connection = connection;
-    }
+    @Autowired
+    private DataSource datasource;
 
     /**
-     * Gera o Jasper Print
+     * Cria o Jasper Print para manipulação
      * 
-     * @param params
-     * @param reportInputStream
-     * @return
+     * @param paramsToReport - Parâmetros do relatório
+     * @param reportInputStream - InputStream do relatório (JXML)
+     * @return instância do JasperPrint com buffer do relatório construído para a manipulação
      * @throws JRException
      */
-    public JasperPrint getJasperPrint(ReportParam params, InputStream reportInputStream) throws JRException {
-        return getPrinterByStream(params, reportInputStream);
+    public JasperPrint create(ReportParam paramsToReport, InputStream reportInputStream) throws JRException {
+        return getPrinterByStream(paramsToReport, reportInputStream);
     }
-    
 
     /**
-     * Trata o Jasper Print com os parâmetros
+     * Cria o JasperPrint com os parâmetros
      * 
-     * @param paramsToReport
-     * @param reportStream
-     * @return
+     * @param paramsToReport - Parâmetros do relatório
+     * @param reportInputStream - InputStream do relatório (JXML)
+     * @return instância do JasperPrint com buffer do relatório construído para a manipulação
      * @throws JRException
      */
     private JasperPrint getPrinterByStream(ReportParam paramsToReport, InputStream reportStream)
@@ -59,19 +57,10 @@ public class Report {
         JasperReport reportCompiled = null;
         try {
             reportCompiled = JasperCompileManager.compileReport(reportStream);
-            return JasperFillManager.fillReport(reportCompiled, paramsToReport.getParams(), connection.getConnection());
+            return JasperFillManager.fillReport(reportCompiled, paramsToReport.getParams(), datasource.getConnection());
         } catch (Exception e) {
             logger.error("Falha ao tentar criar um datasource para o Jasper", e);
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha na criação do relatório");
-        } finally {
-            try {
-                connection.closeConnection();
-                reportCompiled = null;
-                reportStream = null;
-            } catch (SQLException e) {
-                logger.error("Falha ao encerrar conexão com Datasource de relatórios", e);
-            }
-
         }
     }
 
