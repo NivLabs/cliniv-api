@@ -42,4 +42,7 @@ public class AttendanceEventDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Documentos gerados pelo evento do atendimento")
     private List<DigitalDocumentDTO> documents;
+
+    @ApiModelProperty("Acomodação onde o evento foi ou será realizado")
+    private AccomodationDTO accomodation;
 }

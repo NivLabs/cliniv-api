@@ -72,7 +72,7 @@ public class AttendanceEvent extends BaseObjectWithId {
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SALA_LEITO")
-    private RoomOrBed roomOrBed;
+    private Accomodation accomodation;
 
     @Column(name = "TITULO")
     private String title;

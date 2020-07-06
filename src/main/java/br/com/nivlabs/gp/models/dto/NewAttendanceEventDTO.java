@@ -53,6 +53,6 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
 
     @NotNull(message = "Informar a sala ou leito em que o evento foi realizado é obrigatório")
     @ApiModelProperty("Sala ou leito em que o evento ocorreu")
-    private RoomOrBedDTO roomOrBed;
+    private AccomodationDTO accomodation;
 
 }

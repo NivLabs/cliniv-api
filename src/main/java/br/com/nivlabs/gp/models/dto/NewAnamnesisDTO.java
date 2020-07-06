@@ -27,7 +27,7 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
 
     @NotNull(message = "Informe a sala ou leito do procedimento de anamnese")
     @ApiModelProperty("Sala ou leito onde a anamnese foi realizada")
-    private Long roomOrBedId;
+    private Long accomodationId;
 
     private Set<AnamnesisDTO> listOfResponse = new HashSet<>();
 }

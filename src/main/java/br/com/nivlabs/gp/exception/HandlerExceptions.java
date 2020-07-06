@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -121,6 +122,17 @@ public class HandlerExceptions {
                 req.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<StandardErrorSpring> dataIntegrityViolationException(DataIntegrityViolationException e,
+                                                                               HttpServletRequest req) {
+        logger.error("Violação de Integridade :: ", e);
+        StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.UNPROCESSABLE_ENTITY.value(),
+                "Violação de Integridade", Arrays.asList(), "Este item não pode ser manipulado, já encontra-se em uso em outro processo",
+                req.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
     }
 
     /**

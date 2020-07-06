@@ -49,6 +49,8 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
     @DateTimeFormat(iso = ISO.DATE)
     private Date bornDate;
 
+    private AccomodationDTO lastAccommodation;
+
     private Gender gender;
 
     private List<AttendanceEventDTO> events = new ArrayList<>();

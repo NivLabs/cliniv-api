@@ -48,12 +48,14 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
             attendanceConverted.setType(attendance.getEntryType());
             attendanceConverted.setPatientType(attendance.getPatient().getType());
             attendanceConverted.setIsFinished(attendance.getDateTimeExit() != null);
+
+            // Pega o setor atual do atendimento
             if (!attendance.getEvents().isEmpty()) {
                 List<AttendanceEvent> eventsWithSector = attendance.getEvents().stream()
-                        .filter(event -> event.getRoomOrBed() != null).collect(Collectors.toList());
+                        .filter(event -> event.getAccomodation() != null).collect(Collectors.toList());
                 if (!eventsWithSector.isEmpty()) {
                     eventsWithSector.sort((first, second) -> first.getId().compareTo(second.getId()));
-                    attendanceConverted.setSectorDescription(eventsWithSector.get(0).getRoomOrBed().getDescription());
+                    attendanceConverted.setSectorDescription(eventsWithSector.get(0).getAccomodation().getDescription());
                 }
             }
 
