@@ -30,6 +30,7 @@ import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
+import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
@@ -103,10 +104,12 @@ public class AttendanceService implements GenericService {
         medicalRecord.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
         medicalRecord.setSusNumber(objectFromDb.getPatient().getSusNumber());
 
-        List<AttendanceEvent> listOfEventsFromDb = attendanceEventRepo.findByAttendanceId(objectFromDb.getId());
-        listOfEventsFromDb.forEach(event -> medicalRecord.getEvents().add(new AttendanceEventDTO(event.getId(),
+        objectFromDb.getEvents().forEach(event -> medicalRecord.getEvents().add(new AttendanceEventDTO(event.getId(),
                 event.getEventDateTime(), event.getEventType().getDescription(), convertDocuments(event.getDocuments()),
                 event.getAccomodation().getDTO())));
+        objectFromDb.getEvolutions().forEach(evolution -> medicalRecord.getEvolutions()
+                .add(new EvolutionInfoDTO(evolution.getId(), id, null, evolution.getDescription(), evolution.getDatetime())));
+
         if (!medicalRecord.getEvents().isEmpty())
             medicalRecord.setLastAccommodation(getLastAccomodationByPatientId(medicalRecord.getEvents()));
         medicalRecord.getAllergies()
@@ -201,10 +204,13 @@ public class AttendanceService implements GenericService {
         medicalRecord.setPatientId(attendanceFromDb.getPatient().getId());
         medicalRecord.setDocument(new DocumentDTO(patient.getDocument().getType(), patient.getDocument().getValue()));
 
-        List<AttendanceEvent> listOfEventsFromDb = attendanceEventRepo.findByAttendanceId(attendanceFromDb.getId());
-        listOfEventsFromDb.forEach(event -> medicalRecord.getEvents().add(new AttendanceEventDTO(event.getId(),
+        attendanceFromDb.getEvents().forEach(event -> medicalRecord.getEvents().add(new AttendanceEventDTO(event.getId(),
                 event.getEventDateTime(), event.getEventType().getDescription(),
                 convertDocuments(event.getDocuments()), event.getAccomodation().getDTO())));
+
+        attendanceFromDb.getEvolutions().forEach(evolution -> medicalRecord.getEvolutions()
+                .add(new EvolutionInfoDTO(evolution.getId(), evolution.getAttendance().getId(), null, evolution.getDescription(),
+                        evolution.getDatetime())));
 
         if (!medicalRecord.getEvents().isEmpty())
             medicalRecord.setLastAccommodation(getLastAccomodationByPatientId(medicalRecord.getEvents()));
