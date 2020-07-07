@@ -13,9 +13,9 @@ import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
 import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
-import br.com.nivlabs.gp.models.enums.MetaType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

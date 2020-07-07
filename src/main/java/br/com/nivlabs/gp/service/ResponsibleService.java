@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.ResponsibleFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.Responsible;
@@ -22,7 +23,6 @@ import br.com.nivlabs.gp.models.dto.ProfessionalIdentityDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.SpecialityDTO;
-import br.com.nivlabs.gp.models.enums.DocumentType;
 import br.com.nivlabs.gp.repository.ResponsibleRepository;
 import br.com.nivlabs.gp.repository.SpecialityRepository;
 

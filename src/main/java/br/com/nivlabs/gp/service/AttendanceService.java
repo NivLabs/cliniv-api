@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
+import br.com.nivlabs.gp.enums.EntryType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
@@ -31,8 +33,6 @@ import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.models.enums.DocumentType;
-import br.com.nivlabs.gp.models.enums.EntryType;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
 

@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.gp.models.enums.Gender;
+import br.com.nivlabs.gp.enums.Gender;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

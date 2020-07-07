@@ -7,8 +7,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
-import br.com.nivlabs.gp.models.enums.MetaType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

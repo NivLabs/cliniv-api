@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Parameter;
 import br.com.nivlabs.gp.models.dto.NewParameterValueDTO;
-import br.com.nivlabs.gp.models.enums.MetaType;
 import br.com.nivlabs.gp.repository.ParameterRepository;
 import br.com.nivlabs.gp.util.StringUtils;
 

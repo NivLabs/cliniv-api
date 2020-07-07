@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
+import br.com.nivlabs.gp.enums.ActiveType;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 import br.com.nivlabs.gp.models.domain.Attendance_;
@@ -16,7 +17,6 @@ import br.com.nivlabs.gp.models.domain.Patient_;
 import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.Sector_;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
-import br.com.nivlabs.gp.models.enums.ActiveType;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.gp.repository.custom.IExpression;

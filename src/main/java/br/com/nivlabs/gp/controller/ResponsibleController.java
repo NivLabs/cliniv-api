@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.ResponsibleFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.gp.models.enums.DocumentType;
 import br.com.nivlabs.gp.service.ResponsibleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.controller.filters;
 
-import br.com.nivlabs.gp.models.enums.ActiveType;
+import br.com.nivlabs.gp.enums.ActiveType;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -21,11 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.PatientFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.models.enums.DocumentType;
 import br.com.nivlabs.gp.service.PatientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import br.com.nivlabs.gp.models.enums.PatientType;
+import br.com.nivlabs.gp.enums.PatientType;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

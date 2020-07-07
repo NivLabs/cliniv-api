@@ -17,9 +17,9 @@ import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.nivlabs.gp.enums.AccomodationType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
 import br.com.nivlabs.gp.models.dto.AccomodationDTO;
-import br.com.nivlabs.gp.models.enums.AccomodationType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

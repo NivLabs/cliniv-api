@@ -2,7 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.nivlabs.gp.models.enums.AccomodationType;
+import br.com.nivlabs.gp.enums.AccomodationType;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

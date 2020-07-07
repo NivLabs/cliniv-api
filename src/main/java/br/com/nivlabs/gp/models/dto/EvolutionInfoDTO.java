@@ -2,6 +2,8 @@ package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -32,11 +34,19 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Identificador únimco da evolução clínica")
     private Long id;
 
-    @ApiModelProperty("Anotações da evolução")
-    private String annotation;
+    @ApiModelProperty("Identificador únimco do atendimento (Obrigatório)")
+    @NotNull(message = "Informe o código do atendimento")
+    private Long attendanceId;
+
+    @ApiModelProperty("Identificador únimco da acomodação do paciente (Opcional se já houver registro com acomodação)")
+    private Long accomodationId;
+
+    @ApiModelProperty("Descrição da evolução (Obrigatório)")
+    @NotNull(message = "Informe a descrição da evolução clínica")
+    private String description;
 
     @ApiModelProperty("Data/Hora da leitura da evolução")
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime datetime;
 
 }

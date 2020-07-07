@@ -42,6 +42,10 @@ public class EventTypeDTO extends DataTransferObjectBase {
     @Size(min = 3, max = 200, message = "A descricao do tipo de evento deve conter ao menos três letras")
     private String description;
 
+    public EventTypeDTO(Long id) {
+        this.id = id;
+    }
+
     @JsonIgnore
     public EventType getEventTypeDomainFromDTO() {
         EventType domain = new EventType();

@@ -9,10 +9,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.controller.filters.ProcedureFilters;
+import br.com.nivlabs.gp.enums.ActiveType;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure_;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
-import br.com.nivlabs.gp.models.enums.ActiveType;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.gp.repository.custom.IExpression;

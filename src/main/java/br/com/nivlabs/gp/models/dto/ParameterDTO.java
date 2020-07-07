@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import br.com.nivlabs.gp.models.enums.MetaType;
+import br.com.nivlabs.gp.enums.MetaType;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
