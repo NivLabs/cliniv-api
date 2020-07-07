@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.SectorFilters;
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.RoomOrBed;
+import br.com.nivlabs.gp.models.domain.Accomodation;
 import br.com.nivlabs.gp.models.domain.Sector;
-import br.com.nivlabs.gp.models.dto.RoomOrBedDTO;
+import br.com.nivlabs.gp.models.dto.AccomodationDTO;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
 import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
-import br.com.nivlabs.gp.repository.RoomOrBedRepository;
+import br.com.nivlabs.gp.repository.AccomodationRepository;
 import br.com.nivlabs.gp.repository.SectorRepository;
 
 /**
@@ -33,7 +33,7 @@ public class SectorService implements GenericService {
     private SectorRepository dao;
 
     @Autowired
-    private RoomOrBedRepository roomOrBedRepository;
+    private AccomodationRepository roomOrBedRepository;
 
     /**
      * Realiza a busca pagina de setores
@@ -55,7 +55,7 @@ public class SectorService implements GenericService {
         SectorInfoDTO sectorInfoDTO = new SectorInfoDTO();
         BeanUtils.copyProperties(sector, sectorInfoDTO, "listOfRoomsOrBeds");
         sector.getListOfRoomsOrBeds().forEach(item -> sectorInfoDTO.getListOfRoomsOrBeds()
-                .add(new RoomOrBedDTO(item.getId(), sector.getId(), item.getDescription(), item.getType())));
+                .add(new AccomodationDTO(item.getId(), sector.getId(), item.getDescription(), item.getType())));
         return sectorInfoDTO;
     }
 
@@ -82,8 +82,8 @@ public class SectorService implements GenericService {
      * @param request
      * @return
      */
-    public RoomOrBedDTO updateRoomOrBedDTO(Long id, RoomOrBedDTO request) {
-        RoomOrBed entity = roomOrBedRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+    public AccomodationDTO updateRoomOrBedDTO(Long id, AccomodationDTO request) {
+        Accomodation entity = roomOrBedRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Sala ou leito com o identificador %s não encontrado", id)));
         BeanUtils.copyProperties(request, entity, "id");
         entity = roomOrBedRepository.save(entity);
@@ -97,7 +97,7 @@ public class SectorService implements GenericService {
      * @param id
      */
     public void deleteRoomOrBed(Long id) {
-        RoomOrBed entity = roomOrBedRepository.findById(id)
+        Accomodation entity = roomOrBedRepository.findById(id)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
                                                                                          "Sala ou leito com o identificado %s não encontrado, não é possível deletar um registro inexistente.",
                                                                                          id)));
@@ -125,8 +125,8 @@ public class SectorService implements GenericService {
         return sectorDTO;
     }
 
-    public RoomOrBedDTO persist(RoomOrBedDTO request) {
-        RoomOrBed roomOrBad = new RoomOrBed();
+    public AccomodationDTO persist(AccomodationDTO request) {
+        Accomodation roomOrBad = new Accomodation();
         roomOrBad.setSector(new Sector(request.getSectorId()));
         roomOrBad.setDescription(request.getDescription());
         roomOrBad.setType(request.getType());

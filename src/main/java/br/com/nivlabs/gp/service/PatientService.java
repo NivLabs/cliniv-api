@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.PatientFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
+import br.com.nivlabs.gp.enums.PatientType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.PatientAllergy;
@@ -27,8 +29,6 @@ import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.models.enums.DocumentType;
-import br.com.nivlabs.gp.models.enums.PatientType;
 import br.com.nivlabs.gp.repository.PatientAllergyRepository;
 import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.util.StringUtils;

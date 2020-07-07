@@ -2,8 +2,8 @@ package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
 
-import br.com.nivlabs.gp.models.enums.EntryType;
-import br.com.nivlabs.gp.models.enums.PatientType;
+import br.com.nivlabs.gp.enums.EntryType;
+import br.com.nivlabs.gp.enums.PatientType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

@@ -17,8 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import br.com.nivlabs.gp.enums.PatientType;
 import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt;
-import br.com.nivlabs.gp.models.enums.PatientType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

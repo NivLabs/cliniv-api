@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.enums.DigitalDocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.gp.models.enums.DigitalDocumentType;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
 import net.sf.jasperreports.engine.JRException;
@@ -33,9 +33,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 public class ReportService implements GenericService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @Autowired
-    private DigitalDocumentService docService;
 
     @Autowired
     private JasperReportsCreator report;

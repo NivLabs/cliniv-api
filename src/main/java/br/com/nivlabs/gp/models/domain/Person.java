@@ -15,9 +15,9 @@ import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import br.com.nivlabs.gp.enums.Gender;
+import br.com.nivlabs.gp.enums.GenderIdeology;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
-import br.com.nivlabs.gp.models.enums.Gender;
-import br.com.nivlabs.gp.models.enums.GenderIdeology;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

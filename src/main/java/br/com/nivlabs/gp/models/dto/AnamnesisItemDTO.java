@@ -2,7 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.nivlabs.gp.models.enums.MetaType;
+import br.com.nivlabs.gp.enums.MetaType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

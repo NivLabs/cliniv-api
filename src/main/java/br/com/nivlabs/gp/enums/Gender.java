@@ -1,11 +1,11 @@
-package br.com.nivlabs.gp.models.enums;
+package br.com.nivlabs.gp.enums;
 
 /**
  * Classe Gender.java
  * 
  * Representa o Sexo Biológico da pessoa
  * 
- * M -> Masculino, F -> Feminino
+ * M Masculino, F Feminino
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  * 

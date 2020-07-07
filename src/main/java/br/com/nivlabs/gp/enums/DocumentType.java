@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.models.enums;
+package br.com.nivlabs.gp.enums;
 
 /**
  * Classe DocumentType.java

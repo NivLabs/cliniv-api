@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.UserFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.models.dto.UserDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
-import br.com.nivlabs.gp.models.enums.DocumentType;
 import br.com.nivlabs.gp.service.UserService;
 import br.com.nivlabs.gp.service.security.AuthService;
 import io.swagger.annotations.Api;

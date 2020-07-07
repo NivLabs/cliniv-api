@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
+import br.com.nivlabs.gp.enums.ActiveType;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 import br.com.nivlabs.gp.models.domain.Attendance_;
@@ -16,7 +17,6 @@ import br.com.nivlabs.gp.models.domain.Patient_;
 import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.Sector_;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
-import br.com.nivlabs.gp.models.enums.ActiveType;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.gp.repository.custom.IExpression;
@@ -48,12 +48,14 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
             attendanceConverted.setType(attendance.getEntryType());
             attendanceConverted.setPatientType(attendance.getPatient().getType());
             attendanceConverted.setIsFinished(attendance.getDateTimeExit() != null);
+
+            // Pega o setor atual do atendimento
             if (!attendance.getEvents().isEmpty()) {
                 List<AttendanceEvent> eventsWithSector = attendance.getEvents().stream()
-                        .filter(event -> event.getRoomOrBed() != null).collect(Collectors.toList());
+                        .filter(event -> event.getAccomodation() != null).collect(Collectors.toList());
                 if (!eventsWithSector.isEmpty()) {
                     eventsWithSector.sort((first, second) -> first.getId().compareTo(second.getId()));
-                    attendanceConverted.setSectorDescription(eventsWithSector.get(0).getRoomOrBed().getDescription());
+                    attendanceConverted.setSectorDescription(eventsWithSector.get(0).getAccomodation().getDescription());
                 }
             }
 

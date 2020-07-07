@@ -2,7 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.nivlabs.gp.models.enums.RoomOrBedType;
+import br.com.nivlabs.gp.enums.AccomodationType;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("Sala (ambulatório) ou Leito")
-public class RoomOrBedDTO extends DataTransferObjectBase {
+public class AccomodationDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 1574668174638044648L;
 
@@ -27,9 +27,9 @@ public class RoomOrBedDTO extends DataTransferObjectBase {
     private String description;
 
     @NotNull(message = "Informe se é sala (ambulatório) ou leito")
-    private RoomOrBedType type;
+    private AccomodationType type;
 
-    public RoomOrBedDTO(Long id) {
+    public AccomodationDTO(Long id) {
         super();
         this.id = id;
     }

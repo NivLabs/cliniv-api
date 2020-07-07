@@ -9,7 +9,7 @@
 		<version>2.3.1.RELEASE</version>
 	</parent>
 
-	<groupId>br.com.ft</groupId>
+	<groupId>br.com.nivlabs</groupId>
 	<artifactId>gestao-de-prontuario</artifactId>
 	<version>beta-v1.0.0</version>
 	<name>Gestão de Prontuário</name>

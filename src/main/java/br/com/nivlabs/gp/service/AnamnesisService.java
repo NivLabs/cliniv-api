@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
 import br.com.nivlabs.gp.models.domain.Attendance;
+import br.com.nivlabs.gp.models.dto.AccomodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
@@ -32,7 +33,6 @@ import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.gp.models.dto.RoomOrBedDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.AnamneseRepository;
@@ -181,7 +181,7 @@ public class AnamnesisService implements GenericService {
         event.setEventDateTime(LocalDateTime.now());
         event.setObservations("Criação da anamnese");
         event.setResponsible(getResponsibleFromUser(requestOwner));
-        event.setRoomOrBed(new RoomOrBedDTO(request.getRoomOrBedId()));
+        event.setAccomodation(new AccomodationDTO(request.getAccomodationId()));
         logger.info("Evento processado, inserindo evento na base de dados...");
 
         try {

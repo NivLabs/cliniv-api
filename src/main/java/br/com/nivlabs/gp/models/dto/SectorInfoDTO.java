@@ -33,7 +33,7 @@ public class SectorInfoDTO extends DataTransferObjectBase {
 
 	private String description;
 
-	private List<RoomOrBedDTO> listOfRoomsOrBeds = new ArrayList<>();
+	private List<AccomodationDTO> listOfRoomsOrBeds = new ArrayList<>();
 
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDateTime createdAt;

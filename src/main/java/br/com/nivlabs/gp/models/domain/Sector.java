@@ -51,7 +51,7 @@ public class Sector extends BaseObjectWithId {
 	private LocalDateTime createdAt;
 
 	@OneToMany(mappedBy = "sector", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-	private List<RoomOrBed> listOfRoomsOrBeds = new ArrayList<>();
+	private List<Accomodation> listOfRoomsOrBeds = new ArrayList<>();
 
 	public Sector(Long id) {
 		this.id = id;

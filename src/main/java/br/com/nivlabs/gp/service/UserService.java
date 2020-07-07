@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.UserFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
@@ -25,7 +26,6 @@ import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.RoleDTO;
 import br.com.nivlabs.gp.models.dto.UserDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
-import br.com.nivlabs.gp.models.enums.DocumentType;
 import br.com.nivlabs.gp.repository.UserRepository;
 
 /**

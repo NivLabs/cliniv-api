@@ -19,8 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import br.com.nivlabs.gp.enums.EntryType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
-import br.com.nivlabs.gp.models.enums.EntryType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,44 +41,47 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Attendance extends BaseObjectWithId {
 
-	private static final long serialVersionUID = -2728953699232281599L;
+    private static final long serialVersionUID = -2728953699232281599L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "ID_PACIENTE")
-	private Patient patient;
+    @ManyToOne
+    @JoinColumn(name = "ID_PACIENTE")
+    private Patient patient;
 
-	@Column(name = "DH_ENTRADA")
-	private LocalDateTime dateTimeEntry;
+    @Column(name = "DH_ENTRADA")
+    private LocalDateTime dateTimeEntry;
 
-	@Column(name = "DH_SAIDA")
-	private LocalDateTime dateTimeExit;
+    @Column(name = "DH_SAIDA")
+    private LocalDateTime dateTimeExit;
 
-	@ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-	@JoinColumn(name = "SETOR_ATUAL")
-	private Sector currentSector;
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "SETOR_ATUAL")
+    private Sector currentSector;
 
-	@Column(name = "TIPO_ENTRADA")
-	@Enumerated(EnumType.STRING)
-	private EntryType entryType;
+    @Column(name = "TIPO_ENTRADA")
+    @Enumerated(EnumType.STRING)
+    private EntryType entryType;
 
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH, mappedBy = "attendance")
-	private List<AttendanceEvent> events = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH, mappedBy = "attendance")
+    private List<AttendanceEvent> events = new ArrayList<>();
 
-	@Column(name = "MOTIVO_ENTRADA")
-	private String reasonForEntry;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH, mappedBy = "attendance")
+    private List<Evolution> evolutions = new ArrayList<>();
 
-	public Attendance(Long id) {
-		this.id = id;
-	}
+    @Column(name = "MOTIVO_ENTRADA")
+    private String reasonForEntry;
 
-	@PrePersist
-	public void prePersist() {
-		final LocalDateTime now = LocalDateTime.now();
-		this.dateTimeEntry = now;
-	}
+    public Attendance(Long id) {
+        this.id = id;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        final LocalDateTime now = LocalDateTime.now();
+        this.dateTimeEntry = now;
+    }
 
 }
