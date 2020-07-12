@@ -36,15 +36,4 @@ public class PrescriptionService implements GenericService {
 
         return null;
     }
-
-    /**
-     * Busca informações detalhadas da prescrição médica do paciente
-     * 
-     * @param id
-     * @return
-     */
-    public PrescriptionInfoDTO findById(Long id) {
-        return null;
-    }
-
 }

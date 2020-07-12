@@ -48,9 +48,6 @@ public class UserApplication extends BaseObjectWithCreatedAt {
     @JoinColumn(name = "ID_PESSOA")
     private Person person;
 
-    @Column(name = "EMAIL")
-    private String email;
-
     @Column(name = "USUARIO")
     private String userName;
 
