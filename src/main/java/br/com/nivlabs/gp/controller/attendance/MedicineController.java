@@ -41,7 +41,7 @@ public class MedicineController {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.persist(request, userFromSession.getUsername()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createPrescription(request, userFromSession.getUsername()));
     }
 
 }

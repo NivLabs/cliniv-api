@@ -24,70 +24,71 @@ import br.com.nivlabs.gp.repository.UserRepository;
 @Service
 public class AuthService {
 
-	private static Logger logger = LoggerFactory.getLogger(AuthService.class);
+    private static Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-	@Autowired
-	UserRepository userRepo;
+    @Autowired
+    UserRepository userRepo;
 
-	@Autowired
-	BCryptPasswordEncoder bc;
+    @Autowired
+    BCryptPasswordEncoder bc;
 
-	/**
-	 * Cria nova senha
-	 * 
-	 * @param newPasswordRequest
-	 */
-	public void createNewPassword(ForgotPasswordRequestDTO newPasswordRequest) {
-		UserApplication usuario = userRepo
-				.findByUserNameOrEmail(newPasswordRequest.getUsernameOrEmail(), newPasswordRequest.getUsernameOrEmail())
-				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
-						"Usuário não encontrado para o email/usuário: %s", newPasswordRequest.getUsernameOrEmail())));
+    /**
+     * Cria nova senha
+     * 
+     * @param newPasswordRequest
+     */
+    public void createNewPassword(ForgotPasswordRequestDTO newPasswordRequest) {
+        UserApplication usuario = userRepo
+                .findByUserName(newPasswordRequest.getUsername())
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
+                                                                                         "Usuário não encontrado para o email/usuário: %s",
+                                                                                         newPasswordRequest.getUsername())));
 
-		if (!usuario.getPerson().getBornDate().equals(newPasswordRequest.getBornDate())
-				&& !usuario.getPerson().getMotherName().equals(newPasswordRequest.getMotherName()))
-			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-					"Você não forneceu as informações necessárias para recuperar a senha");
+        if (!usuario.getPerson().getBornDate().equals(newPasswordRequest.getBornDate())
+                && !usuario.getPerson().getMotherName().equals(newPasswordRequest.getMotherName()))
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Você não forneceu as informações necessárias para recuperar a senha");
 
-		usuario.setPassword(bc.encode(newPasswordRequest.getNewPassword()));
-		userRepo.save(usuario);
-	}
+        usuario.setPassword(bc.encode(newPasswordRequest.getNewPassword()));
+        userRepo.save(usuario);
+    }
 
-	/**
-	 * Altera a senha do usuário ativo na sessão
-	 * 
-	 * @param newPasswordDTO
-	 * @param userFromSession
-	 */
-	public void updatePassword(NewPasswordRequestDTO newPasswordDTO, UserOfSystem userFromSession) {
-		if (!newPasswordDTO.getNewPassword().equals(newPasswordDTO.getConfirmNewPassword())) {
-			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-					"A nova senha e a confirmação de nova senha devem ser iguais");
-		}
-		UserApplication userFromDb = userRepo.findByUserName(userFromSession.getUsername())
-				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+    /**
+     * Altera a senha do usuário ativo na sessão
+     * 
+     * @param newPasswordDTO
+     * @param userFromSession
+     */
+    public void updatePassword(NewPasswordRequestDTO newPasswordDTO, UserOfSystem userFromSession) {
+        if (!newPasswordDTO.getNewPassword().equals(newPasswordDTO.getConfirmNewPassword())) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                    "A nova senha e a confirmação de nova senha devem ser iguais");
+        }
+        UserApplication userFromDb = userRepo.findByUserName(userFromSession.getUsername())
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-		if (bc.matches(newPasswordDTO.getOldPassword(), userFromDb.getPassword())) {
-			userFromDb.setPassword(bc.encode(newPasswordDTO.getNewPassword()));
-		} else {
-			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A senha atual não está correta");
-		}
-		userRepo.saveAndFlush(userFromDb);
-	}
+        if (bc.matches(newPasswordDTO.getOldPassword(), userFromDb.getPassword())) {
+            userFromDb.setPassword(bc.encode(newPasswordDTO.getNewPassword()));
+        } else {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A senha atual não está correta");
+        }
+        userRepo.saveAndFlush(userFromDb);
+    }
 
-	/**
-	 * Reseta a senha do usuário
-	 * 
-	 * @param id
-	 */
-	public void resetPassword(Long id) {
-		logger.info("Iniciando busca de paciente para reset de senha :: ID -> {}", id);
-		UserApplication userFromDb = userRepo.findById(id)
-				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+    /**
+     * Reseta a senha do usuário
+     * 
+     * @param id
+     */
+    public void resetPassword(Long id) {
+        logger.info("Iniciando busca de paciente para reset de senha :: ID -> {}", id);
+        UserApplication userFromDb = userRepo.findById(id)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
 
-		logger.info("Paciente encontrado :: CPF -> {}", userFromDb.getPerson().getCpf());
+        logger.info("Paciente encontrado :: CPF -> {}", userFromDb.getPerson().getCpf());
 
-		userFromDb.setPassword(bc.encode(userFromDb.getPerson().getCpf()));
-		userRepo.saveAndFlush(userFromDb);
-	}
+        userFromDb.setPassword(bc.encode(userFromDb.getPerson().getCpf()));
+        userRepo.saveAndFlush(userFromDb);
+    }
 
 }

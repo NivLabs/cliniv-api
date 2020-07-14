@@ -1,7 +1,5 @@
 package br.com.nivlabs.gp.models.dto;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -32,8 +30,13 @@ public class PrescriptionItemDTO extends DataTransferObjectBase {
     @NotEmpty(message = "Informe qual é o componente que o item representa (Descrição do Medicamento ou procedimento)")
     private String component;
 
+    @ApiModelProperty("Quantidade de uso (Se houver)")
+    private Double quantity;
+
+    @ApiModelProperty("Unidade de medida (Se houver")
+    private String measureUnit;
+
     @ApiModelProperty("Tipo do item (MEDICINE OU PROCEDURE")
-    @Enumerated(EnumType.STRING)
     @NotNull(message = "Informe o tipo do item da prescrição")
     private PrescriptionItemType type;
 

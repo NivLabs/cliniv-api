@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +34,7 @@ import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
-import br.com.nivlabs.gp.repository.AnamneseRepository;
+import br.com.nivlabs.gp.repository.AnamnesisRepository;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
@@ -49,16 +48,17 @@ public class AnamnesisService implements GenericService {
 
     private static final String TODAY = "TODAY";
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
-    private static final String READER_NAME = "READER_NAME";
+    private static final String REQUESTER_NAME = "READER_NAME";
     private static final String VISIT_ID = "VISIT_ID";
     private static final String FALSE = "false";
     private static final String TRUE = "true";
     private static final InputStream REPORT_SOURCE = ClassLoader.getSystemResourceAsStream("reports/Anamnese.jrxml");
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private Logger logger;
 
     @Autowired
-    private AnamneseRepository dao;
+    private AnamnesisRepository dao;
 
     @Autowired
     private ReportService reportService;
@@ -237,7 +237,7 @@ public class AnamnesisService implements GenericService {
         ReportParam params = new ReportParam();
         params.getParams().put(VISIT_ID, request.getAttendanceId());
         params.getParams().put("DOC_TITLE", "RELATÓRIO DE ANAMNESE DO PACIENTE");
-        params.getParams().put(READER_NAME, requestOwner.getFirstName() + " " + requestOwner.getLastName());
+        params.getParams().put(REQUESTER_NAME, requestOwner.getFirstName() + " " + requestOwner.getLastName());
         params.getParams().put(HOSPITAL_LOGO, logoBase64);
         params.getParams().put(TODAY, new Date());
 

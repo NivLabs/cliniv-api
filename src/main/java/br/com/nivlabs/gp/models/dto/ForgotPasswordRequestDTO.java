@@ -27,7 +27,7 @@ public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Nome de usuário ou e-mail")
     @NotNull(message = "Informe um e-mail ou nome de usuário!")
-    private String usernameOrEmail;
+    private String username;
 
     @ApiModelProperty("Nome completo da mãe")
     @NotNull(message = "Informe o nome materno completo!")

@@ -1,6 +1,5 @@
 package br.com.nivlabs.gp.models.dto;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +33,9 @@ public class PrescriptionInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Lista de itens da prescrição")
     private List<PrescriptionItemDTO> item = new ArrayList<>();
 
-    @ApiModelProperty("Data e hora de criação da prescrição")
-    private LocalDateTime createdAt;
+    @ApiModelProperty("Indica uma prescrição especial com duas vias para medicamentos de receita obrigatória")
+    private boolean special;
 
-    @ApiModelProperty("Flag de status da prescrição (true - ativa ")
-    private boolean status;
-
+    @ApiModelProperty("Indica que a prescrição deve ser usada no prontuário para controle de checagem de medicamento")
+    private boolean insertToMedicalRecords;
 }
