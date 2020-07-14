@@ -32,7 +32,7 @@ public class GTISSClient implements RestClient {
     private static Logger logger = LoggerFactory.getLogger(GTISSClient.class);
     
     /**
-     * Busca medicamento por descrição na Viadescrição API
+     * Busca medicamento por descrição na GTISS API
      * 
      * @param descrição
      * @return
