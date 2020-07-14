@@ -1,7 +1,5 @@
 package br.com.nivlabs.gp.client.gtiss;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.nivlabs.gp.client.RestClientObject;
