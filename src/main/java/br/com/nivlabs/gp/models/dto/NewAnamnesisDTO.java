@@ -25,7 +25,6 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
     @ApiModelProperty("Identificador do atendimento")
     private Long attendanceId;
 
-    @NotNull(message = "Informe a sala ou leito do procedimento de anamnese")
     @ApiModelProperty("Sala ou leito onde a anamnese foi realizada")
     private Long accomodationId;
 
