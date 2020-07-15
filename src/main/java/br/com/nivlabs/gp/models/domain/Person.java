@@ -86,4 +86,6 @@ public class Person extends BaseObjectWithId {
     @Lob
     private String profilePhoto;
 
+    @Column(name = "EMAIL")
+    private String email;
 }

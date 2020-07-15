@@ -38,6 +38,8 @@ import br.com.nivlabs.gp.repository.EvolutionRepository;
 @Service
 public class EvolutionService implements GenericService {
 
+    private static final String EVOLUTION_REPORT_NAME = "Relatório de Evolução Clínica";
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String ADD_EVOLUTION_TEXT = "Adição de evolução clínica";
@@ -135,7 +137,7 @@ public class EvolutionService implements GenericService {
         event.setObservations(ADD_EVOLUTION_TEXT);
 
         DigitalDocumentDTO document = reportService
-                .createDocumentFromReport(request.getAttendanceId(), "Relatório de Evolução Clínica",
+                .createDocumentFromReport(request.getAttendanceId(), EVOLUTION_REPORT_NAME,
                                           getEvolutionReportParams(request, userInfo),
                                           REPORT_SOURCE);
         event.getDocuments().add(document);
@@ -212,7 +214,7 @@ public class EvolutionService implements GenericService {
         ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFirstName());
 
-        logger.info("Realizando processamento do profissional para a requisição de anamnese");
+        logger.info("Realizando processamento do profissional para a requisição de evolução clínica");
         ResponsibleDTO responsible = new ResponsibleDTO();
         BeanUtils.copyProperties(responsibleInformations, responsible);
         return responsible;
