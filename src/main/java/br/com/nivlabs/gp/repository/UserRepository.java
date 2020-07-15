@@ -21,12 +21,6 @@ public interface UserRepository extends JpaRepository<UserApplication, Long>, Us
 
     public Optional<UserApplication> findByUserName(String username);
 
-    /**
-     * @param usernameOrEmail
-     * @return
-     */
-    public Optional<UserApplication> findByUserNameOrEmail(String username, String email);
-
     @Query("from UserApplication where person.cpf = :cpf")
     public Optional<UserApplication> findByCpf(String cpf);
 }

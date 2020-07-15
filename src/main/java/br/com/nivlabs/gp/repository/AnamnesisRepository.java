@@ -9,7 +9,7 @@ import br.com.nivlabs.gp.models.domain.Anamnesis;
 import br.com.nivlabs.gp.models.domain.Attendance;
 
 /**
- * AnamneseDao.java
+ * AnamnesisRepository.java
  *
  * @author <a href="henriquedreyer@gmail.com">Henrique Dreyer</a>
  *
@@ -17,8 +17,8 @@ import br.com.nivlabs.gp.models.domain.Attendance;
  * 
  */
 @Repository
-public interface AnamneseRepository extends JpaRepository<Anamnesis, Long> {
+public interface AnamnesisRepository extends JpaRepository<Anamnesis, Long> {
 
-	public List<Anamnesis> findByAttendance(Attendance attendance);
+    public List<Anamnesis> findByAttendance(Attendance attendance);
 
 }
