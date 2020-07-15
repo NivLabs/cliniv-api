@@ -28,7 +28,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Endpoint - Prescrição do paciente")
 @RestController
 @RequestMapping("/attendance/prescription")
-public class MedicineController {
+public class PrescriptionController {
 
     @Autowired
     private PrescriptionService service;
