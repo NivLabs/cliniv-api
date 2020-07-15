@@ -28,6 +28,7 @@ import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
+import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
@@ -139,7 +140,11 @@ public class AnamnesisService implements GenericService {
      */
     public NewAnamnesisDTO newAnamnesisResponse(NewAnamnesisDTO request, String requestOwner) {
         logger.info("Iniciando o preenchimento de um novo questionário de anamnese...");
-        attendanceService.findMedicalRecordByAttendanceId(request.getAttendanceId());
+        MedicalRecordDTO medicalRecord = attendanceService.findMedicalRecordByAttendanceId(request.getAttendanceId());
+        if (request.getAccomodationId() == null && medicalRecord.getLastAccommodation() == null) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                    "O atendimento atual não possui acomodação, informe a acomodação em que a anamnese está sendo realizada");
+        }
         if (!findByAttendance(new Attendance(request.getAttendanceId())).isEmpty()) {
             logger.warn("Este atendimento já possui um questionário de anamnese respondido, deletando formulário anterior para sobreescrita..");
             undoProcess(request);
@@ -160,7 +165,7 @@ public class AnamnesisService implements GenericService {
                 .createDocumentFromReport(request.getAttendanceId(), "Relatório de Anamnese", getAnamnesisReportParams(request, user),
                                           REPORT_SOURCE);
 
-        createAnamneseDocumentEvent(request, document, user);
+        createAnamneseDocumentEvent(request, medicalRecord, document, user);
 
         return request;
     }
@@ -172,7 +177,8 @@ public class AnamnesisService implements GenericService {
      * @param document
      * @param requestOwner
      */
-    private void createAnamneseDocumentEvent(NewAnamnesisDTO request, DigitalDocumentDTO document, UserInfoDTO requestOwner) {
+    private void createAnamneseDocumentEvent(NewAnamnesisDTO request, MedicalRecordDTO medicalRecord, DigitalDocumentDTO document,
+                                             UserInfoDTO requestOwner) {
         logger.info("Iniciando criação de Evento de atendimento para anamnese...");
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
         event.setEventType(new EventTypeDTO(4L, "ANAMNESE", "Geração de Anamnese"));
@@ -181,7 +187,10 @@ public class AnamnesisService implements GenericService {
         event.setEventDateTime(LocalDateTime.now());
         event.setObservations("Criação da anamnese");
         event.setResponsible(getResponsibleFromUser(requestOwner));
-        event.setAccomodation(new AccomodationDTO(request.getAccomodationId()));
+        if (request.getAccomodationId() == null)
+            event.setAccomodation(medicalRecord.getLastAccommodation());
+        else
+            event.setAccomodation(new AccomodationDTO(request.getAccomodationId()));
         logger.info("Evento processado, inserindo evento na base de dados...");
 
         try {
