@@ -41,7 +41,8 @@ public class PrescriptionController {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createPrescription(request, userFromSession.getUsername()));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.createPrescription(request, userFromSession.getUsername()));
     }
 
 }

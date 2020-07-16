@@ -22,14 +22,14 @@ import br.com.nivlabs.gp.repository.UserRepository;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserApplication user = userRepository.findByUserName(username)
-				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-						"Usuário não encontrado! Username: " + username + ", tipo " + UserApplication.class.getName()));
-		return new UserOfSystem(user.getUserName(), user.getPassword(), user.isActive(), user.getRoles());
-	}
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserApplication user = userRepository.findByUserName(username)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                        "Usuário não encontrado! Username: " + username + ", tipo " + UserApplication.class.getName()));
+        return new UserOfSystem(user.getUserName(), user.getPassword(), user.getPerson(), user.isActive(), user.getRoles());
+    }
 }
