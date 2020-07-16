@@ -368,30 +368,4 @@ public class GTISSClient implements RestClient {
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar material na API Externa");
         }
     }
-    
-    public static void main(String[] args) {
-		GTISSClient gtissClient = new GTISSClient();
-		
-		Medicine medicine = gtissClient.getMedicineByCode("90042247", null);
-		System.out.print(medicine.toString());
-		
-		
-		Page<Medicine> page1 = gtissClient.getMedicineByLaboratory("med", null);
-		
-		List<Medicine> medicamentos1 = page1.getContent();
-		
-		for (Medicine med1 : medicamentos1) {
-			System.out.println(med1.toString());
-		}
-		
-		
-		Page<Medicine> page = gtissClient.getMedicineByDescription("dipirona", null);
-		
-		List<Medicine> medicamentos = page.getContent();
-		
-		for (Medicine med : medicamentos) {
-			System.out.println(med.toString());
-		}
-		
-	}
 }
