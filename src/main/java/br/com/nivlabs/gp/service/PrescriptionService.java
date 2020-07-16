@@ -8,8 +8,10 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
@@ -131,6 +133,8 @@ public class PrescriptionService implements GenericService {
     private ResponsibleDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
         logger.info("Iniciando busca de responsável pelo usuário da requisição...");
         ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
+        if (responsibleInformations.getId() == null)
+            throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFirstName());
 
         logger.info("Realizando processamento do profissional para a requisição de prescrição");

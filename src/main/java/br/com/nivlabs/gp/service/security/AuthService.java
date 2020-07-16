@@ -1,7 +1,6 @@
 package br.com.nivlabs.gp.service.security;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,7 +23,8 @@ import br.com.nivlabs.gp.repository.UserRepository;
 @Service
 public class AuthService {
 
-    private static Logger logger = LoggerFactory.getLogger(AuthService.class);
+    @Autowired
+    private static Logger logger;
 
     @Autowired
     UserRepository userRepo;
@@ -40,9 +40,8 @@ public class AuthService {
     public void createNewPassword(ForgotPasswordRequestDTO newPasswordRequest) {
         UserApplication usuario = userRepo
                 .findByUserName(newPasswordRequest.getUsername())
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
-                                                                                         "Usuário não encontrado para o email/usuário: %s",
-                                                                                         newPasswordRequest.getUsername())));
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                        String.format("Usuário não encontrado para %s", newPasswordRequest.getUsername())));
 
         if (!usuario.getPerson().getBornDate().equals(newPasswordRequest.getBornDate())
                 && !usuario.getPerson().getMotherName().equals(newPasswordRequest.getMotherName()))
