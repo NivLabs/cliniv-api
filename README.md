@@ -49,7 +49,7 @@ Atualmente encontra-se na versão 1.0.0
 - [x] Paciente não identificado
 - [x] Fluxo padrão para atendimento ambulatorial
 - [x] Fluxo padrão para atendimento emergencial
-- [ ] Cadastro de medicamentos e materiais
+- [x] Cadastro de medicamentos e materiais
 
 ---
 
