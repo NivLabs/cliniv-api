@@ -1,7 +1,7 @@
 ---
 name: Relatório de Erro
 about: " Crie um relatório para nos ajudar a melhorar"
-title: "[BUG]"
+title: "[bug]"
 labels: bug
 assignees: ''
 
@@ -11,16 +11,16 @@ O relatório de erros deve ser usado **APENAS** para relatar erros. Novos recurs
 
 <! --- Forneça um resumo geral do problema no título acima ->
 
+## Problema
+<! --- Conte-nos o que acontece, em vez do comportamento esperado ->
+
 ## Comportamento esperado
 <! --- Diga-nos o que deve acontecer ->
-
-## Comportamento atual
-<! --- Conte-nos o que acontece, em vez do comportamento esperado ->
 
 ## Solução possível
 <! --- Não obrigatório, mas sugira uma correção / razão para o erro, ->
 
-## Passos para reproduzir
+## Passos para reproduzir (Se possível)
 <! --- Forneça um link para um exemplo ao vivo ou um conjunto inequívoco de etapas para ->
 <! --- reproduz esse bug. Inclua código para reproduzir, se relevante ->
 1
