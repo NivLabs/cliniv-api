@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,15 +28,19 @@ import lombok.NoArgsConstructor;
 @ApiModel("Informações do Setor")
 public class SectorInfoDTO extends DataTransferObjectBase {
 
-	private static final long serialVersionUID = -8018406138528606923L;
+    private static final long serialVersionUID = -8018406138528606923L;
 
-	private Long id;
+    @ApiModelProperty("Identificador único do setor")
+    private Long id;
 
-	private String description;
+    @ApiModelProperty("Descrição do setor")
+    private String description;
 
-	private List<AccomodationDTO> listOfRoomsOrBeds = new ArrayList<>();
+    @ApiModelProperty("Lista de salas e leitos do setor (Acomodações)")
+    private List<AccomodationDTO> listOfRoomsOrBeds = new ArrayList<>();
 
-	@DateTimeFormat(iso = ISO.DATE)
-	private LocalDateTime createdAt;
+    @ApiModelProperty("Data / Hora de criação do setor")
+    @DateTimeFormat(iso = ISO.DATE)
+    private LocalDateTime createdAt;
 
 }
