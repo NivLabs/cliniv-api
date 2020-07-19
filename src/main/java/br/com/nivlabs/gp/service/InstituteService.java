@@ -1,5 +1,6 @@
 package br.com.nivlabs.gp.service;
 
+import java.io.FileInputStream;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -71,4 +72,9 @@ public class InstituteService implements GenericService {
 
         return response;
     }
+
+	public void setCompanyLogo(FileInputStream fis) throws Throwable {
+		instituteRepo.setCompanyLogo(fis.readAllBytes());
+		
+	}
 }
