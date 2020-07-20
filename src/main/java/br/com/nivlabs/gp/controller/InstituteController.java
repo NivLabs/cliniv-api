@@ -1,9 +1,6 @@
 package br.com.nivlabs.gp.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,15 +42,7 @@ public class InstituteController {
     @ApiOperation(nickname = "institute-upload-logo", value = "Insere a logo do estabelecimento")
     @PostMapping()
     @PreAuthorize("hasAnyRole('INSTITUTO_ESCRITA', 'ADMIN')")
-    public void uploadCompanyLogo(MultipartFile logo) throws Throwable {
-    	System.gc();
-		byte[] bytes = logo.getBytes();
-
-		File file = new File(logo.getOriginalFilename());
-		BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
-		stream.write(bytes);
-		stream.close();
-		FileInputStream fis = new FileInputStream(file);
-		instituteService.setCompanyLogo(fis);
+    public void uploadCompanyLogo(MultipartFile logo) throws IOException{
+		instituteService.setCompanyLogo(logo);
     }
 }
