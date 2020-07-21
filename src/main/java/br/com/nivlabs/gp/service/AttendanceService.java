@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.EntryType;
@@ -28,12 +30,18 @@ import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.dto.AccomodationDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
+import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
+import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
+import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
+import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
+import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
+import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
 
@@ -48,6 +56,8 @@ import br.com.nivlabs.gp.repository.AttendanceRepository;
 @Service
 public class AttendanceService implements GenericService {
 
+    private static final String CLOSE_ATTENDANCE_TEXT = "Encerramento de atendimento";
+
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
@@ -56,6 +66,14 @@ public class AttendanceService implements GenericService {
     private AttendanceEventRepository attendanceEventRepo;
     @Autowired
     private PatientService patientService;
+    @Autowired
+    private SecurityContext securityContext;
+    @Autowired
+    private ResponsibleService responsibleService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AttendanceEventService attendanceEventService;
 
     public Page<AttendanceDTO> getAttendancesPage(AttendanceFilters filters, Pageable pageRequest) {
         return dao.resumedList(filters, pageRequest);
@@ -225,6 +243,69 @@ public class AttendanceService implements GenericService {
      */
     private AccomodationDTO getLastAccomodationByPatientId(List<AttendanceEventDTO> listOfEventsFromDb) {
         return listOfEventsFromDb.get(listOfEventsFromDb.size() - 1).getAccomodation();
+    }
+
+    /**
+     * Realiza alta de paciente com atendimento ativo
+     * 
+     * @param id
+     * @param request
+     */
+    public void closeAttendance(Long id, CloseAttandenceDTO request) {
+        logger.info("Iniciando processo de encerramento de atendimento,\nVerificando situação do atendimento solicitado...");
+        Attendance attendanceFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                "Não é possível encerrar um atendimento inexistente"));
+        if (attendanceFromDb.getDateTimeExit() != null) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Este atendimento já foi encerrado");
+        }
+        NewAttendanceEventDTO newAttendanceEvent = createAttendanceRequest(attendanceFromDb, request);
+        attendanceFromDb.setDateTimeExit(newAttendanceEvent.getEventDateTime());
+        dao.save(attendanceFromDb);
+    }
+
+    /**
+     * Cria um evento de encerramento de atendimento (Alta)
+     * 
+     * @param attendance
+     * @param request
+     * @return
+     */
+    private NewAttendanceEventDTO createAttendanceRequest(Attendance attendance, CloseAttandenceDTO request) {
+        logger.info("Criando evento de atendimento para alta de paciente");
+        NewAttendanceEventDTO event = new NewAttendanceEventDTO();
+        event.setAttendanceId(attendance.getId());
+        event.setEventDateTime(request.getDatetime());
+        event.setEventType(new EventTypeDTO(request.getEventTypeId(), CLOSE_ATTENDANCE_TEXT, CLOSE_ATTENDANCE_TEXT));
+        event.setAccomodation(new AccomodationDTO(attendance.getCurrentSector().getId()));
+        event.setResponsible(getResponsibleFromUserSession());
+        event.setObservations(request.getObservations());
+
+        attendanceEventService.persistNewAttendanceEvent(event);
+        logger.info("Evento de Atendimento para alta de paciente criado com sucesso!");
+
+        return event;
+    }
+
+    /**
+     * Busca o usuário logado na sessão
+     * 
+     * @return
+     */
+    private ResponsibleDTO getResponsibleFromUserSession() {
+        logger.info("Buscando usuário da sessão...");
+        String userName = ((UserOfSystem) securityContext.getAuthentication().getPrincipal()).getUsername();
+        UserInfoDTO logedUser = userService.findByUserName(userName);
+
+        logger.info("Iniciando busca de responsável pelo usuário da requisição...");
+        ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(logedUser.getDocument().getValue());
+        if (responsibleInformations.getId() == null)
+            throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
+        logger.info("Profissional encontrado :: {}", responsibleInformations.getFirstName());
+
+        logger.info("Realizando processamento do profissional para a requisição de evolução clínica");
+        ResponsibleDTO responsible = new ResponsibleDTO();
+        BeanUtils.copyProperties(responsibleInformations, responsible);
+        return responsible;
     }
 
 }
