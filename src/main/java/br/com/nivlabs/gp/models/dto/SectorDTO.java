@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.models.dto;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,10 +21,12 @@ import lombok.NoArgsConstructor;
 @ApiModel("Setor")
 public class SectorDTO extends DataTransferObjectBase {
 
-	private static final long serialVersionUID = -8018406138528606923L;
+    private static final long serialVersionUID = -8018406138528606923L;
 
-	private Long id;
+    @ApiModelProperty("Identificador único do setor")
+    private Long id;
 
-	private String description;
+    @ApiModelProperty("Descrição do setor")
+    private String description;
 
 }

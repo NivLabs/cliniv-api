@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,8 +23,13 @@ public class ResponsibleInfoDTO extends PersonInfoDTO {
 
     private static final long serialVersionUID = 3558512431533807447L;
 
+    @ApiModelProperty("Registro profissional do responsável (Se houver)")
     private ProfessionalIdentityDTO professionalIdentity;
+
+    @ApiModelProperty("Data / Hora de criação")
     private LocalDateTime createdAt;
+
+    @ApiModelProperty("Especializaçõs do responsável (Se houver)")
     private List<SpecialityDTO> specializations = new ArrayList<>();
 
 }
