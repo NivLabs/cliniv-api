@@ -118,9 +118,7 @@ public class UserService {
         BeanUtils.copyProperties(entity, entityFromDb);
 
         entityFromDb.setRoles(Arrays.asList());
-        if (entity.getRoles() != null && !entity.getRoles().isEmpty()) {
-            entityFromDb.setRoles(entity.getRoles().stream().map(this::convertRole).collect(Collectors.toList()));
-        }
+        handleRoles(entity, entityFromDb);
 
         userRepo.saveAndFlush(entityFromDb);
 
@@ -236,25 +234,16 @@ public class UserService {
         }
     }
 
+    /**
+     * Cria um usuário um usuário na aplicação
+     * 
+     * @param entity
+     * @return
+     */
     public UserInfoDTO create(UserInfoDTO entity) {
         entity.setId(null);
 
-        Person personFromDb;
-        if (entity.getDocument() == null
-                || (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF)) {
-            logger.error("Tipo do documento inválido, informe um documento válido");
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo do documento inválido, informe um documento válido.");
-        }
-        userCheckIfExists(entity);
-        try {
-            logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
-            personFromDb = personService.findByCpf(entity.getDocument().getValue());
-        } catch (HttpException e) {
-            logger.info(
-                        "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
-                        entity.getDocument().getType(), entity.getDocument().getValue());
-            personFromDb = new Person();
-        }
+        Person personFromDb = getValidPerson(entity);
 
         logger.info("Copiando as propriedades da requisição para o obijeto de negócio...");
         BeanUtils.copyProperties(entity, personFromDb, "id");
@@ -276,21 +265,64 @@ public class UserService {
         else
             personService.persist(personFromDb);
 
+        UserApplication createdUser = persistUser(entity, personFromDb);
+        entity.setId(createdUser.getId());
+
+        return entity;
+    }
+
+    /**
+     * Insere um usuário na base de dados
+     * 
+     * @param entity
+     * @param personFromDb
+     * @return
+     */
+    private UserApplication persistUser(UserInfoDTO entity, Person personFromDb) {
         UserApplication user = new UserApplication();
         BeanUtils.copyProperties(entity, user);
         user.setPerson(personFromDb);
         user.setPassword(bc.encode(entity.getDocument().getValue()));
         user.setCreatedAt(LocalDateTime.now());
         user.setActive(true);
-        if (entity.getRoles() != null && !entity.getRoles().isEmpty()) {
-            user.setRoles(entity.getRoles().stream().map(this::convertRole).collect(Collectors.toList()));
-        }
+        handleRoles(entity, user);
         userRepo.save(user);
-
-        entity.setId(user.getId());
-        return entity;
+        return user;
     }
 
+    /**
+     * Busca uma pessoa válida baseada nas informações do usuário
+     * 
+     * @param entity
+     * @return
+     */
+    private Person getValidPerson(UserInfoDTO entity) {
+        Person personFromDb;
+        if (entity.getDocument() == null
+                || (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF)) {
+            logger.error("Tipo do documento inválido, informe um documento válido");
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo do documento inválido, informe um documento válido.");
+        }
+        userCheckIfExists(entity);
+        try {
+            logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
+            personFromDb = personService.findByCpf(entity.getDocument().getValue());
+        } catch (HttpException e) {
+            logger.info(
+                        "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
+                        entity.getDocument().getType(), entity.getDocument().getValue());
+            personFromDb = new Person();
+        }
+        return personFromDb;
+    }
+
+    /**
+     * Atualiza as informações de um usupario
+     * 
+     * @param id
+     * @param entity
+     * @return
+     */
     public UserInfoDTO userUpdate(Long id, UserInfoDTO entity) {
         UserApplication entityFromDb = userRepo.findById(id)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado! Identificador informado: " + id));
@@ -299,13 +331,23 @@ public class UserService {
         BeanUtils.copyProperties(entity, entityFromDb);
 
         entityFromDb.setRoles(Arrays.asList());
-        if (entity.getRoles() != null && !entity.getRoles().isEmpty()) {
-            entityFromDb.setRoles(entity.getRoles().stream().map(this::convertRole).collect(Collectors.toList()));
-        }
+        handleRoles(entity, entityFromDb);
 
         userRepo.saveAndFlush(entityFromDb);
 
         return entity;
+    }
+
+    /**
+     * Trata os papéis
+     * 
+     * @param entity
+     * @param entityFromDb
+     */
+    private void handleRoles(UserInfoDTO entity, UserApplication entityFromDb) {
+        if (entity.getRoles() != null && !entity.getRoles().isEmpty()) {
+            entityFromDb.setRoles(entity.getRoles().stream().map(this::convertRole).collect(Collectors.toList()));
+        }
     }
 
 }

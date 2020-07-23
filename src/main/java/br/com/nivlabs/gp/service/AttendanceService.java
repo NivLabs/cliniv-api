@@ -1,9 +1,14 @@
 package br.com.nivlabs.gp.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import br.com.nivlabs.gp.config.security.UserOfSystem;
+import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
+import br.com.nivlabs.gp.enums.EntryType;
+import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.domain.*;
+import br.com.nivlabs.gp.models.dto.*;
+import br.com.nivlabs.gp.repository.AttendanceEventRepository;
+import br.com.nivlabs.gp.repository.AttendanceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -11,46 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import br.com.nivlabs.gp.config.security.UserOfSystem;
-import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
-import br.com.nivlabs.gp.enums.DocumentType;
-import br.com.nivlabs.gp.enums.EntryType;
-import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.Attendance;
-import br.com.nivlabs.gp.models.domain.AttendanceEvent;
-import br.com.nivlabs.gp.models.domain.DigitalDocument;
-import br.com.nivlabs.gp.models.domain.EventType;
-import br.com.nivlabs.gp.models.domain.Patient;
-import br.com.nivlabs.gp.models.domain.PatientAllergy;
-import br.com.nivlabs.gp.models.domain.Person;
-import br.com.nivlabs.gp.models.domain.Responsible;
-import br.com.nivlabs.gp.models.dto.AccomodationDTO;
-import br.com.nivlabs.gp.models.dto.AttendanceDTO;
-import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
-import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
-import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.gp.models.dto.DocumentDTO;
-import br.com.nivlabs.gp.models.dto.EventTypeDTO;
-import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
-import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
-import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
-import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
-import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
-import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.gp.models.dto.UserInfoDTO;
-import br.com.nivlabs.gp.repository.AttendanceEventRepository;
-import br.com.nivlabs.gp.repository.AttendanceRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * 
  * Classe AttendanceService.java
  *
  * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
- *
  * @since 8 de set de 2019
  */
 @Service
@@ -67,8 +43,6 @@ public class AttendanceService implements GenericService {
     @Autowired
     private PatientService patientService;
     @Autowired
-    private SecurityContext securityContext;
-    @Autowired
     private ResponsibleService responsibleService;
     @Autowired
     private UserService userService;
@@ -81,7 +55,7 @@ public class AttendanceService implements GenericService {
 
     /**
      * Busca histórico de Atendimentos por Paciente
-     * 
+     *
      * @param patientId
      * @return lista de AttendanceDTO
      */
@@ -106,7 +80,7 @@ public class AttendanceService implements GenericService {
 
     /**
      * Busca Prontuário do atendimento por Id
-     * 
+     *
      * @param id
      * @return MedicalRecordDTO
      */
@@ -152,8 +126,8 @@ public class AttendanceService implements GenericService {
 
     /**
      * Realiza a criação de uma visita de paciente à partir do DTO
-     * 
-     * @param NewAttandenceDTO
+     *
+     * @param NewAttandenceDTO Novo atendimento
      * @return MedicalRecordDTO
      */
     public MedicalRecordDTO persistNewAttendance(NewAttandenceDTO visitDto) {
@@ -168,7 +142,7 @@ public class AttendanceService implements GenericService {
                 convertedAttendance.setReasonForEntry(visitDto.getEntryCause());
                 convertedAttendance.setPatient(new Patient(savedPatient.getId()));
                 convertedAttendance.setEntryType(
-                                                 visitDto.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
+                        visitDto.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
                 convertedAttendance = persist(convertedAttendance);
                 createEntryEvent(convertedAttendance, visitDto);
                 attendance = getActiveMedicalRecord(visitDto.getPatientId());
@@ -178,13 +152,16 @@ public class AttendanceService implements GenericService {
         }
 
         throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
-                                                                               "O paciente de código %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
-                                                                               visitDto.getPatientId()));
+                "O paciente de código %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
+                visitDto.getPatientId()));
 
     }
 
     /**
+     * Cria evento de entrada
+     *
      * @param convertedAtendance
+     * @param request
      */
     private void createEntryEvent(Attendance convertedAtendance, NewAttandenceDTO request) {
         AttendanceEvent entryEvent = new AttendanceEvent();
@@ -207,15 +184,15 @@ public class AttendanceService implements GenericService {
 
     /**
      * Realiza a busca de um prontuário ativo por código de paciente
-     * 
+     *
      * @return MedicalRecordDTO
      */
     public MedicalRecordDTO getActiveMedicalRecord(Long patientId) {
         PatientInfoDTO patient = patientService.findByPateintId(patientId);
         Attendance attendanceFromDb = dao.findByPatientAndDateTimeExitIsNull(new Patient(patient.getId()))
                 .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
-                                                                                                    "Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
-                                                                                                    patient.getFirstName())));
+                        "Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
+                        patient.getFirstName())));
         MedicalRecordDTO medicalRecord = new MedicalRecordDTO();
         BeanUtils.copyProperties(patient, medicalRecord);
         medicalRecord.setId(attendanceFromDb.getId());
@@ -237,7 +214,7 @@ public class AttendanceService implements GenericService {
 
     /**
      * Pega a última acomodação do paciente baseada nos eventos do prontuário
-     * 
+     *
      * @param listOfEventsFromDb
      * @return
      */
@@ -247,7 +224,7 @@ public class AttendanceService implements GenericService {
 
     /**
      * Realiza alta de paciente com atendimento ativo
-     * 
+     *
      * @param id
      * @param request
      */
@@ -265,7 +242,7 @@ public class AttendanceService implements GenericService {
 
     /**
      * Cria um evento de encerramento de atendimento (Alta)
-     * 
+     *
      * @param attendance
      * @param request
      * @return
@@ -288,12 +265,12 @@ public class AttendanceService implements GenericService {
 
     /**
      * Busca o usuário logado na sessão
-     * 
+     *
      * @return
      */
     private ResponsibleDTO getResponsibleFromUserSession() {
         logger.info("Buscando usuário da sessão...");
-        String userName = ((UserOfSystem) securityContext.getAuthentication().getPrincipal()).getUsername();
+        String userName = ((UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         UserInfoDTO logedUser = userService.findByUserName(userName);
 
         logger.info("Iniciando busca de responsável pelo usuário da requisição...");

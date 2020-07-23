@@ -192,23 +192,8 @@ public class PatientService implements GenericService {
      */
     public PatientInfoDTO persist(PatientInfoDTO entity) {
         entity.setId(null);
-        Person personFromDb;
-        if (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF) {
-            logger.error("Tipo do documento inválido, informe um documento válido");
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo do documento inválido, informe um documento válido.");
-        }
 
-        checkDocument(entity);
-
-        try {
-            logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
-            personFromDb = personService.findByCpf(entity.getDocument().getValue());
-        } catch (HttpException e) {
-            logger.info(
-                        "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
-                        entity.getDocument().getType(), entity.getDocument().getValue());
-            personFromDb = new Person();
-        }
+        Person personFromDb = getValidPerson(entity);
 
         logger.info("Copiando as propriedades da requisição para o objeto de negócio...");
         BeanUtils.copyProperties(entity, personFromDb, "id");
@@ -233,6 +218,39 @@ public class PatientService implements GenericService {
         return entity;
     }
 
+    /**
+     * Valida o cadastro informações da pessoa e retorna um objeto válido
+     * 
+     * @param entity
+     * @return
+     */
+    private Person getValidPerson(PatientInfoDTO entity) {
+        Person personFromDb;
+        if (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF) {
+            logger.error("Tipo do documento inválido, informe um documento válido");
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo do documento inválido, informe um documento válido.");
+        }
+
+        checkDocument(entity);
+
+        try {
+            logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
+            personFromDb = personService.findByCpf(entity.getDocument().getValue());
+        } catch (HttpException e) {
+            logger.info(
+                        "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
+                        entity.getDocument().getType(), entity.getDocument().getValue());
+            personFromDb = new Person();
+        }
+        return personFromDb;
+    }
+
+    /**
+     * Process o endereço
+     * 
+     * @param entity
+     * @param personFromDb
+     */
     private void addressProcess(PatientInfoDTO entity, Person personFromDb) {
         logger.info("Verificando endereço");
         if (entity.getAddress() != null) {
