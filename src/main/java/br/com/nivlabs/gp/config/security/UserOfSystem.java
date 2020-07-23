@@ -29,6 +29,7 @@ public class UserOfSystem implements UserDetails {
      */
     private static final long serialVersionUID = 4402147670971545592L;
 
+    public static final String INFO_AUTHORIZED = "authorized";
     public static final String INFO_PERSON_NAME = "personName";
     public static final String INFO_USER_NAME = "user";
 
@@ -123,9 +124,9 @@ public class UserOfSystem implements UserDetails {
         Map<String, Object> info = new HashMap<>();
         List<String> permissions = new ArrayList<>();
         this.authorities.iterator().forEachRemaining(item -> permissions.add(item.getAuthority()));
-        info.put("user", this.username);
-        info.put("authorized", permissions);
-        info.put("personName", personName);
+        info.put(INFO_USER_NAME, this.username);
+        info.put(INFO_AUTHORIZED, permissions);
+        info.put(INFO_PERSON_NAME, personName);
         return info;
     }
 }
