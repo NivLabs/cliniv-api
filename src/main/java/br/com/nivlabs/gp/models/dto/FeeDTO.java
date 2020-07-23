@@ -12,43 +12,28 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Classe MedicineDTO.java
+ * Classe FeeDTO.java
  * 
- * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
+ * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
  * 
- * @since 5 de dez de 2019
+ * @since 22 de jul de 2020
  */
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("Informações de medicamento")
-public class MedicineInfoDTO extends DataTransferObjectBase {
+@ApiModel("Taxas")
+public class FeeDTO extends DataTransferObjectBase {
 
-    private static final long serialVersionUID = -1687147074910399813L;
-
-    private Long id;
-    
-    private String code;
-
-    @DateTimeFormat(iso = ISO.DATE)
-    private LocalDateTime datetime;
-
-    private String description;
-
-    private Double amount;
-
-    private String prescriptionOfficer;
-
-    private String responsibleForTheAdministration;
-    
+	private static final long serialVersionUID = 139714345053962715L;
 	
-	private String anvisaRegistration;
+	private String id;
 	
-	private String presentation;
+	private String code;
 	
-	private String laboratory;
+	private String description;
+	
+	private String detail;
 	
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDateTime expirationStartDate;
@@ -58,5 +43,4 @@ public class MedicineInfoDTO extends DataTransferObjectBase {
 	
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDateTime implantationEndDate;
-	
 }

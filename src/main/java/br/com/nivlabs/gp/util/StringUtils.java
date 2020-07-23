@@ -1,6 +1,8 @@
 package br.com.nivlabs.gp.util;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -62,5 +64,10 @@ public abstract class StringUtils {
     public static String dateFormat(Date date, String format) {
         return new SimpleDateFormat(format).format(date);
     }
+    
+	public static LocalDateTime convertStringToDate(String stringDate) {
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+        return LocalDateTime.parse(stringDate, format);
+	}
 
 }
