@@ -285,18 +285,18 @@ public class AnamnesisService implements GenericService {
     private void checkMetaTypes(AnamnesisDTO anamnese) {
         logger.info("Verificando meta tipos das respostas");
         switch (anamnese.getAnamnesisItem().getMetaType()) {
-            case number:
+            case NUMBER:
                 if (!StringUtils.isNumeric(anamnese.getResponse()))
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O valor da resposta deve ser numérica");
                 break;
-            case bool:
+            case BOOL:
                 if (StringUtils.isNullOrEmpty(anamnese.getResponse())
                         || (!anamnese.getResponse().equalsIgnoreCase(TRUE)
                                 && !anamnese.getResponse().equalsIgnoreCase(FALSE)))
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                             "O valor da resposta só pode ser true ou false");
                 break;
-            case string:
+            case STRING:
                 break;
             default:
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,

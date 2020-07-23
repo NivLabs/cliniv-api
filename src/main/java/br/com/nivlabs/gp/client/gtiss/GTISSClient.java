@@ -1,7 +1,6 @@
 package br.com.nivlabs.gp.client.gtiss;
 
 import java.net.URI;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,17 @@ import br.com.nivlabs.gp.exception.HttpException;
 public class GTISSClient implements RestClient {
 
 	
-    private static final String BASE_URL = "https://gestao-de-tiss.herokuapp.com/";
+    private static final String PARAMETER_LOG = "Parâmetro de busca :: {}";
+
+	private static final String FAIL = "Falha na busca da API externa GTISS";
+
+	private static final String NOT_FOUND = "não encontrado";
+
+	private static final String INVALID_PARAMETER = "{} é inválido";
+
+	private static final String DESCRIPTION = "description";
+
+	private static final String BASE_URL = "https://gestao-de-tiss.herokuapp.com/";
     
     private static Logger logger = LoggerFactory.getLogger(GTISSClient.class);
     
@@ -40,10 +49,10 @@ public class GTISSClient implements RestClient {
     public Page<Medicine> getMedicineByDescription(String description, Pageable pageSettings) {
         RestTemplate restTemplate = new RestTemplate();
         logger.info("Iniciando busca de medicamentos por descrição na GTISS API...");
-        logger.info("Descrição da busca :: {}", description);
+        logger.info(PARAMETER_LOG, description);
         UriComponentsBuilder targetUrl= UriComponentsBuilder.fromUriString(BASE_URL)
                 .path("/medicine")
-                .queryParam("description", description);
+                .queryParam(DESCRIPTION, description);
                 if (pageSettings !=null) {
                 	targetUrl = targetUrl.queryParam("page", pageSettings.getPageNumber())
 	                .queryParam("size", pageSettings.getPageSize())
@@ -57,19 +66,26 @@ public class GTISSClient implements RestClient {
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Medicamento encontrado para a descrição {}", description);
             return response.getBody();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            logger.info("Não foi possível encontrar medicamento para a descrição {}", description);
-            throw new HttpException(HttpStatus.NOT_FOUND, "medicamento não encontrado");
-        } else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-            logger.warn("A descrição {} é inválida", description);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "descrição inválida, informe uma descrição válida para a busca.");
         } else {
-            logger.error("Falha na busca da API externa GTISS");
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar medicamento na API Externa");
+        	handleException(response.getStatusCode(), description);
         }
+		return null;
     }
     
-    /**
+    private void handleException(HttpStatus statusCode, String parameter){
+    	 if (statusCode.equals(HttpStatus.NOT_FOUND)) {
+             logger.info("Não foi possível encontrar a descrição {}", parameter);
+             throw new HttpException(HttpStatus.NOT_FOUND, NOT_FOUND);
+         } else if (statusCode.equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
+             logger.warn(INVALID_PARAMETER, parameter);
+             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, INVALID_PARAMETER);
+         } else {
+             logger.error(FAIL);
+             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, FAIL);
+         }
+	}
+
+	/**
      * Busca medicamento por laboratório na GTISS API
      * 
      * @param descrição
@@ -78,7 +94,7 @@ public class GTISSClient implements RestClient {
     public Page<Medicine> getMedicineByLaboratory(String laboratory, Pageable pageSettings) {
         RestTemplate restTemplate = new RestTemplate();
         logger.info("Iniciando busca de medicamentos por laboratório na GTISS API...");
-        logger.info("Laboratório da busca :: {}", laboratory);
+        logger.info(PARAMETER_LOG, laboratory);
         UriComponentsBuilder targetUrl= UriComponentsBuilder.fromUriString(BASE_URL)
                 .path("/medicine/medicine/")
                 .queryParam("laboratory", laboratory);
@@ -95,16 +111,10 @@ public class GTISSClient implements RestClient {
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Medicamento encontrado para o laboratório {}", laboratory);
             return response.getBody();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            logger.info("Não foi possível encontrar medicamento para o laboratório {}", laboratory);
-            throw new HttpException(HttpStatus.NOT_FOUND, "medicamento não encontrado");
-        } else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-            logger.warn("O laboratório {} é inválido", laboratory);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "laboratório inválido, informe um laboratório válido para a busca.");
         } else {
-            logger.error("Falha na busca da API externa GTISS");
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar medicamento na API Externa");
+        	handleException(response.getStatusCode(), laboratory);
         }
+		return null;
     }
     
     /**
@@ -113,17 +123,12 @@ public class GTISSClient implements RestClient {
      * @param descrição
      * @return
      */
-    public Medicine getMedicineByCode(String code, Pageable pageSettings) {
+    public Medicine getMedicineByCode(String code) {
         RestTemplate restTemplate = new RestTemplate();
         logger.info("Iniciando busca de medicamentos por código na GTISS API...");
-        logger.info("Código da busca :: {}", code);
+        logger.info(PARAMETER_LOG, code);
         UriComponentsBuilder targetUrl= UriComponentsBuilder.fromUriString(BASE_URL)
                 .path("/medicine/".concat(code));
-                if (pageSettings !=null) {
-                	targetUrl = targetUrl.queryParam("page", pageSettings.getPageNumber())
-	                .queryParam("size", pageSettings.getPageSize())
-	                .queryParam("sort", pageSettings.getSort());
-                }
         
         URI uri = targetUrl.build().toUri();
                 
@@ -132,16 +137,10 @@ public class GTISSClient implements RestClient {
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Medicamento encontrado para o código {}", code);
             return response.getBody();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            logger.info("Não foi possível encontrar medicamento para o código {}", code);
-            throw new HttpException(HttpStatus.NOT_FOUND, "medicamento não encontrado");
-        } else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-            logger.warn("O código {} é inválido", code);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "código inválido, informe um código válido para a busca.");
         } else {
-            logger.error("Falha na busca da API externa GTISS");
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar medicamento na API Externa");
+        	handleException(response.getStatusCode(), code);
         }
+		return null;
     }
     
     /**
@@ -150,18 +149,13 @@ public class GTISSClient implements RestClient {
      * @param descrição
      * @return
      */
-    public MedicalProcedure getMedicalProcedureByCode(String code, Pageable pageSettings) {
+    public MedicalProcedure getMedicalProcedureByCode(String code) {
         RestTemplate restTemplate = new RestTemplate();
         logger.info("Iniciando busca de procedimentos por código na GTISS API...");
-        logger.info("Código da busca :: {}", code);
+        logger.info(PARAMETER_LOG, code);
         UriComponentsBuilder targetUrl= UriComponentsBuilder.fromUriString(BASE_URL)
                 .path("/procedures/".concat(code));
-                if (pageSettings !=null) {
-                	targetUrl = targetUrl.queryParam("page", pageSettings.getPageNumber())
-	                .queryParam("size", pageSettings.getPageSize())
-	                .queryParam("sort", pageSettings.getSort());
-                }
-        
+                
         URI uri = targetUrl.build().toUri();
                 
         ResponseEntity<MedicalProcedure> response = restTemplate.getForEntity(uri, MedicalProcedure.class);
@@ -169,16 +163,10 @@ public class GTISSClient implements RestClient {
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Procedimento encontrado para o código {}", code);
             return response.getBody();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            logger.info("Não foi possível encontrar procedimento para o código {}", code);
-            throw new HttpException(HttpStatus.NOT_FOUND, "procedimento não encontrado");
-        } else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-            logger.warn("O código {} é inválido", code);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "código inválido, informe um código válido para a busca.");
         } else {
-            logger.error("Falha na busca da API externa GTISS");
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar procedimento na API Externa");
+        	handleException(response.getStatusCode(), code);
         }
+		return null;
     }
     
     /**
@@ -190,10 +178,10 @@ public class GTISSClient implements RestClient {
     public Page<MedicalProcedure> getMedicalProcedureByDescription(String description, Pageable pageSettings) {
         RestTemplate restTemplate = new RestTemplate();
         logger.info("Iniciando busca de procedimentos por descrição na GTISS API...");
-        logger.info("Descrição da busca :: {}", description);
+        logger.info(PARAMETER_LOG, description);
         UriComponentsBuilder targetUrl= UriComponentsBuilder.fromUriString(BASE_URL)
                 .path("/procedures")
-                .queryParam("description", description);
+                .queryParam(DESCRIPTION, description);
                 if (pageSettings !=null) {
                 	targetUrl = targetUrl.queryParam("page", pageSettings.getPageNumber())
 	                .queryParam("size", pageSettings.getPageSize())
@@ -207,36 +195,25 @@ public class GTISSClient implements RestClient {
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("procedimento encontrado para a descrição {}", description);
             return response.getBody();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            logger.info("Não foi possível encontrar procedimento para a descrição {}", description);
-            throw new HttpException(HttpStatus.NOT_FOUND, "procedimento não encontrado");
-        } else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-            logger.warn("A descrição {} é inválida", description);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "descrição inválida, informe uma descrição válida para a busca.");
         } else {
-            logger.error("Falha na busca da API externa GTISS");
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar procedimento na API Externa");
+        	handleException(response.getStatusCode(), description);
         }
+		return null;
     }
     
     /**
      * Busca taxas por código na GTISS API
      * 
-     * @param descrição
+     * @param code
      * @return
      */
-    public Fee getFeeByCode(String code, Pageable pageSettings) {
+    public Fee getFeeByCode(String code) {
         RestTemplate restTemplate = new RestTemplate();
         logger.info("Iniciando busca de taxas por código na GTISS API...");
-        logger.info("Código da busca :: {}", code);
+        logger.info(PARAMETER_LOG, code);
         UriComponentsBuilder targetUrl= UriComponentsBuilder.fromUriString(BASE_URL)
                 .path("/fee/".concat(code));
-                if (pageSettings !=null) {
-                	targetUrl = targetUrl.queryParam("page", pageSettings.getPageNumber())
-	                .queryParam("size", pageSettings.getPageSize())
-	                .queryParam("sort", pageSettings.getSort());
-                }
-        
+
         URI uri = targetUrl.build().toUri();
                 
         ResponseEntity<Fee> response = restTemplate.getForEntity(uri, Fee.class);
@@ -244,16 +221,10 @@ public class GTISSClient implements RestClient {
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Taxa encontrada para o código {}", code);
             return response.getBody();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            logger.info("Não foi possível encontrar taxa para o código {}", code);
-            throw new HttpException(HttpStatus.NOT_FOUND, "taxa não encontrada");
-        } else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-            logger.warn("O código {} é inválido", code);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "código inválido, informe um código válido para a busca.");
         } else {
-            logger.error("Falha na busca da API externa GTISS");
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar taxa na API Externa");
+        	handleException(response.getStatusCode(), code);
         }
+		return null;
     }
     
     /**
@@ -265,10 +236,10 @@ public class GTISSClient implements RestClient {
     public Page<Fee> getFeeByDescription(String description, Pageable pageSettings) {
         RestTemplate restTemplate = new RestTemplate();
         logger.info("Iniciando busca de taxas por descrição na GTISS API...");
-        logger.info("Descrição da busca :: {}", description);
+        logger.info(PARAMETER_LOG, description);
         UriComponentsBuilder targetUrl= UriComponentsBuilder.fromUriString(BASE_URL)
                 .path("/fee")
-                .queryParam("description", description);
+                .queryParam(DESCRIPTION, description);
                 if (pageSettings !=null) {
                 	targetUrl = targetUrl.queryParam("page", pageSettings.getPageNumber())
 	                .queryParam("size", pageSettings.getPageSize())
@@ -282,16 +253,10 @@ public class GTISSClient implements RestClient {
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Taxa encontrada para a descrição {}", description);
             return response.getBody();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            logger.info("Não foi possível encontrar taxa para a descrição {}", description);
-            throw new HttpException(HttpStatus.NOT_FOUND, "taxa não encontrada");
-        } else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-            logger.warn("A descrição {} é inválida", description);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "descrição inválida, informe uma descrição válida para a busca.");
         } else {
-            logger.error("Falha na busca da API externa GTISS");
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar taxa na API Externa");
+        	handleException(response.getStatusCode(), description);
         }
+		return null;
     }
     
     /**
@@ -300,18 +265,13 @@ public class GTISSClient implements RestClient {
      * @param descrição
      * @return
      */
-    public Material getMaterialByCode(String code, Pageable pageSettings) {
+    public Material getMaterialByCode(String code) {
         RestTemplate restTemplate = new RestTemplate();
         logger.info("Iniciando busca de materiais por código na GTISS API...");
-        logger.info("Código da busca :: {}", code);
+        logger.info(PARAMETER_LOG, code);
         UriComponentsBuilder targetUrl= UriComponentsBuilder.fromUriString(BASE_URL)
                 .path("/material/".concat(code));
-                if (pageSettings !=null) {
-                	targetUrl = targetUrl.queryParam("page", pageSettings.getPageNumber())
-	                .queryParam("size", pageSettings.getPageSize())
-	                .queryParam("sort", pageSettings.getSort());
-                }
-        
+
         URI uri = targetUrl.build().toUri();
                 
         ResponseEntity<Material> response = restTemplate.getForEntity(uri, Material.class);
@@ -319,16 +279,10 @@ public class GTISSClient implements RestClient {
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("Material encontrado para o código {}", code);
             return response.getBody();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            logger.info("Não foi possível encontrar material para o código {}", code);
-            throw new HttpException(HttpStatus.NOT_FOUND, "material não encontrado");
-        } else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-            logger.warn("O código {} é inválido", code);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "código inválido, informe um código válido para a busca.");
         } else {
-            logger.error("Falha na busca da API externa GTISS");
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar material na API Externa");
+        	handleException(response.getStatusCode(), code);
         }
+		return null;
     }
     
     /**
@@ -340,10 +294,10 @@ public class GTISSClient implements RestClient {
     public Page<Material> getMaterialByDescription(String description, Pageable pageSettings) {
         RestTemplate restTemplate = new RestTemplate();
         logger.info("Iniciando busca de materiais por descrição na GTISS API...");
-        logger.info("Descrição da busca :: {}", description);
+        logger.info(PARAMETER_LOG, description);
         UriComponentsBuilder targetUrl= UriComponentsBuilder.fromUriString(BASE_URL)
                 .path("/material")
-                .queryParam("description", description);
+                .queryParam(DESCRIPTION, description);
                 if (pageSettings !=null) {
                 	targetUrl = targetUrl.queryParam("page", pageSettings.getPageNumber())
 	                .queryParam("size", pageSettings.getPageSize())
@@ -357,15 +311,9 @@ public class GTISSClient implements RestClient {
         if (response.getStatusCode().equals(HttpStatus.OK)) {
             logger.info("material encontrado para a descrição {}", description);
             return response.getBody();
-        } else if (response.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-            logger.info("Não foi possível encontrar material para a descrição {}", description);
-            throw new HttpException(HttpStatus.NOT_FOUND, "material não encontrado");
-        } else if (response.getStatusCode().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-            logger.warn("A descrição {} é inválida", description);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "descrição inválida, informe uma descrição válida para a busca.");
         } else {
-            logger.error("Falha na busca da API externa GTISS");
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao buscar material na API Externa");
+        	handleException(response.getStatusCode(), description);
         }
+		return null;
     }
 }

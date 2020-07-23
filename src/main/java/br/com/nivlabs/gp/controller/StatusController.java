@@ -26,7 +26,7 @@ public class StatusController {
     @Autowired
     BuildProperties buildProperties;
 
-    @ApiOperation(nickname = "status-get", value = "Bosca o status do servidor")
+    @ApiOperation(nickname = "status-get", value = "Busca o status do servidor")
     @GetMapping
     public ResponseEntity<ServerStatusDTO> getSectorsGroupedBySuper() {
         ServerStatusDTO serverStatus = new ServerStatusDTO();

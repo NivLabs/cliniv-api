@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -35,9 +34,6 @@ public class EventTypeController {
 
     @Autowired
     private EventTypeService service;
-
-    @Autowired
-    private ApplicationEventPublisher publisher;
 
     @ApiOperation(nickname = "eventtype-get", value = "Busca uma página de tipos de eventos")
     @GetMapping
