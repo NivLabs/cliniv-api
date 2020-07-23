@@ -7,5 +7,5 @@ package br.com.nivlabs.gp.enums;
  *
  */
 public enum AccomodationType {
-    room, bed
+    ROOM, BED
 }

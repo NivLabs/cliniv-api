@@ -43,7 +43,7 @@ public class ParameterService implements GenericService {
         logger.info("Parãmetro encontrado :: {}", parameter.getName());
         checkParameterValue(parameter, newValue.getNewValue());
         parameter.setValue(newValue.getNewValue());
-        if (!parameter.getMetaType().equals(MetaType.password))
+        if (!parameter.getMetaType().equals(MetaType.PASSWORD))
             logger.info("Novo valor do parâmetro :: {}", newValue);
         else
             logger.info("O novo valor pertence à um parâmetro do tipo password, não será exibido.");
@@ -59,23 +59,23 @@ public class ParameterService implements GenericService {
     private void checkParameterValue(Parameter param, String newValue) {
         logger.info("Checando valor para parâmetro do tipo {}", param.getMetaType());
         switch (param.getMetaType()) {
-            case number:
+            case NUMBER:
                 if (!StringUtils.isNumeric(newValue))
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O valor do parâmetro deve ser numérico");
                 break;
-            case bool:
+            case BOOL:
                 if (StringUtils.isNullOrEmpty(newValue)
                         || (!newValue.equalsIgnoreCase("true") && !newValue.equalsIgnoreCase("false")))
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                             "O valor do parâmetro só pode ser true ou false");
                 break;
-            case group:
+            case GROUP:
                 if (StringUtils.isNullOrEmpty(newValue) || checkGroupParameter(newValue))
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                             "O valor do parâmetro deve existir no grupo de valores possíveis");
                 break;
-            case string:
-            case password:
+            case STRING:
+            case PASSWORD:
                 break;
             default:
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
