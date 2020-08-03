@@ -1,3 +1,5 @@
+#!/bin/sh
+
 echo "Baixando a última versão do Maria DB..."
 docker pull mariadb:latest
 
