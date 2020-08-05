@@ -85,13 +85,8 @@ public class InstituteService implements GenericService {
 			try (BufferedOutputStream stream = new BufferedOutputStream(fos)) {
 				stream.write(bytes);
 				try (FileInputStream fis = new FileInputStream(file)) {
-			        logger.info("Buscando informações de configurações...");
-			        List<Parameter> parameters = paramRepo.findAll();
-			        parameters.sort((primary, scondary) -> primary.getId().compareTo(scondary.getId()));
-			
 			        logger.info("Buscando informações da instituição...");
 			        List<Institute> institutes = instituteRepo.findAll();
-			
 			        if (!institutes.isEmpty()) {
 			            Institute institute = institutes.get(0);
 			            logger.info("Inserindo a Logo");
