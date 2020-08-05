@@ -52,6 +52,10 @@ public class Patient extends BaseObjectWithCreatedAt {
     @JoinColumn(name = "ID_PESSOA")
     private Person person;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_PLANO")
+    private HealthPlan healthPlan;
+
     @Column(name = "TIPO_PACIENTE")
     @Enumerated(EnumType.STRING)
     private PatientType type;
