@@ -1,9 +1,5 @@
 package br.com.nivlabs.gp.models.dto;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
 import br.com.nivlabs.gp.enums.Modality;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
