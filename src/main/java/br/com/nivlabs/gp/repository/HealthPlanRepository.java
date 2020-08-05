@@ -21,7 +21,5 @@ public interface HealthPlanRepository extends JpaRepository<HealthPlan, Long> {
 	
 	
 	public Optional<HealthPlan> findByPlanCode(Long planCode);
-	
-	public List<HealthPlan> findByCommecialNameLike(String commecialName);
 
 }
