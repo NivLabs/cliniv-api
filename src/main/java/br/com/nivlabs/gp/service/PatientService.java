@@ -3,9 +3,6 @@ package br.com.nivlabs.gp.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +23,7 @@ import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
+import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
@@ -46,9 +44,6 @@ public class PatientService implements GenericService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @PersistenceContext
-    private EntityManager em;
-
     @Autowired
     private PatientRepository dao;
     @Autowired
@@ -67,7 +62,7 @@ public class PatientService implements GenericService {
         return dao.resumedList(filters, pageRequest);
     }
 
-    public PatientInfoDTO findByPateintId(Long id) {
+    public PatientInfoDTO findByPatientId(Long id) {
         Patient patient = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Paciente com o identificador %s não encontrado", id)));
         Person person = patient.getPerson();
@@ -80,6 +75,11 @@ public class PatientService implements GenericService {
             AddressDTO address = new AddressDTO();
             BeanUtils.copyProperties(person.getAddress(), address);
             patientInfo.setAddress(address);
+        }
+        if (patient.getHealthPlan() != null) {
+            HealthPlanDTO healthPlan = new HealthPlanDTO();
+            BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
+            patientInfo.setHealthPlan(healthPlan);
         }
 
         BeanUtils.copyProperties(patient, patientInfo, Patient_.ALLERGIES);
@@ -121,7 +121,7 @@ public class PatientService implements GenericService {
     public PatientInfoDTO findByCpf(String cpf) {
         try {
             Patient patient = dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                    String.format("Paciente com CPF: [%s] não encontrado", cpf)));
+                    String.format("Paciente com CPF %s não encontrado", cpf)));
             Person personFromDb = patient.getPerson();
 
             PatientInfoDTO patientInfo = new PatientInfoDTO();
@@ -133,6 +133,12 @@ public class PatientService implements GenericService {
                 BeanUtils.copyProperties(personFromDb.getAddress(), address);
                 patientInfo.setAddress(address);
             }
+            if (patient.getHealthPlan() != null) {
+                HealthPlanDTO healthPlan = new HealthPlanDTO();
+                BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
+                patientInfo.setHealthPlan(healthPlan);
+            }
+
             BeanUtils.copyProperties(patient, patientInfo);
             return patientInfo;
         } catch (HttpException e) {
@@ -159,6 +165,12 @@ public class PatientService implements GenericService {
             AddressDTO address = new AddressDTO();
             BeanUtils.copyProperties(personFromDb.getAddress(), address);
             patientInfo.setAddress(address);
+        }
+
+        if (patient.getHealthPlan() != null) {
+            HealthPlanDTO healthPlan = new HealthPlanDTO();
+            BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
+            patientInfo.setHealthPlan(healthPlan);
         }
         BeanUtils.copyProperties(patient, patientInfo);
         return patientInfo;
