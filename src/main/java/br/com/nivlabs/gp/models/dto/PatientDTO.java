@@ -2,6 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import br.com.nivlabs.gp.enums.PatientType;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,7 +20,12 @@ public class PatientDTO extends PersonDTO {
 
     private static final long serialVersionUID = -1070682704153329772L;
 
+    @ApiModelProperty("Plano de saúde")
+    private HealthPlanDTO healthPlan;
+
+    @ApiModelProperty("Número do SUS")
     private String susNumber;
 
+    @ApiModelProperty("Tipo do paciente (Identificado ou não identificado)")
     private PatientType type;
 }
