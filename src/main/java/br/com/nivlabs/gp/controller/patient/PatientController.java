@@ -87,7 +87,7 @@ public class PatientController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findByPateintId(id));
+        return ResponseEntity.ok(service.findByPatientId(id));
     }
 
     @ApiOperation(nickname = "patient-get-by-document", value = "Busca um paciente pelo documento")

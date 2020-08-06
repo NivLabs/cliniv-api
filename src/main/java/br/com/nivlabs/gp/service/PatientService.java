@@ -23,6 +23,7 @@ import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
+import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
@@ -61,7 +62,7 @@ public class PatientService implements GenericService {
         return dao.resumedList(filters, pageRequest);
     }
 
-    public PatientInfoDTO findByPateintId(Long id) {
+    public PatientInfoDTO findByPatientId(Long id) {
         Patient patient = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Paciente com o identificador %s não encontrado", id)));
         Person person = patient.getPerson();
@@ -74,6 +75,11 @@ public class PatientService implements GenericService {
             AddressDTO address = new AddressDTO();
             BeanUtils.copyProperties(person.getAddress(), address);
             patientInfo.setAddress(address);
+        }
+        if (patient.getHealthPlan() != null) {
+            HealthPlanDTO healthPlan = new HealthPlanDTO();
+            BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
+            patientInfo.setHealthPlan(healthPlan);
         }
 
         BeanUtils.copyProperties(patient, patientInfo, Patient_.ALLERGIES);
@@ -127,6 +133,12 @@ public class PatientService implements GenericService {
                 BeanUtils.copyProperties(personFromDb.getAddress(), address);
                 patientInfo.setAddress(address);
             }
+            if (patient.getHealthPlan() != null) {
+                HealthPlanDTO healthPlan = new HealthPlanDTO();
+                BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
+                patientInfo.setHealthPlan(healthPlan);
+            }
+
             BeanUtils.copyProperties(patient, patientInfo);
             return patientInfo;
         } catch (HttpException e) {
@@ -153,6 +165,12 @@ public class PatientService implements GenericService {
             AddressDTO address = new AddressDTO();
             BeanUtils.copyProperties(personFromDb.getAddress(), address);
             patientInfo.setAddress(address);
+        }
+
+        if (patient.getHealthPlan() != null) {
+            HealthPlanDTO healthPlan = new HealthPlanDTO();
+            BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
+            patientInfo.setHealthPlan(healthPlan);
         }
         BeanUtils.copyProperties(patient, patientInfo);
         return patientInfo;
