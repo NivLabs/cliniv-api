@@ -3,9 +3,6 @@ package br.com.nivlabs.gp.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -45,9 +42,6 @@ import br.com.nivlabs.gp.util.StringUtils;
 public class PatientService implements GenericService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    @PersistenceContext
-    private EntityManager em;
 
     @Autowired
     private PatientRepository dao;
@@ -121,7 +115,7 @@ public class PatientService implements GenericService {
     public PatientInfoDTO findByCpf(String cpf) {
         try {
             Patient patient = dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                    String.format("Paciente com CPF: [%s] não encontrado", cpf)));
+                    String.format("Paciente com CPF %s não encontrado", cpf)));
             Person personFromDb = patient.getPerson();
 
             PatientInfoDTO patientInfo = new PatientInfoDTO();
