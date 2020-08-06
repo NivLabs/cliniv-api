@@ -44,7 +44,4 @@ public class HealthPlanDTO extends DataTransferObjectBase {
     @ApiModelProperty("Tipo do plano")
     private String type;
 
-    @ApiModelProperty("Operador do plano")
-    private HealthOperator healthOperator;
-
 }
