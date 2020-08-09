@@ -85,7 +85,7 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     private String profilePhoto;
 
     @ApiModelProperty("Número do SUS do paciente")
-    @Size(max = 15, message = "Informe o código SUS do paciente. O número deve conter ao menos 15 dígitos.")
+    @Size(max = 15, message = "O código do deve conter no máximo 15 dígitos.")
     private String susNumber;
 
     @ApiModelProperty("Tipo do paciente (Identificado ou não identificado)")
