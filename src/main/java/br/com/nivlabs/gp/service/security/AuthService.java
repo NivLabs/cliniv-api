@@ -24,7 +24,7 @@ import br.com.nivlabs.gp.repository.UserRepository;
 public class AuthService {
 
     @Autowired
-    private static Logger logger;
+    private Logger logger;
 
     @Autowired
     UserRepository userRepo;
