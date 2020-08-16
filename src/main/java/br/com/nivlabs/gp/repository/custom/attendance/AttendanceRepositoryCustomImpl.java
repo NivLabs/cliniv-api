@@ -39,8 +39,8 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         pageFromDatabase.forEach(attendance -> {
             AttendanceDTO attendanceConverted = new AttendanceDTO();
             attendanceConverted.setId(attendance.getId());
-            attendanceConverted.setFirstName(attendance.getPatient().getPerson().getFirstName());
-            attendanceConverted.setLastName(attendance.getPatient().getPerson().getLastName());
+            attendanceConverted.setFullName(attendance.getPatient().getPerson().getFullName());
+            attendanceConverted.setSocialName(attendance.getPatient().getPerson().getSocialName());
             attendanceConverted.setEntryCause(attendance.getReasonForEntry());
             attendanceConverted.setEntryDatetime(attendance.getDateTimeEntry());
             attendanceConverted.setPatientId(attendance.getPatient().getId());
@@ -74,13 +74,13 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
             attributes.add((cb, from) -> cb.equal(from.get(Attendance_.patient).get(Patient_.person).get(Person_.cpf), filters.getCpf()));
         }
-        if (!StringUtils.isNullOrEmpty(filters.getFirstName())) {
-            attributes.add((cb, from) -> cb.like(from.get(Attendance_.patient).get(Patient_.person).get(Person_.firstName),
-                                                 filters.getFirstName()));
+        if (!StringUtils.isNullOrEmpty(filters.getFullName())) {
+            attributes.add((cb, from) -> cb.like(from.get(Attendance_.patient).get(Patient_.person).get(Person_.fullName),
+                                                 filters.getFullName()));
         }
-        if (!StringUtils.isNullOrEmpty(filters.getLastName())) {
-            attributes.add((cb, from) -> cb.like(from.get(Attendance_.patient).get(Patient_.person).get(Person_.lastName),
-                                                 filters.getLastName()));
+        if (!StringUtils.isNullOrEmpty(filters.getSocialName())) {
+            attributes.add((cb, from) -> cb.like(from.get(Attendance_.patient).get(Patient_.person).get(Person_.socialName),
+                                                 filters.getSocialName()));
         }
         if (filters.getPatientType() != null) {
             attributes.add((cb, from) -> cb.equal(from.get(Attendance_.patient).get(Patient_.type), filters.getPatientType()));

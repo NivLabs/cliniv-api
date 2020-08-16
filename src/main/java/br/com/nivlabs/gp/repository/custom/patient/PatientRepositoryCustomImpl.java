@@ -35,7 +35,7 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
 
         pageFromDatabase.forEach(patient -> {
             PatientDTO patientConverted = new PatientDTO();
-            BeanUtils.copyProperties(patient.getPerson(), patientConverted, "id");
+            BeanUtils.copyProperties(patient.getPerson(), patientConverted, Person_.ID);
             BeanUtils.copyProperties(patient, patientConverted);
             if (patient.getHealthPlan() != null) {
                 HealthPlanDTO healthPlan = new HealthPlanDTO();
@@ -64,13 +64,13 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
             attributes.add((cb, from) -> cb.equal(from.get(Patient_.person).get(Person_.cpf), filters.getCpf()));
         }
-        if (!StringUtils.isNullOrEmpty(filters.getFirstName())) {
+        if (!StringUtils.isNullOrEmpty(filters.getFullName())) {
             attributes.add(
-                           (cb, from) -> cb.like(from.get(Patient_.person).get(Person_.firstName), filters.getFirstName()));
+                           (cb, from) -> cb.like(from.get(Patient_.person).get(Person_.fullName), filters.getFullName()));
         }
-        if (!StringUtils.isNullOrEmpty(filters.getLastName())) {
+        if (!StringUtils.isNullOrEmpty(filters.getSocialName())) {
             attributes
-                    .add((cb, from) -> cb.like(from.get(Patient_.person).get(Person_.lastName), filters.getLastName()));
+                    .add((cb, from) -> cb.like(from.get(Patient_.person).get(Person_.socialName), filters.getSocialName()));
         }
         if (filters.getType() != null) {
             attributes.add((cb, from) -> cb.equal(from.get(Patient_.type), filters.getType()));

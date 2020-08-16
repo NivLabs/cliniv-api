@@ -14,7 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.enums.Gender;
-import br.com.nivlabs.gp.enums.GenderIdeology;
+import br.com.nivlabs.gp.enums.GenderIdentity;
 import br.com.nivlabs.gp.enums.PatientType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,13 +41,13 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Identificador único do paciente")
     private Long id;
 
-    @ApiModelProperty("Primeiro nome do paciente")
-    @NotNull(message = "O nome é obrigatório")
-    @Size(min = 3, max = 45, message = "O nome é obrigatório")
-    private String firstName;
+    @ApiModelProperty("Nome completo do paciente")
+    @NotNull(message = "Nome completo é obrigatório")
+    @Size(min = 3, max = 45, message = "O nome completo é obrigatório")
+    private String fullName;
 
-    @ApiModelProperty("Sobrenome do paciente")
-    private String lastName;
+    @ApiModelProperty("Nome social do paciente")
+    private String socialName;
 
     @ApiModelProperty("Data de nascimento")
     @DateTimeFormat(iso = ISO.DATE)
@@ -57,14 +57,14 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @NotNull(message = "O documento deve ser informado")
     private DocumentDTO document;
 
-    @ApiModelProperty("Gênero biológigo (sexo) do paciente")
+    @ApiModelProperty("Gênero (sexo) do paciente")
     @NotNull(message = "O gênero deve ser informado")
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ApiModelProperty("Gênero ideológico (orientação) do paciente")
+    @ApiModelProperty("Identidade de gênero (orientação) do paciente")
     @Enumerated(EnumType.STRING)
-    private GenderIdeology genderIdeology;
+    private GenderIdentity genderIdentity;
 
     @ApiModelProperty("Nome do pai do paciente")
     private String fatherName;

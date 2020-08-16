@@ -16,7 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.nivlabs.gp.enums.Gender;
-import br.com.nivlabs.gp.enums.GenderIdeology;
+import br.com.nivlabs.gp.enums.GenderIdentity;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,11 +44,11 @@ public class Person extends BaseObjectWithId {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NOME")
-    private String firstName;
+    @Column(name = "NOME_COMPLETO")
+    private String fullName;
 
-    @Column(name = "SOBRENOME")
-    private String lastName;
+    @Column(name = "NOME_SOCIAL")
+    private String socialName;
 
     @Column(name = "CPF")
     private String cpf;
@@ -57,9 +57,9 @@ public class Person extends BaseObjectWithId {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(name = "IDEOLOGIA_GENERO")
+    @Column(name = "IDENTIDADE_GENERO")
     @Enumerated(EnumType.STRING)
-    private GenderIdeology genderIdeology;
+    private GenderIdentity genderIdentity;
 
     @Column(name = "NOME_COMP_PAI")
     private String fatherName;

@@ -31,9 +31,9 @@ public abstract class PersonDTO extends DataTransferObjectBase {
 
     private Long id;
 
-    private String firstName;
+    private String fullName;
 
-    private String lastName;
+    private String socialName;
 
     private String rg;
 

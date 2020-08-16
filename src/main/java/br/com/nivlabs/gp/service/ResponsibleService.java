@@ -176,7 +176,7 @@ public class ResponsibleService {
         logger.info("Verificando especializações...");
         if (responsible.getSpecializations() != null) {
             logger.info("Alterações encontradas, atualizando especializações do profissional :: {}",
-                        responsible.getFirstName());
+                        responsible.getFullName());
             responsibleFrom.setSpecializations(new ArrayList<>());
             responsible.getSpecializations().stream().map(SpecialityDTO::getId).forEach(specId -> responsibleFrom.getSpecializations()
                     .add(specDao.findById(specId).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
