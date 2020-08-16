@@ -284,8 +284,7 @@ public class PatientService implements GenericService {
     private void handlePatientType(Patient newPatient) {
         if (StringUtils.isNullOrEmpty(newPatient.getSusNumber())
                 && StringUtils.isNullOrEmpty(newPatient.getPerson().getMotherName())
-                && StringUtils.isNullOrEmpty(newPatient.getPerson().getCpf())
-                && StringUtils.isNullOrEmpty(newPatient.getPerson().getLastName())) {
+                && StringUtils.isNullOrEmpty(newPatient.getPerson().getCpf())) {
             newPatient.setType(PatientType.NOT_IDENTIFIED);
         } else {
             newPatient.setType(PatientType.IDENTIFIED);

@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.Role;
-import br.com.nivlabs.gp.util.StringUtils;
 
 /**
  * Classe UserOfSystem.java
@@ -66,14 +65,7 @@ public class UserOfSystem implements UserDetails {
      * @return
      */
     private String getPersonName(Person person) {
-        StringBuilder fullname = new StringBuilder();
-        if (!StringUtils.isNullOrEmpty(person.getFirstName()))
-            fullname.append(person.getFirstName());
-        if (!StringUtils.isNullOrEmpty(person.getFirstName())) {
-            fullname.append(" ");
-            fullname.append(person.getLastName());
-        }
-        return new String(fullname);
+        return person.getFullName();
     }
 
     @Override
