@@ -23,8 +23,8 @@ public class AttendanceFilters extends CustomFilters {
 
     private static final long serialVersionUID = 4716373803667305120L;
     private String sectorId;
-    private String firstName = "";
-    private String lastName = "";
+    private String fullName = "";
+    private String socialName = "";
     private String cpf;
     private ActiveType activeType;
     private PatientType patientType;
@@ -36,11 +36,11 @@ public class AttendanceFilters extends CustomFilters {
         return this.activeType;
     }
 
-    public String getFirstName() {
-        return "%".concat(firstName).concat("%");
+    public String getFullName() {
+        return "%".concat(fullName).concat("%");
     }
 
-    public String getLastName() {
-        return "%".concat(lastName).concat("%");
+    public String getSocialName() {
+        return "%".concat(socialName).concat("%");
     }
 }

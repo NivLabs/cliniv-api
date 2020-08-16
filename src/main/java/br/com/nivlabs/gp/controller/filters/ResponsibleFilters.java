@@ -20,16 +20,16 @@ public class ResponsibleFilters extends CustomFilters {
 
     private String cpf;
 
-    private String firstName = "";
+    private String fullName = "";
 
-    private String lastName = "";
+    private String socialName = "";
 
-    public String getFirstName() {
-        return "%".concat(firstName).concat("%");
+    public String getFullName() {
+        return "%".concat(fullName).concat("%");
     }
 
-    public String getLastName() {
-        return "%".concat(lastName).concat("%");
+    public String getSocialName() {
+        return "%".concat(socialName).concat("%");
     }
 
 }

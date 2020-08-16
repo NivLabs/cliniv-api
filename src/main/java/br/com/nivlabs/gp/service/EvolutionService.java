@@ -163,7 +163,7 @@ public class EvolutionService implements GenericService {
         ReportParam params = new ReportParam();
         params.getParams().put(VISIT_ID, request.getAttendanceId());
         params.getParams().put("DOC_TITLE", "RELATÓRIO DE EVOLUÇÃO CLÍNICA DO PACIENTE");
-        params.getParams().put(READER_NAME, requestOwner.getFirstName() + " " + requestOwner.getLastName());
+        params.getParams().put(READER_NAME, requestOwner.getFullName());
         params.getParams().put(HOSPITAL_LOGO, logoBase64);
         params.getParams().put(TODAY, new Date());
         params.getParams().put(DESCIPTION, request.getDescription());
@@ -214,7 +214,7 @@ public class EvolutionService implements GenericService {
         ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
         if (responsibleInformations.getId() == null)
             throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
-        logger.info("Profissional encontrado :: {}", responsibleInformations.getFirstName());
+        logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
         logger.info("Realizando processamento do profissional para a requisição de evolução clínica");
         ResponsibleDTO responsible = new ResponsibleDTO();

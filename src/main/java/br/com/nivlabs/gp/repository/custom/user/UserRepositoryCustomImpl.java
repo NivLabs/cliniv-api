@@ -58,11 +58,11 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
             attributes.add((cb, from) -> cb.equal(from.get(UserApplication_.person).get(Person_.cpf), filters.getCpf()));
         }
-        if (!StringUtils.isNullOrEmpty(filters.getFirstName())) {
-            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.person).get(Person_.firstName), filters.getFirstName()));
+        if (!StringUtils.isNullOrEmpty(filters.getFullName())) {
+            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.person).get(Person_.fullName), filters.getFullName()));
         }
-        if (!StringUtils.isNullOrEmpty(filters.getLastName())) {
-            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.person).get(Person_.lastName), filters.getLastName()));
+        if (!StringUtils.isNullOrEmpty(filters.getSocialName())) {
+            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.person).get(Person_.socialName), filters.getSocialName()));
         }
         if (filters.getGender() != null) {
             attributes.add((cb, from) -> cb.equal(from.get(UserApplication_.person).get(Person_.gender), filters.getGender()));

@@ -1,14 +1,9 @@
 package br.com.nivlabs.gp.service;
 
-import br.com.nivlabs.gp.config.security.UserOfSystem;
-import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
-import br.com.nivlabs.gp.enums.DocumentType;
-import br.com.nivlabs.gp.enums.EntryType;
-import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.*;
-import br.com.nivlabs.gp.models.dto.*;
-import br.com.nivlabs.gp.repository.AttendanceEventRepository;
-import br.com.nivlabs.gp.repository.AttendanceRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -19,9 +14,36 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import br.com.nivlabs.gp.config.security.UserOfSystem;
+import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
+import br.com.nivlabs.gp.enums.EntryType;
+import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.domain.Attendance;
+import br.com.nivlabs.gp.models.domain.AttendanceEvent;
+import br.com.nivlabs.gp.models.domain.DigitalDocument;
+import br.com.nivlabs.gp.models.domain.EventType;
+import br.com.nivlabs.gp.models.domain.Patient;
+import br.com.nivlabs.gp.models.domain.PatientAllergy;
+import br.com.nivlabs.gp.models.domain.Person;
+import br.com.nivlabs.gp.models.domain.Responsible;
+import br.com.nivlabs.gp.models.dto.AccomodationDTO;
+import br.com.nivlabs.gp.models.dto.AttendanceDTO;
+import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
+import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
+import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
+import br.com.nivlabs.gp.models.dto.DocumentDTO;
+import br.com.nivlabs.gp.models.dto.EventTypeDTO;
+import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
+import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
+import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
+import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
+import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
+import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
+import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
+import br.com.nivlabs.gp.models.dto.UserInfoDTO;
+import br.com.nivlabs.gp.repository.AttendanceEventRepository;
+import br.com.nivlabs.gp.repository.AttendanceRepository;
 
 /**
  * Classe AttendanceService.java
@@ -142,7 +164,7 @@ public class AttendanceService implements GenericService {
                 convertedAttendance.setReasonForEntry(visitDto.getEntryCause());
                 convertedAttendance.setPatient(new Patient(savedPatient.getId()));
                 convertedAttendance.setEntryType(
-                        visitDto.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
+                                                 visitDto.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
                 convertedAttendance = persist(convertedAttendance);
                 createEntryEvent(convertedAttendance, visitDto);
                 attendance = getActiveMedicalRecord(visitDto.getPatientId());
@@ -152,8 +174,8 @@ public class AttendanceService implements GenericService {
         }
 
         throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
-                "O paciente de código %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
-                visitDto.getPatientId()));
+                                                                               "O paciente de código %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
+                                                                               visitDto.getPatientId()));
 
     }
 
@@ -191,8 +213,8 @@ public class AttendanceService implements GenericService {
         PatientInfoDTO patient = patientService.findByPatientId(patientId);
         Attendance attendanceFromDb = dao.findByPatientAndDateTimeExitIsNull(new Patient(patient.getId()))
                 .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
-                        "Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
-                        patient.getFirstName())));
+                                                                                                    "Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
+                                                                                                    patient.getFullName())));
         MedicalRecordDTO medicalRecord = new MedicalRecordDTO();
         BeanUtils.copyProperties(patient, medicalRecord);
         medicalRecord.setId(attendanceFromDb.getId());
@@ -277,7 +299,7 @@ public class AttendanceService implements GenericService {
         ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(logedUser.getDocument().getValue());
         if (responsibleInformations.getId() == null)
             throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
-        logger.info("Profissional encontrado :: {}", responsibleInformations.getFirstName());
+        logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
         logger.info("Realizando processamento do profissional para a requisição de evolução clínica");
         ResponsibleDTO responsible = new ResponsibleDTO();
