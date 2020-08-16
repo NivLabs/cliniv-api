@@ -27,9 +27,9 @@ public class UserFilters extends CustomFilters {
 
     private String cpf = "";
 
-    private String firstName = "";
+    private String fullName = "";
 
-    private String lastName = "";
+    private String socialName = "";
 
     private Gender gender;
 
@@ -41,12 +41,12 @@ public class UserFilters extends CustomFilters {
         return cpf;
     }
 
-    public String getFirstName() {
-        return "%".concat(firstName).concat("%");
+    public String getFullName() {
+        return "%".concat(fullName).concat("%");
     }
 
-    public String getLastName() {
-        return "%".concat(lastName).concat("%");
+    public String getSocialName() {
+        return "%".concat(socialName).concat("%");
     }
 
     public Gender getGender() {

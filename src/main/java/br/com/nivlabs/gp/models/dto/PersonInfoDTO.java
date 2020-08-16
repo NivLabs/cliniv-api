@@ -11,7 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.enums.Gender;
-import br.com.nivlabs.gp.enums.GenderIdeology;
+import br.com.nivlabs.gp.enums.GenderIdentity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -38,15 +38,13 @@ public abstract class PersonInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Identificadfor único")
     private Long id;
 
-    @ApiModelProperty("Primeiro nome da pessoa")
-    @NotNull(message = "O nome é obrigatório")
-    @Size(min = 3, max = 45, message = "O nome é obrigatório")
-    private String firstName;
+    @ApiModelProperty("Nome completo da pessoa")
+    @NotNull(message = "O nome completo é obrigatório")
+    @Size(min = 3, max = 45, message = "O nome completo é obrigatório")
+    private String fullName;
 
-    @ApiModelProperty("Sobrenome da pessoa")
-    @NotNull(message = "O sobrenome é obrigatório")
-    @Size(min = 3, max = 45, message = "O sobrenome é obrigatório")
-    private String lastName;
+    @ApiModelProperty("Nome social da pessoa")
+    private String socialName;
 
     @ApiModelProperty("Data de nascimento da pessoa")
     @NotNull(message = "A data de nascimento é obrigatória")
@@ -62,9 +60,9 @@ public abstract class PersonInfoDTO extends DataTransferObjectBase {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ApiModelProperty("Ideologia")
+    @ApiModelProperty("Identidade de gênero")
     @Enumerated(EnumType.STRING)
-    private GenderIdeology genderIdeology;
+    private GenderIdentity genderIdentity;
 
     @ApiModelProperty("Nome do pai")
     private String fatherName;

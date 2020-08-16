@@ -224,7 +224,7 @@ public class AnamnesisService implements GenericService {
         ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
         if (responsibleInformations.getId() == null)
             throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
-        logger.info("Profissional encontrado :: {}", responsibleInformations.getFirstName());
+        logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
         logger.info("Realizando processamento do profissional para a requisição de anamnese");
         ResponsibleDTO responsible = new ResponsibleDTO();
@@ -248,7 +248,7 @@ public class AnamnesisService implements GenericService {
         ReportParam params = new ReportParam();
         params.getParams().put(VISIT_ID, request.getAttendanceId());
         params.getParams().put("DOC_TITLE", "RELATÓRIO DE ANAMNESE DO PACIENTE");
-        params.getParams().put(REQUESTER_NAME, requestOwner.getFirstName() + " " + requestOwner.getLastName());
+        params.getParams().put(REQUESTER_NAME, requestOwner.getFullName());
         params.getParams().put(HOSPITAL_LOGO, logoBase64);
         params.getParams().put(TODAY, new Date());
 

@@ -30,11 +30,11 @@ public class AttendanceDTO extends DataTransferObjectBase {
     @ApiModelProperty("Identificador único do atendimento")
     private Long id;
 
-    @ApiModelProperty("Primeiro nome")
-    private String firstName;
+    @ApiModelProperty("Nome completo")
+    private String fullName;
 
-    @ApiModelProperty("Último nome")
-    private String lastName;
+    @ApiModelProperty("Nome Social")
+    private String socialName;
 
     @ApiModelProperty("Data da entrada")
     private LocalDateTime entryDatetime;

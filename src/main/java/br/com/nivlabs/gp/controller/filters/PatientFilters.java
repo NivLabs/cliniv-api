@@ -19,25 +19,25 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PatientFilters extends CustomFilters {
 
-	private static final long serialVersionUID = 1647722811566982336L;
+    private static final long serialVersionUID = 1647722811566982336L;
 
-	private String id;
+    private String id;
 
-	private String cpf;
+    private String cpf;
 
-	private String firstName = "";
+    private String fullName = "";
 
-	private String lastName = "";
+    private String socialName = "";
 
-	private String susNumber = "";
+    private String susNumber = "";
 
-	private PatientType type;
+    private PatientType type;
 
-	public String getFirstName() {
-		return "%".concat(firstName).concat("%");
-	}
+    public String getFullName() {
+        return "%".concat(fullName).concat("%");
+    }
 
-	public String getLastName() {
-		return "%".concat(lastName).concat("%");
-	}
+    public String getSocialName() {
+        return "%".concat(socialName).concat("%");
+    }
 }
