@@ -38,9 +38,9 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
 
     private Long anamnesisDigitalDocuentId;
 
-    private String firstName;
+    private String fullName;
 
-    private String lastName;
+    private String socialName;
 
     private String principalNumber;
 
