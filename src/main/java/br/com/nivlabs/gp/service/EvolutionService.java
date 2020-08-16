@@ -87,7 +87,7 @@ public class EvolutionService implements GenericService {
                     request.getAttendanceId());
         MedicalRecordDTO medicalRecord = attendanceService.findMedicalRecordByAttendanceId(request.getAttendanceId());
 
-        logger.info("Atendimento encontrado para o paciente {}.", medicalRecord.getFirstName());
+        logger.info("Atendimento encontrado para o paciente {}.", medicalRecord.getFullName());
         LocalDateTime currentTime = LocalDateTime.now();
         logger.info("Hora da solicitaçõ do evento de Evolução :: {}", currentTime);
 
