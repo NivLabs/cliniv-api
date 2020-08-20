@@ -1,5 +1,5 @@
 name: app
-type: "java:11"
+type: "java:13"
 
 disk: 1024
 
