@@ -17,18 +17,12 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<java.version>13</java.version>
+		<java.version>14</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 		<io.jwt.version>0.9.1</io.jwt.version>
 	</properties>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>sh.platform</groupId>
-			<artifactId>config</artifactId>
-			<version>2.2.0</version>
-		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
