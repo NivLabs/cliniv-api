@@ -1,10 +1,5 @@
 package br.com.nivlabs.gp.service;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,12 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import br.com.nivlabs.gp.models.domain.Institute;
 import br.com.nivlabs.gp.models.domain.Parameter;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.CustomerInfoDTO;
+import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.LicenseDTO;
 import br.com.nivlabs.gp.models.dto.ParameterDTO;
@@ -78,26 +73,14 @@ public class InstituteService implements GenericService {
         return response;
     }
 
-	public void setCompanyLogo(MultipartFile logo) throws IOException {
-		byte[] bytes = logo.getBytes();
-		File file = new File(logo.getOriginalFilename());
-		try (FileOutputStream fos = new FileOutputStream(file)) {
-			try (BufferedOutputStream stream = new BufferedOutputStream(fos)) {
-				stream.write(bytes);
-				try (FileInputStream fis = new FileInputStream(file)) {
-			        logger.info("Buscando informações da instituição...");
-			        List<Institute> institutes = instituteRepo.findAll();
-			        if (!institutes.isEmpty()) {
-			            Institute institute = institutes.get(0);
-			            logger.info("Inserindo a Logo");
-			            institute.setCompanyLogo(fis.readAllBytes());
-						instituteRepo.save(institute);
-						logger.info("Logo Inserida");
-			        }
-				}
-			} 
-		} 
-		
-		
-	}
+    public void setCompanyLogo(FileDTO file) {
+        List<Institute> institutes = instituteRepo.findAll();
+        if (!institutes.isEmpty()) {
+            Institute institute = institutes.get(0);
+            logger.info("Inserindo a Logo");
+            institute.setCompanyLogo(file.getBase64());
+            instituteRepo.save(institute);
+            logger.info("Logo Inserida");
+        }
+    }
 }
