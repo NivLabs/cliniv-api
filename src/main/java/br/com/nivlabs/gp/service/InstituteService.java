@@ -6,8 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Institute;
 import br.com.nivlabs.gp.models.domain.Parameter;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
@@ -18,6 +20,7 @@ import br.com.nivlabs.gp.models.dto.LicenseDTO;
 import br.com.nivlabs.gp.models.dto.ParameterDTO;
 import br.com.nivlabs.gp.repository.InstituteRepository;
 import br.com.nivlabs.gp.repository.ParameterRepository;
+import br.com.nivlabs.gp.util.StringUtils;
 
 /**
  * 
@@ -75,6 +78,8 @@ public class InstituteService implements GenericService {
     }
 
     public void setCompanyLogo(FileDTO file) {
+        if (file == null || StringUtils.isNullOrEmpty(file.getBase64()))
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A propriedade de Base64 da imagem não pode ser nula");
         List<Institute> institutes = instituteRepo.findAll();
         if (!institutes.isEmpty()) {
             Institute institute = institutes.get(0);
