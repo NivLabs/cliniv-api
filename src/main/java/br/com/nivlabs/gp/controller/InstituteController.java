@@ -1,7 +1,5 @@
 package br.com.nivlabs.gp.controller;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -9,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
+import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.service.InstituteService;
 import io.swagger.annotations.Api;
@@ -32,17 +30,17 @@ public class InstituteController {
     @Autowired
     private InstituteService instituteService;
 
-    @ApiOperation(nickname = "institute-get-settings", value = "Busca as informações do estabelecimento")
+    @ApiOperation(nickname = "institute-get-settings", value = "Busca as informações da Instituição")
     @GetMapping
     @PreAuthorize("hasAnyRole('INSTINTUTO_LEITURA', 'INSTITUTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<InstituteDTO> getInstitute() {
         return ResponseEntity.ok(instituteService.getSettings());
     }
-    
-    @ApiOperation(nickname = "institute-upload-logo", value = "Insere a logo do estabelecimento")
-    @PostMapping()
+
+    @ApiOperation(nickname = "institute-upload-logo", value = "Insere a logo da Instituição")
+    @PostMapping
     @PreAuthorize("hasAnyRole('INSTITUTO_ESCRITA', 'ADMIN')")
-    public void uploadCompanyLogo(MultipartFile logo) throws IOException{
-		instituteService.setCompanyLogo(logo);
+    public void uploadCompanyLogo(FileDTO file) {
+        instituteService.setCompanyLogo(file);
     }
 }

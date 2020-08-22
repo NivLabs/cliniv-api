@@ -41,7 +41,7 @@ public class Institute implements Serializable {
 
     @Lob
     @Column(name = "LOGO")
-    private byte[] companyLogo;
+    private String companyLogo;
 
     @Column(name = "NOME")
     private String name;
@@ -99,5 +99,5 @@ public class Institute implements Serializable {
 
     @Column(name = "DATA_FIM")
     private Date endDate;
-    
+
 }
