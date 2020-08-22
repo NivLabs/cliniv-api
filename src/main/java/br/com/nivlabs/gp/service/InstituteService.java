@@ -58,6 +58,7 @@ public class InstituteService implements GenericService {
             BeanUtils.copyProperties(institute, customer);
             BeanUtils.copyProperties(institute, license);
 
+            customer.setLogoBase64(institute.getCompanyLogo());
             customer.setAddress(address);
             customer.setLicense(license);
             response.setCustomerInfo(customer);
