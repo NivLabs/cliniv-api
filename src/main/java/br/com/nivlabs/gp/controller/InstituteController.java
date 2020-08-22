@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +41,8 @@ public class InstituteController {
     @ApiOperation(nickname = "institute-upload-logo", value = "Insere a logo da Instituição")
     @PostMapping
     @PreAuthorize("hasAnyRole('INSTITUTO_ESCRITA', 'ADMIN')")
-    public void uploadCompanyLogo(FileDTO file) {
+    public ResponseEntity<Void> uploadCompanyLogo(@RequestBody(required = true) FileDTO file) {
         instituteService.setCompanyLogo(file);
+        return ResponseEntity.ok().build();
     }
 }
