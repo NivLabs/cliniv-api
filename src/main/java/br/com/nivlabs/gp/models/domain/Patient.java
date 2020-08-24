@@ -19,10 +19,6 @@ import javax.persistence.Table;
 
 import br.com.nivlabs.gp.enums.PatientType;
 import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * Classe Patient.java
@@ -33,10 +29,6 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "PACIENTE")
-@Data
-@EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
-@NoArgsConstructor
 public class Patient extends BaseObjectWithCreatedAt {
 
     private static final long serialVersionUID = 4873898002597934236L;
@@ -70,4 +62,141 @@ public class Patient extends BaseObjectWithCreatedAt {
     public Patient(Long patientId) {
         this.id = patientId;
     }
+
+    public Patient() {
+        super();
+    }
+
+    public Patient(Long id, String susNumber, Person person, HealthPlan healthPlan, PatientType type, String annotations,
+            List<PatientAllergy> allergies) {
+        super();
+        this.id = id;
+        this.susNumber = susNumber;
+        this.person = person;
+        this.healthPlan = healthPlan;
+        this.type = type;
+        this.annotations = annotations;
+        this.allergies = allergies;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getSusNumber() {
+        return susNumber;
+    }
+
+    public void setSusNumber(String susNumber) {
+        this.susNumber = susNumber;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public HealthPlan getHealthPlan() {
+        return healthPlan;
+    }
+
+    public void setHealthPlan(HealthPlan healthPlan) {
+        this.healthPlan = healthPlan;
+    }
+
+    public PatientType getType() {
+        return type;
+    }
+
+    public void setType(PatientType type) {
+        this.type = type;
+    }
+
+    public String getAnnotations() {
+        return annotations;
+    }
+
+    public void setAnnotations(String annotations) {
+        this.annotations = annotations;
+    }
+
+    public List<PatientAllergy> getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(List<PatientAllergy> allergies) {
+        this.allergies = allergies;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((allergies == null) ? 0 : allergies.hashCode());
+        result = prime * result + ((annotations == null) ? 0 : annotations.hashCode());
+        result = prime * result + ((healthPlan == null) ? 0 : healthPlan.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((person == null) ? 0 : person.hashCode());
+        result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Patient other = (Patient) obj;
+        if (allergies == null) {
+            if (other.allergies != null)
+                return false;
+        } else if (!allergies.equals(other.allergies))
+            return false;
+        if (annotations == null) {
+            if (other.annotations != null)
+                return false;
+        } else if (!annotations.equals(other.annotations))
+            return false;
+        if (healthPlan == null) {
+            if (other.healthPlan != null)
+                return false;
+        } else if (!healthPlan.equals(other.healthPlan))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (person == null) {
+            if (other.person != null)
+                return false;
+        } else if (!person.equals(other.person))
+            return false;
+        if (susNumber == null) {
+            if (other.susNumber != null)
+                return false;
+        } else if (!susNumber.equals(other.susNumber))
+            return false;
+        if (type != other.type)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Patient [id=" + id + ", susNumber=" + susNumber + ", person=" + person + ", healthPlan=" + healthPlan + ", type=" + type
+                + ", annotations=" + annotations + ", allergies=" + allergies + "]";
+    }
+
 }
