@@ -9,10 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * Classe EvolutionInfoDTO.java
@@ -21,11 +17,6 @@ import lombok.NoArgsConstructor;
  * 
  * @since 5 de dez de 2019
  */
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @ApiModel("Evolução Clínica")
 public class EvolutionInfoDTO extends DataTransferObjectBase {
 
@@ -48,5 +39,113 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Data/Hora da leitura da evolução")
     @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime datetime;
+
+    public EvolutionInfoDTO() {
+        super();
+    }
+
+    public EvolutionInfoDTO(Long id, Long attendanceId, Long accomodationId, String description, LocalDateTime datetime) {
+        super();
+        this.id = id;
+        this.attendanceId = attendanceId;
+        this.accomodationId = accomodationId;
+        this.description = description;
+        this.datetime = datetime;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getAttendanceId() {
+        return attendanceId;
+    }
+
+    public void setAttendanceId(Long attendanceId) {
+        this.attendanceId = attendanceId;
+    }
+
+    public Long getAccomodationId() {
+        return accomodationId;
+    }
+
+    public void setAccomodationId(Long accomodationId) {
+        this.accomodationId = accomodationId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(LocalDateTime datetime) {
+        this.datetime = datetime;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((accomodationId == null) ? 0 : accomodationId.hashCode());
+        result = prime * result + ((attendanceId == null) ? 0 : attendanceId.hashCode());
+        result = prime * result + ((datetime == null) ? 0 : datetime.hashCode());
+        result = prime * result + ((description == null) ? 0 : description.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        EvolutionInfoDTO other = (EvolutionInfoDTO) obj;
+        if (accomodationId == null) {
+            if (other.accomodationId != null)
+                return false;
+        } else if (!accomodationId.equals(other.accomodationId))
+            return false;
+        if (attendanceId == null) {
+            if (other.attendanceId != null)
+                return false;
+        } else if (!attendanceId.equals(other.attendanceId))
+            return false;
+        if (datetime == null) {
+            if (other.datetime != null)
+                return false;
+        } else if (!datetime.equals(other.datetime))
+            return false;
+        if (description == null) {
+            if (other.description != null)
+                return false;
+        } else if (!description.equals(other.description))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "EvolutionInfoDTO [id=" + id + ", attendanceId=" + attendanceId + ", accomodationId=" + accomodationId + ", description="
+                + description + ", datetime=" + datetime + "]";
+    }
 
 }

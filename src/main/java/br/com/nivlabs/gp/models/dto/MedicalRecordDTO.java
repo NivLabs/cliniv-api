@@ -9,10 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.enums.Gender;
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Classe que representa um prontuário médico
@@ -21,44 +18,294 @@ import lombok.NoArgsConstructor;
  * 
  * @since 11 de out de 2019
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @ApiModel("Prontuário")
 public class MedicalRecordDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6838739544914003033L;
 
+    @ApiModelProperty("Identificador único do atendimento")
     private Long id;
 
+    @ApiModelProperty("Identificador do paciente")
     private Long patientId;
 
+    @ApiModelProperty("Documento do paciente")
     private DocumentDTO document;
 
+    @ApiModelProperty("Identificador da anmnese")
     private Long anamnesisDigitalDocuentId;
 
+    @ApiModelProperty("Nome completo do paciente")
     private String fullName;
 
+    @ApiModelProperty("Nome social do pacienteV")
     private String socialName;
 
+    @ApiModelProperty("Número de Telfone/Celular do paciente")
     private String principalNumber;
 
+    @ApiModelProperty("Número do SUS")
     private String susNumber;
 
+    @ApiModelProperty("Data de nascimento")
     @DateTimeFormat(iso = ISO.DATE)
     private Date bornDate;
 
+    @ApiModelProperty("Acomodação")
     private AccomodationDTO lastAccommodation;
 
+    @ApiModelProperty("Sexo")
     private Gender gender;
 
+    @ApiModelProperty("Eventos")
     private List<AttendanceEventDTO> events = new ArrayList<>();
 
+    @ApiModelProperty("Medicamentos")
     private List<MedicineInfoDTO> medicines = new ArrayList<>();
 
+    @ApiModelProperty("Evoluções")
     private List<EvolutionInfoDTO> evolutions = new ArrayList<>();
 
+    @ApiModelProperty("Alergias")
     private List<String> allergies = new ArrayList<>();
+
+    public MedicalRecordDTO() {
+        super();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
+    }
+
+    public DocumentDTO getDocument() {
+        return document;
+    }
+
+    public void setDocument(DocumentDTO document) {
+        this.document = document;
+    }
+
+    public Long getAnamnesisDigitalDocuentId() {
+        return anamnesisDigitalDocuentId;
+    }
+
+    public void setAnamnesisDigitalDocuentId(Long anamnesisDigitalDocuentId) {
+        this.anamnesisDigitalDocuentId = anamnesisDigitalDocuentId;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getSocialName() {
+        return socialName;
+    }
+
+    public void setSocialName(String socialName) {
+        this.socialName = socialName;
+    }
+
+    public String getPrincipalNumber() {
+        return principalNumber;
+    }
+
+    public void setPrincipalNumber(String principalNumber) {
+        this.principalNumber = principalNumber;
+    }
+
+    public String getSusNumber() {
+        return susNumber;
+    }
+
+    public void setSusNumber(String susNumber) {
+        this.susNumber = susNumber;
+    }
+
+    public Date getBornDate() {
+        return bornDate;
+    }
+
+    public void setBornDate(Date bornDate) {
+        this.bornDate = bornDate;
+    }
+
+    public AccomodationDTO getLastAccommodation() {
+        return lastAccommodation;
+    }
+
+    public void setLastAccommodation(AccomodationDTO lastAccommodation) {
+        this.lastAccommodation = lastAccommodation;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public List<AttendanceEventDTO> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<AttendanceEventDTO> events) {
+        this.events = events;
+    }
+
+    public List<MedicineInfoDTO> getMedicines() {
+        return medicines;
+    }
+
+    public void setMedicines(List<MedicineInfoDTO> medicines) {
+        this.medicines = medicines;
+    }
+
+    public List<EvolutionInfoDTO> getEvolutions() {
+        return evolutions;
+    }
+
+    public void setEvolutions(List<EvolutionInfoDTO> evolutions) {
+        this.evolutions = evolutions;
+    }
+
+    public List<String> getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(List<String> allergies) {
+        this.allergies = allergies;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((allergies == null) ? 0 : allergies.hashCode());
+        result = prime * result + ((anamnesisDigitalDocuentId == null) ? 0 : anamnesisDigitalDocuentId.hashCode());
+        result = prime * result + ((bornDate == null) ? 0 : bornDate.hashCode());
+        result = prime * result + ((document == null) ? 0 : document.hashCode());
+        result = prime * result + ((events == null) ? 0 : events.hashCode());
+        result = prime * result + ((evolutions == null) ? 0 : evolutions.hashCode());
+        result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
+        result = prime * result + ((gender == null) ? 0 : gender.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((lastAccommodation == null) ? 0 : lastAccommodation.hashCode());
+        result = prime * result + ((medicines == null) ? 0 : medicines.hashCode());
+        result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
+        result = prime * result + ((principalNumber == null) ? 0 : principalNumber.hashCode());
+        result = prime * result + ((socialName == null) ? 0 : socialName.hashCode());
+        result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        MedicalRecordDTO other = (MedicalRecordDTO) obj;
+        if (allergies == null) {
+            if (other.allergies != null)
+                return false;
+        } else if (!allergies.equals(other.allergies))
+            return false;
+        if (anamnesisDigitalDocuentId == null) {
+            if (other.anamnesisDigitalDocuentId != null)
+                return false;
+        } else if (!anamnesisDigitalDocuentId.equals(other.anamnesisDigitalDocuentId))
+            return false;
+        if (bornDate == null) {
+            if (other.bornDate != null)
+                return false;
+        } else if (!bornDate.equals(other.bornDate))
+            return false;
+        if (document == null) {
+            if (other.document != null)
+                return false;
+        } else if (!document.equals(other.document))
+            return false;
+        if (events == null) {
+            if (other.events != null)
+                return false;
+        } else if (!events.equals(other.events))
+            return false;
+        if (evolutions == null) {
+            if (other.evolutions != null)
+                return false;
+        } else if (!evolutions.equals(other.evolutions))
+            return false;
+        if (fullName == null) {
+            if (other.fullName != null)
+                return false;
+        } else if (!fullName.equals(other.fullName))
+            return false;
+        if (gender != other.gender)
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (lastAccommodation == null) {
+            if (other.lastAccommodation != null)
+                return false;
+        } else if (!lastAccommodation.equals(other.lastAccommodation))
+            return false;
+        if (medicines == null) {
+            if (other.medicines != null)
+                return false;
+        } else if (!medicines.equals(other.medicines))
+            return false;
+        if (patientId == null) {
+            if (other.patientId != null)
+                return false;
+        } else if (!patientId.equals(other.patientId))
+            return false;
+        if (principalNumber == null) {
+            if (other.principalNumber != null)
+                return false;
+        } else if (!principalNumber.equals(other.principalNumber))
+            return false;
+        if (socialName == null) {
+            if (other.socialName != null)
+                return false;
+        } else if (!socialName.equals(other.socialName))
+            return false;
+        if (susNumber == null) {
+            if (other.susNumber != null)
+                return false;
+        } else if (!susNumber.equals(other.susNumber))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "MedicalRecordDTO [id=" + id + ", patientId=" + patientId + ", document=" + document + ", anamnesisDigitalDocuentId="
+                + anamnesisDigitalDocuentId + ", fullName=" + fullName + ", socialName=" + socialName + ", principalNumber="
+                + principalNumber + ", susNumber=" + susNumber + ", bornDate=" + bornDate + ", lastAccommodation=" + lastAccommodation
+                + ", gender=" + gender + ", events=" + events + ", medicines=" + medicines + ", evolutions=" + evolutions + ", allergies="
+                + allergies + "]";
+    }
 
 }

@@ -7,9 +7,6 @@ import javax.persistence.MappedSuperclass;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Classe BaseObject.java
  * 
@@ -24,7 +21,14 @@ public abstract class BaseObjectWithCreatedAt extends BaseObjectWithId {
 
     @Column(name = "DATA_CRIACAO")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    @Getter
-    @Setter
     private LocalDateTime createdAt;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
 }

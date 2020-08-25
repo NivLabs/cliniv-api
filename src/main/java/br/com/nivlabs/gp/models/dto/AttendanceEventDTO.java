@@ -8,10 +8,6 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 /**
  * Classe VisitEventDTO.java
@@ -21,10 +17,6 @@ import lombok.NoArgsConstructor;
  * @since 18 de nov de 2019
  */
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @ApiModel("Evento do Atendimento")
 public class AttendanceEventDTO extends DataTransferObjectBase {
 
@@ -45,4 +37,114 @@ public class AttendanceEventDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Acomodação onde o evento foi ou será realizado")
     private AccomodationDTO accomodation;
+
+    public AttendanceEventDTO() {
+        super();
+    }
+
+    public AttendanceEventDTO(Long id, LocalDateTime datetime, String description, List<DigitalDocumentDTO> documents,
+            AccomodationDTO accomodation) {
+        super();
+        this.id = id;
+        this.datetime = datetime;
+        this.description = description;
+        this.documents = documents;
+        this.accomodation = accomodation;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(LocalDateTime datetime) {
+        this.datetime = datetime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<DigitalDocumentDTO> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<DigitalDocumentDTO> documents) {
+        this.documents = documents;
+    }
+
+    public AccomodationDTO getAccomodation() {
+        return accomodation;
+    }
+
+    public void setAccomodation(AccomodationDTO accomodation) {
+        this.accomodation = accomodation;
+    }
+
+    @Override
+    public String toString() {
+        return "AttendanceEventDTO [id=" + id + ", datetime=" + datetime + ", description=" + description + ", documents=" + documents
+                + ", accomodation=" + accomodation + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((accomodation == null) ? 0 : accomodation.hashCode());
+        result = prime * result + ((datetime == null) ? 0 : datetime.hashCode());
+        result = prime * result + ((description == null) ? 0 : description.hashCode());
+        result = prime * result + ((documents == null) ? 0 : documents.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        AttendanceEventDTO other = (AttendanceEventDTO) obj;
+        if (accomodation == null) {
+            if (other.accomodation != null)
+                return false;
+        } else if (!accomodation.equals(other.accomodation))
+            return false;
+        if (datetime == null) {
+            if (other.datetime != null)
+                return false;
+        } else if (!datetime.equals(other.datetime))
+            return false;
+        if (description == null) {
+            if (other.description != null)
+                return false;
+        } else if (!description.equals(other.description))
+            return false;
+        if (documents == null) {
+            if (other.documents != null)
+                return false;
+        } else if (!documents.equals(other.documents))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
 }
