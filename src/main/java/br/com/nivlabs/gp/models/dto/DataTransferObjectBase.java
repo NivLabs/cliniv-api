@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  *
  */
 @JsonIgnoreProperties(ignoreUnknown = false)
-public class DataTransferObjectBase implements Serializable {
+public abstract class DataTransferObjectBase implements Serializable {
 
     private static final long serialVersionUID = 8601475769419769218L;
 

@@ -4,15 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.nivlabs.gp.enums.AccomodationType;
 import io.swagger.annotations.ApiModel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @ApiModel("Sala (ambulatório) ou Leito")
 public class AccomodationDTO extends DataTransferObjectBase {
 
@@ -32,6 +24,95 @@ public class AccomodationDTO extends DataTransferObjectBase {
     public AccomodationDTO(Long id) {
         super();
         this.id = id;
+    }
+
+    public AccomodationDTO(Long id, Long sectorId, String description, AccomodationType type) {
+        super();
+        this.id = id;
+        this.sectorId = sectorId;
+        this.description = description;
+        this.type = type;
+    }
+
+    public AccomodationDTO() {
+        super();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getSectorId() {
+        return sectorId;
+    }
+
+    public void setSectorId(Long sectorId) {
+        this.sectorId = sectorId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public AccomodationType getType() {
+        return type;
+    }
+
+    public void setType(AccomodationType type) {
+        this.type = type;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((description == null) ? 0 : description.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((sectorId == null) ? 0 : sectorId.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        AccomodationDTO other = (AccomodationDTO) obj;
+        if (description == null) {
+            if (other.description != null)
+                return false;
+        } else if (!description.equals(other.description))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (sectorId == null) {
+            if (other.sectorId != null)
+                return false;
+        } else if (!sectorId.equals(other.sectorId))
+            return false;
+        if (type != other.type)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "AccomodationDTO [id=" + id + ", sectorId=" + sectorId + ", description=" + description + ", type=" + type + "]";
     }
 
 }

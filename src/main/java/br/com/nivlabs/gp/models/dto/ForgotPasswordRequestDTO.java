@@ -8,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * Classe NewPasswordRequestDTO.java
@@ -18,8 +16,6 @@ import lombok.EqualsAndHashCode;
  * 
  * @since 15 de set de 2019
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
 @ApiModel("Requisição de Senha perdida")
 public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
 
@@ -41,4 +37,90 @@ public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
     @ApiModelProperty("Nova senha")
     @NotNull(message = "Informe a nova senha!")
     private String newPassword;
+
+    public ForgotPasswordRequestDTO() {
+        super();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getMotherName() {
+        return motherName;
+    }
+
+    public void setMotherName(String motherName) {
+        this.motherName = motherName;
+    }
+
+    public Date getBornDate() {
+        return bornDate;
+    }
+
+    public void setBornDate(Date bornDate) {
+        this.bornDate = bornDate;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((bornDate == null) ? 0 : bornDate.hashCode());
+        result = prime * result + ((motherName == null) ? 0 : motherName.hashCode());
+        result = prime * result + ((newPassword == null) ? 0 : newPassword.hashCode());
+        result = prime * result + ((username == null) ? 0 : username.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ForgotPasswordRequestDTO other = (ForgotPasswordRequestDTO) obj;
+        if (bornDate == null) {
+            if (other.bornDate != null)
+                return false;
+        } else if (!bornDate.equals(other.bornDate))
+            return false;
+        if (motherName == null) {
+            if (other.motherName != null)
+                return false;
+        } else if (!motherName.equals(other.motherName))
+            return false;
+        if (newPassword == null) {
+            if (other.newPassword != null)
+                return false;
+        } else if (!newPassword.equals(other.newPassword))
+            return false;
+        if (username == null) {
+            if (other.username != null)
+                return false;
+        } else if (!username.equals(other.username))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ForgotPasswordRequestDTO [username=" + username + ", motherName=" + motherName + ", bornDate=" + bornDate + ", newPassword="
+                + newPassword + "]";
+    }
+
 }
