@@ -7,15 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @ApiModel("Requisição de Anamnese")
 public class NewAnamnesisDTO extends DataTransferObjectBase {
 
@@ -29,4 +21,72 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
     private Long accomodationId;
 
     private Set<AnamnesisDTO> listOfResponse = new HashSet<>();
+
+	public Long getAttendanceId() {
+		return attendanceId;
+	}
+
+	public void setAttendanceId(Long attendanceId) {
+		this.attendanceId = attendanceId;
+	}
+
+	public Long getAccomodationId() {
+		return accomodationId;
+	}
+
+	public void setAccomodationId(Long accomodationId) {
+		this.accomodationId = accomodationId;
+	}
+
+	public Set<AnamnesisDTO> getListOfResponse() {
+		return listOfResponse;
+	}
+
+	public void setListOfResponse(Set<AnamnesisDTO> listOfResponse) {
+		this.listOfResponse = listOfResponse;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((accomodationId == null) ? 0 : accomodationId.hashCode());
+		result = prime * result + ((attendanceId == null) ? 0 : attendanceId.hashCode());
+		result = prime * result + ((listOfResponse == null) ? 0 : listOfResponse.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NewAnamnesisDTO other = (NewAnamnesisDTO) obj;
+		if (accomodationId == null) {
+			if (other.accomodationId != null)
+				return false;
+		} else if (!accomodationId.equals(other.accomodationId))
+			return false;
+		if (attendanceId == null) {
+			if (other.attendanceId != null)
+				return false;
+		} else if (!attendanceId.equals(other.attendanceId))
+			return false;
+		if (listOfResponse == null) {
+			if (other.listOfResponse != null)
+				return false;
+		} else if (!listOfResponse.equals(other.listOfResponse))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "NewAnamnesisDTO [attendanceId=" + attendanceId + ", accomodationId=" + accomodationId
+				+ ", listOfResponse=" + listOfResponse + "]";
+	}
+	
 }
