@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import br.com.nivlabs.gp.enums.AttendanceLevel;
 import br.com.nivlabs.gp.enums.EntryType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
 
@@ -65,6 +66,10 @@ public class Attendance extends BaseObjectWithId {
 
     @Column(name = "MOTIVO_ENTRADA")
     private String reasonForEntry;
+
+    @Column(name = "NIVEL_RISCO")
+    @Enumerated(EnumType.STRING)
+    private AttendanceLevel level;
 
     public Attendance() {
         super();
@@ -147,6 +152,13 @@ public class Attendance extends BaseObjectWithId {
     }
 
     @Override
+    public String toString() {
+        return "Attendance [id=" + id + ", patient=" + patient + ", dateTimeEntry=" + dateTimeEntry + ", dateTimeExit=" + dateTimeExit
+                + ", currentSector=" + currentSector + ", entryType=" + entryType + ", events=" + events + ", evolutions=" + evolutions
+                + ", reasonForEntry=" + reasonForEntry + ", level=" + level + "]";
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -157,6 +169,7 @@ public class Attendance extends BaseObjectWithId {
         result = prime * result + ((events == null) ? 0 : events.hashCode());
         result = prime * result + ((evolutions == null) ? 0 : evolutions.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((level == null) ? 0 : level.hashCode());
         result = prime * result + ((patient == null) ? 0 : patient.hashCode());
         result = prime * result + ((reasonForEntry == null) ? 0 : reasonForEntry.hashCode());
         return result;
@@ -203,6 +216,8 @@ public class Attendance extends BaseObjectWithId {
                 return false;
         } else if (!id.equals(other.id))
             return false;
+        if (level != other.level)
+            return false;
         if (patient == null) {
             if (other.patient != null)
                 return false;
@@ -216,11 +231,12 @@ public class Attendance extends BaseObjectWithId {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Attendance [id=" + id + ", patient=" + patient + ", dateTimeEntry=" + dateTimeEntry + ", dateTimeExit=" + dateTimeExit
-                + ", currentSector=" + currentSector + ", entryType=" + entryType + ", events=" + events + ", evolutions=" + evolutions
-                + ", reasonForEntry=" + reasonForEntry + "]";
+    public AttendanceLevel getLevel() {
+        return level;
+    }
+
+    public void setLevel(AttendanceLevel level) {
+        this.level = level;
     }
 
     @PrePersist
