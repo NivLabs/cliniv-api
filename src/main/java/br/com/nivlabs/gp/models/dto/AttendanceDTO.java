@@ -2,6 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
 
+import br.com.nivlabs.gp.enums.AttendanceLevel;
 import br.com.nivlabs.gp.enums.EntryType;
 import br.com.nivlabs.gp.enums.PatientType;
 import io.swagger.annotations.ApiModel;
@@ -54,6 +55,9 @@ public class AttendanceDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Descrição|nome do setor")
     private String sectorDescripton;
+
+    @ApiModelProperty("Nível de risco do paciente do atendimento")
+    private AttendanceLevel level;
 
     public AttendanceDTO() {
         super();
@@ -155,6 +159,14 @@ public class AttendanceDTO extends DataTransferObjectBase {
         this.sectorDescripton = sectorDescripton;
     }
 
+    public AttendanceLevel getLevel() {
+        return level;
+    }
+
+    public void setLevel(AttendanceLevel level) {
+        this.level = level;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -164,6 +176,7 @@ public class AttendanceDTO extends DataTransferObjectBase {
         result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((isFinished == null) ? 0 : isFinished.hashCode());
+        result = prime * result + ((level == null) ? 0 : level.hashCode());
         result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
         result = prime * result + ((patientType == null) ? 0 : patientType.hashCode());
         result = prime * result + ((sectorDescription == null) ? 0 : sectorDescription.hashCode());
@@ -208,6 +221,8 @@ public class AttendanceDTO extends DataTransferObjectBase {
                 return false;
         } else if (!isFinished.equals(other.isFinished))
             return false;
+        if (level != other.level)
+            return false;
         if (patientId == null) {
             if (other.patientId != null)
                 return false;
@@ -245,7 +260,7 @@ public class AttendanceDTO extends DataTransferObjectBase {
         return "AttendanceDTO [id=" + id + ", fullName=" + fullName + ", socialName=" + socialName + ", entryDatetime=" + entryDatetime
                 + ", entryCause=" + entryCause + ", isFinished=" + isFinished + ", type=" + type + ", patientType=" + patientType
                 + ", patientId=" + patientId + ", sectorDescription=" + sectorDescription + ", susNumber=" + susNumber
-                + ", sectorDescripton=" + sectorDescripton + "]";
+                + ", sectorDescripton=" + sectorDescripton + ", level=" + level + "]";
     }
 
 }
