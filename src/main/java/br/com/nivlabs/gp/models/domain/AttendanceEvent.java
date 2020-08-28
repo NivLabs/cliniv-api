@@ -17,11 +17,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.models.BaseObjectWithId;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
+import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
+import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 
 /**
  * Classe VisitEvent.java
@@ -256,6 +259,22 @@ public class AttendanceEvent extends BaseObjectWithId {
     public AttendanceEvent(Long id) {
         super();
         this.id = id;
+    }
+
+    public AttendanceEventDTO getDTO() {
+        return new AttendanceEventDTO(this.getId(),
+                this.getEventDateTime(), this.getEventType().getDescription(), convertDocuments(this.getDocuments()),
+                this.getAccomodation().getDTO());
+    }
+
+    private List<DigitalDocumentDTO> convertDocuments(List<DigitalDocument> documents) {
+        List<DigitalDocumentDTO> returnList = new ArrayList<>();
+        documents.forEach(doc -> {
+            DigitalDocumentDTO docToList = new DigitalDocumentDTO();
+            BeanUtils.copyProperties(doc, docToList, "base64");
+            returnList.add(docToList);
+        });
+        return returnList;
     }
 
 }

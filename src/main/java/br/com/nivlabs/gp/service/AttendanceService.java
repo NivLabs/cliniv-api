@@ -21,7 +21,6 @@ import br.com.nivlabs.gp.enums.EntryType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
-import br.com.nivlabs.gp.models.domain.DigitalDocument;
 import br.com.nivlabs.gp.models.domain.EventType;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.PatientAllergy;
@@ -31,11 +30,11 @@ import br.com.nivlabs.gp.models.dto.AccomodationDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
-import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
+import br.com.nivlabs.gp.models.dto.MedicineInfoDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
@@ -54,7 +53,13 @@ import br.com.nivlabs.gp.repository.AttendanceRepository;
 @Service
 public class AttendanceService implements GenericService {
 
+    private static final long EVENT_ID = 15L;
+
     private static final String CLOSE_ATTENDANCE_TEXT = "Encerramento de atendimento";
+
+    private static final Long START_RANGE_MEDICAL_ID = 12L;
+
+    private static final Long END_RANGE_MEDICA_ID = 14L;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -118,11 +123,7 @@ public class AttendanceService implements GenericService {
         medicalRecord.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
         medicalRecord.setSusNumber(objectFromDb.getPatient().getSusNumber());
 
-        objectFromDb.getEvents().forEach(event -> medicalRecord.getEvents().add(new AttendanceEventDTO(event.getId(),
-                event.getEventDateTime(), event.getEventType().getDescription(), convertDocuments(event.getDocuments()),
-                event.getAccomodation().getDTO())));
-        objectFromDb.getEvolutions().forEach(evolution -> medicalRecord.getEvolutions()
-                .add(new EvolutionInfoDTO(evolution.getId(), id, null, evolution.getDescription(), evolution.getDatetime())));
+        processEvents(objectFromDb, medicalRecord);
 
         if (!medicalRecord.getEvents().isEmpty())
             medicalRecord.setLastAccommodation(getLastAccomodationByPatientId(medicalRecord.getEvents()));
@@ -131,14 +132,60 @@ public class AttendanceService implements GenericService {
         return medicalRecord;
     }
 
-    private List<DigitalDocumentDTO> convertDocuments(List<DigitalDocument> documents) {
-        List<DigitalDocumentDTO> returnList = new ArrayList<>();
-        documents.forEach(doc -> {
-            DigitalDocumentDTO docToList = new DigitalDocumentDTO();
-            BeanUtils.copyProperties(doc, docToList, "base64");
-            returnList.add(docToList);
+    /**
+     * Processa eventos do atendimento no prontuário
+     * 
+     * @param objectFromDb
+     * @param medicalRecord
+     */
+    private void processEvents(Attendance objectFromDb, MedicalRecordDTO medicalRecord) {
+        objectFromDb.getEvents().forEach(event -> {
+            processEvent(medicalRecord, event);
         });
-        return returnList;
+    }
+
+    /**
+     * Processa evento no prontuário
+     * 
+     * @param medicalRecord
+     * @param event
+     */
+    private void processEvent(MedicalRecordDTO medicalRecord, AttendanceEvent event) {
+        medicalRecord.getEvents().add(event.getDTO());
+        if (event.getEventType().getId().equals(EVENT_ID)) {
+            processEvolution(medicalRecord, event);
+        } else if (event.getEventType().getId() > START_RANGE_MEDICAL_ID && event.getEventType().getId() <= END_RANGE_MEDICA_ID) {
+            processMedications(medicalRecord, event);
+        }
+    }
+
+    /**
+     * Processa medicamentos no protuário
+     * 
+     * @param medicalRecord
+     * @param event
+     */
+    private void processMedications(MedicalRecordDTO medicalRecord, AttendanceEvent event) {
+        MedicineInfoDTO medicine = new MedicineInfoDTO();
+        medicine.setId(event.getId());
+        medicine.setDatetime(event.getEventDateTime());
+        medicine.setDescription(event.getTitle());
+        medicine.setAmount(event.getObservations());
+        medicine.setResponsibleForTheAdministration(event.getResponsible().getPerson().getFullName());
+        medicalRecord.getMedicines().add(medicine);
+    }
+
+    /**
+     * Processa evoluções no prontuário
+     * 
+     * @param medicalRecord
+     * @param event
+     */
+    private void processEvolution(MedicalRecordDTO medicalRecord, AttendanceEvent event) {
+        medicalRecord.getEvolutions()
+                .add(new EvolutionInfoDTO(event.getId(), medicalRecord.getId(),
+                        medicalRecord.getLastAccommodation() != null ? medicalRecord.getLastAccommodation().getId() : null,
+                        "EVOLUÇÃO", event.getEventDateTime()));
     }
 
     public Attendance persist(Attendance entity) {
@@ -221,13 +268,7 @@ public class AttendanceService implements GenericService {
         medicalRecord.setPatientId(attendanceFromDb.getPatient().getId());
         medicalRecord.setDocument(new DocumentDTO(patient.getDocument().getType(), patient.getDocument().getValue()));
 
-        attendanceFromDb.getEvents().forEach(event -> medicalRecord.getEvents().add(new AttendanceEventDTO(event.getId(),
-                event.getEventDateTime(), event.getEventType().getDescription(),
-                convertDocuments(event.getDocuments()), event.getAccomodation().getDTO())));
-
-        attendanceFromDb.getEvolutions().forEach(evolution -> medicalRecord.getEvolutions()
-                .add(new EvolutionInfoDTO(evolution.getId(), evolution.getAttendance().getId(), null, evolution.getDescription(),
-                        evolution.getDatetime())));
+        processEvents(attendanceFromDb, medicalRecord);
 
         if (!medicalRecord.getEvents().isEmpty())
             medicalRecord.setLastAccommodation(getLastAccomodationByPatientId(medicalRecord.getEvents()));
