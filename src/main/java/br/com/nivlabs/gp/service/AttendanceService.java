@@ -172,6 +172,7 @@ public class AttendanceService implements GenericService {
         medicine.setDescription(event.getTitle());
         medicine.setAmount(event.getObservations());
         medicine.setResponsibleForTheAdministration(event.getResponsible().getPerson().getFullName());
+
         medicalRecord.getMedicines().add(medicine);
     }
 
@@ -182,10 +183,15 @@ public class AttendanceService implements GenericService {
      * @param event
      */
     private void processEvolution(MedicalRecordDTO medicalRecord, AttendanceEvent event) {
-        medicalRecord.getEvolutions()
-                .add(new EvolutionInfoDTO(event.getId(), medicalRecord.getId(),
-                        medicalRecord.getLastAccommodation() != null ? medicalRecord.getLastAccommodation().getId() : null,
-                        "EVOLUÇÃO", event.getEventDateTime()));
+        EvolutionInfoDTO evolution = new EvolutionInfoDTO();
+        evolution.setId(event.getId());
+        evolution.setAccomodationId(medicalRecord.getLastAccommodation() != null ? medicalRecord.getLastAccommodation().getId() : null);
+        evolution.setAttendanceId(medicalRecord.getId());
+        evolution.setDescription("EVOLUÇÃO");
+        evolution.setDatetime(event.getEventDateTime());
+        evolution.setResponsibleName(event.getResponsible().getPerson().getFullName());
+
+        medicalRecord.getEvolutions().add(evolution);
     }
 
     public Attendance persist(Attendance entity) {
