@@ -40,17 +40,10 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
     @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime datetime;
 
+    private String responsibleName;
+
     public EvolutionInfoDTO() {
         super();
-    }
-
-    public EvolutionInfoDTO(Long id, Long attendanceId, Long accomodationId, String description, LocalDateTime datetime) {
-        super();
-        this.id = id;
-        this.attendanceId = attendanceId;
-        this.accomodationId = accomodationId;
-        this.description = description;
-        this.datetime = datetime;
     }
 
     public Long getId() {
@@ -93,6 +86,14 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
         this.datetime = datetime;
     }
 
+    public String getResponsibleName() {
+        return responsibleName;
+    }
+
+    public void setResponsibleName(String responsibleName) {
+        this.responsibleName = responsibleName;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -102,6 +103,7 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
         result = prime * result + ((datetime == null) ? 0 : datetime.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((responsibleName == null) ? 0 : responsibleName.hashCode());
         return result;
     }
 
@@ -139,13 +141,17 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
                 return false;
         } else if (!id.equals(other.id))
             return false;
+        if (responsibleName == null) {
+            if (other.responsibleName != null)
+                return false;
+        } else if (!responsibleName.equals(other.responsibleName))
+            return false;
         return true;
     }
 
     @Override
     public String toString() {
         return "EvolutionInfoDTO [id=" + id + ", attendanceId=" + attendanceId + ", accomodationId=" + accomodationId + ", description="
-                + description + ", datetime=" + datetime + "]";
+                + description + ", datetime=" + datetime + ", responsibleName=" + responsibleName + "]";
     }
-
 }
