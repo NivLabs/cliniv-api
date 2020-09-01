@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.service;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -49,7 +50,7 @@ public class EvolutionService implements GenericService {
     private static final String READER_NAME = "READER_NAME";
     private static final String VISIT_ID = "VISIT_ID";
     private static final String DESCIPTION = "DESCRICAO";
-    private static final InputStream REPORT_SOURCE = ClassLoader.getSystemResourceAsStream("reports/Evolucao.jrxml");
+    private static final String REPORT_SOURCE = "reports/Evolucao.jrxml";
 
     private static final Long EVOLUTION_ID = 15L;
 
@@ -136,11 +137,18 @@ public class EvolutionService implements GenericService {
         event.setResponsible(getResponsibleFromUser(userInfo));
         event.setObservations(ADD_EVOLUTION_TEXT);
 
-        DigitalDocumentDTO document = reportService
-                .createDocumentFromReport(request.getAttendanceId(), EVOLUTION_REPORT_NAME,
-                                          getEvolutionReportParams(request, userInfo),
-                                          REPORT_SOURCE);
-        event.getDocuments().add(document);
+        DigitalDocumentDTO document;
+
+        try {
+            document = reportService
+                    .createDocumentFromReport(request.getAttendanceId(), EVOLUTION_REPORT_NAME,
+                                              getEvolutionReportParams(request, userInfo),
+                                              new ClassPathResource(REPORT_SOURCE).getInputStream());
+            event.getDocuments().add(document);
+        } catch (IOException e) {
+            logger.error("Falha ao gerar documento de evolução", e);
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento de evolução");
+        }
 
         attendanceEventService.persistNewAttendanceEvent(event);
         logger.info("Evento de Atendimento para Evolução clínica criado com sucesso!");
