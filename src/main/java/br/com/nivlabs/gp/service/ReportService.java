@@ -40,7 +40,8 @@ public class ReportService implements GenericService {
     public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
                                                        InputStream reportInputStream) {
         try {
-            logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento");
+            logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: Instância -> {}",
+                        reportInputStream);
             JasperPrint jasperPrint = report.create(params, reportInputStream);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
