@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.models.domain.tiss;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,18 +28,88 @@ public class Procedure extends BaseObjectWithId {
     @Column(name = "DESCRICAO")
     private String description;
 
+    @Column(name = "VALOR_BASE")
+    private BigDecimal baseValue;
+
+    @Column(name = "PERIOCIDADE")
+    private String frequency;
+
+    @Column(name = "REQ_AUTORIZACAO_ESPECIAL")
+    private boolean specialAuthorization;
+
+    @Column(name = "REQ_AUDIT_PREV")
+    private boolean previousAudit;
+
+    @Column(name = "REQ_ESPECIALIDADE")
+    private boolean specialty;
+
+    @Column(name = "IDADE_MAX")
+    private String maxAge;
+
+    @Column(name = "IDADE_MIN")
+    private String minAge;
+
     @Column(name = "ATIVO")
     private boolean active;
 
-    public Procedure(Long id, String description, boolean active) {
-        super();
-        this.id = id;
-        this.description = description;
-        this.active = active;
-    }
-
     public Procedure() {
         super();
+    }
+
+    public BigDecimal getBaseValue() {
+        return baseValue;
+    }
+
+    public void setBaseValue(BigDecimal baseValue) {
+        this.baseValue = baseValue;
+    }
+
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
+    }
+
+    public boolean isSpecialAuthorization() {
+        return specialAuthorization;
+    }
+
+    public void setSpecialAuthorization(boolean specialAuthorization) {
+        this.specialAuthorization = specialAuthorization;
+    }
+
+    public boolean isPreviousAudit() {
+        return previousAudit;
+    }
+
+    public void setPreviousAudit(boolean previousAudit) {
+        this.previousAudit = previousAudit;
+    }
+
+    public boolean isSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(boolean specialty) {
+        this.specialty = specialty;
+    }
+
+    public String getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(String maxAge) {
+        this.maxAge = maxAge;
+    }
+
+    public String getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(String minAge) {
+        this.minAge = minAge;
     }
 
     public Long getId() {

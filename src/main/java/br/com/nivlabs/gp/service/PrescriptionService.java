@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.service;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
@@ -8,6 +8,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class PrescriptionService implements GenericService {
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
     private static final String REQUESTER_NAME = "READER_NAME";
     private static final String VISIT_ID = "VISIT_ID";
-    private static final InputStream REPORT_SOURCE = ClassLoader.getSystemResourceAsStream("reports/Prescricao.jrxml");
+    private static final String REPORT_SOURCE = "reports/Prescricao.jrxml";
 
     @Autowired
     private Logger logger;
@@ -73,11 +74,15 @@ public class PrescriptionService implements GenericService {
         UserInfoDTO user = userSerive.findByUserName(username);
 
         logger.info("Iniciando criação do documento digital da prescrição");
-        DigitalDocumentDTO document = reportService.createDocumentFromReport(request.getAttendanceId(), "Prescrição Médica",
-                                                                             getReportParam(request, user),
-                                                                             REPORT_SOURCE);
-
-        createDocumentEvent(request, document, user, medicalRecord);
+        try {
+            DigitalDocumentDTO document = reportService.createDocumentFromReport(request.getAttendanceId(), "Prescrição Médica",
+                                                                                 getReportParam(request, user),
+                                                                                 new ClassPathResource(REPORT_SOURCE).getInputStream());
+            createDocumentEvent(request, document, user, medicalRecord);
+        } catch (IOException e) {
+            logger.error("Falha ao gerar documento de evolução", e);
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento de evolução");
+        }
 
         return null;
     }
