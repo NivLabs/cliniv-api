@@ -95,9 +95,9 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         }
         if (filters.getActiveType() != null) {
             if (filters.getActiveType() == ActiveType.ACTIVE)
-                attributes.add((cb, from) -> cb.isNull(from.get(Attendance_.dateTimeExit)));
+                attributes.add((cb, from) -> cb.isNull(from.get(Attendance_.exitDateTime)));
             else
-                attributes.add((cb, from) -> cb.isNotNull(from.get(Attendance_.dateTimeExit)));
+                attributes.add((cb, from) -> cb.isNotNull(from.get(Attendance_.exitDateTime)));
         }
 
         return attributes;
