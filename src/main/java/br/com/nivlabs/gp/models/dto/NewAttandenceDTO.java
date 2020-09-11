@@ -36,99 +36,99 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
     @NotNull(message = "Informar o motivo da visita é obrigatório")
     private String entryCause;
 
-	public Long getPatientId() {
-		return patientId;
-	}
+    public Long getPatientId() {
+        return patientId;
+    }
 
-	public void setPatientId(Long patientId) {
-		this.patientId = patientId;
-	}
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
+    }
 
-	public Long getEventTypeId() {
-		return eventTypeId;
-	}
+    public Long getEventTypeId() {
+        return eventTypeId;
+    }
 
-	public void setEventTypeId(Long eventTypeId) {
-		this.eventTypeId = eventTypeId;
-	}
+    public void setEventTypeId(Long eventTypeId) {
+        this.eventTypeId = eventTypeId;
+    }
 
-	public Long getResponsibleId() {
-		return responsibleId;
-	}
+    public Long getResponsibleId() {
+        return responsibleId;
+    }
 
-	public void setResponsibleId(Long responsibleId) {
-		this.responsibleId = responsibleId;
-	}
+    public void setResponsibleId(Long responsibleId) {
+        this.responsibleId = responsibleId;
+    }
 
-	public Long getSectorId() {
-		return sectorId;
-	}
+    public Long getSectorId() {
+        return sectorId;
+    }
 
-	public void setSectorId(Long sectorId) {
-		this.sectorId = sectorId;
-	}
+    public void setSectorId(Long sectorId) {
+        this.sectorId = sectorId;
+    }
 
-	public String getEntryCause() {
-		return entryCause;
-	}
+    public String getEntryCause() {
+        return entryCause;
+    }
 
-	public void setEntryCause(String entryCause) {
-		this.entryCause = entryCause;
-	}
+    public void setEntryCause(String entryCause) {
+        this.entryCause = entryCause;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((entryCause == null) ? 0 : entryCause.hashCode());
-		result = prime * result + ((eventTypeId == null) ? 0 : eventTypeId.hashCode());
-		result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
-		result = prime * result + ((responsibleId == null) ? 0 : responsibleId.hashCode());
-		result = prime * result + ((sectorId == null) ? 0 : sectorId.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((entryCause == null) ? 0 : entryCause.hashCode());
+        result = prime * result + ((eventTypeId == null) ? 0 : eventTypeId.hashCode());
+        result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
+        result = prime * result + ((responsibleId == null) ? 0 : responsibleId.hashCode());
+        result = prime * result + ((sectorId == null) ? 0 : sectorId.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		NewAttandenceDTO other = (NewAttandenceDTO) obj;
-		if (entryCause == null) {
-			if (other.entryCause != null)
-				return false;
-		} else if (!entryCause.equals(other.entryCause))
-			return false;
-		if (eventTypeId == null) {
-			if (other.eventTypeId != null)
-				return false;
-		} else if (!eventTypeId.equals(other.eventTypeId))
-			return false;
-		if (patientId == null) {
-			if (other.patientId != null)
-				return false;
-		} else if (!patientId.equals(other.patientId))
-			return false;
-		if (responsibleId == null) {
-			if (other.responsibleId != null)
-				return false;
-		} else if (!responsibleId.equals(other.responsibleId))
-			return false;
-		if (sectorId == null) {
-			if (other.sectorId != null)
-				return false;
-		} else if (!sectorId.equals(other.sectorId))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        NewAttandenceDTO other = (NewAttandenceDTO) obj;
+        if (entryCause == null) {
+            if (other.entryCause != null)
+                return false;
+        } else if (!entryCause.equals(other.entryCause))
+            return false;
+        if (eventTypeId == null) {
+            if (other.eventTypeId != null)
+                return false;
+        } else if (!eventTypeId.equals(other.eventTypeId))
+            return false;
+        if (patientId == null) {
+            if (other.patientId != null)
+                return false;
+        } else if (!patientId.equals(other.patientId))
+            return false;
+        if (responsibleId == null) {
+            if (other.responsibleId != null)
+                return false;
+        } else if (!responsibleId.equals(other.responsibleId))
+            return false;
+        if (sectorId == null) {
+            if (other.sectorId != null)
+                return false;
+        } else if (!sectorId.equals(other.sectorId))
+            return false;
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return "NewAttandenceDTO [patientId=" + patientId + ", eventTypeId=" + eventTypeId + ", responsibleId="
-				+ responsibleId + ", sectorId=" + sectorId + ", entryCause=" + entryCause + "]";
-	}
+    @Override
+    public String toString() {
+        return "NewAttandenceDTO [patientId=" + patientId + ", eventTypeId=" + eventTypeId + ", responsibleId="
+                + responsibleId + ", sectorId=" + sectorId + ", entryCause=" + entryCause + "]";
+    }
 
 }
