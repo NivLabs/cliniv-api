@@ -266,7 +266,7 @@ public class AttendanceService implements GenericService {
      */
     public MedicalRecordDTO getActiveMedicalRecord(Long patientId) {
         PatientInfoDTO patient = patientService.findByPatientId(patientId);
-        Attendance attendanceFromDb = dao.findByPatientAndDateTimeExitIsNull(new Patient(patient.getId()))
+        Attendance attendanceFromDb = dao.findByPatientAndExitDateTimeIsNull(new Patient(patient.getId()))
                 .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
                                                                                                     "Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
                                                                                                     patient.getFullName())));

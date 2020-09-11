@@ -27,5 +27,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long>, A
      */
     List<Attendance> findByPatient(Patient patient);
 
-    Optional<Attendance> findByPatientAndDateTimeExitIsNull(Patient patient);
+    Optional<Attendance> findByPatientAndExitDateTimeIsNull(Patient patient);
 }
