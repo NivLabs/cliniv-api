@@ -1,7 +1,7 @@
 package br.com.nivlabs.gp.models.dto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,6 +26,14 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
     @ApiModelProperty("Identificador único do atendimento")
     private Long id;
 
+    @ApiModelProperty("Data/Hora de entrada do paciente no atendimento")
+    @DateTimeFormat(iso = ISO.DATE)
+    private LocalDateTime entryDateTime;
+
+    @ApiModelProperty("Data/Hora de alta do paciente")
+    @DateTimeFormat(iso = ISO.DATE)
+    private LocalDateTime exitDateTime;
+
     @ApiModelProperty("Identificador do paciente")
     private Long patientId;
 
@@ -49,7 +57,7 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Data de nascimento")
     @DateTimeFormat(iso = ISO.DATE)
-    private Date bornDate;
+    private LocalDateTime bornDate;
 
     @ApiModelProperty("Acomodação")
     private AccomodationDTO lastAccommodation;
@@ -79,6 +87,22 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public LocalDateTime getEntryDateTime() {
+        return entryDateTime;
+    }
+
+    public void setEntryDateTime(LocalDateTime entryDateTime) {
+        this.entryDateTime = entryDateTime;
+    }
+
+    public LocalDateTime getExitDateTime() {
+        return exitDateTime;
+    }
+
+    public void setExitDateTime(LocalDateTime exitDateTime) {
+        this.exitDateTime = exitDateTime;
     }
 
     public Long getPatientId() {
@@ -137,11 +161,11 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         this.susNumber = susNumber;
     }
 
-    public Date getBornDate() {
+    public LocalDateTime getBornDate() {
         return bornDate;
     }
 
-    public void setBornDate(Date bornDate) {
+    public void setBornDate(LocalDateTime bornDate) {
         this.bornDate = bornDate;
     }
 
@@ -201,8 +225,10 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         result = prime * result + ((anamnesisDigitalDocuentId == null) ? 0 : anamnesisDigitalDocuentId.hashCode());
         result = prime * result + ((bornDate == null) ? 0 : bornDate.hashCode());
         result = prime * result + ((document == null) ? 0 : document.hashCode());
+        result = prime * result + ((entryDateTime == null) ? 0 : entryDateTime.hashCode());
         result = prime * result + ((events == null) ? 0 : events.hashCode());
         result = prime * result + ((evolutions == null) ? 0 : evolutions.hashCode());
+        result = prime * result + ((exitDateTime == null) ? 0 : exitDateTime.hashCode());
         result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
         result = prime * result + ((gender == null) ? 0 : gender.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -244,6 +270,11 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
                 return false;
         } else if (!document.equals(other.document))
             return false;
+        if (entryDateTime == null) {
+            if (other.entryDateTime != null)
+                return false;
+        } else if (!entryDateTime.equals(other.entryDateTime))
+            return false;
         if (events == null) {
             if (other.events != null)
                 return false;
@@ -253,6 +284,11 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
             if (other.evolutions != null)
                 return false;
         } else if (!evolutions.equals(other.evolutions))
+            return false;
+        if (exitDateTime == null) {
+            if (other.exitDateTime != null)
+                return false;
+        } else if (!exitDateTime.equals(other.exitDateTime))
             return false;
         if (fullName == null) {
             if (other.fullName != null)
@@ -301,11 +337,11 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "MedicalRecordDTO [id=" + id + ", patientId=" + patientId + ", document=" + document + ", anamnesisDigitalDocuentId="
-                + anamnesisDigitalDocuentId + ", fullName=" + fullName + ", socialName=" + socialName + ", principalNumber="
-                + principalNumber + ", susNumber=" + susNumber + ", bornDate=" + bornDate + ", lastAccommodation=" + lastAccommodation
-                + ", gender=" + gender + ", events=" + events + ", medicines=" + medicines + ", evolutions=" + evolutions + ", allergies="
-                + allergies + "]";
+        return "MedicalRecordDTO [id=" + id + ", entryDateTime=" + entryDateTime + ", exitDateTime=" + exitDateTime + ", patientId="
+                + patientId + ", document=" + document + ", anamnesisDigitalDocuentId=" + anamnesisDigitalDocuentId + ", fullName="
+                + fullName + ", socialName=" + socialName + ", principalNumber=" + principalNumber + ", susNumber=" + susNumber
+                + ", bornDate=" + bornDate + ", lastAccommodation=" + lastAccommodation + ", gender=" + gender + ", events=" + events
+                + ", medicines=" + medicines + ", evolutions=" + evolutions + ", allergies=" + allergies + "]";
     }
 
 }

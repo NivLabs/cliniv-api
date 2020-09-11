@@ -97,9 +97,9 @@ public class AttendanceService implements GenericService {
         list.forEach(attendance -> {
             AttendanceDTO dto = new AttendanceDTO();
             dto.setId(attendance.getId());
-            dto.setEntryDatetime(attendance.getDateTimeEntry());
+            dto.setEntryDatetime(attendance.getEntryDateTime());
             dto.setEntryCause(attendance.getReasonForEntry());
-            dto.setIsFinished(Boolean.valueOf(attendance.getDateTimeExit() != null));
+            dto.setIsFinished(Boolean.valueOf(attendance.getExitDateTime() != null));
             listOfDto.add(dto);
         });
         return listOfDto;
@@ -122,6 +122,8 @@ public class AttendanceService implements GenericService {
         medicalRecord.setPatientId(objectFromDb.getPatient().getId());
         medicalRecord.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
         medicalRecord.setSusNumber(objectFromDb.getPatient().getSusNumber());
+        medicalRecord.setEntryDateTime(objectFromDb.getEntryDateTime());
+        medicalRecord.setExitDateTime(objectFromDb.getExitDateTime());
 
         processEvents(objectFromDb, medicalRecord);
 
@@ -240,7 +242,7 @@ public class AttendanceService implements GenericService {
      */
     private void createEntryEvent(Attendance convertedAtendance, NewAttandenceDTO request) {
         AttendanceEvent entryEvent = new AttendanceEvent();
-        entryEvent.setEventDateTime(convertedAtendance.getDateTimeEntry());
+        entryEvent.setEventDateTime(convertedAtendance.getEntryDateTime());
         entryEvent.setTitle(convertedAtendance.getReasonForEntry());
         entryEvent.setAttendance(new Attendance(convertedAtendance.getId()));
 
@@ -273,6 +275,8 @@ public class AttendanceService implements GenericService {
         medicalRecord.setId(attendanceFromDb.getId());
         medicalRecord.setPatientId(attendanceFromDb.getPatient().getId());
         medicalRecord.setDocument(new DocumentDTO(patient.getDocument().getType(), patient.getDocument().getValue()));
+        medicalRecord.setEntryDateTime(attendanceFromDb.getEntryDateTime());
+        medicalRecord.setExitDateTime(attendanceFromDb.getExitDateTime());
 
         processEvents(attendanceFromDb, medicalRecord);
 
@@ -301,11 +305,11 @@ public class AttendanceService implements GenericService {
         logger.info("Iniciando processo de encerramento de atendimento,\nVerificando situação do atendimento solicitado...");
         Attendance attendanceFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                 "Não é possível encerrar um atendimento inexistente"));
-        if (attendanceFromDb.getDateTimeExit() != null) {
+        if (attendanceFromDb.getExitDateTime() != null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Este atendimento já foi encerrado");
         }
         NewAttendanceEventDTO newAttendanceEvent = createAttendanceRequest(attendanceFromDb, request);
-        attendanceFromDb.setDateTimeExit(newAttendanceEvent.getEventDateTime());
+        attendanceFromDb.setExitDateTime(newAttendanceEvent.getEventDateTime());
         dao.save(attendanceFromDb);
     }
 
