@@ -42,12 +42,12 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
             attendanceConverted.setFullName(attendance.getPatient().getPerson().getFullName());
             attendanceConverted.setSocialName(attendance.getPatient().getPerson().getSocialName());
             attendanceConverted.setEntryCause(attendance.getReasonForEntry());
-            attendanceConverted.setEntryDatetime(attendance.getDateTimeEntry());
+            attendanceConverted.setEntryDatetime(attendance.getEntryDateTime());
             attendanceConverted.setPatientId(attendance.getPatient().getId());
             attendanceConverted.setSusNumber(attendance.getPatient().getSusNumber());
             attendanceConverted.setType(attendance.getEntryType());
             attendanceConverted.setPatientType(attendance.getPatient().getType());
-            attendanceConverted.setIsFinished(attendance.getDateTimeExit() != null);
+            attendanceConverted.setIsFinished(attendance.getExitDateTime() != null);
             attendanceConverted.setLevel(attendance.getLevel());
 
             // Pega o setor atual do atendimento
