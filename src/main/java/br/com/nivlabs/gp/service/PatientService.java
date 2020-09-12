@@ -16,6 +16,7 @@ import br.com.nivlabs.gp.controller.filters.PatientFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.PatientType;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.domain.HealthPlan;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.PatientAllergy;
 import br.com.nivlabs.gp.models.domain.Patient_;
@@ -27,6 +28,7 @@ import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
+import br.com.nivlabs.gp.repository.HealthPlanRepository;
 import br.com.nivlabs.gp.repository.PatientAllergyRepository;
 import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.util.StringUtils;
@@ -48,6 +50,8 @@ public class PatientService implements GenericService {
     private PatientRepository dao;
     @Autowired
     private PatientAllergyRepository patientAllergyDao;
+    @Autowired
+    private HealthPlanRepository healthPlanDao;
 
     @Autowired
     private PersonService personService;
@@ -203,9 +207,29 @@ public class PatientService implements GenericService {
         personService.update(entityFromDb.getId(), entityFromDb);
         BeanUtils.copyProperties(entity, patient, Patient_.ID, Patient_.ALLERGIES);
         handlePatientType(patient);
+        handleHealthPlah(entity, patient);
         dao.save(patient);
 
         return entity;
+    }
+
+    /**
+     * Trata o cadastro de plano de saúde do paciente
+     * 
+     * @param entity
+     * @param patient
+     */
+    private void handleHealthPlah(PatientInfoDTO entity, Patient patient) {
+        if (entity.getHealthPlan() != null && !StringUtils.isNullOrEmpty(entity.getHealthPlan().getPatientPlanNumber())) {
+            if (entity.getHealthPlan().getId() == null) {
+                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O plano de saúde deve ser informado!");
+            }
+
+            HealthPlan planFromDb = healthPlanDao.findById(entity.getHealthPlan().getId())
+                    .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Plano de saúde não cadastrado"));
+            patient.setHealthPlanCode(entity.getHealthPlan().getPatientPlanNumber());
+            patient.setHealthPlan(planFromDb);
+        }
     }
 
     /**
@@ -233,6 +257,7 @@ public class PatientService implements GenericService {
         newPatient.setCreatedAt(LocalDateTime.now());
 
         handlePatientType(newPatient);
+        handleHealthPlah(entity, newPatient);
         dao.save(newPatient);
 
         entity.setId(newPatient.getId());
