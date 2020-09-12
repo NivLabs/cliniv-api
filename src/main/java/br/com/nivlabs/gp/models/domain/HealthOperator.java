@@ -29,7 +29,7 @@ public class HealthOperator extends BaseObjectWithId {
     private Long id;
 
     @Column(name = "COD_ANS")
-    private Long ansCode;
+    private String ansCode;
 
     @Column(name = "CNPJ")
     private String cnpj;
@@ -59,11 +59,11 @@ public class HealthOperator extends BaseObjectWithId {
         this.id = id;
     }
 
-    public Long getAnsCode() {
+    public String getAnsCode() {
         return ansCode;
     }
 
-    public void setAnsCode(Long ansCode) {
+    public void setAnsCode(String ansCode) {
         this.ansCode = ansCode;
     }
 
