@@ -60,10 +60,10 @@ public class HealthOperatorRepositoryCustomImpl extends GenericCustomRepository<
             attributes.add((cb, from) -> cb.equal(from.get(HealthOperator_.cnpj), filters.getCnpj()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getCompanyName())) {
-            attributes.add((cb, from) -> cb.equal(from.get(HealthOperator_.companyName), filters.getCompanyName()));
+            attributes.add((cb, from) -> cb.like(from.get(HealthOperator_.companyName), filters.getCompanyName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getFantasyName())) {
-            attributes.add((cb, from) -> cb.equal(from.get(HealthOperator_.fantasyName), filters.getFantasyName()));
+            attributes.add((cb, from) -> cb.like(from.get(HealthOperator_.fantasyName), filters.getFantasyName()));
         }
         if (filters.getModality() != null) {
             attributes.add((cb, from) -> cb.equal(from.get(HealthOperator_.modality), filters.getModality()));

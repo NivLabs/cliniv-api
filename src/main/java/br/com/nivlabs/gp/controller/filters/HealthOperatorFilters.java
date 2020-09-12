@@ -15,13 +15,13 @@ public class HealthOperatorFilters extends CustomFilters {
 
     private String id;
 
-    private String ansCode;
+    private String ansCode = "";
 
-    private String cnpj;
+    private String cnpj = "";
 
-    private String companyName;
+    private String companyName = "";
 
-    private String fantasyName;
+    private String fantasyName = "";
 
     private Modality modality;
 

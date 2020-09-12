@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,13 +35,14 @@ import br.com.nivlabs.gp.repository.HealthOperatorRepository;
 @Service
 public class HealthOperatorService implements GenericService {
 
+    @Autowired
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
     private HealthOperatorRepository healthOperatorRepository;
-    
 
     /**
      * Busca uma página de operadoras de planos de saúde
@@ -48,30 +51,32 @@ public class HealthOperatorService implements GenericService {
      * @return Page
      */
     public Page<HealthOperatorDTO> getListOfHealthOperator(HealthOperatorFilters filters, Pageable pageRequest) {
+        logger.info("Inicinado busca filtrada por Operadoras de saúde");
         return healthOperatorRepository.resumedList(filters, pageRequest);
     }
-    
+
     /**
      * Busca os detalhes de uma operadora de plano de saúde
+     * 
      * @param id
      * @return HealthOperatorInfoDTO
      */
     public HealthOperatorInfoDTO findByHealthOperatorId(Long id) {
-    	HealthOperator healthOperator = healthOperatorRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+        HealthOperator healthOperator = healthOperatorRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Operadora com o identificador %s não encontrado", id)));
         List<HealthPlan> plans = healthOperator.getHealthPlans();
         List<HealthPlanDTO> plansDTO = new ArrayList<>();
-        
+
         HealthOperatorInfoDTO healthOperatorInfoDTO = new HealthOperatorInfoDTO();
-        
-		plans.forEach(plan -> {
-			HealthPlanDTO newHealthPlanDTO = new HealthPlanDTO();
-			BeanUtils.copyProperties(plan, newHealthPlanDTO);
-			plansDTO.add(newHealthPlanDTO);
-		});
-        	
-		healthOperatorInfoDTO.setHealthPlans(plansDTO);
-        
+
+        plans.forEach(plan -> {
+            HealthPlanDTO newHealthPlanDTO = new HealthPlanDTO();
+            BeanUtils.copyProperties(plan, newHealthPlanDTO);
+            plansDTO.add(newHealthPlanDTO);
+        });
+
+        healthOperatorInfoDTO.setHealthPlans(plansDTO);
+
         return healthOperatorInfoDTO;
     }
 
