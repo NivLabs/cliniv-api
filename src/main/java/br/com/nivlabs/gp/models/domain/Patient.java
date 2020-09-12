@@ -48,6 +48,9 @@ public class Patient extends BaseObjectWithCreatedAt {
     @JoinColumn(name = "ID_PLANO")
     private HealthPlan healthPlan;
 
+    @Column(name = "NUMERO_PLANO")
+    private String healthPlanCode;
+
     @Column(name = "TIPO_PACIENTE")
     @Enumerated(EnumType.STRING)
     private PatientType type;
@@ -65,18 +68,6 @@ public class Patient extends BaseObjectWithCreatedAt {
 
     public Patient() {
         super();
-    }
-
-    public Patient(Long id, String susNumber, Person person, HealthPlan healthPlan, PatientType type, String annotations,
-            List<PatientAllergy> allergies) {
-        super();
-        this.id = id;
-        this.susNumber = susNumber;
-        this.person = person;
-        this.healthPlan = healthPlan;
-        this.type = type;
-        this.annotations = annotations;
-        this.allergies = allergies;
     }
 
     public Long getId() {
@@ -111,6 +102,14 @@ public class Patient extends BaseObjectWithCreatedAt {
         this.healthPlan = healthPlan;
     }
 
+    public String getHealthPlanCode() {
+        return healthPlanCode;
+    }
+
+    public void setHealthPlanCode(String healthPlanCode) {
+        this.healthPlanCode = healthPlanCode;
+    }
+
     public PatientType getType() {
         return type;
     }
@@ -136,12 +135,19 @@ public class Patient extends BaseObjectWithCreatedAt {
     }
 
     @Override
+    public String toString() {
+        return "Patient [id=" + id + ", susNumber=" + susNumber + ", person=" + person + ", healthPlan=" + healthPlan + ", healthPlanCode="
+                + healthPlanCode + ", type=" + type + ", annotations=" + annotations + ", allergies=" + allergies + "]";
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((allergies == null) ? 0 : allergies.hashCode());
         result = prime * result + ((annotations == null) ? 0 : annotations.hashCode());
         result = prime * result + ((healthPlan == null) ? 0 : healthPlan.hashCode());
+        result = prime * result + ((healthPlanCode == null) ? 0 : healthPlanCode.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((person == null) ? 0 : person.hashCode());
         result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
@@ -173,6 +179,11 @@ public class Patient extends BaseObjectWithCreatedAt {
                 return false;
         } else if (!healthPlan.equals(other.healthPlan))
             return false;
+        if (healthPlanCode == null) {
+            if (other.healthPlanCode != null)
+                return false;
+        } else if (!healthPlanCode.equals(other.healthPlanCode))
+            return false;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -191,12 +202,6 @@ public class Patient extends BaseObjectWithCreatedAt {
         if (type != other.type)
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Patient [id=" + id + ", susNumber=" + susNumber + ", person=" + person + ", healthPlan=" + healthPlan + ", type=" + type
-                + ", annotations=" + annotations + ", allergies=" + allergies + "]";
     }
 
 }
