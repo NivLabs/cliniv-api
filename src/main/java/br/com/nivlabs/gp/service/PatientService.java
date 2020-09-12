@@ -79,6 +79,9 @@ public class PatientService implements GenericService {
         if (patient.getHealthPlan() != null) {
             HealthPlanDTO healthPlan = new HealthPlanDTO();
             BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
+            healthPlan.setPatientPlanNumber(patient.getHealthPlanCode());
+            healthPlan.setOperatorCode(patient.getHealthPlan().getHealthOperator().getAnsCode());
+            healthPlan.setOperatorName(patient.getHealthPlan().getHealthOperator().getFantasyName());
             patientInfo.setHealthPlan(healthPlan);
         }
 
@@ -136,6 +139,9 @@ public class PatientService implements GenericService {
             if (patient.getHealthPlan() != null) {
                 HealthPlanDTO healthPlan = new HealthPlanDTO();
                 BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
+                healthPlan.setPatientPlanNumber(patient.getHealthPlanCode());
+                healthPlan.setOperatorCode(patient.getHealthPlan().getHealthOperator().getAnsCode());
+                healthPlan.setOperatorName(patient.getHealthPlan().getHealthOperator().getFantasyName());
                 patientInfo.setHealthPlan(healthPlan);
             }
 
@@ -170,6 +176,9 @@ public class PatientService implements GenericService {
         if (patient.getHealthPlan() != null) {
             HealthPlanDTO healthPlan = new HealthPlanDTO();
             BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
+            healthPlan.setPatientPlanNumber(patient.getHealthPlanCode());
+            healthPlan.setOperatorCode(patient.getHealthPlan().getHealthOperator().getAnsCode());
+            healthPlan.setOperatorName(patient.getHealthPlan().getHealthOperator().getFantasyName());
             patientInfo.setHealthPlan(healthPlan);
         }
         BeanUtils.copyProperties(patient, patientInfo);

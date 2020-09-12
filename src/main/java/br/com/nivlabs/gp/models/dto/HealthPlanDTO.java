@@ -9,13 +9,15 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel("Plano de saúde")
 public class HealthPlanDTO extends DataTransferObjectBase {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -6773781566276160000L;
 
     @ApiModelProperty("Identificador único  do plano")
     private Long id;
+    @ApiModelProperty("Código da operadora do plano")
+    private String operatorCode;
+
+    @ApiModelProperty("Nome da operadora do plano")
+    private String operatorName;
 
     @ApiModelProperty("Código do plano")
     private Long planCode;
@@ -34,6 +36,9 @@ public class HealthPlanDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Tipo do plano")
     private String type;
+
+    @ApiModelProperty("Código do plano de saúde do paciente")
+    private String patientPlanNumber;
 
     public HealthPlanDTO() {
         super();
@@ -95,6 +100,37 @@ public class HealthPlanDTO extends DataTransferObjectBase {
         this.type = type;
     }
 
+    public String getPatientPlanNumber() {
+        return patientPlanNumber;
+    }
+
+    public void setPatientPlanNumber(String patientPlanNumber) {
+        this.patientPlanNumber = patientPlanNumber;
+    }
+
+    public String getOperatorCode() {
+        return operatorCode;
+    }
+
+    public void setOperatorCode(String operatorCode) {
+        this.operatorCode = operatorCode;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
+    @Override
+    public String toString() {
+        return "HealthPlanDTO [id=" + id + ", operatorCode=" + operatorCode + ", operatorName=" + operatorName + ", planCode=" + planCode
+                + ", commercialName=" + commercialName + ", segmentation=" + segmentation + ", contractType=" + contractType
+                + ", abragency=" + abragency + ", type=" + type + ", patientPlanNumber=" + patientPlanNumber + "]";
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -103,6 +139,9 @@ public class HealthPlanDTO extends DataTransferObjectBase {
         result = prime * result + ((commercialName == null) ? 0 : commercialName.hashCode());
         result = prime * result + ((contractType == null) ? 0 : contractType.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((operatorCode == null) ? 0 : operatorCode.hashCode());
+        result = prime * result + ((operatorName == null) ? 0 : operatorName.hashCode());
+        result = prime * result + ((patientPlanNumber == null) ? 0 : patientPlanNumber.hashCode());
         result = prime * result + ((planCode == null) ? 0 : planCode.hashCode());
         result = prime * result + ((segmentation == null) ? 0 : segmentation.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -132,6 +171,21 @@ public class HealthPlanDTO extends DataTransferObjectBase {
                 return false;
         } else if (!id.equals(other.id))
             return false;
+        if (operatorCode == null) {
+            if (other.operatorCode != null)
+                return false;
+        } else if (!operatorCode.equals(other.operatorCode))
+            return false;
+        if (operatorName == null) {
+            if (other.operatorName != null)
+                return false;
+        } else if (!operatorName.equals(other.operatorName))
+            return false;
+        if (patientPlanNumber == null) {
+            if (other.patientPlanNumber != null)
+                return false;
+        } else if (!patientPlanNumber.equals(other.patientPlanNumber))
+            return false;
         if (planCode == null) {
             if (other.planCode != null)
                 return false;
@@ -145,12 +199,6 @@ public class HealthPlanDTO extends DataTransferObjectBase {
         } else if (!type.equals(other.type))
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "HealthPlanDTO [id=" + id + ", planCode=" + planCode + ", commercialName=" + commercialName + ", segmentation="
-                + segmentation + ", contractType=" + contractType + ", abragency=" + abragency + ", type=" + type + "]";
     }
 
 }
