@@ -52,6 +52,8 @@ public class PatientService implements GenericService {
     private PatientAllergyRepository patientAllergyDao;
     @Autowired
     private HealthPlanRepository healthPlanDao;
+    @Autowired
+    private AttendanceService attendanceService;
 
     @Autowired
     private PersonService personService;
@@ -88,13 +90,16 @@ public class PatientService implements GenericService {
             healthPlan.setOperatorName(patient.getHealthPlan().getHealthOperator().getFantasyName());
             patientInfo.setHealthPlan(healthPlan);
         }
-
         BeanUtils.copyProperties(patient, patientInfo, Patient_.ALLERGIES);
-
         patient.getAllergies().forEach(allergy -> patientInfo.getAllergies().add(allergy.getDescription()));
+        setPatientHistory(patientInfo);
 
         return patientInfo;
 
+    }
+
+    private void setPatientHistory(PatientInfoDTO patientInfo) {
+        patientInfo.getAttendanceHistory().addAll(attendanceService.getAttandenceByPatientId(patientInfo.getId()));
     }
 
     /**
@@ -115,6 +120,7 @@ public class PatientService implements GenericService {
             BeanUtils.copyProperties(personFromDb.getAddress(), address);
             patientInfo.setAddress(address);
         }
+        setPatientHistory(patientInfo);
 
         return patientInfo;
     }
@@ -150,6 +156,8 @@ public class PatientService implements GenericService {
             }
 
             BeanUtils.copyProperties(patient, patientInfo);
+            setPatientHistory(patientInfo);
+
             return patientInfo;
         } catch (HttpException e) {
             return findPersonByCpf(cpf);
@@ -186,6 +194,8 @@ public class PatientService implements GenericService {
             patientInfo.setHealthPlan(healthPlan);
         }
         BeanUtils.copyProperties(patient, patientInfo);
+        setPatientHistory(patientInfo);
+
         return patientInfo;
     }
 

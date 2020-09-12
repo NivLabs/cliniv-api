@@ -93,6 +93,9 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Alergias do pacente")
     private List<String> allergies = new ArrayList<>();
 
+    @ApiModelProperty("Histórico de atendimentos do paciente")
+    private List<AttendanceDTO> attendanceHistory = new ArrayList<>();
+
     @ApiModelProperty("Plano de saúde do paciente")
     private HealthPlanDTO healthPlan;
 
@@ -248,6 +251,24 @@ public class PatientInfoDTO extends DataTransferObjectBase {
         this.healthPlan = healthPlan;
     }
 
+    public List<AttendanceDTO> getAttendanceHistory() {
+        return attendanceHistory;
+    }
+
+    public void setAttendanceHistory(List<AttendanceDTO> attendanceHistory) {
+        this.attendanceHistory = attendanceHistory;
+    }
+
+    @Override
+    public String toString() {
+        return "PatientInfoDTO [id=" + id + ", fullName=" + fullName + ", socialName=" + socialName + ", bornDate=" + bornDate
+                + ", document=" + document + ", gender=" + gender + ", genderIdentity=" + genderIdentity + ", fatherName=" + fatherName
+                + ", motherName=" + motherName + ", principalNumber=" + principalNumber + ", secondaryNumber=" + secondaryNumber
+                + ", address=" + address + ", profilePhoto=" + profilePhoto + ", susNumber=" + susNumber + ", type=" + type
+                + ", annotations=" + annotations + ", createdAt=" + createdAt + ", allergies=" + allergies + ", attendanceHistory="
+                + attendanceHistory + ", healthPlan=" + healthPlan + "]";
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -255,6 +276,7 @@ public class PatientInfoDTO extends DataTransferObjectBase {
         result = prime * result + ((address == null) ? 0 : address.hashCode());
         result = prime * result + ((allergies == null) ? 0 : allergies.hashCode());
         result = prime * result + ((annotations == null) ? 0 : annotations.hashCode());
+        result = prime * result + ((attendanceHistory == null) ? 0 : attendanceHistory.hashCode());
         result = prime * result + ((bornDate == null) ? 0 : bornDate.hashCode());
         result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
         result = prime * result + ((document == null) ? 0 : document.hashCode());
@@ -297,6 +319,11 @@ public class PatientInfoDTO extends DataTransferObjectBase {
             if (other.annotations != null)
                 return false;
         } else if (!annotations.equals(other.annotations))
+            return false;
+        if (attendanceHistory == null) {
+            if (other.attendanceHistory != null)
+                return false;
+        } else if (!attendanceHistory.equals(other.attendanceHistory))
             return false;
         if (bornDate == null) {
             if (other.bornDate != null)
@@ -370,16 +397,6 @@ public class PatientInfoDTO extends DataTransferObjectBase {
         if (type != other.type)
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "PatientInfoDTO [id=" + id + ", fullName=" + fullName + ", socialName=" + socialName + ", bornDate="
-                + bornDate + ", document=" + document + ", gender=" + gender + ", genderIdentity=" + genderIdentity
-                + ", fatherName=" + fatherName + ", motherName=" + motherName + ", principalNumber=" + principalNumber
-                + ", secondaryNumber=" + secondaryNumber + ", address=" + address + ", profilePhoto=" + profilePhoto
-                + ", susNumber=" + susNumber + ", type=" + type + ", annotations=" + annotations + ", createdAt="
-                + createdAt + ", allergies=" + allergies + ", healthPlan=" + healthPlan + "]";
     }
 
 }
