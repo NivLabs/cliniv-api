@@ -13,7 +13,7 @@ public class HealthOperatorDTO extends DataTransferObjectBase {
     private Long id;
 
     @ApiModelProperty("Código ANS")
-    private Long ansCode;
+    private String ansCode;
 
     @ApiModelProperty("CNPJ")
     private String cnpj;
@@ -39,11 +39,11 @@ public class HealthOperatorDTO extends DataTransferObjectBase {
         this.id = id;
     }
 
-    public Long getAnsCode() {
+    public String getAnsCode() {
         return ansCode;
     }
 
-    public void setAnsCode(Long ansCode) {
+    public void setAnsCode(String ansCode) {
         this.ansCode = ansCode;
     }
 
