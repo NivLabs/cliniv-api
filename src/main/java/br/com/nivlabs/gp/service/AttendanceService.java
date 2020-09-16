@@ -248,6 +248,7 @@ public class AttendanceService implements GenericService {
         entryEvent.setEventDateTime(convertedAtendance.getEntryDateTime());
         entryEvent.setTitle(convertedAtendance.getReasonForEntry());
         entryEvent.setAttendance(new Attendance(convertedAtendance.getId()));
+        entryEvent.setAccommodation(convertedAtendance.getCurrentAccommodation());
 
         if (request.getResponsibleId() != null)
             // Verificar Responsável
