@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.SectorFilters;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
-import br.com.nivlabs.gp.models.dto.AccomodationDTO;
+import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
 import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
 import br.com.nivlabs.gp.service.SectorService;
@@ -81,17 +81,17 @@ public class SectorController {
 	@ApiOperation(nickname = "room-or-bet-put", value = "Atualiza uma sala (ambulatório) ou leito na aplicação")
 	@PutMapping("/room-or-bed/{id}")
 	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-	public ResponseEntity<AccomodationDTO> updateRoomOrBed(@PathVariable("id") Long id,
-			@Validated @RequestBody(required = true) AccomodationDTO request) {
+	public ResponseEntity<AccommodationDTO> updateRoomOrBed(@PathVariable("id") Long id,
+			@Validated @RequestBody(required = true) AccommodationDTO request) {
 		return ResponseEntity.ok().body(service.updateRoomOrBedDTO(id, request));
 	}
 
 	@ApiOperation(nickname = "room-or-bet-post", value = "Cria uma sala (ambulatório) ou leito na aplicação")
 	@PostMapping("/room-or-bed")
 	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-	public ResponseEntity<AccomodationDTO> persist(@Validated @RequestBody(required = true) AccomodationDTO request,
+	public ResponseEntity<AccommodationDTO> persist(@Validated @RequestBody(required = true) AccommodationDTO request,
 			HttpServletResponse response) {
-		AccomodationDTO createdsector = service.persist(request);
+		AccommodationDTO createdsector = service.persist(request);
 
 		publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
 

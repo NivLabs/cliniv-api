@@ -30,7 +30,7 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
     private Long attendanceId;
 
     @ApiModelProperty("Identificador únimco da acomodação do paciente (Opcional se já houver registro com acomodação)")
-    private Long accomodationId;
+    private Long accommodationId;
 
     @ApiModelProperty("Descrição da evolução (Obrigatório)")
     @NotNull(message = "Informe a descrição da evolução clínica")
@@ -62,12 +62,12 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
         this.attendanceId = attendanceId;
     }
 
-    public Long getAccomodationId() {
-        return accomodationId;
+    public Long getAccommodationId() {
+        return accommodationId;
     }
 
-    public void setAccomodationId(Long accomodationId) {
-        this.accomodationId = accomodationId;
+    public void setAccommodationId(Long accommodationId) {
+        this.accommodationId = accommodationId;
     }
 
     public String getDescription() {
@@ -98,7 +98,7 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((accomodationId == null) ? 0 : accomodationId.hashCode());
+        result = prime * result + ((accommodationId == null) ? 0 : accommodationId.hashCode());
         result = prime * result + ((attendanceId == null) ? 0 : attendanceId.hashCode());
         result = prime * result + ((datetime == null) ? 0 : datetime.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
@@ -116,10 +116,10 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         EvolutionInfoDTO other = (EvolutionInfoDTO) obj;
-        if (accomodationId == null) {
-            if (other.accomodationId != null)
+        if (accommodationId == null) {
+            if (other.accommodationId != null)
                 return false;
-        } else if (!accomodationId.equals(other.accomodationId))
+        } else if (!accommodationId.equals(other.accommodationId))
             return false;
         if (attendanceId == null) {
             if (other.attendanceId != null)
@@ -151,7 +151,7 @@ public class EvolutionInfoDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "EvolutionInfoDTO [id=" + id + ", attendanceId=" + attendanceId + ", accomodationId=" + accomodationId + ", description="
+        return "EvolutionInfoDTO [id=" + id + ", attendanceId=" + attendanceId + ", accommodationId=" + accommodationId + ", description="
                 + description + ", datetime=" + datetime + ", responsibleName=" + responsibleName + "]";
     }
 }

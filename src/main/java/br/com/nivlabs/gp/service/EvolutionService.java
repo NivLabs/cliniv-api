@@ -13,10 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.Accomodation;
+import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.Evolution;
-import br.com.nivlabs.gp.models.dto.AccomodationDTO;
+import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
@@ -27,7 +27,7 @@ import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
-import br.com.nivlabs.gp.repository.AccomodationRepository;
+import br.com.nivlabs.gp.repository.AccommodationRepository;
 import br.com.nivlabs.gp.repository.EvolutionRepository;
 
 /**
@@ -64,7 +64,7 @@ public class EvolutionService implements GenericService {
     private AttendanceService attendanceService;
 
     @Autowired
-    private AccomodationRepository accomodationRepository;
+    private AccommodationRepository accommodationRepository;
 
     @Autowired
     private UserService userService;
@@ -131,7 +131,7 @@ public class EvolutionService implements GenericService {
         event.setAttendanceId(request.getAttendanceId());
         event.setEventDateTime(request.getDatetime());
         event.setEventType(new EventTypeDTO(EVOLUTION_ID, ADD_EVOLUTION_TEXT, ADD_EVOLUTION_TEXT));
-        setAccomodationIntoAttendanceEvent(request, medicalRecord, event);
+        setAccommodationIntoAttendanceEvent(request, medicalRecord, event);
 
         UserInfoDTO userInfo = userService.findByUserName(userFromSession);
         event.setResponsible(getResponsibleFromUser(userInfo));
@@ -188,23 +188,23 @@ public class EvolutionService implements GenericService {
      * @param medicalRecord
      * @param event
      */
-    private void setAccomodationIntoAttendanceEvent(EvolutionInfoDTO request, MedicalRecordDTO medicalRecord, NewAttendanceEventDTO event) {
+    private void setAccommodationIntoAttendanceEvent(EvolutionInfoDTO request, MedicalRecordDTO medicalRecord, NewAttendanceEventDTO event) {
         logger.info("Verificando acomodação do evento...");
-        if (request.getAccomodationId() != null) {
+        if (request.getAccommodationId() != null) {
             logger.info("A acomodação foi informada via requisição :: Identificador informado :: {} :: Iniciando uma busca pelo mesmo...",
-                        request.getAccomodationId());
-            Accomodation accomodation = accomodationRepository.findById(request.getAccomodationId())
+                        request.getAccommodationId());
+            Accommodation accommodation = accommodationRepository.findById(request.getAccommodationId())
                     .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                            String.format("Acomodação com código %s não encontrada", request.getAccomodationId())));
-            logger.info("A acomodação informada na requisição foi encontrada e adicionada ao evento :: {}", accomodation.getDescription());
-            event.setAccomodation(new AccomodationDTO(request.getAccomodationId()));
+                            String.format("Acomodação com código %s não encontrada", request.getAccommodationId())));
+            logger.info("A acomodação informada na requisição foi encontrada e adicionada ao evento :: {}", accommodation.getDescription());
+            event.setAccommodation(new AccommodationDTO(request.getAccommodationId()));
         } else if (medicalRecord.getLastAccommodation() != null) {
             logger.info("Nenhuma acomodação foi informada na requisição, buscando última acomodação do paciente...");
-            AccomodationDTO currentAccomodation = medicalRecord.getLastAccommodation();
+            AccommodationDTO currentAccommodation = medicalRecord.getLastAccommodation();
             logger.info("A última acomodação do paciente foi adicionada ao evento do atendimento (Evolução) :: Identificador {} | Descrição {}",
-                        currentAccomodation.getId(),
-                        currentAccomodation.getDescription());
-            event.setAccomodation(new AccomodationDTO(currentAccomodation.getId()));
+                        currentAccommodation.getId(),
+                        currentAccommodation.getDescription());
+            event.setAccommodation(new AccommodationDTO(currentAccommodation.getId()));
         } else {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Nenhuma acomodação foi informada na requisição e não há registro de acomodações para o paciente.");

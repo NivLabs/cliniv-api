@@ -122,7 +122,7 @@ public class PrescriptionService implements GenericService {
         event.setEventDateTime(LocalDateTime.now());
         event.setObservations("Criação da prescrição");
         event.setResponsible(getResponsibleFromUser(requestOwner));
-        event.setAccomodation(medicalRecord.getLastAccommodation());
+        event.setAccommodation(medicalRecord.getLastAccommodation());
         logger.info("Evento processado, inserindo evento na base de dados...");
 
         eventService.persistNewAttendanceEvent(event);

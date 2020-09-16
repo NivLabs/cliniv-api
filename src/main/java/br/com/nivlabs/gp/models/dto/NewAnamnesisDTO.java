@@ -18,7 +18,7 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
     private Long attendanceId;
 
     @ApiModelProperty("Sala ou leito onde a anamnese foi realizada")
-    private Long accomodationId;
+    private Long accommodationId;
 
     private Set<AnamnesisDTO> listOfResponse = new HashSet<>();
 
@@ -30,12 +30,12 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
 		this.attendanceId = attendanceId;
 	}
 
-	public Long getAccomodationId() {
-		return accomodationId;
+	public Long getAccommodationId() {
+		return accommodationId;
 	}
 
-	public void setAccomodationId(Long accomodationId) {
-		this.accomodationId = accomodationId;
+	public void setAccommodationId(Long accommodationId) {
+		this.accommodationId = accommodationId;
 	}
 
 	public Set<AnamnesisDTO> getListOfResponse() {
@@ -50,7 +50,7 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((accomodationId == null) ? 0 : accomodationId.hashCode());
+		result = prime * result + ((accommodationId == null) ? 0 : accommodationId.hashCode());
 		result = prime * result + ((attendanceId == null) ? 0 : attendanceId.hashCode());
 		result = prime * result + ((listOfResponse == null) ? 0 : listOfResponse.hashCode());
 		return result;
@@ -65,10 +65,10 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
 		if (getClass() != obj.getClass())
 			return false;
 		NewAnamnesisDTO other = (NewAnamnesisDTO) obj;
-		if (accomodationId == null) {
-			if (other.accomodationId != null)
+		if (accommodationId == null) {
+			if (other.accommodationId != null)
 				return false;
-		} else if (!accomodationId.equals(other.accomodationId))
+		} else if (!accommodationId.equals(other.accommodationId))
 			return false;
 		if (attendanceId == null) {
 			if (other.attendanceId != null)
@@ -85,7 +85,7 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
 
 	@Override
 	public String toString() {
-		return "NewAnamnesisDTO [attendanceId=" + attendanceId + ", accomodationId=" + accomodationId
+		return "NewAnamnesisDTO [attendanceId=" + attendanceId + ", accommodationId=" + accommodationId
 				+ ", listOfResponse=" + listOfResponse + "]";
 	}
 	

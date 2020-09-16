@@ -26,7 +26,7 @@ import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.PatientAllergy;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.Responsible;
-import br.com.nivlabs.gp.models.dto.AccomodationDTO;
+import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
@@ -128,7 +128,7 @@ public class AttendanceService implements GenericService {
         processEvents(objectFromDb, medicalRecord);
 
         if (!medicalRecord.getEvents().isEmpty())
-            medicalRecord.setLastAccommodation(getLastAccomodationByPatientId(medicalRecord.getEvents()));
+            medicalRecord.setLastAccommodation(getLastAccommodationByPatientId(medicalRecord.getEvents()));
         medicalRecord.getAllergies()
                 .addAll(objectFromDb.getPatient().getAllergies().stream().map(PatientAllergy::getDescription).collect(Collectors.toList()));
         return medicalRecord;
@@ -187,7 +187,7 @@ public class AttendanceService implements GenericService {
     private void processEvolution(MedicalRecordDTO medicalRecord, AttendanceEvent event) {
         EvolutionInfoDTO evolution = new EvolutionInfoDTO();
         evolution.setId(event.getId());
-        evolution.setAccomodationId(medicalRecord.getLastAccommodation() != null ? medicalRecord.getLastAccommodation().getId() : null);
+        evolution.setAccommodationId(medicalRecord.getLastAccommodation() != null ? medicalRecord.getLastAccommodation().getId() : null);
         evolution.setAttendanceId(medicalRecord.getId());
         evolution.setDescription("EVOLUÇÃO");
         evolution.setDatetime(event.getEventDateTime());
@@ -281,7 +281,7 @@ public class AttendanceService implements GenericService {
         processEvents(attendanceFromDb, medicalRecord);
 
         if (!medicalRecord.getEvents().isEmpty())
-            medicalRecord.setLastAccommodation(getLastAccomodationByPatientId(medicalRecord.getEvents()));
+            medicalRecord.setLastAccommodation(getLastAccommodationByPatientId(medicalRecord.getEvents()));
         return medicalRecord;
     }
 
@@ -291,8 +291,8 @@ public class AttendanceService implements GenericService {
      * @param listOfEventsFromDb
      * @return
      */
-    private AccomodationDTO getLastAccomodationByPatientId(List<AttendanceEventDTO> listOfEventsFromDb) {
-        return listOfEventsFromDb.get(listOfEventsFromDb.size() - 1).getAccomodation();
+    private AccommodationDTO getLastAccommodationByPatientId(List<AttendanceEventDTO> listOfEventsFromDb) {
+        return listOfEventsFromDb.get(listOfEventsFromDb.size() - 1).getAccommodation();
     }
 
     /**
@@ -326,7 +326,7 @@ public class AttendanceService implements GenericService {
         event.setAttendanceId(attendance.getId());
         event.setEventDateTime(request.getDatetime());
         event.setEventType(new EventTypeDTO(request.getEventTypeId(), CLOSE_ATTENDANCE_TEXT, CLOSE_ATTENDANCE_TEXT));
-        event.setAccomodation(new AccomodationDTO(attendance.getCurrentAccomodation().getId()));
+        event.setAccommodation(new AccommodationDTO(attendance.getCurrentAccommodation().getId()));
         event.setResponsible(getResponsibleFromUserSession());
         event.setObservations(request.getObservations());
 

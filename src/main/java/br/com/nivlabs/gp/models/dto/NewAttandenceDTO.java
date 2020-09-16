@@ -34,7 +34,7 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Código da acomodação de origem do atendimento, ex: Triagem")
     @NotNull(message = "Informar a acomodação de origem é obrigatório")
-    private Long accomodationId;
+    private Long accommodationId;
 
     @ApiModelProperty("Breve descrição do motivo da entrada|visita do paciente")
     @NotNull(message = "Informar o motivo da visita é obrigatório")
@@ -72,12 +72,12 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
         this.responsibleId = responsibleId;
     }
 
-    public Long getAccomodationId() {
-        return accomodationId;
+    public Long getAccommodationId() {
+        return accommodationId;
     }
 
-    public void setAccomodationId(Long accomodationId) {
-        this.accomodationId = accomodationId;
+    public void setAccommodationId(Long accommodationId) {
+        this.accommodationId = accommodationId;
     }
 
     public String getEntryCause() {
@@ -91,14 +91,14 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
     @Override
     public String toString() {
         return "NewAttandenceDTO [patientId=" + patientId + ", eventTypeId=" + eventTypeId + ", specialityId=" + specialityId
-                + ", responsibleId=" + responsibleId + ", accomodationId=" + accomodationId + ", entryCause=" + entryCause + "]";
+                + ", responsibleId=" + responsibleId + ", accommodationId=" + accommodationId + ", entryCause=" + entryCause + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((accomodationId == null) ? 0 : accomodationId.hashCode());
+        result = prime * result + ((accommodationId == null) ? 0 : accommodationId.hashCode());
         result = prime * result + ((entryCause == null) ? 0 : entryCause.hashCode());
         result = prime * result + ((eventTypeId == null) ? 0 : eventTypeId.hashCode());
         result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
@@ -116,10 +116,10 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         NewAttandenceDTO other = (NewAttandenceDTO) obj;
-        if (accomodationId == null) {
-            if (other.accomodationId != null)
+        if (accommodationId == null) {
+            if (other.accommodationId != null)
                 return false;
-        } else if (!accomodationId.equals(other.accomodationId))
+        } else if (!accommodationId.equals(other.accommodationId))
             return false;
         if (entryCause == null) {
             if (other.entryCause != null)
