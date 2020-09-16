@@ -51,8 +51,8 @@ public class Attendance extends BaseObjectWithId {
     private LocalDateTime exitDateTime;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "SETOR_ATUAL")
-    private Sector currentSector;
+    @JoinColumn(name = "ACOMODACAO_ATUAL")
+    private Sector currentAccomodation;
 
     @Column(name = "TIPO_ENTRADA")
     @Enumerated(EnumType.STRING)
@@ -111,14 +111,6 @@ public class Attendance extends BaseObjectWithId {
         this.exitDateTime = exitDateTime;
     }
 
-    public Sector getCurrentSector() {
-        return currentSector;
-    }
-
-    public void setCurrentSector(Sector currentSector) {
-        this.currentSector = currentSector;
-    }
-
     public EntryType getEntryType() {
         return entryType;
     }
@@ -151,11 +143,27 @@ public class Attendance extends BaseObjectWithId {
         this.reasonForEntry = reasonForEntry;
     }
 
+    public AttendanceLevel getLevel() {
+        return level;
+    }
+
+    public void setLevel(AttendanceLevel level) {
+        this.level = level;
+    }
+
+    public Sector getCurrentAccomodation() {
+        return currentAccomodation;
+    }
+
+    public void setCurrentAccomodation(Sector currentAccomodation) {
+        this.currentAccomodation = currentAccomodation;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((currentSector == null) ? 0 : currentSector.hashCode());
+        result = prime * result + ((currentAccomodation == null) ? 0 : currentAccomodation.hashCode());
         result = prime * result + ((entryDateTime == null) ? 0 : entryDateTime.hashCode());
         result = prime * result + ((entryType == null) ? 0 : entryType.hashCode());
         result = prime * result + ((events == null) ? 0 : events.hashCode());
@@ -177,10 +185,10 @@ public class Attendance extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         Attendance other = (Attendance) obj;
-        if (currentSector == null) {
-            if (other.currentSector != null)
+        if (currentAccomodation == null) {
+            if (other.currentAccomodation != null)
                 return false;
-        } else if (!currentSector.equals(other.currentSector))
+        } else if (!currentAccomodation.equals(other.currentAccomodation))
             return false;
         if (entryDateTime == null) {
             if (other.entryDateTime != null)
@@ -227,16 +235,8 @@ public class Attendance extends BaseObjectWithId {
     @Override
     public String toString() {
         return "Attendance [id=" + id + ", patient=" + patient + ", entryDateTime=" + entryDateTime + ", exitDateTime=" + exitDateTime
-                + ", currentSector=" + currentSector + ", entryType=" + entryType + ", events=" + events + ", evolutions=" + evolutions
-                + ", reasonForEntry=" + reasonForEntry + ", level=" + level + "]";
-    }
-
-    public AttendanceLevel getLevel() {
-        return level;
-    }
-
-    public void setLevel(AttendanceLevel level) {
-        this.level = level;
+                + ", currentAccomodation=" + currentAccomodation + ", entryType=" + entryType + ", events=" + events + ", evolutions="
+                + evolutions + ", reasonForEntry=" + reasonForEntry + ", level=" + level + "]";
     }
 
     @PrePersist
@@ -244,5 +244,4 @@ public class Attendance extends BaseObjectWithId {
         final LocalDateTime now = LocalDateTime.now();
         this.entryDateTime = now;
     }
-
 }

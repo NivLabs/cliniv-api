@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.models.domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -86,10 +87,10 @@ public class Institute implements Serializable {
     private String key;
 
     @Column(name = "DATA_INICIO")
-    private Date startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "DATA_FIM")
-    private Date endDate;
+    private LocalDateTime endDate;
 
     public Institute() {
         super();
@@ -255,19 +256,19 @@ public class Institute implements Serializable {
         this.key = key;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

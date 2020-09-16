@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -18,17 +18,17 @@ public class LicenseDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Data de início")
     @DateTimeFormat(iso = ISO.DATE)
-    private Date startDate;
+    private LocalDateTime startDate;
 
     @ApiModelProperty("Data fim")
     @DateTimeFormat(iso = ISO.DATE)
-    private Date endDate;
+    private LocalDateTime endDate;
 
     public LicenseDTO() {
         super();
     }
 
-    public LicenseDTO(String key, Date startDate, Date endDate) {
+    public LicenseDTO(String key, LocalDateTime startDate, LocalDateTime endDate) {
         super();
         this.key = key;
         this.startDate = startDate;
@@ -43,19 +43,19 @@ public class LicenseDTO extends DataTransferObjectBase {
         this.key = key;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

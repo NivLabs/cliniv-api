@@ -25,12 +25,16 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
     @ApiModelProperty("Códgido do tipo do Evento")
     private Long eventTypeId;
 
+    @ApiModelProperty("Código da especialidade procurada")
+    @NotNull(message = "Informar o código da especialidade requisitada é obrigatório")
+    private Long specialityId;
+
     @ApiModelProperty("Código do profissional responsável pela entrada")
     private Long responsibleId;
 
-    @ApiModelProperty("Código do setor de origem do atendimento, ex: Recepção")
-    @NotNull(message = "Informar o setor de origem é obrigatório")
-    private Long sectorId;
+    @ApiModelProperty("Código da acomodação de origem do atendimento, ex: Triagem")
+    @NotNull(message = "Informar a acomodação de origem é obrigatório")
+    private Long accomodationId;
 
     @ApiModelProperty("Breve descrição do motivo da entrada|visita do paciente")
     @NotNull(message = "Informar o motivo da visita é obrigatório")
@@ -52,6 +56,14 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
         this.eventTypeId = eventTypeId;
     }
 
+    public Long getSpecialityId() {
+        return specialityId;
+    }
+
+    public void setSpecialityId(Long specialityId) {
+        this.specialityId = specialityId;
+    }
+
     public Long getResponsibleId() {
         return responsibleId;
     }
@@ -60,12 +72,12 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
         this.responsibleId = responsibleId;
     }
 
-    public Long getSectorId() {
-        return sectorId;
+    public Long getAccomodationId() {
+        return accomodationId;
     }
 
-    public void setSectorId(Long sectorId) {
-        this.sectorId = sectorId;
+    public void setAccomodationId(Long accomodationId) {
+        this.accomodationId = accomodationId;
     }
 
     public String getEntryCause() {
@@ -77,14 +89,21 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
     }
 
     @Override
+    public String toString() {
+        return "NewAttandenceDTO [patientId=" + patientId + ", eventTypeId=" + eventTypeId + ", specialityId=" + specialityId
+                + ", responsibleId=" + responsibleId + ", accomodationId=" + accomodationId + ", entryCause=" + entryCause + "]";
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((accomodationId == null) ? 0 : accomodationId.hashCode());
         result = prime * result + ((entryCause == null) ? 0 : entryCause.hashCode());
         result = prime * result + ((eventTypeId == null) ? 0 : eventTypeId.hashCode());
         result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
         result = prime * result + ((responsibleId == null) ? 0 : responsibleId.hashCode());
-        result = prime * result + ((sectorId == null) ? 0 : sectorId.hashCode());
+        result = prime * result + ((specialityId == null) ? 0 : specialityId.hashCode());
         return result;
     }
 
@@ -97,6 +116,11 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         NewAttandenceDTO other = (NewAttandenceDTO) obj;
+        if (accomodationId == null) {
+            if (other.accomodationId != null)
+                return false;
+        } else if (!accomodationId.equals(other.accomodationId))
+            return false;
         if (entryCause == null) {
             if (other.entryCause != null)
                 return false;
@@ -117,18 +141,12 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
                 return false;
         } else if (!responsibleId.equals(other.responsibleId))
             return false;
-        if (sectorId == null) {
-            if (other.sectorId != null)
+        if (specialityId == null) {
+            if (other.specialityId != null)
                 return false;
-        } else if (!sectorId.equals(other.sectorId))
+        } else if (!specialityId.equals(other.specialityId))
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "NewAttandenceDTO [patientId=" + patientId + ", eventTypeId=" + eventTypeId + ", responsibleId="
-                + responsibleId + ", sectorId=" + sectorId + ", entryCause=" + entryCause + "]";
     }
 
 }
