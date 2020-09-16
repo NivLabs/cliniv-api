@@ -52,7 +52,7 @@ public class Attendance extends BaseObjectWithId {
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ACOMODACAO_ATUAL")
-    private Accomodation currentAccomodation;
+    private Accommodation currentAccommodation;
 
     @Column(name = "TIPO_ENTRADA")
     @Enumerated(EnumType.STRING)
@@ -151,19 +151,19 @@ public class Attendance extends BaseObjectWithId {
         this.level = level;
     }
 
-    public Accomodation getCurrentAccomodation() {
-        return currentAccomodation;
+    public Accommodation getCurrentAccommodation() {
+        return currentAccommodation;
     }
 
-    public void setCurrentAccomodation(Accomodation currentAccomodation) {
-        this.currentAccomodation = currentAccomodation;
+    public void setCurrentAccommodation(Accommodation currentAccommodation) {
+        this.currentAccommodation = currentAccommodation;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((currentAccomodation == null) ? 0 : currentAccomodation.hashCode());
+        result = prime * result + ((currentAccommodation == null) ? 0 : currentAccommodation.hashCode());
         result = prime * result + ((entryDateTime == null) ? 0 : entryDateTime.hashCode());
         result = prime * result + ((entryType == null) ? 0 : entryType.hashCode());
         result = prime * result + ((events == null) ? 0 : events.hashCode());
@@ -185,10 +185,10 @@ public class Attendance extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         Attendance other = (Attendance) obj;
-        if (currentAccomodation == null) {
-            if (other.currentAccomodation != null)
+        if (currentAccommodation == null) {
+            if (other.currentAccommodation != null)
                 return false;
-        } else if (!currentAccomodation.equals(other.currentAccomodation))
+        } else if (!currentAccommodation.equals(other.currentAccommodation))
             return false;
         if (entryDateTime == null) {
             if (other.entryDateTime != null)
@@ -235,7 +235,7 @@ public class Attendance extends BaseObjectWithId {
     @Override
     public String toString() {
         return "Attendance [id=" + id + ", patient=" + patient + ", entryDateTime=" + entryDateTime + ", exitDateTime=" + exitDateTime
-                + ", currentAccomodation=" + currentAccomodation + ", entryType=" + entryType + ", events=" + events + ", evolutions="
+                + ", currentAccommodation=" + currentAccommodation + ", entryType=" + entryType + ", events=" + events + ", evolutions="
                 + evolutions + ", reasonForEntry=" + reasonForEntry + ", level=" + level + "]";
     }
 

@@ -60,7 +60,7 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
     private LocalDateTime bornDate;
 
     @ApiModelProperty("Acomodação")
-    private AccomodationDTO lastAccommodation;
+    private AccommodationDTO lastAccommodation;
 
     @ApiModelProperty("Sexo")
     private Gender gender;
@@ -169,11 +169,11 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         this.bornDate = bornDate;
     }
 
-    public AccomodationDTO getLastAccommodation() {
+    public AccommodationDTO getLastAccommodation() {
         return lastAccommodation;
     }
 
-    public void setLastAccommodation(AccomodationDTO lastAccommodation) {
+    public void setLastAccommodation(AccommodationDTO lastAccommodation) {
         this.lastAccommodation = lastAccommodation;
     }
 

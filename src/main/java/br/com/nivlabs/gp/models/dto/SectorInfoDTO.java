@@ -29,7 +29,7 @@ public class SectorInfoDTO extends DataTransferObjectBase {
     private String description;
 
     @ApiModelProperty("Lista de salas e leitos do setor (Acomodações)")
-    private List<AccomodationDTO> listOfRoomsOrBeds = new ArrayList<>();
+    private List<AccommodationDTO> listOfRoomsOrBeds = new ArrayList<>();
 
     @ApiModelProperty("Data / Hora de criação do setor")
     @DateTimeFormat(iso = ISO.DATE)
@@ -51,11 +51,11 @@ public class SectorInfoDTO extends DataTransferObjectBase {
 		this.description = description;
 	}
 
-	public List<AccomodationDTO> getListOfRoomsOrBeds() {
+	public List<AccommodationDTO> getListOfRoomsOrBeds() {
 		return listOfRoomsOrBeds;
 	}
 
-	public void setListOfRoomsOrBeds(List<AccomodationDTO> listOfRoomsOrBeds) {
+	public void setListOfRoomsOrBeds(List<AccommodationDTO> listOfRoomsOrBeds) {
 		this.listOfRoomsOrBeds = listOfRoomsOrBeds;
 	}
 

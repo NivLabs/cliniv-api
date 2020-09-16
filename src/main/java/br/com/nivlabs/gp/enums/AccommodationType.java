@@ -6,6 +6,6 @@ package br.com.nivlabs.gp.enums;
  * @author viniciosarodrigues
  *
  */
-public enum AccomodationType {
+public enum AccommodationType {
     ROOM, BED
 }

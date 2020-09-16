@@ -13,13 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.Accomodation;
+import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 import br.com.nivlabs.gp.models.domain.EventType;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
-import br.com.nivlabs.gp.models.dto.AccomodationDTO;
+import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
@@ -74,7 +74,7 @@ public class AttendanceEventService implements GenericService {
         newAttendanceEvent.setEventType(convertEventType(request.getEventType()));
         newAttendanceEvent.setObservations(request.getObservations());
         newAttendanceEvent.setResponsible(convertResponsible(request.getResponsible()));
-        newAttendanceEvent.setAccomodation(convertAccomodation(request.getAccomodation()));
+        newAttendanceEvent.setAccommodation(convertAccommodation(request.getAccommodation()));
         newAttendanceEvent.setTitle(request.getEventType().getDescription());
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
 
@@ -94,12 +94,12 @@ public class AttendanceEventService implements GenericService {
         return procedureReturn;
     }
 
-    private Accomodation convertAccomodation(AccomodationDTO accomodation) {
-        logger.info("Convertendo informações de Sala ou Leito :: Identificador processado -> {}", accomodation.getId());
-        Accomodation accomodationReturn = new Accomodation();
-        BeanUtils.copyProperties(accomodation, accomodationReturn);
+    private Accommodation convertAccommodation(AccommodationDTO accommodation) {
+        logger.info("Convertendo informações de Sala ou Leito :: Identificador processado -> {}", accommodation.getId());
+        Accommodation accommodationReturn = new Accommodation();
+        BeanUtils.copyProperties(accommodation, accommodationReturn);
         logger.info(SUCCESS_CONVERTION_MESSAGE);
-        return accomodationReturn;
+        return accommodationReturn;
     }
 
     private Responsible convertResponsible(ResponsibleDTO responsible) {

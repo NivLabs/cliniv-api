@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
 import br.com.nivlabs.gp.models.domain.Attendance;
-import br.com.nivlabs.gp.models.dto.AccomodationDTO;
+import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
@@ -141,7 +141,7 @@ public class AnamnesisService implements GenericService {
     public NewAnamnesisDTO newAnamnesisResponse(NewAnamnesisDTO request, String requestOwner) {
         logger.info("Iniciando o preenchimento de um novo questionário de anamnese...");
         MedicalRecordDTO medicalRecord = attendanceService.findMedicalRecordByAttendanceId(request.getAttendanceId());
-        if (request.getAccomodationId() == null && medicalRecord.getLastAccommodation() == null) {
+        if (request.getAccommodationId() == null && medicalRecord.getLastAccommodation() == null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "O atendimento atual não possui acomodação, informe a acomodação em que a anamnese está sendo realizada");
         }
@@ -187,10 +187,10 @@ public class AnamnesisService implements GenericService {
         event.setEventDateTime(LocalDateTime.now());
         event.setObservations("Criação da anamnese");
         event.setResponsible(getResponsibleFromUser(requestOwner));
-        if (request.getAccomodationId() == null)
-            event.setAccomodation(medicalRecord.getLastAccommodation());
+        if (request.getAccommodationId() == null)
+            event.setAccommodation(medicalRecord.getLastAccommodation());
         else
-            event.setAccomodation(new AccomodationDTO(request.getAccomodationId()));
+            event.setAccommodation(new AccommodationDTO(request.getAccommodationId()));
         logger.info("Evento processado, inserindo evento na base de dados...");
 
         try {

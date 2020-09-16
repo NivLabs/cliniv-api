@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 
 import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
 import br.com.nivlabs.gp.enums.ActiveType;
-import br.com.nivlabs.gp.models.domain.Accomodation_;
+import br.com.nivlabs.gp.models.domain.Accommodation_;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 import br.com.nivlabs.gp.models.domain.Attendance_;
@@ -62,10 +62,10 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
             // Pega o setor atual do atendimento
             if (!attendance.getEvents().isEmpty()) {
                 List<AttendanceEvent> eventsWithSector = attendance.getEvents().stream()
-                        .filter(event -> event.getAccomodation() != null).collect(Collectors.toList());
+                        .filter(event -> event.getAccommodation() != null).collect(Collectors.toList());
                 if (!eventsWithSector.isEmpty()) {
                     eventsWithSector.sort((first, second) -> first.getId().compareTo(second.getId()));
-                    attendanceConverted.setSectorDescription(eventsWithSector.get(0).getAccomodation().getDescription());
+                    attendanceConverted.setSectorDescription(eventsWithSector.get(0).getAccommodation().getDescription());
                 }
             }
 
@@ -97,8 +97,8 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         }
         if (!StringUtils.isNullOrEmpty(filters.getSectorId()) && !StringUtils.isNullOrEmpty(StringUtils.getDigits(filters.getSectorId()))) {
             attributes.add((cb, from) -> {
-                In<Long> inClause = cb.in(from.get(Attendance_.currentAccomodation).get(Accomodation_.id));
-                return getAccomodationsFormSectorId(inClause, filters.getSectorId());
+                In<Long> inClause = cb.in(from.get(Attendance_.currentAccommodation).get(Accommodation_.id));
+                return getAccommodationsFormSectorId(inClause, filters.getSectorId());
             });
         }
         if (filters.getEntryType() != null) {
@@ -121,9 +121,9 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
      * @param sectorId
      * @return
      */
-    private Predicate getAccomodationsFormSectorId(In<Long> inClause, String sectorId) {
+    private Predicate getAccommodationsFormSectorId(In<Long> inClause, String sectorId) {
         SectorInfoDTO sector = sectorService.findInfoById(Long.parseLong(sectorId));
-        sector.getListOfRoomsOrBeds().forEach(accomodation -> inClause.value(accomodation.getId()));
+        sector.getListOfRoomsOrBeds().forEach(accommodation -> inClause.value(accommodation.getId()));
         return inClause;
     }
 

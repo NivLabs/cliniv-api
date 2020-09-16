@@ -68,7 +68,7 @@ public class AttendanceEvent extends BaseObjectWithId {
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SALA_LEITO")
-    private Accomodation accomodation;
+    private Accommodation accommodation;
 
     @Column(name = "TITULO")
     private String title;
@@ -132,12 +132,12 @@ public class AttendanceEvent extends BaseObjectWithId {
         this.documents = documents;
     }
 
-    public Accomodation getAccomodation() {
-        return accomodation;
+    public Accommodation getAccommodation() {
+        return accommodation;
     }
 
-    public void setAccomodation(Accomodation accomodation) {
-        this.accomodation = accomodation;
+    public void setAccommodation(Accommodation accommodation) {
+        this.accommodation = accommodation;
     }
 
     public String getTitle() {
@@ -167,7 +167,7 @@ public class AttendanceEvent extends BaseObjectWithId {
     @Override
     public String toString() {
         return "AttendanceEvent [id=" + id + ", eventType=" + eventType + ", responsible=" + responsible + ", attendance=" + attendance
-                + ", procedure=" + procedure + ", documents=" + documents + ", accomodation=" + accomodation + ", title=" + title
+                + ", procedure=" + procedure + ", documents=" + documents + ", accommodation=" + accommodation + ", title=" + title
                 + ", observations=" + observations + ", eventDateTime=" + eventDateTime + "]";
     }
 
@@ -175,7 +175,7 @@ public class AttendanceEvent extends BaseObjectWithId {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((accomodation == null) ? 0 : accomodation.hashCode());
+        result = prime * result + ((accommodation == null) ? 0 : accommodation.hashCode());
         result = prime * result + ((attendance == null) ? 0 : attendance.hashCode());
         result = prime * result + ((documents == null) ? 0 : documents.hashCode());
         result = prime * result + ((eventDateTime == null) ? 0 : eventDateTime.hashCode());
@@ -197,10 +197,10 @@ public class AttendanceEvent extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         AttendanceEvent other = (AttendanceEvent) obj;
-        if (accomodation == null) {
-            if (other.accomodation != null)
+        if (accommodation == null) {
+            if (other.accommodation != null)
                 return false;
-        } else if (!accomodation.equals(other.accomodation))
+        } else if (!accommodation.equals(other.accommodation))
             return false;
         if (attendance == null) {
             if (other.attendance != null)
@@ -264,7 +264,7 @@ public class AttendanceEvent extends BaseObjectWithId {
     public AttendanceEventDTO getDTO() {
         return new AttendanceEventDTO(this.getId(),
                 this.getEventDateTime(), this.getEventType().getDescription(), convertDocuments(this.getDocuments()),
-                this.getAccomodation().getDTO());
+                this.getAccommodation().getDTO());
     }
 
     private List<DigitalDocumentDTO> convertDocuments(List<DigitalDocument> documents) {

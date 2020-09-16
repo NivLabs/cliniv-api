@@ -43,7 +43,7 @@ public class Sector extends BaseObjectWithId {
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "sector", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    private List<Accomodation> listOfRoomsOrBeds = new ArrayList<>();
+    private List<Accommodation> listOfRoomsOrBeds = new ArrayList<>();
 
     public Sector(Long id) {
         this.id = id;
@@ -53,7 +53,7 @@ public class Sector extends BaseObjectWithId {
         super();
     }
 
-    public Sector(Long id, String description, LocalDateTime createdAt, List<Accomodation> listOfRoomsOrBeds) {
+    public Sector(Long id, String description, LocalDateTime createdAt, List<Accommodation> listOfRoomsOrBeds) {
         super();
         this.id = id;
         this.description = description;
@@ -85,11 +85,11 @@ public class Sector extends BaseObjectWithId {
         this.createdAt = createdAt;
     }
 
-    public List<Accomodation> getListOfRoomsOrBeds() {
+    public List<Accommodation> getListOfRoomsOrBeds() {
         return listOfRoomsOrBeds;
     }
 
-    public void setListOfRoomsOrBeds(List<Accomodation> listOfRoomsOrBeds) {
+    public void setListOfRoomsOrBeds(List<Accommodation> listOfRoomsOrBeds) {
         this.listOfRoomsOrBeds = listOfRoomsOrBeds;
     }
 

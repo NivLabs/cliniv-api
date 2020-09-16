@@ -2,11 +2,11 @@ package br.com.nivlabs.gp.models.dto;
 
 import javax.validation.constraints.NotNull;
 
-import br.com.nivlabs.gp.enums.AccomodationType;
+import br.com.nivlabs.gp.enums.AccommodationType;
 import io.swagger.annotations.ApiModel;
 
 @ApiModel("Sala (ambulatório) ou Leito")
-public class AccomodationDTO extends DataTransferObjectBase {
+public class AccommodationDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 1574668174638044648L;
 
@@ -19,14 +19,14 @@ public class AccomodationDTO extends DataTransferObjectBase {
     private String description;
 
     @NotNull(message = "Informe se é sala (ambulatório) ou leito")
-    private AccomodationType type;
+    private AccommodationType type;
 
-    public AccomodationDTO(Long id) {
+    public AccommodationDTO(Long id) {
         super();
         this.id = id;
     }
 
-    public AccomodationDTO(Long id, Long sectorId, String description, AccomodationType type) {
+    public AccommodationDTO(Long id, Long sectorId, String description, AccommodationType type) {
         super();
         this.id = id;
         this.sectorId = sectorId;
@@ -34,7 +34,7 @@ public class AccomodationDTO extends DataTransferObjectBase {
         this.type = type;
     }
 
-    public AccomodationDTO() {
+    public AccommodationDTO() {
         super();
     }
 
@@ -62,11 +62,11 @@ public class AccomodationDTO extends DataTransferObjectBase {
         this.description = description;
     }
 
-    public AccomodationType getType() {
+    public AccommodationType getType() {
         return type;
     }
 
-    public void setType(AccomodationType type) {
+    public void setType(AccommodationType type) {
         this.type = type;
     }
 
@@ -89,7 +89,7 @@ public class AccomodationDTO extends DataTransferObjectBase {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AccomodationDTO other = (AccomodationDTO) obj;
+        AccommodationDTO other = (AccommodationDTO) obj;
         if (description == null) {
             if (other.description != null)
                 return false;
@@ -112,7 +112,7 @@ public class AccomodationDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "AccomodationDTO [id=" + id + ", sectorId=" + sectorId + ", description=" + description + ", type=" + type + "]";
+        return "AccommodationDTO [id=" + id + ", sectorId=" + sectorId + ", description=" + description + ", type=" + type + "]";
     }
 
 }

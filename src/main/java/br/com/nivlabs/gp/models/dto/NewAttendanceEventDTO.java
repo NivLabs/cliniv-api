@@ -45,7 +45,7 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
 
 	@NotNull(message = "Informar a sala ou leito em que o evento foi realizado é obrigatório")
 	@ApiModelProperty("Sala ou leito em que o evento ocorreu")
-	private AccomodationDTO accomodation;
+	private AccommodationDTO accommodation;
 
 	public Long getAttendanceId() {
 		return attendanceId;
@@ -103,19 +103,19 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
 		this.responsible = responsible;
 	}
 
-	public AccomodationDTO getAccomodation() {
-		return accomodation;
+	public AccommodationDTO getAccommodation() {
+		return accommodation;
 	}
 
-	public void setAccomodation(AccomodationDTO accomodation) {
-		this.accomodation = accomodation;
+	public void setAccommodation(AccommodationDTO accommodation) {
+		this.accommodation = accommodation;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((accomodation == null) ? 0 : accomodation.hashCode());
+		result = prime * result + ((accommodation == null) ? 0 : accommodation.hashCode());
 		result = prime * result + ((attendanceId == null) ? 0 : attendanceId.hashCode());
 		result = prime * result + ((documents == null) ? 0 : documents.hashCode());
 		result = prime * result + ((eventDateTime == null) ? 0 : eventDateTime.hashCode());
@@ -135,10 +135,10 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
 		if (getClass() != obj.getClass())
 			return false;
 		NewAttendanceEventDTO other = (NewAttendanceEventDTO) obj;
-		if (accomodation == null) {
-			if (other.accomodation != null)
+		if (accommodation == null) {
+			if (other.accommodation != null)
 				return false;
-		} else if (!accomodation.equals(other.accomodation))
+		} else if (!accommodation.equals(other.accommodation))
 			return false;
 		if (attendanceId == null) {
 			if (other.attendanceId != null)
@@ -182,7 +182,7 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
 	public String toString() {
 		return "NewAttendanceEventDTO [attendanceId=" + attendanceId + ", eventDateTime=" + eventDateTime
 				+ ", documents=" + documents + ", eventType=" + eventType + ", observations=" + observations
-				+ ", procedure=" + procedure + ", responsible=" + responsible + ", accomodation=" + accomodation + "]";
+				+ ", procedure=" + procedure + ", responsible=" + responsible + ", accommodation=" + accommodation + "]";
 	}
 
 }

@@ -17,13 +17,13 @@ import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.com.nivlabs.gp.enums.AccomodationType;
+import br.com.nivlabs.gp.enums.AccommodationType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
-import br.com.nivlabs.gp.models.dto.AccomodationDTO;
+import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 
 @Entity
 @Table(name = "SALA_LEITO")
-public class Accomodation extends BaseObjectWithId {
+public class Accommodation extends BaseObjectWithId {
 
     private static final long serialVersionUID = 7743590060203121165L;
 
@@ -36,14 +36,14 @@ public class Accomodation extends BaseObjectWithId {
 
     @Column(name = "TIPO")
     @Enumerated(EnumType.STRING)
-    private AccomodationType type;
+    private AccommodationType type;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "SECTOR_ID")
     private Sector sector;
 
-    public Accomodation(Long id, String description, AccomodationType type, Sector sector) {
+    public Accommodation(Long id, String description, AccommodationType type, Sector sector) {
         super();
         this.id = id;
         this.description = description;
@@ -51,7 +51,7 @@ public class Accomodation extends BaseObjectWithId {
         this.sector = sector;
     }
 
-    public Accomodation() {
+    public Accommodation() {
         super();
     }
 
@@ -71,11 +71,11 @@ public class Accomodation extends BaseObjectWithId {
         this.description = description;
     }
 
-    public AccomodationType getType() {
+    public AccommodationType getType() {
         return type;
     }
 
-    public void setType(AccomodationType type) {
+    public void setType(AccommodationType type) {
         this.type = type;
     }
 
@@ -106,7 +106,7 @@ public class Accomodation extends BaseObjectWithId {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Accomodation other = (Accomodation) obj;
+        Accommodation other = (Accommodation) obj;
         if (description == null) {
             if (other.description != null)
                 return false;
@@ -127,8 +127,8 @@ public class Accomodation extends BaseObjectWithId {
         return true;
     }
 
-    public AccomodationDTO getDTO() {
-        AccomodationDTO dto = new AccomodationDTO();
+    public AccommodationDTO getDTO() {
+        AccommodationDTO dto = new AccommodationDTO();
         BeanUtils.copyProperties(this, dto);
         dto.setSectorId(this.getSector().getId());
         return dto;

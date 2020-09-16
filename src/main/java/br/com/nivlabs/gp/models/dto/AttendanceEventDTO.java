@@ -36,20 +36,20 @@ public class AttendanceEventDTO extends DataTransferObjectBase {
     private List<DigitalDocumentDTO> documents;
 
     @ApiModelProperty("Acomodação onde o evento foi ou será realizado")
-    private AccomodationDTO accomodation;
+    private AccommodationDTO accommodation;
 
     public AttendanceEventDTO() {
         super();
     }
 
     public AttendanceEventDTO(Long id, LocalDateTime datetime, String description, List<DigitalDocumentDTO> documents,
-            AccomodationDTO accomodation) {
+            AccommodationDTO accommodation) {
         super();
         this.id = id;
         this.datetime = datetime;
         this.description = description;
         this.documents = documents;
-        this.accomodation = accomodation;
+        this.accommodation = accommodation;
     }
 
     public Long getId() {
@@ -84,25 +84,25 @@ public class AttendanceEventDTO extends DataTransferObjectBase {
         this.documents = documents;
     }
 
-    public AccomodationDTO getAccomodation() {
-        return accomodation;
+    public AccommodationDTO getAccommodation() {
+        return accommodation;
     }
 
-    public void setAccomodation(AccomodationDTO accomodation) {
-        this.accomodation = accomodation;
+    public void setAccommodation(AccommodationDTO accommodation) {
+        this.accommodation = accommodation;
     }
 
     @Override
     public String toString() {
         return "AttendanceEventDTO [id=" + id + ", datetime=" + datetime + ", description=" + description + ", documents=" + documents
-                + ", accomodation=" + accomodation + "]";
+                + ", accommodation=" + accommodation + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((accomodation == null) ? 0 : accomodation.hashCode());
+        result = prime * result + ((accommodation == null) ? 0 : accommodation.hashCode());
         result = prime * result + ((datetime == null) ? 0 : datetime.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((documents == null) ? 0 : documents.hashCode());
@@ -119,10 +119,10 @@ public class AttendanceEventDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         AttendanceEventDTO other = (AttendanceEventDTO) obj;
-        if (accomodation == null) {
-            if (other.accomodation != null)
+        if (accommodation == null) {
+            if (other.accommodation != null)
                 return false;
-        } else if (!accomodation.equals(other.accomodation))
+        } else if (!accommodation.equals(other.accommodation))
             return false;
         if (datetime == null) {
             if (other.datetime != null)
