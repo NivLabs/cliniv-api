@@ -208,23 +208,24 @@ public class AttendanceService implements GenericService {
      * @param NewAttandenceDTO Novo atendimento
      * @return MedicalRecordDTO
      */
-    public MedicalRecordDTO persistNewAttendance(NewAttandenceDTO visitDto) {
+    public MedicalRecordDTO persistNewAttendance(NewAttandenceDTO request) {
         MedicalRecordDTO attendance = null;
         try {
-            getActiveMedicalRecord(visitDto.getPatientId());
+            getActiveMedicalRecord(request.getPatientId());
         } catch (HttpException e) {
             if (e.getStatus().equals(HttpStatus.UNPROCESSABLE_ENTITY)) {
-                PatientInfoDTO savedPatient = patientService.findByPatientId(visitDto.getPatientId());
+                PatientInfoDTO savedPatient = patientService.findByPatientId(request.getPatientId());
 
                 Attendance convertedAttendance = new Attendance();
-                convertedAttendance.setReasonForEntry(visitDto.getEntryCause());
+                convertedAttendance.setReasonForEntry(request.getEntryCause());
+                convertedAttendance.setLevel(request.getLevel());
                 convertedAttendance.setPatient(new Patient(savedPatient.getId()));
-                convertedAttendance.setCurrentAccommodation(new Accommodation(visitDto.getAccommodationId(), null, null, null));
+                convertedAttendance.setCurrentAccommodation(new Accommodation(request.getAccommodationId(), null, null, null));
                 convertedAttendance.setEntryType(
-                                                 visitDto.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
+                                                 request.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
                 convertedAttendance = persist(convertedAttendance);
-                createEntryEvent(convertedAttendance, visitDto);
-                attendance = getActiveMedicalRecord(visitDto.getPatientId());
+                createEntryEvent(convertedAttendance, request);
+                attendance = getActiveMedicalRecord(request.getPatientId());
 
                 return attendance;
             }
@@ -232,7 +233,7 @@ public class AttendanceService implements GenericService {
 
         throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
                                                                                "O paciente de código %s já possui um atendimento ativo, favor realizar a alta do mesmo para iniciar um novo.",
-                                                                               visitDto.getPatientId()));
+                                                                               request.getPatientId()));
 
     }
 
