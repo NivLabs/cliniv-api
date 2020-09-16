@@ -19,6 +19,7 @@ import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.EntryType;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 import br.com.nivlabs.gp.models.domain.EventType;
@@ -218,6 +219,7 @@ public class AttendanceService implements GenericService {
                 Attendance convertedAttendance = new Attendance();
                 convertedAttendance.setReasonForEntry(visitDto.getEntryCause());
                 convertedAttendance.setPatient(new Patient(savedPatient.getId()));
+                convertedAttendance.setCurrentAccommodation(new Accommodation(visitDto.getAccommodationId(), null, null, null));
                 convertedAttendance.setEntryType(
                                                  visitDto.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
                 convertedAttendance = persist(convertedAttendance);
