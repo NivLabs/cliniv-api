@@ -2,6 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import javax.validation.constraints.NotNull;
 
+import br.com.nivlabs.gp.enums.AttendanceLevel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -39,6 +40,10 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
     @ApiModelProperty("Breve descrição do motivo da entrada|visita do paciente")
     @NotNull(message = "Informar o motivo da visita é obrigatório")
     private String entryCause;
+
+    @ApiModelProperty("Nível de risco do atendimento")
+    @NotNull(message = "O nível de risco do atendimento deve ser informado")
+    private AttendanceLevel level;
 
     public Long getPatientId() {
         return patientId;
@@ -88,10 +93,12 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
         this.entryCause = entryCause;
     }
 
-    @Override
-    public String toString() {
-        return "NewAttandenceDTO [patientId=" + patientId + ", eventTypeId=" + eventTypeId + ", specialityId=" + specialityId
-                + ", responsibleId=" + responsibleId + ", accommodationId=" + accommodationId + ", entryCause=" + entryCause + "]";
+    public AttendanceLevel getLevel() {
+        return level;
+    }
+
+    public void setLevel(AttendanceLevel level) {
+        this.level = level;
     }
 
     @Override
@@ -101,6 +108,7 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
         result = prime * result + ((accommodationId == null) ? 0 : accommodationId.hashCode());
         result = prime * result + ((entryCause == null) ? 0 : entryCause.hashCode());
         result = prime * result + ((eventTypeId == null) ? 0 : eventTypeId.hashCode());
+        result = prime * result + ((level == null) ? 0 : level.hashCode());
         result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
         result = prime * result + ((responsibleId == null) ? 0 : responsibleId.hashCode());
         result = prime * result + ((specialityId == null) ? 0 : specialityId.hashCode());
@@ -131,6 +139,8 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
                 return false;
         } else if (!eventTypeId.equals(other.eventTypeId))
             return false;
+        if (level != other.level)
+            return false;
         if (patientId == null) {
             if (other.patientId != null)
                 return false;
@@ -147,6 +157,13 @@ public class NewAttandenceDTO extends DataTransferObjectBase {
         } else if (!specialityId.equals(other.specialityId))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "NewAttandenceDTO [patientId=" + patientId + ", eventTypeId=" + eventTypeId + ", specialityId=" + specialityId
+                + ", responsibleId=" + responsibleId + ", accommodationId=" + accommodationId + ", entryCause=" + entryCause + ", level="
+                + level + "]";
     }
 
 }
