@@ -326,7 +326,7 @@ public class AttendanceService implements GenericService {
         event.setAttendanceId(attendance.getId());
         event.setEventDateTime(request.getDatetime());
         event.setEventType(new EventTypeDTO(request.getEventTypeId(), CLOSE_ATTENDANCE_TEXT, CLOSE_ATTENDANCE_TEXT));
-        event.setAccomodation(new AccomodationDTO(attendance.getCurrentSector().getId()));
+        event.setAccomodation(new AccomodationDTO(attendance.getCurrentAccomodation().getId()));
         event.setResponsible(getResponsibleFromUserSession());
         event.setObservations(request.getObservations());
 

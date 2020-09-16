@@ -101,7 +101,7 @@ public class PatientService implements GenericService {
     /**
      * Adiciona o histórico do paciente
      * 
-     * @param patientInfo
+     * @param patientInfo Informações do paciente
      */
     private void setPatientHistory(PatientInfoDTO patientInfo) {
         try {

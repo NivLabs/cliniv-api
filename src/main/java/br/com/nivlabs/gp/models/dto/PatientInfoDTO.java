@@ -2,7 +2,6 @@ package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EnumType;
@@ -43,7 +42,7 @@ public class PatientInfoDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Data de nascimento")
     @DateTimeFormat(iso = ISO.DATE)
-    private Date bornDate;
+    private LocalDateTime bornDate;
 
     @ApiModelProperty("Documento do paciente")
     @NotNull(message = "O documento deve ser informado")
@@ -123,11 +122,11 @@ public class PatientInfoDTO extends DataTransferObjectBase {
         this.socialName = socialName;
     }
 
-    public Date getBornDate() {
+    public LocalDateTime getBornDate() {
         return bornDate;
     }
 
-    public void setBornDate(Date bornDate) {
+    public void setBornDate(LocalDateTime bornDate) {
         this.bornDate = bornDate;
     }
 

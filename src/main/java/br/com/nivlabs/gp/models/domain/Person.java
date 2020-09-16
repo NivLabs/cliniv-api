@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.models.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,7 +60,7 @@ public class Person extends BaseObjectWithId {
     private String motherName;
 
     @Column(name = "DATA_NASCIMENTO")
-    private Date bornDate;
+    private LocalDateTime bornDate;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "person", cascade = CascadeType.ALL)
     private PersonAddress address;
@@ -149,11 +149,11 @@ public class Person extends BaseObjectWithId {
         this.motherName = motherName;
     }
 
-    public Date getBornDate() {
+    public LocalDateTime getBornDate() {
         return bornDate;
     }
 
-    public void setBornDate(Date bornDate) {
+    public void setBornDate(LocalDateTime bornDate) {
         this.bornDate = bornDate;
     }
 
