@@ -52,7 +52,7 @@ public class Attendance extends BaseObjectWithId {
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ACOMODACAO_ATUAL")
-    private Sector currentAccomodation;
+    private Accomodation currentAccomodation;
 
     @Column(name = "TIPO_ENTRADA")
     @Enumerated(EnumType.STRING)
@@ -151,11 +151,11 @@ public class Attendance extends BaseObjectWithId {
         this.level = level;
     }
 
-    public Sector getCurrentAccomodation() {
+    public Accomodation getCurrentAccomodation() {
         return currentAccomodation;
     }
 
-    public void setCurrentAccomodation(Sector currentAccomodation) {
+    public void setCurrentAccomodation(Accomodation currentAccomodation) {
         this.currentAccomodation = currentAccomodation;
     }
 
