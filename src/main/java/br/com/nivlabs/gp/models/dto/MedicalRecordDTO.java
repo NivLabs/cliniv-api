@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import br.com.nivlabs.gp.enums.AttendanceLevel;
 import br.com.nivlabs.gp.enums.Gender;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -77,9 +78,8 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
     @ApiModelProperty("Alergias")
     private List<String> allergies = new ArrayList<>();
 
-    public MedicalRecordDTO() {
-        super();
-    }
+    @ApiModelProperty("Nível de Risco de atendimento")
+    private AttendanceLevel attendanceLevel;
 
     public Long getId() {
         return id;
@@ -217,12 +217,31 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         this.allergies = allergies;
     }
 
+    public AttendanceLevel getAttendanceLevel() {
+        return attendanceLevel;
+    }
+
+    public void setAttendanceLevel(AttendanceLevel attendanceLevel) {
+        this.attendanceLevel = attendanceLevel;
+    }
+
+    @Override
+    public String toString() {
+        return "MedicalRecordDTO [id=" + id + ", entryDateTime=" + entryDateTime + ", exitDateTime=" + exitDateTime + ", patientId="
+                + patientId + ", document=" + document + ", anamnesisDigitalDocuentId=" + anamnesisDigitalDocuentId + ", fullName="
+                + fullName + ", socialName=" + socialName + ", principalNumber=" + principalNumber + ", susNumber=" + susNumber
+                + ", bornDate=" + bornDate + ", lastAccommodation=" + lastAccommodation + ", gender=" + gender + ", events=" + events
+                + ", medicines=" + medicines + ", evolutions=" + evolutions + ", allergies=" + allergies + ", attendanceLevel="
+                + attendanceLevel + "]";
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((allergies == null) ? 0 : allergies.hashCode());
         result = prime * result + ((anamnesisDigitalDocuentId == null) ? 0 : anamnesisDigitalDocuentId.hashCode());
+        result = prime * result + ((attendanceLevel == null) ? 0 : attendanceLevel.hashCode());
         result = prime * result + ((bornDate == null) ? 0 : bornDate.hashCode());
         result = prime * result + ((document == null) ? 0 : document.hashCode());
         result = prime * result + ((entryDateTime == null) ? 0 : entryDateTime.hashCode());
@@ -259,6 +278,8 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
             if (other.anamnesisDigitalDocuentId != null)
                 return false;
         } else if (!anamnesisDigitalDocuentId.equals(other.anamnesisDigitalDocuentId))
+            return false;
+        if (attendanceLevel != other.attendanceLevel)
             return false;
         if (bornDate == null) {
             if (other.bornDate != null)
@@ -333,15 +354,6 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         } else if (!susNumber.equals(other.susNumber))
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "MedicalRecordDTO [id=" + id + ", entryDateTime=" + entryDateTime + ", exitDateTime=" + exitDateTime + ", patientId="
-                + patientId + ", document=" + document + ", anamnesisDigitalDocuentId=" + anamnesisDigitalDocuentId + ", fullName="
-                + fullName + ", socialName=" + socialName + ", principalNumber=" + principalNumber + ", susNumber=" + susNumber
-                + ", bornDate=" + bornDate + ", lastAccommodation=" + lastAccommodation + ", gender=" + gender + ", events=" + events
-                + ", medicines=" + medicines + ", evolutions=" + evolutions + ", allergies=" + allergies + "]";
     }
 
 }

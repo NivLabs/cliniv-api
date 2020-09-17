@@ -125,6 +125,7 @@ public class AttendanceService implements GenericService {
         medicalRecord.setSusNumber(objectFromDb.getPatient().getSusNumber());
         medicalRecord.setEntryDateTime(objectFromDb.getEntryDateTime());
         medicalRecord.setExitDateTime(objectFromDb.getExitDateTime());
+        medicalRecord.setAttendanceLevel(objectFromDb.getLevel());
 
         processEvents(objectFromDb, medicalRecord);
 
@@ -281,6 +282,7 @@ public class AttendanceService implements GenericService {
         medicalRecord.setDocument(new DocumentDTO(patient.getDocument().getType(), patient.getDocument().getValue()));
         medicalRecord.setEntryDateTime(attendanceFromDb.getEntryDateTime());
         medicalRecord.setExitDateTime(attendanceFromDb.getExitDateTime());
+        medicalRecord.setAttendanceLevel(attendanceFromDb.getLevel());
 
         processEvents(attendanceFromDb, medicalRecord);
 
