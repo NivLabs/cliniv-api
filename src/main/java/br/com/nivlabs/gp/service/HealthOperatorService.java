@@ -23,6 +23,7 @@ import br.com.nivlabs.gp.models.dto.HealthOperatorDTO;
 import br.com.nivlabs.gp.models.dto.HealthOperatorInfoDTO;
 import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
 import br.com.nivlabs.gp.repository.HealthOperatorRepository;
+import br.com.nivlabs.gp.repository.HealthPlanRepository;
 
 /**
  * 
@@ -35,49 +36,96 @@ import br.com.nivlabs.gp.repository.HealthOperatorRepository;
 @Service
 public class HealthOperatorService implements GenericService {
 
-    @Autowired
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @PersistenceContext
-    private EntityManager em;
+	@PersistenceContext
+	private EntityManager em;
 
-    @Autowired
-    private HealthOperatorRepository healthOperatorRepository;
+	@Autowired
+	private HealthOperatorRepository healthOperatorRepository;
 
-    /**
-     * Busca uma página de operadoras de planos de saúde
-     * 
-     * @param pageRequest
-     * @return Page
-     */
-    public Page<HealthOperatorDTO> getListOfHealthOperator(HealthOperatorFilters filters, Pageable pageRequest) {
-        logger.info("Inicinado busca filtrada por Operadoras de saúde");
-        return healthOperatorRepository.resumedList(filters, pageRequest);
-    }
+	@Autowired
+	private HealthPlanRepository healthPlanRepository;
 
-    /**
-     * Busca os detalhes de uma operadora de plano de saúde
-     * 
-     * @param id
-     * @return HealthOperatorInfoDTO
-     */
-    public HealthOperatorInfoDTO findByHealthOperatorId(Long id) {
-        HealthOperator healthOperator = healthOperatorRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Operadora com o identificador %s não encontrado", id)));
-        List<HealthPlan> plans = healthOperator.getHealthPlans();
-        List<HealthPlanDTO> plansDTO = new ArrayList<>();
+	/**
+	 * Busca uma página de operadoras de planos de saúde
+	 * 
+	 * @param pageRequest
+	 * @return Page
+	 */
+	public Page<HealthOperatorDTO> getListOfHealthOperator(HealthOperatorFilters filters, Pageable pageRequest) {
+		logger.info("Inicinado busca filtrada por Operadoras de saúde");
+		return healthOperatorRepository.resumedList(filters, pageRequest);
+	}
 
-        HealthOperatorInfoDTO healthOperatorInfoDTO = new HealthOperatorInfoDTO();
+	/**
+	 * Busca os detalhes de uma operadora de plano de saúde
+	 * 
+	 * @param id
+	 * @return HealthOperatorInfoDTO
+	 */
+	public HealthOperatorInfoDTO findByHealthOperatorId(Long id) {
+		HealthOperator healthOperator = healthOperatorRepository.findById(id)
+				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+						String.format("Operadora com o identificador %s não encontrado", id)));
+		List<HealthPlan> plans = healthOperator.getHealthPlans();
+		List<HealthPlanDTO> plansDTO = new ArrayList<>();
 
-        plans.forEach(plan -> {
-            HealthPlanDTO newHealthPlanDTO = new HealthPlanDTO();
-            BeanUtils.copyProperties(plan, newHealthPlanDTO);
-            plansDTO.add(newHealthPlanDTO);
-        });
+		HealthOperatorInfoDTO healthOperatorInfoDTO = new HealthOperatorInfoDTO();
 
-        healthOperatorInfoDTO.setHealthPlans(plansDTO);
+		plans.forEach(plan -> {
+			HealthPlanDTO newHealthPlanDTO = new HealthPlanDTO();
+			BeanUtils.copyProperties(plan, newHealthPlanDTO);
+			plansDTO.add(newHealthPlanDTO);
+		});
 
-        return healthOperatorInfoDTO;
-    }
+		healthOperatorInfoDTO.setHealthPlans(plansDTO);
+
+		return healthOperatorInfoDTO;
+	}
+
+	/**
+	 * Busca o plano de saúde pelo identificador único
+	 * 
+	 * @param id Identificador único do plano de saúde
+	 * @return
+	 */
+	public HealthPlanDTO findHealthPlanById(Long id) {
+		logger.info("Iniciando busca de plano de saúde por id :: {}", id);
+		if (id == null) {
+			throw new HttpException(HttpStatus.BAD_REQUEST, "Informe o identificador único do plano para a pesquisa");
+		}
+		HealthPlanDTO response = new HealthPlanDTO();
+		HealthPlan objectFromDB = healthPlanRepository.findById(id)
+				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+						String.format("Plano de saúde com o identificador %s não encontrado", id)));
+
+		BeanUtils.copyProperties(objectFromDB, response);
+		logger.info("Plano encontrado :: {}", response);
+
+		return response;
+	}
+
+	/**
+	 * Busca o plando de saúde pelo código da ANS
+	 * 
+	 * @param ansCode Código ANS do plano de saúde
+	 * @return
+	 */
+	public HealthPlanDTO findHealthPlanByAnsCode(Long ansCode) {
+		if (ansCode == null) {
+			throw new HttpException(HttpStatus.BAD_REQUEST, "Informe o código da ANS do plano para a pesquisa");
+		}
+		HealthPlanDTO response = new HealthPlanDTO();
+		HealthPlan objectFromDB = healthPlanRepository.findByPlanCode(ansCode)
+				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+						String.format("Plano de saúde com o código ANS %s não encontrado", ansCode)));
+
+		BeanUtils.copyProperties(objectFromDB, response);
+		logger.info("Plano encontrado :: {}", response);
+
+		return response;
+	}
 
 }

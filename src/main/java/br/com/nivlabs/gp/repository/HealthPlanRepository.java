@@ -17,8 +17,7 @@ import br.com.nivlabs.gp.models.domain.HealthPlan;
  */
 @Repository
 public interface HealthPlanRepository extends JpaRepository<HealthPlan, Long> {
-	
-	
+
 	public Optional<HealthPlan> findByPlanCode(Long planCode);
 
 }
