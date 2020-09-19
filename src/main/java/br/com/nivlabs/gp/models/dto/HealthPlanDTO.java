@@ -13,7 +13,7 @@ public class HealthPlanDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Identificador único  do plano")
     private Long id;
-    
+
     @ApiModelProperty("Código da operadora do plano")
     private String operatorCode;
 
