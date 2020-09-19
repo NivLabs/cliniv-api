@@ -33,37 +33,37 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/health-operator")
 public class HealthOperatorController {
 
-	@Autowired
-	private HealthOperatorService service;
+    @Autowired
+    private HealthOperatorService service;
 
-	@ApiOperation(nickname = "health-operator-get", value = "Busca uma página de operadoras de plano de saúde")
-	@GetMapping
-	@PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-	public ResponseEntity<Page<HealthOperatorDTO>> findPage(HealthOperatorFilters filters) {
-		Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
-				Direction.valueOf(filters.getDirection()), filters.getOrderBy());
-		return ResponseEntity.ok(service.getListOfHealthOperator(filters, pageSettings));
-	}
+    @ApiOperation(nickname = "health-operator-get", value = "Busca uma página de operadoras de plano de saúde")
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    public ResponseEntity<Page<HealthOperatorDTO>> findPage(HealthOperatorFilters filters) {
+        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
+                                               Direction.valueOf(filters.getDirection()), filters.getOrderBy());
+        return ResponseEntity.ok(service.getListOfHealthOperator(filters, pageSettings));
+    }
 
-	@ApiOperation(nickname = "health-operator-get-id", value = "Busca uma operadora baseada no identificador")
-	@GetMapping("/{id}")
-	@PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-	public ResponseEntity<HealthOperatorInfoDTO> findById(@PathVariable("id") Long id) {
-		return ResponseEntity.ok(service.findByHealthOperatorId(id));
-	}
+    @ApiOperation(nickname = "health-operator-get-id", value = "Busca uma operadora baseada no identificador")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    public ResponseEntity<HealthOperatorInfoDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findByHealthOperatorId(id));
+    }
 
-	@ApiOperation(nickname = "health-plan-get-id", value = "Busca um plano de saúde baseada no identificador")
-	@GetMapping("/health-plan/{id}")
-	@PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-	public ResponseEntity<HealthPlanDTO> findHealthPlanById(@PathVariable("id") Long id) {
-		return ResponseEntity.ok(service.findHealthPlanById(id));
-	}
+    @ApiOperation(nickname = "health-plan-get-id", value = "Busca um plano de saúde baseada no identificador")
+    @GetMapping("/health-plan/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    public ResponseEntity<HealthPlanDTO> findHealthPlanById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findHealthPlanById(id));
+    }
 
-	@ApiOperation(nickname = "health-plan-get-ansCode", value = "Busca um plano de saúde baseada no código da ANS")
-	@GetMapping("/health-plan/ansCode/{ansCode}")
-	@PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-	public ResponseEntity<HealthPlanDTO> findHealthPlanByAnsCode(@PathVariable("ansCode") Long ansCode) {
-		return ResponseEntity.ok(service.findHealthPlanByAnsCode(ansCode));
-	}
+    @ApiOperation(nickname = "health-plan-get-ansCode", value = "Busca um plano de saúde baseada no código da ANS")
+    @GetMapping("/health-plan/ansCode/{ansCode}")
+    @PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    public ResponseEntity<HealthPlanDTO> findHealthPlanByAnsCode(@PathVariable("ansCode") Long ansCode) {
+        return ResponseEntity.ok(service.findHealthPlanByAnsCode(ansCode));
+    }
 
 }
