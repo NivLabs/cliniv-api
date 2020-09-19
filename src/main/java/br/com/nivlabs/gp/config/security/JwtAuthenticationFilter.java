@@ -31,64 +31,65 @@ import br.com.nivlabs.gp.models.dto.CredentialsDTO;
  */
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private AuthenticationManager authenticationManager;
-    private JwtUtils jwtUtils;
+	private AuthenticationManager authenticationManager;
+	private JwtUtils jwtUtils;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
-        super();
-        setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
-        this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
-    }
+	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+		super();
+		setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
+		this.authenticationManager = authenticationManager;
+		this.jwtUtils = jwtUtils;
+	}
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
-        try {
-            CredentialsDTO cred = new ObjectMapper().readValue(request.getInputStream(), CredentialsDTO.class);
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException {
+		try {
+			CredentialsDTO cred = new ObjectMapper().readValue(request.getInputStream(), CredentialsDTO.class);
 
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(cred.getUsername().toUpperCase(),
-                    cred.getPassword(), new ArrayList<>());
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+					cred.getUsername().toUpperCase(), cred.getPassword(), new ArrayList<>());
 
-            return authenticationManager.authenticate(authToken);
-        } catch (IOException e) {
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha interna na autenticação");
-        }
-    }
+			return authenticationManager.authenticate(authToken);
+		} catch (IOException e) {
+			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha interna na autenticação");
+		}
+	}
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-                                            Authentication authResult)
-            throws IOException, ServletException {
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+			Authentication authResult) throws IOException, ServletException {
 
-        UserOfSystem user = ((UserOfSystem) authResult.getPrincipal());
+		UserOfSystem user = ((UserOfSystem) authResult.getPrincipal());
 
-        String token = jwtUtils.generateToken(user);
+		String token = jwtUtils.generateToken(user);
 
-        response.addHeader("Authorization", "Bearer " + token);
-        response.addHeader("access-control-expose-headers", "Authorization");
-    }
+		response.addHeader("Authorization", "Bearer " + token);
+		response.addHeader("access-control-expose-headers", "Authorization");
+	}
 
-    private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
+	private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-        @Override
-        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-                                            AuthenticationException exception)
-                throws IOException, ServletException {
-            response.setStatus(401);
-            response.setContentType("application/json;charset=utf-8");
-            response.getWriter().append(json());
-        }
+		@Override
+		public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+				AuthenticationException exception) throws IOException, ServletException {
+			response.setStatus(401);
+			response.setContentType("application/json;charset=utf-8");
+			response.getWriter().append(json());
+		}
 
-        private String json() {
-            long date = new Date().getTime();
-            return "{"
-                    + "\"timestamp\": " + date + ", "
-                    + "\"status\": 401, "
-                    + "\"error\": \"Não autorizado\", "
-                    + "\"message\": \"Usuário e/ou senha inválido(s)\", "
-                    + "\"path\": \"/login\""
-                    + "}";
-        }
-    }
+		private String json() {
+			String returnObject = """
+					{
+					   "timestamp": "$DATE",
+					   "status": "401",
+					   "error": "Não autorizado",
+					   "message": "Usuário e/ou senha inválido(s)",
+					   "path": "login"
+					}
+					""";
+			return returnObject.replace("$DATE", String.valueOf(new Date().getTime()));
+		}
+	}
+
 }

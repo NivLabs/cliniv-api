@@ -47,7 +47,6 @@ public class Evolution extends BaseObjectWithId {
 
     public Evolution() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
     public Evolution(Long id, Attendance attendance, String description, LocalDateTime datetime) {
