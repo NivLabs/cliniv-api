@@ -102,6 +102,8 @@ public class HealthOperatorService implements GenericService {
 						String.format("Plano de saúde com o identificador %s não encontrado", id)));
 
 		BeanUtils.copyProperties(objectFromDB, response);
+		response.setOperatorCode(objectFromDB.getHealthOperator().getAnsCode());
+		response.setOperatorName(objectFromDB.getHealthOperator().getCompanyName());
 		logger.info("Plano encontrado :: {}", response);
 
 		return response;
@@ -123,6 +125,8 @@ public class HealthOperatorService implements GenericService {
 						String.format("Plano de saúde com o código ANS %s não encontrado", ansCode)));
 
 		BeanUtils.copyProperties(objectFromDB, response);
+		response.setOperatorCode(objectFromDB.getHealthOperator().getAnsCode());
+		response.setOperatorName(objectFromDB.getHealthOperator().getCompanyName());
 		logger.info("Plano encontrado :: {}", response);
 
 		return response;
