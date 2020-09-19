@@ -96,15 +96,11 @@ public class HealthOperatorService implements GenericService {
 		if (id == null) {
 			throw new HttpException(HttpStatus.BAD_REQUEST, "Informe o identificador único do plano para a pesquisa");
 		}
-		HealthPlanDTO response = new HealthPlanDTO();
 		HealthPlan objectFromDB = healthPlanRepository.findById(id)
 				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
 						String.format("Plano de saúde com o identificador %s não encontrado", id)));
 
-		BeanUtils.copyProperties(objectFromDB, response);
-		logger.info("Plano encontrado :: {}", response);
-
-		return response;
+		return convertSearchHealthPlanObject(objectFromDB);
 	}
 
 	/**
@@ -117,15 +113,26 @@ public class HealthOperatorService implements GenericService {
 		if (ansCode == null) {
 			throw new HttpException(HttpStatus.BAD_REQUEST, "Informe o código da ANS do plano para a pesquisa");
 		}
-		HealthPlanDTO response = new HealthPlanDTO();
 		HealthPlan objectFromDB = healthPlanRepository.findByPlanCode(ansCode)
 				.orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
 						String.format("Plano de saúde com o código ANS %s não encontrado", ansCode)));
 
-		BeanUtils.copyProperties(objectFromDB, response);
-		logger.info("Plano encontrado :: {}", response);
-
-		return response;
+		return convertSearchHealthPlanObject(objectFromDB);
 	}
 
+	/**
+	 * Converte um objeto de domínio para um DTO
+	 * 
+	 * @param objectFromDB Objeto de domínio
+	 * @return DTO de resposta
+	 */
+	private HealthPlanDTO convertSearchHealthPlanObject(HealthPlan objectFromDB) {
+
+		HealthPlanDTO response = new HealthPlanDTO();
+		BeanUtils.copyProperties(objectFromDB, response);
+		response.setOperatorCode(objectFromDB.getHealthOperator().getAnsCode());
+		response.setOperatorName(objectFromDB.getHealthOperator().getCompanyName());
+		logger.info("Plano encontrado :: {}", response);
+		return response;
+	}
 }
