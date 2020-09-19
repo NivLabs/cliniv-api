@@ -23,44 +23,44 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private JwtUtils jwtUtils;
-    private UserDetailsService userDetailsService;
+	private JwtUtils jwtUtils;
+	private UserDetailsService userDetailsService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
-            UserDetailsService userDetailsService) {
-        super(authenticationManager);
-        this.jwtUtils = jwtUtils;
-        this.userDetailsService = userDetailsService;
-    }
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
+			UserDetailsService userDetailsService) {
+		super(authenticationManager);
+		this.jwtUtils = jwtUtils;
+		this.userDetailsService = userDetailsService;
+	}
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain)
-            throws IOException, ServletException {
+	@Override
+	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain)
+			throws IOException, ServletException {
 
-        String authorizationHeader = req.getHeader("Authorization");
+		String authorizationHeader = req.getHeader("Authorization");
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            UsernamePasswordAuthenticationToken auth = getAuthentication(authorizationHeader.substring(7));
+		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+			UsernamePasswordAuthenticationToken auth = getAuthentication(authorizationHeader.substring(7));
 
-            if (auth != null)
-                SecurityContextHolder.getContext().setAuthentication(auth);
-        }
+			if (auth != null)
+				SecurityContextHolder.getContext().setAuthentication(auth);
+		}
 
-        filterChain.doFilter(req, resp);
-    }
+		filterChain.doFilter(req, resp);
+	}
 
-    /**
-     * Pega informações do token
-     * 
-     * @param token
-     * @return
-     */
-    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        if (jwtUtils.isValidToken(token)) {
-            String userName = jwtUtils.getUserName(token);
-            UserDetails user = userDetailsService.loadUserByUsername(userName);
-            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-        }
-        return null;
-    }
+	/**
+	 * Pega informações do token
+	 * 
+	 * @param token
+	 * @return
+	 */
+	private UsernamePasswordAuthenticationToken getAuthentication(String token) {
+		if (jwtUtils.isValidToken(token)) {
+			String userName = jwtUtils.getUserName(token);
+			UserDetails user = userDetailsService.loadUserByUsername(userName);
+			return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+		}
+		return null;
+	}
 }
