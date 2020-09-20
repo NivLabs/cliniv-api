@@ -16,6 +16,7 @@ import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
+import br.com.nivlabs.gp.models.domain.AttendanceEvent_;
 import br.com.nivlabs.gp.models.domain.EventType;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
@@ -57,7 +58,7 @@ public class AttendanceEventService implements GenericService {
 
     public AttendanceEvent update(Long id, AttendanceEvent entity) {
         AttendanceEvent auxEntity = findById(id);
-        BeanUtils.copyProperties(entity, auxEntity, "id");
+        BeanUtils.copyProperties(entity, auxEntity, AttendanceEvent_.ID);
         return dao.save(auxEntity);
     }
 

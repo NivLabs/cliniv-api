@@ -19,6 +19,7 @@ import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
+import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.Role;
 import br.com.nivlabs.gp.models.domain.UserApplication;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
@@ -60,7 +61,7 @@ public class UserService {
         UserInfoDTO responseDTO = new UserInfoDTO();
 
         Person person = entityFromDb.getPerson();
-        BeanUtils.copyProperties(person, responseDTO, "id");
+        BeanUtils.copyProperties(person, responseDTO, Person_.ID);
         BeanUtils.copyProperties(entityFromDb, responseDTO);
         responseDTO.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
@@ -153,7 +154,7 @@ public class UserService {
      * @return
      */
     private Person getPersonFromUserInfo(Person personToUpdate, UserInfoDTO entity) {
-        BeanUtils.copyProperties(entity, personToUpdate, "id");
+        BeanUtils.copyProperties(entity, personToUpdate, Person_.ID);
         if (entity.getAddress() != null) {
             if (personToUpdate.getAddress() == null) {
                 PersonAddress newAddress = new PersonAddress();
@@ -175,7 +176,7 @@ public class UserService {
         Person personFromDb = personService.findByCpf(cpf);
 
         UserInfoDTO userInfo = new UserInfoDTO();
-        BeanUtils.copyProperties(personFromDb, userInfo, "id");
+        BeanUtils.copyProperties(personFromDb, userInfo, Person_.ID);
         userInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
 
         if (personFromDb.getAddress() != null) {
@@ -194,7 +195,7 @@ public class UserService {
             Person personFromDb = user.getPerson();
 
             UserInfoDTO userInfo = new UserInfoDTO();
-            BeanUtils.copyProperties(personFromDb, userInfo, "id");
+            BeanUtils.copyProperties(personFromDb, userInfo, Person_.ID);
             BeanUtils.copyProperties(user, userInfo);
             userInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
 
@@ -246,7 +247,7 @@ public class UserService {
         Person personFromDb = getValidPerson(entity);
 
         logger.info("Copiando as propriedades da requisição para o obijeto de negócio...");
-        BeanUtils.copyProperties(entity, personFromDb, "id");
+        BeanUtils.copyProperties(entity, personFromDb, Person_.ID);
         personFromDb.setCpf(entity.getDocument().getValue());
 
         logger.info("Verificando e-mail");

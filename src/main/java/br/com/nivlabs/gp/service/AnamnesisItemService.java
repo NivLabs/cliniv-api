@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.AnamnesisItem;
+import br.com.nivlabs.gp.models.domain.AnamnesisItem_;
 import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
 import br.com.nivlabs.gp.repository.AnamnesisItemRepository;
 
@@ -47,7 +48,7 @@ public class AnamnesisItemService implements GenericService {
 
     public AnamnesisItem update(Long id, AnamnesisItem entity) {
         AnamnesisItem anamnesisItem = findById(id);
-        BeanUtils.copyProperties(entity, anamnesisItem, "id");
+        BeanUtils.copyProperties(entity, anamnesisItem, AnamnesisItem_.ID);
         return dao.save(anamnesisItem);
     }
 

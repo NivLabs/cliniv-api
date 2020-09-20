@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
+import br.com.nivlabs.gp.models.domain.Anamnesis_;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
@@ -104,7 +105,7 @@ public class AnamnesisService implements GenericService {
 
     public Anamnesis update(Long id, Anamnesis entity) {
         Anamnesis anamnese = findById(id);
-        BeanUtils.copyProperties(entity, anamnese, "id");
+        BeanUtils.copyProperties(entity, anamnese, Anamnesis_.ID);
         return anamnese;
     }
 

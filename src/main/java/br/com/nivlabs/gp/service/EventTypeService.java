@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.EventType;
+import br.com.nivlabs.gp.models.domain.EventType_;
 import br.com.nivlabs.gp.repository.EventTypeRepository;
 
 /**
@@ -37,7 +38,7 @@ public class EventTypeService implements GenericService {
 
     public EventType update(Long id, EventType entity) {
         EventType auxEntity = findById(id);
-        BeanUtils.copyProperties(entity, auxEntity, "id");
+        BeanUtils.copyProperties(entity, auxEntity, EventType_.ID);
         return dao.save(auxEntity);
     }
 

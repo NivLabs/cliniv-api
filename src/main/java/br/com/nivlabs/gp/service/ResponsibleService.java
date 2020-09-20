@@ -16,7 +16,9 @@ import br.com.nivlabs.gp.controller.filters.ResponsibleFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Person;
+import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.Responsible;
+import br.com.nivlabs.gp.models.domain.Responsible_;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.ProfessionalIdentityDTO;
@@ -80,7 +82,7 @@ public class ResponsibleService {
         Person personFromDb = personService.findByCpf(cpf);
 
         ResponsibleInfoDTO responsibleInfo = new ResponsibleInfoDTO();
-        BeanUtils.copyProperties(personFromDb, responsibleInfo, "id");
+        BeanUtils.copyProperties(personFromDb, responsibleInfo, Person_.ID);
         responsibleInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
 
         if (personFromDb.getAddress() != null) {
@@ -102,7 +104,7 @@ public class ResponsibleService {
         Person person = responsibleOrigin.getPerson();
 
         ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
-        BeanUtils.copyProperties(responsibleOrigin.getPerson(), responsibleConverted, "id");
+        BeanUtils.copyProperties(responsibleOrigin.getPerson(), responsibleConverted, Person_.ID);
         BeanUtils.copyProperties(responsibleOrigin, responsibleConverted);
         responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
@@ -155,7 +157,7 @@ public class ResponsibleService {
         Responsible responsibleFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format(RESPONSIBLE_NOT_FOUND, id)));
 
-        BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), "id", "createdAt");
+        BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), Responsible_.ID, Responsible_.CREATED_AT);
         if (responsible.getProfessionalIdentity() != null) {
             responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
             responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());
@@ -229,7 +231,7 @@ public class ResponsibleService {
             personFromDb = new Person();
         }
 
-        BeanUtils.copyProperties(responsible, personFromDb, "id");
+        BeanUtils.copyProperties(responsible, personFromDb, Responsible_.ID);
         if (responsible.getProfessionalIdentity() != null) {
             responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
             responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());

@@ -271,7 +271,7 @@ public class AttendanceEvent extends BaseObjectWithId {
         List<DigitalDocumentDTO> returnList = new ArrayList<>();
         documents.forEach(doc -> {
             DigitalDocumentDTO docToList = new DigitalDocumentDTO();
-            BeanUtils.copyProperties(doc, docToList, "base64");
+            BeanUtils.copyProperties(doc, docToList, DigitalDocument_.BASE64);
             returnList.add(docToList);
         });
         return returnList;
