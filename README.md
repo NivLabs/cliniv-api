@@ -57,7 +57,7 @@ Atualmente encontra-se na versão 1.0.0
 
 Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles:
 
-- Java 14 + **(Obrigatório)**
+- Java 15 + **(Obrigatório)**
 - MariaDB Server 10.3+ **(Obrigatório se não for rodar via docker)**
 - Lombok 1.18.0 + **(Obrigatório)**
 - Eclipse ou STS **(Obrigatório)**

@@ -42,74 +42,74 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping(value = "/sector")
 public class SectorController {
 
-	@Autowired
-	private SectorService service;
+    @Autowired
+    private SectorService service;
 
-	@Autowired
-	private ApplicationEventPublisher publisher;
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
-	@ApiOperation(nickname = "sector-get", value = "Busca uma página de setores")
-	@GetMapping
-	@PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
-	public ResponseEntity<Page<SectorDTO>> getPageSectors(SectorFilters filters) {
-		Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
-				Direction.valueOf(filters.getDirection()), filters.getOrderBy());
-		return ResponseEntity.ok(service.getPageWithFilter(filters, pageSettings));
-	}
+    @ApiOperation(nickname = "sector-get", value = "Busca uma página de setores")
+    @GetMapping
+    @PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
+    public ResponseEntity<Page<SectorDTO>> getPageSectors(SectorFilters filters) {
+        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
+                                               Direction.valueOf(filters.getDirection()), filters.getOrderBy());
+        return ResponseEntity.ok(service.getPageWithFilter(filters, pageSettings));
+    }
 
-	@ApiOperation(nickname = "sector-post", value = "Insere um novo setor na aplicação")
-	@PostMapping
-	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-	public ResponseEntity<SectorDTO> persist(@Validated @RequestBody(required = true) SectorDTO newsector,
-			HttpServletResponse response) {
-		SectorDTO createdsector = service.persist(newsector);
+    @ApiOperation(nickname = "sector-post", value = "Insere um novo setor na aplicação")
+    @PostMapping
+    @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+    public ResponseEntity<SectorInfoDTO> persist(@Validated @RequestBody(required = true) SectorInfoDTO newsector,
+                                                 HttpServletResponse response) {
+        SectorInfoDTO createdsector = service.persist(newsector);
 
-		publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
+        publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
 
-		return ResponseEntity.status(HttpStatus.CREATED).body(createdsector);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdsector);
 
-	}
+    }
 
-	@ApiOperation(nickname = "sector-put", value = "Atualiza um setor na aplicação")
-	@PutMapping("/{id}")
-	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-	public ResponseEntity<SectorInfoDTO> update(@PathVariable("id") Long id,
-			@Validated @RequestBody(required = true) SectorInfoDTO sector) {
-		return ResponseEntity.ok().body(service.update(id, sector));
-	}
+    @ApiOperation(nickname = "sector-put", value = "Atualiza um setor na aplicação")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+    public ResponseEntity<SectorInfoDTO> update(@PathVariable("id") Long id,
+                                                @Validated @RequestBody(required = true) SectorInfoDTO sector) {
+        return ResponseEntity.ok().body(service.update(id, sector));
+    }
 
-	@ApiOperation(nickname = "room-or-bet-put", value = "Atualiza uma sala (ambulatório) ou leito na aplicação")
-	@PutMapping("/room-or-bed/{id}")
-	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-	public ResponseEntity<AccommodationDTO> updateRoomOrBed(@PathVariable("id") Long id,
-			@Validated @RequestBody(required = true) AccommodationDTO request) {
-		return ResponseEntity.ok().body(service.updateRoomOrBedDTO(id, request));
-	}
+    @ApiOperation(nickname = "room-or-bet-put", value = "Atualiza uma sala (ambulatório) ou leito na aplicação")
+    @PutMapping("/room-or-bed/{id}")
+    @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+    public ResponseEntity<AccommodationDTO> updateRoomOrBed(@PathVariable("id") Long id,
+                                                            @Validated @RequestBody(required = true) AccommodationDTO request) {
+        return ResponseEntity.ok().body(service.updateRoomOrBedDTO(id, request));
+    }
 
-	@ApiOperation(nickname = "room-or-bet-post", value = "Cria uma sala (ambulatório) ou leito na aplicação")
-	@PostMapping("/room-or-bed")
-	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-	public ResponseEntity<AccommodationDTO> persist(@Validated @RequestBody(required = true) AccommodationDTO request,
-			HttpServletResponse response) {
-		AccommodationDTO createdsector = service.persist(request);
+    @ApiOperation(nickname = "room-or-bet-post", value = "Cria uma sala (ambulatório) ou leito na aplicação")
+    @PostMapping("/room-or-bed")
+    @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+    public ResponseEntity<AccommodationDTO> persist(@Validated @RequestBody(required = true) AccommodationDTO request,
+                                                    HttpServletResponse response) {
+        AccommodationDTO createdsector = service.persist(request);
 
-		publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
+        publisher.publishEvent(new CreatedResourceEvent(this, response, createdsector.getId()));
 
-		return ResponseEntity.ok().body(createdsector);
-	}
+        return ResponseEntity.ok().body(createdsector);
+    }
 
-	@ApiOperation(nickname = "room-or-bet-delete", value = "Deleta uma sala (ambulatório) ou leito na aplicação")
-	@DeleteMapping("/room-or-bed/{id}")
-	@PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
-	public ResponseEntity<Void> deleteRoomOrBed(@PathVariable("id") Long id) {
-		service.deleteRoomOrBed(id);
-		return ResponseEntity.noContent().build();
-	}
+    @ApiOperation(nickname = "room-or-bet-delete", value = "Deleta uma sala (ambulatório) ou leito na aplicação")
+    @DeleteMapping("/room-or-bed/{id}")
+    @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
+    public ResponseEntity<Void> deleteRoomOrBed(@PathVariable("id") Long id) {
+        service.deleteRoomOrBed(id);
+        return ResponseEntity.noContent().build();
+    }
 
-	@ApiOperation(nickname = "sector-get-id", value = "Busca um setor baseado no identificador")
-	@GetMapping("/{id}")
-	@PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
-	public ResponseEntity<SectorInfoDTO> findById(@PathVariable("id") Long id) {
-		return ResponseEntity.ok(service.findInfoById(id));
-	}
+    @ApiOperation(nickname = "sector-get-id", value = "Busca um setor baseado no identificador")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
+    public ResponseEntity<SectorInfoDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findInfoById(id));
+    }
 }
