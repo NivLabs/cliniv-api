@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
+import br.com.nivlabs.gp.models.domain.PersonAddress_;
 import br.com.nivlabs.gp.repository.PersonAddressRepository;
 
 /**
@@ -37,7 +38,7 @@ public class PersonAddressService implements GenericService {
 
     public PersonAddress update(Long id, PersonAddress entity) {
         PersonAddress auxEntity = findById(id);
-        BeanUtils.copyProperties(entity, auxEntity, "id");
+        BeanUtils.copyProperties(entity, auxEntity, PersonAddress_.ID);
         return dao.save(auxEntity);
     }
 

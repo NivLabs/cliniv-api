@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Person;
+import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.repository.PersonRepository;
 import br.com.nivlabs.gp.util.StringUtils;
 
@@ -36,7 +37,7 @@ public class PersonService implements GenericService {
 
     public Person update(Long id, Person entity) {
         Person person = findById(id);
-        BeanUtils.copyProperties(entity, person, "id");
+        BeanUtils.copyProperties(entity, person, Person_.ID);
         if (StringUtils.isNullOrEmpty(entity.getCpf()))
             person.setCpf(null);
         person = dao.save(person);

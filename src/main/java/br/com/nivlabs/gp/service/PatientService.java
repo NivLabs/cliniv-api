@@ -22,6 +22,7 @@ import br.com.nivlabs.gp.models.domain.PatientAllergy;
 import br.com.nivlabs.gp.models.domain.Patient_;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
+import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
@@ -74,7 +75,7 @@ public class PatientService implements GenericService {
         Person person = patient.getPerson();
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
-        BeanUtils.copyProperties(person, patientInfo, "id");
+        BeanUtils.copyProperties(person, patientInfo, Person_.ID);
         patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
 
         if (person.getAddress() != null) {
@@ -122,7 +123,7 @@ public class PatientService implements GenericService {
         Person personFromDb = personService.findByCpf(cpf);
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
-        BeanUtils.copyProperties(personFromDb, patientInfo, "id");
+        BeanUtils.copyProperties(personFromDb, patientInfo, Person_.ID);
         patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
 
         if (personFromDb.getAddress() != null) {
@@ -264,7 +265,7 @@ public class PatientService implements GenericService {
         Person personFromDb = getValidPerson(entity);
 
         logger.info("Copiando as propriedades da requisição para o objeto de negócio...");
-        BeanUtils.copyProperties(entity, personFromDb, "id");
+        BeanUtils.copyProperties(entity, personFromDb, Person_.ID);
         personFromDb.setCpf(entity.getDocument().getValue());
 
         addressProcess(entity, personFromDb);

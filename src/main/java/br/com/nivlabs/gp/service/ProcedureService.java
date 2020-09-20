@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.controller.filters.ProcedureFilters;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
+import br.com.nivlabs.gp.models.domain.tiss.Procedure_;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
 import br.com.nivlabs.gp.repository.ProcedureRepository;
 
@@ -39,7 +40,7 @@ public class ProcedureService implements GenericService {
 
     public Procedure update(Long id, Procedure entity) {
         Procedure procedureOrEvent = findById(id);
-        BeanUtils.copyProperties(entity, procedureOrEvent, "id");
+        BeanUtils.copyProperties(entity, procedureOrEvent, Procedure_.ID);
         return dao.save(procedureOrEvent);
     }
 
