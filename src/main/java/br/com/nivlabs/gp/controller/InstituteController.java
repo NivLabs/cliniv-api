@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.service.InstituteService;
@@ -68,10 +69,10 @@ public class InstituteController {
 			instituteService.setCustomerInfoCrypto(file);
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
 			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível ler o arquivo de licença");
 		} catch (IOException e) {
 			logger.error(e.getMessage());
-			return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).build();
+			throw new HttpException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Não foi possível ler o arquivo de licença");
 		} 
         return ResponseEntity.ok().build();
     }
