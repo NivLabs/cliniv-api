@@ -1,13 +1,28 @@
 package br.com.nivlabs.gp.service;
 
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Institute;
@@ -40,6 +55,9 @@ public class InstituteService implements GenericService {
 
     @Autowired
     private ParameterRepository paramRepo;
+    
+    @Value("${secret-key.property}")
+    private String secretKey;
 
     public InstituteDTO getSettings() {
 
@@ -89,4 +107,56 @@ public class InstituteService implements GenericService {
             logger.info("Logo Inserida");
         }
     }
+    
+    public void setCustomerInfoCrypto(FileDTO file) throws JsonProcessingException, JsonMappingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException, IllegalBlockSizeException, BadPaddingException {
+        if (file == null || StringUtils.isNullOrEmpty(file.getBase64()))
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A propriedade de Base64 do arquivo não pode ser nula");
+        
+        Cipher cipher = Cipher.getInstance("AES");
+        SecretKeySpec  key = new SecretKeySpec (this.secretKey.getBytes(), "AES");
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        
+        String decrypted;
+        byte[] decoded;
+        logger.debug("Descryptografando arquivo");
+        decoded = Base64.decodeBase64(file.getBase64().getBytes());
+        decrypted = new String(cipher.doFinal(decoded));
+        logger.debug("Arquivo descryptografado");
+        CustomerInfoDTO customerInfoDTO;
+        logger.debug("Convertendo json em objeto");
+        try {
+        	customerInfoDTO = new ObjectMapper().readValue(decrypted, CustomerInfoDTO.class);
+		} catch (JsonProcessingException e) {
+			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A propriedade de Base64 do arquivo não é um json válido");
+		}
+        logger.debug("Json convertido em objeto");
+        InstituteDTO instituteDTO = getSettings();
+        
+        if (instituteDTO == null) {
+        	Institute institute = new Institute();
+        	BeanUtils.copyProperties(customerInfoDTO, institute);
+        	logger.debug("Vai inserir objeto");
+        	this.instituteRepo.save(institute);
+        } else {
+        	BeanUtils.copyProperties(customerInfoDTO, instituteDTO);
+        	logger.debug("Vai inserir objeto");
+        	persist(instituteDTO);
+        }
+        
+    }
+    
+	public InstituteDTO persist(InstituteDTO instituteDTO) {
+		logger.debug("persist");
+		Institute institute = new Institute();
+        CustomerInfoDTO customer = instituteDTO.getCustomerInfo();
+        AddressDTO address = customer.getAddress();
+        LicenseDTO license = customer.getLicense();
+        BeanUtils.copyProperties(address, institute);
+        BeanUtils.copyProperties(customer, institute);
+        BeanUtils.copyProperties(license, institute);
+
+        this.instituteRepo.save(institute);
+		return instituteDTO;
+	}
+    
 }
