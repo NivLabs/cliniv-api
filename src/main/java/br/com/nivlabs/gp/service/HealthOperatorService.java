@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.controller.filters.HealthOperatorFilters;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.HealthOperator;
+import br.com.nivlabs.gp.models.domain.HealthOperator_;
 import br.com.nivlabs.gp.models.domain.HealthPlan;
 import br.com.nivlabs.gp.models.dto.HealthOperatorDTO;
 import br.com.nivlabs.gp.models.dto.HealthOperatorInfoDTO;
@@ -66,6 +67,7 @@ public class HealthOperatorService implements GenericService {
      * @return HealthOperatorInfoDTO
      */
     public HealthOperatorInfoDTO findByHealthOperatorId(Long id) {
+        logger.info("Iniciando busca de operadora por identificador único interno :: {}", id);
         HealthOperator healthOperator = healthOperatorRepository.findById(id)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                         String.format("Operadora com o identificador %s não encontrado", id)));
@@ -74,6 +76,7 @@ public class HealthOperatorService implements GenericService {
 
         HealthOperatorInfoDTO healthOperatorInfoDTO = new HealthOperatorInfoDTO();
 
+        BeanUtils.copyProperties(healthOperator, healthOperatorInfoDTO, HealthOperator_.HEALTH_PLANS);
         plans.forEach(plan -> {
             HealthPlanDTO newHealthPlanDTO = new HealthPlanDTO();
             BeanUtils.copyProperties(plan, newHealthPlanDTO);
