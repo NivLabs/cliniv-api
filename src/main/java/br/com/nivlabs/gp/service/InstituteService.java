@@ -1,6 +1,5 @@
 package br.com.nivlabs.gp.service;
 
-import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -21,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.nivlabs.gp.exception.HttpException;
@@ -108,19 +106,35 @@ public class InstituteService implements GenericService {
         }
     }
     
-    public void setCustomerInfoCrypto(FileDTO file) throws JsonProcessingException, JsonMappingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IOException, IllegalBlockSizeException, BadPaddingException {
+    public void setCustomerInfoCrypto(FileDTO file) {
         if (file == null || StringUtils.isNullOrEmpty(file.getBase64()))
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A propriedade de Base64 do arquivo não pode ser nula");
         
-        Cipher cipher = Cipher.getInstance("AES");
+        Cipher cipher;
+		try {
+			cipher = Cipher.getInstance("AES");
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e1) {
+			logger.error(e1.getMessage());
+			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível ler o arquivo de licença");
+		}
         SecretKeySpec  key = new SecretKeySpec (this.secretKey.getBytes(), "AES");
-        cipher.init(Cipher.DECRYPT_MODE, key);
+        try {
+			cipher.init(Cipher.DECRYPT_MODE, key);
+		} catch (InvalidKeyException e1) {
+			logger.error(e1.getMessage());
+			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível ler o arquivo de licença");
+		}
         
-        String decrypted;
+        String decrypted = null;
         byte[] decoded;
         logger.debug("Descryptografando arquivo");
         decoded = Base64.decodeBase64(file.getBase64().getBytes());
-        decrypted = new String(cipher.doFinal(decoded));
+        try {
+			decrypted = new String(cipher.doFinal(decoded));
+		} catch (IllegalBlockSizeException | BadPaddingException e1) {
+			logger.error(e1.getMessage());
+			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível ler o arquivo de licença");
+		}
         logger.debug("Arquivo descryptografado");
         CustomerInfoDTO customerInfoDTO;
         logger.debug("Convertendo json em objeto");

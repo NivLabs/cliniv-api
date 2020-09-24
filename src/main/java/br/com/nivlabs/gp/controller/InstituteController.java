@@ -1,16 +1,7 @@
 package br.com.nivlabs.gp.controller;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.service.InstituteService;
@@ -41,7 +31,6 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/institute")
 public class InstituteController {
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
     @Autowired
     private InstituteService instituteService;
@@ -65,15 +54,7 @@ public class InstituteController {
     @PostMapping
     @PreAuthorize("hasAnyRole('INSTITUTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> uploadCustomInfoCrypto(@RequestBody(required = true) FileDTO file) {
-        try {
-			instituteService.setCustomerInfoCrypto(file);
-		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
-			logger.error(e.getMessage());
-			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível ler o arquivo de licença");
-		} catch (IOException e) {
-			logger.error(e.getMessage());
-			throw new HttpException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Não foi possível ler o arquivo de licença");
-		} 
+		instituteService.setCustomerInfoCrypto(file);
         return ResponseEntity.ok().build();
     }
     
