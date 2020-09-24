@@ -377,7 +377,7 @@ public class PatientService implements GenericService {
      */
     private void checkDocument(PatientInfoDTO entity) {
         if (entity.getDocument() != null && StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
-            entity.getDocument().setValue(null);
+            entity.setDocument(null);
         } else if (entity.getDocument() != null && !StringUtils.isNullOrEmpty(entity.getDocument().getValue()))
             patientCheckIfExistsByCpf(entity.getDocument().getValue());
     }
