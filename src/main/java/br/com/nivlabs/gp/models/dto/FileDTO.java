@@ -9,19 +9,19 @@ public class FileDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -4952673680887120451L;
 
-    @ApiModelProperty("Identificador único da imagem")
+    @ApiModelProperty("Identificador único do arquivo")
     private String id;
 
-    @ApiModelProperty("Nome da imagem")
+    @ApiModelProperty("Nome do arquivo")
     private String name;
 
-    @ApiModelProperty("Tipo da imagem")
+    @ApiModelProperty("Tipo do arquivo")
     private FileType type;
 
-    @ApiModelProperty("Base64 da imagem")
+    @ApiModelProperty("Base64 do arquivo")
     private String base64;
 
-    @ApiModelProperty("Url da imagem")
+    @ApiModelProperty("Url do arquivo")
     private String url;
 
     public String getId() {
