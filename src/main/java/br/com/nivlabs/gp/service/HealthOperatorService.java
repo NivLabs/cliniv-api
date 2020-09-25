@@ -138,4 +138,10 @@ public class HealthOperatorService implements GenericService {
         logger.info("Plano encontrado :: {}", response);
         return response;
     }
+
+    public HealthOperatorInfoDTO persist(HealthOperatorInfoDTO request) {
+        logger.info("Iniciando processo de cadastro de Operadora/Convênio de Saúde..");
+
+        return null;
+    }
 }

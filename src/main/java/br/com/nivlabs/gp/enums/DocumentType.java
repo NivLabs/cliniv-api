@@ -8,5 +8,5 @@ package br.com.nivlabs.gp.enums;
  * @since 3 de out de 2019
  */
 public enum DocumentType {
-    CPF, RG, PASSPORT, RNE, SUS
+    CPF, RG, PASSPORT, RNE, SUS, CNPJ
 }

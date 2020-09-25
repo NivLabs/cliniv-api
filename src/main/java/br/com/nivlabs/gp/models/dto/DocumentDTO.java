@@ -4,7 +4,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.http.HttpStatus;
+
 import br.com.nivlabs.gp.enums.DocumentType;
+import br.com.nivlabs.gp.exception.HttpException;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -21,11 +24,11 @@ public class DocumentDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8977997168527769344L;
 
-    @ApiModelProperty("Tipo do documento pessoal, ex: CPF, CNPJ, RG")
+    @ApiModelProperty("Tipo do documento pessoal, ex: CPF, CNPJ, RG, CNPJ")
     @NotNull(message = "O tipo do documeno deve ser informado")
     @NotEmpty(message = "O tipo do documeno deve ser informado")
     @NotBlank(message = "O tipo do documeno deve ser informado")
-    private DocumentType type;
+    private final DocumentType type;
 
     @ApiModelProperty("Valor do documento pessoal")
     @NotNull(message = "O documeno deve ser informado")
@@ -33,12 +36,9 @@ public class DocumentDTO extends DataTransferObjectBase {
     @NotBlank(message = "O documento deve ser informado")
     private String value;
 
-    public DocumentDTO() {
+    public DocumentDTO(final DocumentType type, final String value) {
         super();
-    }
-
-    public DocumentDTO(DocumentType type, String value) {
-        super();
+        checkDocumentTypeWithValuePattern(type, value);
         this.type = type;
         this.value = value;
     }
@@ -47,16 +47,8 @@ public class DocumentDTO extends DataTransferObjectBase {
         return type;
     }
 
-    public void setType(DocumentType type) {
-        this.type = type;
-    }
-
     public String getValue() {
         return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     @Override
@@ -90,6 +82,52 @@ public class DocumentDTO extends DataTransferObjectBase {
     @Override
     public String toString() {
         return "DocumentDTO [type=" + type + ", value=" + value + "]";
+    }
+
+    private void checkDocumentTypeWithValuePattern(DocumentType type, String value) {
+        switch (type) {
+            case RG:
+                checkRG(value);
+                break;
+            case CNPJ:
+                checkCNPJ(value);
+                break;
+            case CPF:
+                checkCPF(value);
+                break;
+            case PASSPORT, RNE, SUS:
+                break;
+            default:
+                throw new HttpException(HttpStatus.BAD_REQUEST, String.format("Tipo de documento inexistente :: %s", type));
+        }
+
+    }
+
+    /**
+     * Checa se o documento informado é um CPF válido
+     * 
+     * @param value Número do CPF
+     */
+    private void checkCPF(String value) {
+
+    }
+
+    /**
+     * Checa se o CNPJ é um CNPJ Válido
+     * 
+     * @param value Número do CNPJ
+     */
+    private void checkCNPJ(String value) {
+
+    }
+
+    /**
+     * Checa se a identidade é um documento válido
+     * 
+     * @param value
+     */
+    private void checkRG(String value) {
+
     }
 
 }

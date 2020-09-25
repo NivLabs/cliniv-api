@@ -1,21 +1,18 @@
 package br.com.nivlabs.gp.service;
 
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +30,7 @@ import br.com.nivlabs.gp.models.dto.LicenseDTO;
 import br.com.nivlabs.gp.models.dto.ParameterDTO;
 import br.com.nivlabs.gp.repository.InstituteRepository;
 import br.com.nivlabs.gp.repository.ParameterRepository;
+import br.com.nivlabs.gp.util.EncryptUtils;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
@@ -53,9 +51,6 @@ public class InstituteService implements GenericService {
 
     @Autowired
     private ParameterRepository paramRepo;
-    
-    @Value("${secret-key.property}")
-    private String secretKey;
 
     public InstituteDTO getSettings() {
 
@@ -105,63 +100,58 @@ public class InstituteService implements GenericService {
             logger.info("Logo Inserida");
         }
     }
-    
-    public void setCustomerInfoCrypto(FileDTO file) {
-        if (file == null || StringUtils.isNullOrEmpty(file.getBase64()))
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A propriedade de Base64 do arquivo não pode ser nula");
-        
-        Cipher cipher;
-		try {
-			cipher = Cipher.getInstance("AES");
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e1) {
-			logger.error(e1.getMessage());
-			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível ler o arquivo de licença");
-		}
-        SecretKeySpec  key = new SecretKeySpec (this.secretKey.getBytes(), "AES");
-        try {
-			cipher.init(Cipher.DECRYPT_MODE, key);
-		} catch (InvalidKeyException e1) {
-			logger.error(e1.getMessage());
-			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível ler o arquivo de licença");
-		}
-        
-        String decrypted = null;
-        byte[] decoded;
-        logger.debug("Descryptografando arquivo");
-        decoded = Base64.decodeBase64(file.getBase64().getBytes());
-        try {
-			decrypted = new String(cipher.doFinal(decoded));
-		} catch (IllegalBlockSizeException | BadPaddingException e1) {
-			logger.error(e1.getMessage());
-			throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível ler o arquivo de licença");
-		}
-        logger.debug("Arquivo descryptografado");
+
+    public void checkAndActiveLicense(FileDTO file) {
+        if (file == null || StringUtils.isNullOrEmpty(file.getBase64())) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A propriedade de Base64 da licença não pode ser nula");
+        }
         CustomerInfoDTO customerInfoDTO;
-        logger.debug("Convertendo json em objeto");
         try {
-        	customerInfoDTO = new ObjectMapper().readValue(decrypted, CustomerInfoDTO.class);
-		} catch (JsonProcessingException e) {
-			throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A propriedade de Base64 do arquivo não é um json válido");
-		}
+            customerInfoDTO = new ObjectMapper().readValue(decryptInformationsFromFile(file), CustomerInfoDTO.class);
+        } catch (JsonProcessingException e) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Licença inválida!");
+        }
         logger.debug("Json convertido em objeto");
         InstituteDTO instituteDTO = getSettings();
-        
+
         if (instituteDTO == null) {
-        	Institute institute = new Institute();
-        	BeanUtils.copyProperties(customerInfoDTO, institute);
-        	logger.debug("Vai inserir objeto");
-        	this.instituteRepo.save(institute);
+            Institute institute = new Institute();
+            BeanUtils.copyProperties(customerInfoDTO, institute);
+            logger.debug("Inserindo objeto");
+            this.instituteRepo.save(institute);
         } else {
-        	BeanUtils.copyProperties(customerInfoDTO, instituteDTO);
-        	logger.debug("Vai inserir objeto");
-        	persist(instituteDTO);
+            BeanUtils.copyProperties(customerInfoDTO, instituteDTO);
+            logger.debug("Inserindo objeto");
+            persist(instituteDTO);
         }
-        
+
     }
-    
-	public InstituteDTO persist(InstituteDTO instituteDTO) {
-		logger.debug("persist");
-		Institute institute = new Institute();
+
+    /**
+     * Retira a criptografia do arquivo
+     * 
+     * @param file
+     * @return Informações da licença
+     */
+    private String decryptInformationsFromFile(FileDTO file) {
+        try {
+            logger.info("Iniciando descriptografia do arquivo de licença");
+            String decryptedInformations = EncryptUtils.getInstance().decrypt(file.getBase64());
+            logger.info("Informações reconhecidas :: {}", decryptedInformations);
+            return decryptedInformations;
+        } catch (InvalidKeyException e) {
+            logger.error("Chave de criptografia inválida!", e);
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Chave de criptografia inválida");
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException
+                 | BadPaddingException e) {
+            logger.error("Falha ao tentar descriptografar arquivo!", e);
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao tentar descriptografar arquivo!");
+        }
+    }
+
+    public InstituteDTO persist(InstituteDTO instituteDTO) {
+        logger.debug("persist");
+        Institute institute = new Institute();
         CustomerInfoDTO customer = instituteDTO.getCustomerInfo();
         AddressDTO address = customer.getAddress();
         LicenseDTO license = customer.getLicense();
@@ -170,7 +160,7 @@ public class InstituteService implements GenericService {
         BeanUtils.copyProperties(license, institute);
 
         this.instituteRepo.save(institute);
-		return instituteDTO;
-	}
-    
+        return instituteDTO;
+    }
+
 }

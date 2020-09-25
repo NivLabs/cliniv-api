@@ -1,12 +1,8 @@
 package br.com.nivlabs.gp.controller;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/institute")
 public class InstituteController {
-	
+
     @Autowired
     private InstituteService instituteService;
 
@@ -43,30 +39,18 @@ public class InstituteController {
     }
 
     @ApiOperation(nickname = "institute-upload-logo", value = "Insere a logo da Instituição")
-    @PostMapping
+    @PostMapping("/logo")
     @PreAuthorize("hasAnyRole('INSTITUTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> uploadCompanyLogo(@RequestBody(required = true) FileDTO file) {
         instituteService.setCompanyLogo(file);
         return ResponseEntity.ok().build();
     }
-    
-    @ApiOperation(nickname = "institute-upload-custominfo", value = "Insere a chave de acesso ao sistema")
-    @PostMapping
+
+    @ApiOperation(nickname = "institute-upload-customerinfo", value = "Insere a chave de acesso ao sistema")
+    @PostMapping("/license")
     @PreAuthorize("hasAnyRole('INSTITUTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> uploadCustomInfoCrypto(@RequestBody(required = true) FileDTO file) {
-		instituteService.setCustomerInfoCrypto(file);
+        instituteService.checkAndActiveLicense(file);
         return ResponseEntity.ok().build();
-    }
-    
-    
-    @ApiOperation(nickname = "institute-post", value = "Insere um novo Instituto")
-    @PostMapping
-    @PreAuthorize("hasAnyRole('INSTITUTO_ESCRITA', 'ADMIN')")
-    public ResponseEntity<InstituteDTO> persist(@Validated @RequestBody(required = true) InstituteDTO newInstitute,
-                                                  HttpServletResponse response) {
-    	InstituteDTO createdInstitute = instituteService.persist(newInstitute);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdInstitute);
-
     }
 }
