@@ -150,9 +150,8 @@ public class HealthOperatorService implements GenericService {
      */
     public HealthOperatorInfoDTO create(HealthOperatorInfoDTO request) {
         logger.info("Iniciando processo de criação de cadastro de Operadora/Convênio de Saúde..");
-        request.setId(null);
         HealthOperator healthOperator = new HealthOperator();
-        BeanUtils.copyProperties(request, healthOperator);
+        BeanUtils.copyProperties(request, healthOperator, HealthOperator_.ID, HealthOperator_.HEALTH_PLANS);
         healthOperator.setCnpj(request.getDocument().getValue());
 
         logger.info("Salvando criação de cadastro no banco");
@@ -177,7 +176,7 @@ public class HealthOperatorService implements GenericService {
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format("Operadora com o id %s não encontrada.", id)));
 
         logger.info("Operadora encontrada {}", objectFromDb.getCompanyName());
-        BeanUtils.copyProperties(request, objectFromDb, HealthOperator_.ID);
+        BeanUtils.copyProperties(request, objectFromDb, HealthOperator_.ID, HealthOperator_.HEALTH_PLANS);
         objectFromDb.setCnpj(request.getDocument().getValue());
 
         logger.info("Salvando atualização de cadastro no banco");
