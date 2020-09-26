@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.models.dto;
 
+import javax.validation.constraints.NotNull;
+
 import br.com.nivlabs.gp.enums.Abragency;
 import br.com.nivlabs.gp.enums.ContractType;
 import br.com.nivlabs.gp.enums.Segmentation;
@@ -12,27 +14,34 @@ public class HealthPlanDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -6773781566276160000L;
 
     @ApiModelProperty("Identificador único  do plano")
+    @NotNull(message = "")
     private Long id;
 
     @ApiModelProperty("Código da operadora do plano")
+    @NotNull(message = "")
     private String operatorCode;
 
     @ApiModelProperty("Nome da operadora do plano")
     private String operatorName;
 
     @ApiModelProperty("Código do plano")
+    @NotNull(message = "")
     private Long planCode;
 
     @ApiModelProperty("Nome comercial")
+    @NotNull(message = "")
     private String commercialName;
 
     @ApiModelProperty("Segmentação")
+    @NotNull(message = "")
     private Segmentation segmentation;
 
     @ApiModelProperty("Tipo do contrato")
+    @NotNull(message = "")
     private ContractType contractType;
 
     @ApiModelProperty("Abrangência")
+    @NotNull(message = "")
     private Abragency abragency;
 
     @ApiModelProperty("Tipo do plano")
@@ -40,10 +49,6 @@ public class HealthPlanDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Código do plano de saúde do paciente")
     private String patientPlanNumber;
-
-    public HealthPlanDTO() {
-        super();
-    }
 
     public Long getId() {
         return id;
