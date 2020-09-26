@@ -65,7 +65,7 @@ public class HealthOperatorService implements GenericService {
     /**
      * Busca os detalhes de uma operadora de plano de saúde
      * 
-     * @param id
+     * @param id Identificador único da operadora de saúde
      * @return HealthOperatorInfoDTO
      */
     public HealthOperatorInfoDTO findByHealthOperatorId(Long id) {
@@ -142,9 +142,29 @@ public class HealthOperatorService implements GenericService {
         return response;
     }
 
-    public HealthOperatorInfoDTO persist(HealthOperatorInfoDTO request) {
-        logger.info("Iniciando processo de cadastro de Operadora/Convênio de Saúde..");
+    public HealthOperatorInfoDTO create(HealthOperatorInfoDTO request) {
+        logger.info("Iniciando processo de criação de cadastro de Operadora/Convênio de Saúde..");
 
         return null;
+    }
+
+    /**
+     * Atualizando informações de operadora de saúde
+     * 
+     * @param id Identificador único interno da operadora de saúde
+     * @param request Objeto da requisição (DTO)
+     * @return Objeto atualizado com as novas informações
+     */
+    public HealthOperatorInfoDTO update(Long id, HealthOperatorInfoDTO request) {
+        logger.info("Iniciando processo de atualização de cadastro de Operadora/Convênio de Saúde..");
+
+        HealthOperator objectFromDb = healthOperatorRepository.findById(id)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format("Operadora com o id %s não encontrada.", id)));
+
+        logger.info("Operadora encontrada {}", objectFromDb.getCompanyName());
+        BeanUtils.copyProperties(request, objectFromDb, HealthOperator_.ID);
+        objectFromDb.setCnpj(request.getDocument().getValue());
+
+        return request;
     }
 }
