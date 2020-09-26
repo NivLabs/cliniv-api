@@ -127,7 +127,7 @@ public class HealthOperatorService implements GenericService {
     }
 
     /**
-     * Converte um objeto de domínio para um DTO
+     * Converte um HealthPlan padrão de domínio para um DTO
      * 
      * @param objectFromDB Objeto de domínio
      * @return DTO de resposta
@@ -142,17 +142,32 @@ public class HealthOperatorService implements GenericService {
         return response;
     }
 
+    /**
+     * Cria um novo cadastro de operadora de saúde
+     * 
+     * @param request Objeto de requisição (DTO) de Operadora de saúde
+     * @return Objeto cadastrado na aplicação
+     */
     public HealthOperatorInfoDTO create(HealthOperatorInfoDTO request) {
         logger.info("Iniciando processo de criação de cadastro de Operadora/Convênio de Saúde..");
+        request.setId(null);
+        HealthOperator healthOperator = new HealthOperator();
+        BeanUtils.copyProperties(request, healthOperator);
+        healthOperator.setCnpj(request.getDocument().getValue());
 
-        return null;
+        logger.info("Salvando criação de cadastro no banco");
+        healthOperatorRepository.save(healthOperator);
+        request.setId(healthOperator.getId());
+
+        logger.info("Nova operadora cadastrada com sucesso, devolvendo resposta atualizada :: {}", request);
+        return request;
     }
 
     /**
      * Atualizando informações de operadora de saúde
      * 
      * @param id Identificador único interno da operadora de saúde
-     * @param request Objeto da requisição (DTO)
+     * @param request Objeto da requisição (DTO) de Operadora de saúde
      * @return Objeto atualizado com as novas informações
      */
     public HealthOperatorInfoDTO update(Long id, HealthOperatorInfoDTO request) {
@@ -165,6 +180,10 @@ public class HealthOperatorService implements GenericService {
         BeanUtils.copyProperties(request, objectFromDb, HealthOperator_.ID);
         objectFromDb.setCnpj(request.getDocument().getValue());
 
+        logger.info("Salvando atualização de cadastro no banco");
+        healthOperatorRepository.save(objectFromDb);
+
+        logger.info("Atualização realizada com sucesso, devolvendo resposta atualizada :: {}", request);
         return request;
     }
 }
