@@ -16,10 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.HealthOperatorFilters;
+import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.HealthOperator;
 import br.com.nivlabs.gp.models.domain.HealthOperator_;
 import br.com.nivlabs.gp.models.domain.HealthPlan;
+import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.HealthOperatorDTO;
 import br.com.nivlabs.gp.models.dto.HealthOperatorInfoDTO;
 import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
@@ -84,6 +86,7 @@ public class HealthOperatorService implements GenericService {
         });
 
         healthOperatorInfoDTO.setHealthPlans(plansDTO);
+        healthOperatorInfoDTO.setDocument(new DocumentDTO(DocumentType.CNPJ, healthOperator.getCnpj()));
 
         return healthOperatorInfoDTO;
     }
