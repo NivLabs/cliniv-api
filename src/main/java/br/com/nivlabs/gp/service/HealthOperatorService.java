@@ -39,7 +39,6 @@ import br.com.nivlabs.gp.repository.HealthPlanRepository;
 @Service
 public class HealthOperatorService implements GenericService {
 
-    @Autowired
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PersistenceContext
@@ -58,7 +57,7 @@ public class HealthOperatorService implements GenericService {
      * @return Page
      */
     public Page<HealthOperatorDTO> getListOfHealthOperator(HealthOperatorFilters filters, Pageable pageRequest) {
-        logger.info("Inicinado busca filtrada por Operadoras de saúde");
+        logger.info("Iniciando busca filtrada por Operadoras de saúde");
         return healthOperatorRepository.resumedList(filters, pageRequest);
     }
 
