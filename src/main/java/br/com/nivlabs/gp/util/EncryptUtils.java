@@ -28,13 +28,7 @@ public class EncryptUtils {
 
     private static final String CIPHER_STRATEGY = "AES/GCM/NoPadding";
     private static final String ALGORITHM = "AES";
-
-    private static final String ENCRYPT_ERROR_MESSAGE = "Não foi possível ler o arquivo de licença";
-
     private static EncryptUtils instance;
-
-    private EncryptUtils() {
-    }
 
     @Value("${secret-key.property}")
     private String secretKey;
