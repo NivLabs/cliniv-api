@@ -84,7 +84,7 @@ public class HealthOperatorController {
 
     @ApiOperation(nickname = "health-operator-post", value = "Adiciona uma operadora de saúde")
     @PostMapping
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'OPERADORA_ESCRITA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthOperatorInfoDTO> creatHealthOperator(@Validated @RequestBody(required = true) HealthOperatorInfoDTO request,
                                                                      HttpServletResponse response) {
 
@@ -98,7 +98,7 @@ public class HealthOperatorController {
 
     @ApiOperation(nickname = "health-operator-put", value = "Atualiza uma operadora de saúde")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'OPERADORA_ESCRITA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthOperatorInfoDTO> updateHealthOperator(@PathVariable("id") Long id,
                                                                       @Validated @RequestBody(required = true) HealthOperatorInfoDTO request) {
 
@@ -109,7 +109,7 @@ public class HealthOperatorController {
 
     @ApiOperation(nickname = "health-plan-put", value = "Atualiza uma operadora de saúde")
     @PutMapping("/health-plan/{id}")
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'OPERADORA_ESCRITA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> updateHealthPlan(@PathVariable("id") Long id,
                                                           @Validated @RequestBody(required = true) HealthPlanDTO request) {
 
@@ -119,8 +119,8 @@ public class HealthOperatorController {
     }
 
     @ApiOperation(nickname = "health-plan-post", value = "Atualiza uma operadora de saúde")
-    @PutMapping("/health-plan")
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'OPERADORA_ESCRITA', 'ADMIN')")
+    @PostMapping("/health-plan")
+    @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> updateHealthPlan(@Validated @RequestBody(required = true) HealthPlanDTO request,
                                                           HttpServletResponse response) {
 
