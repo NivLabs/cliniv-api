@@ -14,35 +14,34 @@ public class HealthPlanDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -6773781566276160000L;
 
     @ApiModelProperty("Identificador único  do plano")
-    @NotNull(message = "")
     private Long id;
 
     @ApiModelProperty("Código da operadora do plano")
-    @NotNull(message = "")
+    @NotNull(message = "O código da operadora do plano (ANS) é obrigatório")
     private String operatorCode;
 
     @ApiModelProperty("Nome da operadora do plano")
     private String operatorName;
 
     @ApiModelProperty("Código do plano")
-    @NotNull(message = "")
+    @NotNull(message = "O código do plano de saúde é obrigatório")
     private Long planCode;
 
     @ApiModelProperty("Nome comercial")
-    @NotNull(message = "")
+    @NotNull(message = "O nome comercial do plano de saúde é obrigatório")
     private String commercialName;
 
     @ApiModelProperty("Segmentação")
-    @NotNull(message = "")
+    @NotNull(message = "A segmentação do plano é obrigatória")
     private Segmentation segmentation;
 
     @ApiModelProperty("Tipo do contrato")
-    @NotNull(message = "")
+    @NotNull(message = "O tipo de contrato do plano é obrigatório")
     private ContractType contractType;
 
     @ApiModelProperty("Abrangência")
-    @NotNull(message = "")
-    private Abragency abragency;
+    @NotNull(message = "A abrangência do plano é obrigatória")
+    private Abragency abrangency;
 
     @ApiModelProperty("Tipo do plano")
     private String type;
@@ -90,12 +89,12 @@ public class HealthPlanDTO extends DataTransferObjectBase {
         this.contractType = contractType;
     }
 
-    public Abragency getAbragency() {
-        return abragency;
+    public Abragency getAbrangency() {
+        return abrangency;
     }
 
-    public void setAbragency(Abragency abragency) {
-        this.abragency = abragency;
+    public void setAbrangency(Abragency abrangency) {
+        this.abrangency = abrangency;
     }
 
     public String getType() {
@@ -134,14 +133,14 @@ public class HealthPlanDTO extends DataTransferObjectBase {
     public String toString() {
         return "HealthPlanDTO [id=" + id + ", operatorCode=" + operatorCode + ", operatorName=" + operatorName + ", planCode=" + planCode
                 + ", commercialName=" + commercialName + ", segmentation=" + segmentation + ", contractType=" + contractType
-                + ", abragency=" + abragency + ", type=" + type + ", patientPlanNumber=" + patientPlanNumber + "]";
+                + ", abrangency=" + abrangency + ", type=" + type + ", patientPlanNumber=" + patientPlanNumber + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((abragency == null) ? 0 : abragency.hashCode());
+        result = prime * result + ((abrangency == null) ? 0 : abrangency.hashCode());
         result = prime * result + ((commercialName == null) ? 0 : commercialName.hashCode());
         result = prime * result + ((contractType == null) ? 0 : contractType.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -163,7 +162,7 @@ public class HealthPlanDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         HealthPlanDTO other = (HealthPlanDTO) obj;
-        if (abragency != other.abragency)
+        if (abrangency != other.abrangency)
             return false;
         if (commercialName == null) {
             if (other.commercialName != null)

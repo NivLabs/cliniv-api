@@ -44,7 +44,7 @@ public class HealthPlan extends BaseObjectWithId {
 
     @Column(name = "ABRANGENCIA")
     @Enumerated(EnumType.STRING)
-    private Abragency abragency;
+    private Abragency abrangency;
 
     @Column(name = "TIPO_PLANO")
     private String type;
@@ -97,12 +97,12 @@ public class HealthPlan extends BaseObjectWithId {
         this.contractType = contractType;
     }
 
-    public Abragency getAbragency() {
-        return abragency;
+    public Abragency getAbrangency() {
+        return abrangency;
     }
 
-    public void setAbragency(Abragency abragency) {
-        this.abragency = abragency;
+    public void setAbrangency(Abragency abrangency) {
+        this.abrangency = abrangency;
     }
 
     public String getType() {
@@ -125,7 +125,7 @@ public class HealthPlan extends BaseObjectWithId {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((abragency == null) ? 0 : abragency.hashCode());
+        result = prime * result + ((abrangency == null) ? 0 : abrangency.hashCode());
         result = prime * result + ((commercialName == null) ? 0 : commercialName.hashCode());
         result = prime * result + ((contractType == null) ? 0 : contractType.hashCode());
         result = prime * result + ((healthOperator == null) ? 0 : healthOperator.hashCode());
@@ -145,7 +145,7 @@ public class HealthPlan extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         HealthPlan other = (HealthPlan) obj;
-        if (abragency != other.abragency)
+        if (abrangency != other.abrangency)
             return false;
         if (commercialName == null) {
             if (other.commercialName != null)
@@ -182,7 +182,7 @@ public class HealthPlan extends BaseObjectWithId {
     @Override
     public String toString() {
         return "HealthPlan [id=" + id + ", planCode=" + planCode + ", commercialName=" + commercialName + ", segmentation=" + segmentation
-                + ", contractType=" + contractType + ", abragency=" + abragency + ", type=" + type + ", healthOperator=" + healthOperator
+                + ", contractType=" + contractType + ", abrangency=" + abrangency + ", type=" + type + ", healthOperator=" + healthOperator
                 + "]";
     }
 
