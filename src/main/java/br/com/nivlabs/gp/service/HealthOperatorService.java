@@ -184,4 +184,5 @@ public class HealthOperatorService implements GenericService {
         logger.info("Atualização realizada com sucesso, devolvendo resposta atualizada :: {}", request);
         return request;
     }
+
 }

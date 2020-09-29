@@ -26,6 +26,7 @@ import br.com.nivlabs.gp.models.dto.HealthOperatorDTO;
 import br.com.nivlabs.gp.models.dto.HealthOperatorInfoDTO;
 import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
 import br.com.nivlabs.gp.service.HealthOperatorService;
+import br.com.nivlabs.gp.service.HealthPlanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -46,11 +47,14 @@ public class HealthOperatorController {
     private HealthOperatorService service;
 
     @Autowired
+    private HealthPlanService healthPlanService;
+
+    @Autowired
     private ApplicationEventPublisher publisher;
 
     @ApiOperation(nickname = "health-operator-get", value = "Busca uma página de operadoras de plano de saúde")
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('OPERADORA_LEITURA', 'OPERADORA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<HealthOperatorDTO>> findPage(HealthOperatorFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
                                                Direction.valueOf(filters.getDirection()), filters.getOrderBy());
@@ -59,28 +63,28 @@ public class HealthOperatorController {
 
     @ApiOperation(nickname = "health-operator-get-id", value = "Busca uma operadora baseada no identificador")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('OPERADORA_LEITURA', 'OPERADORA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<HealthOperatorInfoDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findByHealthOperatorId(id));
     }
 
     @ApiOperation(nickname = "health-plan-get-id", value = "Busca um plano de saúde baseada no identificador")
     @GetMapping("/health-plan/{id}")
-    @PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('OPERADORA_LEITURA', 'OPERADORA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> findHealthPlanById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findHealthPlanById(id));
     }
 
     @ApiOperation(nickname = "health-plan-get-ansCode", value = "Busca um plano de saúde baseada no código da ANS")
     @GetMapping("/health-plan/ansCode/{ansCode}")
-    @PreAuthorize("hasAnyRole('ROLE_OPERADORA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('OPERADORA_LEITURA', 'OPERADORA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> findHealthPlanByAnsCode(@PathVariable("ansCode") Long ansCode) {
         return ResponseEntity.ok(service.findHealthPlanByAnsCode(ansCode));
     }
 
     @ApiOperation(nickname = "health-operator-post", value = "Adiciona uma operadora de saúde")
     @PostMapping
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthOperatorInfoDTO> creatHealthOperator(@Validated @RequestBody(required = true) HealthOperatorInfoDTO request,
                                                                      HttpServletResponse response) {
 
@@ -93,15 +97,38 @@ public class HealthOperatorController {
     }
 
     @ApiOperation(nickname = "health-operator-put", value = "Atualiza uma operadora de saúde")
-    @PutMapping("{id}")
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthOperatorInfoDTO> updateHealthOperator(@PathVariable("id") Long id,
                                                                       @Validated @RequestBody(required = true) HealthOperatorInfoDTO request) {
 
         HealthOperatorInfoDTO responseDTO = service.update(id, request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+    }
 
+    @ApiOperation(nickname = "health-plan-put", value = "Atualiza uma operadora de saúde")
+    @PutMapping("/health-plan/{id}")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'OPERADORA_ESCRITA', 'ADMIN')")
+    public ResponseEntity<HealthPlanDTO> updateHealthPlan(@PathVariable("id") Long id,
+                                                          @Validated @RequestBody(required = true) HealthPlanDTO request) {
+
+        HealthPlanDTO responseDTO = healthPlanService.update(id, request);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+    }
+
+    @ApiOperation(nickname = "health-plan-post", value = "Atualiza uma operadora de saúde")
+    @PutMapping("/health-plan")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'OPERADORA_ESCRITA', 'ADMIN')")
+    public ResponseEntity<HealthPlanDTO> updateHealthPlan(@Validated @RequestBody(required = true) HealthPlanDTO request,
+                                                          HttpServletResponse response) {
+
+        HealthPlanDTO responseDTO = healthPlanService.create(request);
+
+        publisher.publishEvent(new CreatedResourceEvent(this, response, responseDTO.getId()));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
 }
