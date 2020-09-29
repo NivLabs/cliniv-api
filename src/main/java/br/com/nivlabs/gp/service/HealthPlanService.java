@@ -64,6 +64,10 @@ public class HealthPlanService implements GenericService {
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                         "A Operadora informada no cadastro do Plano não está cadastrada no sistema, favor realizar o cadastro da mesma."));
 
+        if (principalRepository.findByPlanCode(request.getPlanCode()).isPresent()) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Este código de Plano de Saúde já está em uso por outro plano");
+        }
+
         HealthPlan healthPlan = new HealthPlan();
         BeanUtils.copyProperties(request, healthPlan);
         healthPlan.setHealthOperator(healthOperator);
