@@ -1,5 +1,6 @@
 package br.com.nivlabs.gp.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -332,7 +333,7 @@ public class AttendanceService implements GenericService {
         logger.info("Criando evento de atendimento para alta de paciente");
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
         event.setAttendanceId(attendance.getId());
-        event.setEventDateTime(request.getDatetime());
+        event.setEventDateTime(LocalDateTime.now());
         event.setEventType(new EventTypeDTO(request.getEventTypeId(), CLOSE_ATTENDANCE_TEXT, CLOSE_ATTENDANCE_TEXT));
         event.setAccommodation(new AccommodationDTO(attendance.getCurrentAccommodation().getId()));
         event.setResponsible(getResponsibleFromUserSession());
