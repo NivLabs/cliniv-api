@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -132,7 +133,7 @@ public class HealthOperatorController {
     }
 
     @ApiOperation(nickname = "health-plan-delet", value = "Deleta uma operadora de saúde")
-    @PostMapping("/health-plan/{id}")
+    @DeleteMapping("/health-plan/{id}")
     @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> deleteHealthPlan(@PathVariable("id") Long id) {
         healthPlanService.delete(id);
