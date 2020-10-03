@@ -31,6 +31,9 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime entryDateTime;
 
+    @ApiModelProperty("Motivo da entrada")
+    private String reasonForEntry;
+
     @ApiModelProperty("Data/Hora de alta do paciente")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime exitDateTime;
@@ -225,14 +228,22 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         this.attendanceLevel = attendanceLevel;
     }
 
+    public String getReasonForEntry() {
+        return reasonForEntry;
+    }
+
+    public void setReasonForEntry(String reasonForEntry) {
+        this.reasonForEntry = reasonForEntry;
+    }
+
     @Override
     public String toString() {
-        return "MedicalRecordDTO [id=" + id + ", entryDateTime=" + entryDateTime + ", exitDateTime=" + exitDateTime + ", patientId="
-                + patientId + ", document=" + document + ", anamnesisDigitalDocuentId=" + anamnesisDigitalDocuentId + ", fullName="
-                + fullName + ", socialName=" + socialName + ", principalNumber=" + principalNumber + ", susNumber=" + susNumber
-                + ", bornDate=" + bornDate + ", lastAccommodation=" + lastAccommodation + ", gender=" + gender + ", events=" + events
-                + ", medicines=" + medicines + ", evolutions=" + evolutions + ", allergies=" + allergies + ", attendanceLevel="
-                + attendanceLevel + "]";
+        return "MedicalRecordDTO [id=" + id + ", entryDateTime=" + entryDateTime + ", reasonForEntry=" + reasonForEntry + ", exitDateTime="
+                + exitDateTime + ", patientId=" + patientId + ", document=" + document + ", anamnesisDigitalDocuentId="
+                + anamnesisDigitalDocuentId + ", fullName=" + fullName + ", socialName=" + socialName + ", principalNumber="
+                + principalNumber + ", susNumber=" + susNumber + ", bornDate=" + bornDate + ", lastAccommodation=" + lastAccommodation
+                + ", gender=" + gender + ", events=" + events + ", medicines=" + medicines + ", evolutions=" + evolutions + ", allergies="
+                + allergies + ", attendanceLevel=" + attendanceLevel + "]";
     }
 
     @Override
@@ -255,6 +266,7 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         result = prime * result + ((medicines == null) ? 0 : medicines.hashCode());
         result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
         result = prime * result + ((principalNumber == null) ? 0 : principalNumber.hashCode());
+        result = prime * result + ((reasonForEntry == null) ? 0 : reasonForEntry.hashCode());
         result = prime * result + ((socialName == null) ? 0 : socialName.hashCode());
         result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
         return result;
@@ -342,6 +354,11 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
             if (other.principalNumber != null)
                 return false;
         } else if (!principalNumber.equals(other.principalNumber))
+            return false;
+        if (reasonForEntry == null) {
+            if (other.reasonForEntry != null)
+                return false;
+        } else if (!reasonForEntry.equals(other.reasonForEntry))
             return false;
         if (socialName == null) {
             if (other.socialName != null)

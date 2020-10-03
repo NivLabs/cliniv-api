@@ -126,6 +126,7 @@ public class AttendanceService implements GenericService {
         medicalRecord.setEntryDateTime(objectFromDb.getEntryDateTime());
         medicalRecord.setExitDateTime(objectFromDb.getExitDateTime());
         medicalRecord.setAttendanceLevel(objectFromDb.getLevel());
+        medicalRecord.setReasonForEntry(objectFromDb.getReasonForEntry());
 
         processEvents(objectFromDb, medicalRecord);
 
@@ -283,6 +284,7 @@ public class AttendanceService implements GenericService {
         medicalRecord.setEntryDateTime(attendanceFromDb.getEntryDateTime());
         medicalRecord.setExitDateTime(attendanceFromDb.getExitDateTime());
         medicalRecord.setAttendanceLevel(attendanceFromDb.getLevel());
+        medicalRecord.setReasonForEntry(attendanceFromDb.getReasonForEntry());
 
         processEvents(attendanceFromDb, medicalRecord);
 
@@ -314,7 +316,7 @@ public class AttendanceService implements GenericService {
         if (attendanceFromDb.getExitDateTime() != null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Este atendimento já foi encerrado");
         }
-        NewAttendanceEventDTO newAttendanceEvent = createAttendanceRequest(attendanceFromDb, request);
+        NewAttendanceEventDTO newAttendanceEvent = createAttendanceFromCloseRequest(attendanceFromDb, request);
         attendanceFromDb.setExitDateTime(newAttendanceEvent.getEventDateTime());
         dao.save(attendanceFromDb);
     }
@@ -326,7 +328,7 @@ public class AttendanceService implements GenericService {
      * @param request
      * @return
      */
-    private NewAttendanceEventDTO createAttendanceRequest(Attendance attendance, CloseAttandenceDTO request) {
+    private NewAttendanceEventDTO createAttendanceFromCloseRequest(Attendance attendance, CloseAttandenceDTO request) {
         logger.info("Criando evento de atendimento para alta de paciente");
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
         event.setAttendanceId(attendance.getId());
