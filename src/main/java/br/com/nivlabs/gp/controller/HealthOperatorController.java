@@ -107,7 +107,7 @@ public class HealthOperatorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
-    @ApiOperation(nickname = "health-plan-put", value = "Atualiza uma operadora de saúde")
+    @ApiOperation(nickname = "health-plan-put", value = "Atualiza um plano de saúde")
     @PutMapping("/health-plan/{id}")
     @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> updateHealthPlan(@PathVariable("id") Long id,
@@ -118,7 +118,7 @@ public class HealthOperatorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
-    @ApiOperation(nickname = "health-plan-post", value = "Atualiza uma operadora de saúde")
+    @ApiOperation(nickname = "health-plan-post", value = "Adiciona um plano de saúde")
     @PostMapping("/health-plan")
     @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> updateHealthPlan(@Validated @RequestBody(required = true) HealthPlanDTO request,
@@ -129,6 +129,15 @@ public class HealthOperatorController {
         publisher.publishEvent(new CreatedResourceEvent(this, response, responseDTO.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+    }
+
+    @ApiOperation(nickname = "health-plan-delet", value = "Deleta uma operadora de saúde")
+    @PostMapping("/health-plan/{id}")
+    @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
+    public ResponseEntity<Void> deleteHealthPlan(@PathVariable("id") Long id) {
+        healthPlanService.delete(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

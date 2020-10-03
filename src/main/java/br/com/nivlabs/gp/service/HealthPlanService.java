@@ -79,4 +79,20 @@ public class HealthPlanService implements GenericService {
         return request;
     }
 
+    /**
+     * Deleta um plano de saúde da aplicação
+     * 
+     * @param id Identificador único interno do plano de saúde
+     */
+    public void delete(Long id) {
+        logger.info("Iniciando busca de plano de saúde para exclusão...");
+        HealthPlan objectFromDb = principalRepository.findById(id)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                        String.format("Plano de saúde com o id %s não encontrada.", id)));
+
+        logger.info("Plano de saúde encontrado :: {} :: iniciando exclusão...", objectFromDb.getCommercialName());
+        principalRepository.delete(objectFromDb);
+        logger.info("Exclusão de plano realisada com sucesso!");
+    }
+
 }
