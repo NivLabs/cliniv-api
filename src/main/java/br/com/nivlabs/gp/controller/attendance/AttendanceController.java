@@ -88,7 +88,7 @@ public class AttendanceController {
      * @param response
      * @return
      */
-    @ApiOperation(nickname = "attendance-put", value = "Inicia um novo atendimento na aplicação")
+    @ApiOperation(nickname = "attendance-put", value = "Finaliza um novo atendimento na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ALTA', 'ADMIN')")
     public ResponseEntity<Void> closeAttendance(@PathVariable("id") Long id,

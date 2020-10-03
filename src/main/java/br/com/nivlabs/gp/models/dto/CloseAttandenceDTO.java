@@ -1,11 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.NotNull;
-
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,27 +16,20 @@ public class CloseAttandenceDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4058913578939379862L;
 
-    @ApiModelProperty("Tipo do evento de encerramento - ex: Alta médica por melhora")
-    @NotNull(message = "Informe o tipo de evento de encerramento")
+    @ApiModelProperty("Identificador único do Tipo do evento de encerramento")
+    @NotNull(message = "Informe o código interno único do tipo de evento de encerramento")
     private Long eventTypeId;
-
-    @ApiModelProperty("Data/Hora do encerramento do atendimento")
-    @DateTimeFormat(iso = ISO.DATE_TIME)
-    @NotNull(message = "Informe a data e hora do evento e encerramento")
-    private LocalDateTime datetime;
 
     @ApiModelProperty("Observações do encerramento (se houver)")
     private String observations;
 
-    public CloseAttandenceDTO() {
-        super();
+    public CloseAttandenceDTO(Long eventTypeId, String observations) {
+        this.eventTypeId = eventTypeId;
+        this.observations = observations;
     }
 
-    public CloseAttandenceDTO(Long eventTypeId, LocalDateTime datetime, String observations) {
+    public CloseAttandenceDTO() {
         super();
-        this.eventTypeId = eventTypeId;
-        this.datetime = datetime;
-        this.observations = observations;
     }
 
     public Long getEventTypeId() {
@@ -50,14 +38,6 @@ public class CloseAttandenceDTO extends DataTransferObjectBase {
 
     public void setEventTypeId(Long eventTypeId) {
         this.eventTypeId = eventTypeId;
-    }
-
-    public LocalDateTime getDatetime() {
-        return datetime;
-    }
-
-    public void setDatetime(LocalDateTime datetime) {
-        this.datetime = datetime;
     }
 
     public String getObservations() {
@@ -69,10 +49,14 @@ public class CloseAttandenceDTO extends DataTransferObjectBase {
     }
 
     @Override
+    public String toString() {
+        return "CloseAttandenceDTO [eventTypeId=" + eventTypeId + ", observations=" + observations + "]";
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((datetime == null) ? 0 : datetime.hashCode());
         result = prime * result + ((eventTypeId == null) ? 0 : eventTypeId.hashCode());
         result = prime * result + ((observations == null) ? 0 : observations.hashCode());
         return result;
@@ -87,11 +71,6 @@ public class CloseAttandenceDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         CloseAttandenceDTO other = (CloseAttandenceDTO) obj;
-        if (datetime == null) {
-            if (other.datetime != null)
-                return false;
-        } else if (!datetime.equals(other.datetime))
-            return false;
         if (eventTypeId == null) {
             if (other.eventTypeId != null)
                 return false;
@@ -103,11 +82,6 @@ public class CloseAttandenceDTO extends DataTransferObjectBase {
         } else if (!observations.equals(other.observations))
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "CloseAttandenceDTO [eventTypeId=" + eventTypeId + ", datetime=" + datetime + ", observations=" + observations + "]";
     }
 
 }
