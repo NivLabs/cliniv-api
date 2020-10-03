@@ -129,10 +129,10 @@ public class HandlerExceptions {
                                                                                HttpServletRequest req) {
         logger.error("Violação de Integridade :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                "Violação de Integridade", Arrays.asList(), "Este item não pode ser manipulado, já encontra-se em uso em outro processo",
+                "Violação de Integridade", Arrays.asList(), "Violação de integridade, esta ação não pode ser concluída",
                 req.getRequestURI());
 
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
 
     /**
