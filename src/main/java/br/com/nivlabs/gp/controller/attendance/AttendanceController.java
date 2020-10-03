@@ -90,13 +90,11 @@ public class AttendanceController {
      */
     @ApiOperation(nickname = "attendance-put", value = "Inicia um novo atendimento na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ALTA', 'ADMIN')")
     public ResponseEntity<Void> closeAttendance(@PathVariable("id") Long id,
                                                 @Validated @RequestBody(required = true) CloseAttandenceDTO request,
                                                 HttpServletResponse response) {
-
         service.closeAttendance(id, request);
-
         return ResponseEntity.ok().build();
 
     }
