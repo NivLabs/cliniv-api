@@ -23,7 +23,6 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Data/Hora do evento")
     @DateTimeFormat(iso = ISO.DATE)
-    @NotNull(message = "A data do evento não pode ser nula")
     private LocalDateTime eventDateTime;
 
     @ApiModelProperty("Dovumentos do evento (se houver)")
