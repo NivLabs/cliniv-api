@@ -40,7 +40,6 @@ import br.com.nivlabs.gp.models.dto.MedicineInfoDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
@@ -350,7 +349,7 @@ public class AttendanceService implements GenericService {
      *
      * @return
      */
-    private ResponsibleDTO getResponsibleFromUserSession() {
+    private ResponsibleInfoDTO getResponsibleFromUserSession() {
         logger.info("Buscando usuário da sessão...");
         String userName = ((UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         UserInfoDTO logedUser = userService.findByUserName(userName);
@@ -362,7 +361,7 @@ public class AttendanceService implements GenericService {
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
         logger.info("Realizando processamento do profissional para a requisição de evolução clínica");
-        ResponsibleDTO responsible = new ResponsibleDTO();
+        ResponsibleInfoDTO responsible = new ResponsibleInfoDTO();
         BeanUtils.copyProperties(responsibleInformations, responsible);
         return responsible;
     }

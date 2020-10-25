@@ -19,7 +19,6 @@ import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.PrescriptionInfoDTO;
-import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
@@ -135,7 +134,7 @@ public class PrescriptionService implements GenericService {
      * @param requestOwner
      * @return
      */
-    private ResponsibleDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
+    private ResponsibleInfoDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
         logger.info("Iniciando busca de responsável pelo usuário da requisição...");
         ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
         if (responsibleInformations.getId() == null)
@@ -143,7 +142,7 @@ public class PrescriptionService implements GenericService {
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
         logger.info("Realizando processamento do profissional para a requisição de prescrição");
-        ResponsibleDTO responsible = new ResponsibleDTO();
+        ResponsibleInfoDTO responsible = new ResponsibleInfoDTO();
         BeanUtils.copyProperties(responsibleInformations, responsible);
         return responsible;
     }
