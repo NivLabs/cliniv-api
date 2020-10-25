@@ -149,7 +149,7 @@ public class EvolutionService implements GenericService {
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento de evolução");
         }
 
-        attendanceEventService.persistNewAttendanceEvent(event);
+        attendanceEventService.persistNewAttendanceEvent(event, null);
         logger.info("Evento de Atendimento para Evolução clínica criado com sucesso!");
 
     }
