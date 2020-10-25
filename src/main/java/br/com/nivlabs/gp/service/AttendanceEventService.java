@@ -63,6 +63,9 @@ public class AttendanceEventService implements GenericService {
     }
 
     public void persistNewAttendanceEvent(NewAttendanceEventDTO request) {
+        if (request.getEventDateTime() == null) {
+            request.setEventDateTime(LocalDateTime.now());
+        }
         logger.info("Iniciando o processo de criação de evento de atendimento");
         logger.info("Identificador do atendimento: {}", request.getAttendanceId());
         logger.info("Identificador do solicitante: {}", request.getResponsible().getId());
