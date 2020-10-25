@@ -338,7 +338,7 @@ public class AttendanceService implements GenericService {
         event.setResponsible(getResponsibleFromUserSession());
         event.setObservations(request.getObservations());
 
-        attendanceEventService.persistNewAttendanceEvent(event);
+        attendanceEventService.persistNewAttendanceEvent(event, null);
         logger.info("Evento de Atendimento para alta de paciente criado com sucesso!");
 
         return event;

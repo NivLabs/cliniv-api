@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.service.AttendanceEventService;
 import io.swagger.annotations.Api;
@@ -38,7 +40,10 @@ public class AttendanceEventController {
     public ResponseEntity<Void> persist(
                                         @Validated @RequestBody(required = true) NewAttendanceEventDTO newAttendanceEvent,
                                         HttpServletResponse response) {
-        service.persistNewAttendanceEvent(newAttendanceEvent);
+        UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
+                .getPrincipal();
+
+        service.persistNewAttendanceEvent(newAttendanceEvent, userFromSession);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
 

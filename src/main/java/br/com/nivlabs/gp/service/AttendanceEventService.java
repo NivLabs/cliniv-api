@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
@@ -26,6 +27,7 @@ import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
+import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 
 /**
@@ -46,6 +48,10 @@ public class AttendanceEventService implements GenericService {
     private AttendanceEventRepository dao;
     @Autowired
     private DigitalDocumentService docService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ResponsibleService responsibleService;
 
     public Page<AttendanceEvent> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
@@ -62,14 +68,19 @@ public class AttendanceEventService implements GenericService {
         return dao.save(auxEntity);
     }
 
-    public void persistNewAttendanceEvent(NewAttendanceEventDTO request) {
+    public void persistNewAttendanceEvent(NewAttendanceEventDTO request, UserOfSystem userFromSession) {
         if (request.getEventDateTime() == null) {
             request.setEventDateTime(LocalDateTime.now());
+        }
+        if (request.getResponsible() == null) {
+
+            UserInfoDTO userInfo = userService.findByUserName(userFromSession.getUsername());
+            request.setResponsible(getResponsibleFromUser(userInfo));
         }
         logger.info("Iniciando o processo de criação de evento de atendimento");
         logger.info("Identificador do atendimento: {}", request.getAttendanceId());
         logger.info("Identificador do solicitante: {}", request.getResponsible().getId());
-        logger.info("Título do evento: {}", request.getEventType().getDescription());
+        logger.info("Identificador do tipo do evento: {}", request.getEventType().getId());
         logger.info("Data/Hora do evento: {}", request.getEventDateTime());
 
         AttendanceEvent newAttendanceEvent = new AttendanceEvent();
@@ -85,6 +96,25 @@ public class AttendanceEventService implements GenericService {
         Long newEventId = dao.save(newAttendanceEvent).getId();
         insertDocuments(newEventId, request.getDocuments());
 
+    }
+
+    /**
+     * Busca o responsável pela criação da evolução clínica
+     * 
+     * @param requestOwner
+     * @return
+     */
+    private ResponsibleInfoDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
+        logger.info("Iniciando busca de responsável pelo usuário da requisição...");
+        ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
+        if (responsibleInformations.getId() == null)
+            throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
+        logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
+
+        logger.info("Realizando processamento do profissional para a requisição de evolução clínica");
+        ResponsibleInfoDTO responsible = new ResponsibleInfoDTO();
+        BeanUtils.copyProperties(responsibleInformations, responsible);
+        return responsible;
     }
 
     private Procedure convertProcedure(ProcedureDTO procedure) {

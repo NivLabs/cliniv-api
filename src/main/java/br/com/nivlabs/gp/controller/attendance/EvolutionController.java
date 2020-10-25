@@ -1,7 +1,5 @@
 package br.com.nivlabs.gp.controller.attendance;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +36,7 @@ public class EvolutionController {
     @ApiOperation(nickname = "evolution-post", value = "Insere uma nova evolução do paciente na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
-    public ResponseEntity<EvolutionInfoDTO> persist(@Validated @RequestBody(required = true) EvolutionInfoDTO request,
-                                                    HttpServletResponse response) {
+    public ResponseEntity<EvolutionInfoDTO> persist(@Validated @RequestBody(required = true) EvolutionInfoDTO request) {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
 
