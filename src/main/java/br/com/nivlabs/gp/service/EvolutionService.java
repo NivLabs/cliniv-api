@@ -23,7 +23,6 @@ import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
-import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
@@ -188,7 +187,8 @@ public class EvolutionService implements GenericService {
      * @param medicalRecord
      * @param event
      */
-    private void setAccommodationIntoAttendanceEvent(EvolutionInfoDTO request, MedicalRecordDTO medicalRecord, NewAttendanceEventDTO event) {
+    private void setAccommodationIntoAttendanceEvent(EvolutionInfoDTO request, MedicalRecordDTO medicalRecord,
+                                                     NewAttendanceEventDTO event) {
         logger.info("Verificando acomodação do evento...");
         if (request.getAccommodationId() != null) {
             logger.info("A acomodação foi informada via requisição :: Identificador informado :: {} :: Iniciando uma busca pelo mesmo...",
@@ -217,7 +217,7 @@ public class EvolutionService implements GenericService {
      * @param requestOwner
      * @return
      */
-    private ResponsibleDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
+    private ResponsibleInfoDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
         logger.info("Iniciando busca de responsável pelo usuário da requisição...");
         ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
         if (responsibleInformations.getId() == null)
@@ -225,7 +225,7 @@ public class EvolutionService implements GenericService {
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
         logger.info("Realizando processamento do profissional para a requisição de evolução clínica");
-        ResponsibleDTO responsible = new ResponsibleDTO();
+        ResponsibleInfoDTO responsible = new ResponsibleInfoDTO();
         BeanUtils.copyProperties(responsibleInformations, responsible);
         return responsible;
     }

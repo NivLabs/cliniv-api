@@ -25,7 +25,7 @@ import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
-import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
+import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 
 /**
@@ -103,7 +103,7 @@ public class AttendanceEventService implements GenericService {
         return accommodationReturn;
     }
 
-    private Responsible convertResponsible(ResponsibleDTO responsible) {
+    private Responsible convertResponsible(ResponsibleInfoDTO responsible) {
         logger.info("Convertendo informações do responsável :: Identificador processado -> {}", responsible.getId());
         Responsible responsibleReturn = new Responsible();
         BeanUtils.copyProperties(responsible, responsibleReturn);
