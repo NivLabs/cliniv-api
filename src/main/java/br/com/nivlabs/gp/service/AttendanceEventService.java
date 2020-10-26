@@ -54,6 +54,8 @@ public class AttendanceEventService implements GenericService {
     private ResponsibleService responsibleService;
     @Autowired
     private EventTypeService eventTypeService;
+    @Autowired
+    private ProcedureService procedureService;
 
     public Page<AttendanceEvent> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
@@ -74,7 +76,7 @@ public class AttendanceEventService implements GenericService {
         if (request.getEventDateTime() == null) {
             request.setEventDateTime(LocalDateTime.now());
         }
-        if (request.getResponsible() == null) {
+        if (request.getResponsible() == null || request.getResponsible().getId() == null) {
             UserInfoDTO userInfo = userService.findByUserName(userFromSession.getUsername());
             request.setResponsible(getResponsibleFromUser(userInfo));
         }
@@ -124,9 +126,8 @@ public class AttendanceEventService implements GenericService {
         logger.info("Convertendo informações de procedimento");
 
         Procedure procedureReturn = null;
-        if (procedure != null) {
-            procedureReturn = new Procedure();
-            BeanUtils.copyProperties(procedure, procedureReturn);
+        if (procedure != null && procedure.getId() != null) {
+            procedureReturn = procedureService.findById(procedure.getId());
         }
         return procedureReturn;
     }
