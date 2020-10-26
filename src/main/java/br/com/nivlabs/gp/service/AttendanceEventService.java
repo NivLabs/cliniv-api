@@ -52,6 +52,8 @@ public class AttendanceEventService implements GenericService {
     private UserService userService;
     @Autowired
     private ResponsibleService responsibleService;
+    @Autowired
+    private EventTypeService eventTypeService;
 
     public Page<AttendanceEvent> searchEntityPage(Pageable pageRequest) {
         return dao.findAll(pageRequest);
@@ -73,10 +75,11 @@ public class AttendanceEventService implements GenericService {
             request.setEventDateTime(LocalDateTime.now());
         }
         if (request.getResponsible() == null) {
-
             UserInfoDTO userInfo = userService.findByUserName(userFromSession.getUsername());
             request.setResponsible(getResponsibleFromUser(userInfo));
         }
+        request.setEventType(eventTypeService.findById(request.getEventType().getId()).getEventTypeDTOFromDomain());
+
         logger.info("Iniciando o processo de criação de evento de atendimento");
         logger.info("Identificador do atendimento: {}", request.getAttendanceId());
         logger.info("Identificador do solicitante: {}", request.getResponsible().getId());
