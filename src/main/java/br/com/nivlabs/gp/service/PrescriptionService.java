@@ -124,7 +124,7 @@ public class PrescriptionService implements GenericService {
         event.setAccommodation(medicalRecord.getLastAccommodation());
         logger.info("Evento processado, inserindo evento na base de dados...");
 
-        eventService.persistNewAttendanceEvent(event);
+        eventService.persistNewAttendanceEvent(event, null);
         logger.info("Evento inserido com sucesso!");
     }
 
