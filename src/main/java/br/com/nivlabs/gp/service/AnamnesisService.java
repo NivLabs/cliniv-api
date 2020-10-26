@@ -194,7 +194,7 @@ public class AnamnesisService implements GenericService {
         logger.info("Evento processado, inserindo evento na base de dados...");
 
         try {
-            eventService.persistNewAttendanceEvent(event);
+            eventService.persistNewAttendanceEvent(event, null);
             logger.info("Evento inserido com sucesso!");
         } catch (Exception e) {
             logger.error("Faha ao tentar inserir evento de anamnese na base de dados!", e);
