@@ -263,7 +263,7 @@ public class AttendanceEvent extends BaseObjectWithId {
 
     public AttendanceEventDTO getDTO() {
         return new AttendanceEventDTO(this.getId(),
-                this.getEventDateTime(), this.getEventType().getDescription(), convertDocuments(this.getDocuments()),
+                this.getEventDateTime(), this.getTitle(), convertDocuments(this.getDocuments()),
                 this.getAccommodation().getDTO());
     }
 
