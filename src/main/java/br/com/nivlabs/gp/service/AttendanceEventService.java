@@ -76,7 +76,7 @@ public class AttendanceEventService implements GenericService {
         if (request.getEventDateTime() == null) {
             request.setEventDateTime(LocalDateTime.now());
         }
-        if (request.getResponsible() == null) {
+        if (request.getResponsible() == null || request.getResponsible().getId() == null) {
             UserInfoDTO userInfo = userService.findByUserName(userFromSession.getUsername());
             request.setResponsible(getResponsibleFromUser(userInfo));
         }
