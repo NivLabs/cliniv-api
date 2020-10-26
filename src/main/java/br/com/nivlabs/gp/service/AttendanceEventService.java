@@ -29,6 +29,7 @@ import br.com.nivlabs.gp.models.dto.ProcedureDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
+import br.com.nivlabs.gp.util.StringUtils;
 
 /**
  * Classe VisitEventService.java
@@ -96,6 +97,8 @@ public class AttendanceEventService implements GenericService {
         newAttendanceEvent.setResponsible(convertResponsible(request.getResponsible()));
         newAttendanceEvent.setAccommodation(convertAccommodation(request.getAccommodation()));
         newAttendanceEvent.setTitle(request.getEventType().getDescription());
+        if (request.getProcedure() != null && !StringUtils.isNullOrEmpty(request.getProcedure().getDescription()))
+            newAttendanceEvent.setTitle(request.getProcedure().getDescription());
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
 
         Long newEventId = dao.save(newAttendanceEvent).getId();
