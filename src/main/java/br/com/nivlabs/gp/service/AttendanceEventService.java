@@ -98,7 +98,8 @@ public class AttendanceEventService implements GenericService {
         newAttendanceEvent.setAccommodation(convertAccommodation(request.getAccommodation()));
         newAttendanceEvent.setTitle(request.getEventType().getDescription());
         if (request.getProcedure() != null && !StringUtils.isNullOrEmpty(request.getProcedure().getDescription()))
-            newAttendanceEvent.setTitle(request.getProcedure().getDescription());
+            newAttendanceEvent
+                    .setTitle(request.getProcedure().getId().toString().concat(" ").concat(request.getProcedure().getDescription()));
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
 
         Long newEventId = dao.save(newAttendanceEvent).getId();
