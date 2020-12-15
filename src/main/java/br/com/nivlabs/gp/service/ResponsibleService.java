@@ -16,6 +16,7 @@ import br.com.nivlabs.gp.controller.filters.ResponsibleFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Person;
+import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.domain.Responsible_;
@@ -238,6 +239,11 @@ public class ResponsibleService {
         }
         if (responsible.getDocument() != null && responsible.getDocument().getType().equals(DocumentType.CPF)) {
             personFromDb.setCpf(responsible.getDocument().getValue());
+        }
+        if (responsible.getAddress() != null) {
+            PersonAddress address = new PersonAddress();
+            BeanUtils.copyProperties(responsible.getAddress(), address);
+            personFromDb.setAddress(address);
         }
 
         handleSpecializations(responsible, responsibleFromDb);
