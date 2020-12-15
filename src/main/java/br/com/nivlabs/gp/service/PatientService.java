@@ -106,8 +106,10 @@ public class PatientService implements GenericService {
      */
     private void setPatientHistory(PatientInfoDTO patientInfo) {
         try {
-            logger.info("Buscando histórico de atendimentos do paciente...");
-            patientInfo.getAttendanceHistory().addAll(attendanceService.getAttandenceByPatientId(patientInfo.getId()));
+            if (patientInfo.getId() != null) {
+                logger.info("Buscando histórico de atendimentos do paciente...");
+                patientInfo.getAttendanceHistory().addAll(attendanceService.getAttandenceByPatientId(patientInfo.getId()));
+            }
         } catch (HttpException e) {
             logger.info("Nenhum atendimento para o paciente...");
         }
