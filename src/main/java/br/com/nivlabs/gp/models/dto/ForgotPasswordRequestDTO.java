@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 
@@ -32,7 +32,7 @@ public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
     @ApiModelProperty("Data de nascimento")
     @NotNull(message = "Informe a data de nascimento!")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDateTime bornDate;
+    private LocalDate bornDate;
 
     @ApiModelProperty("Nova senha")
     @NotNull(message = "Informe a nova senha!")
@@ -58,11 +58,11 @@ public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
         this.motherName = motherName;
     }
 
-    public LocalDateTime getBornDate() {
+    public LocalDate getBornDate() {
         return bornDate;
     }
 
-    public void setBornDate(LocalDateTime bornDate) {
+    public void setBornDate(LocalDate bornDate) {
         this.bornDate = bornDate;
     }
 

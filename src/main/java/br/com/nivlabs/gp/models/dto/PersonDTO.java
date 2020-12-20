@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -32,7 +32,7 @@ public abstract class PersonDTO extends DataTransferObjectBase {
     private String cpf;
 
     @DateTimeFormat(iso = ISO.DATE)
-    private LocalDateTime bornDate;
+    private LocalDate bornDate;
 
     private String principalNumber;
 
@@ -78,11 +78,11 @@ public abstract class PersonDTO extends DataTransferObjectBase {
         this.cpf = cpf;
     }
 
-    public LocalDateTime getBornDate() {
+    public LocalDate getBornDate() {
         return bornDate;
     }
 
-    public void setBornDate(LocalDateTime bornDate) {
+    public void setBornDate(LocalDate bornDate) {
         this.bornDate = bornDate;
     }
 

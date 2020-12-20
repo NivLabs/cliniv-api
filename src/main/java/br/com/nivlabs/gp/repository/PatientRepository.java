@@ -22,6 +22,9 @@ import br.com.nivlabs.gp.repository.custom.patient.PatientRepositoryCustom;
 public interface PatientRepository extends JpaRepository<Patient, Long>, PatientRepositoryCustom {
 
     /**
+     * 
+     * Busca paciente por CPF informado
+     * 
      * @param cpf
      * @return
      */
@@ -29,9 +32,10 @@ public interface PatientRepository extends JpaRepository<Patient, Long>, Patient
     public Optional<Patient> findByCpf(String cpf);
 
     /**
+     * Busca informações por composição de chave
+     * 
      * @param name
      * @param motherName
-     * @param bornDate
      * @return
      */
     @Query("from Patient where firstName like :name and motherName like :motherName")
