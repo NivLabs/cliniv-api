@@ -1,5 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Data de nascimento")
     @DateTimeFormat(iso = ISO.DATE)
-    private LocalDateTime bornDate;
+    private LocalDate bornDate;
 
     @ApiModelProperty("Acomodação")
     private AccommodationDTO lastAccommodation;
@@ -164,11 +165,11 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         this.susNumber = susNumber;
     }
 
-    public LocalDateTime getBornDate() {
+    public LocalDate getBornDate() {
         return bornDate;
     }
 
-    public void setBornDate(LocalDateTime bornDate) {
+    public void setBornDate(LocalDate bornDate) {
         this.bornDate = bornDate;
     }
 

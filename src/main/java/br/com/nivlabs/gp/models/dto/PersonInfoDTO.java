@@ -1,6 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -41,7 +41,7 @@ public abstract class PersonInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Data de nascimento da pessoa")
     @NotNull(message = "A data de nascimento é obrigatória")
     @DateTimeFormat(iso = ISO.DATE)
-    private LocalDateTime bornDate;
+    private LocalDate bornDate;
 
     @ApiModelProperty("Documento da pessoa")
     @NotNull(message = "O documento deve ser informado")
@@ -101,11 +101,11 @@ public abstract class PersonInfoDTO extends DataTransferObjectBase {
 		this.socialName = socialName;
 	}
 
-	public LocalDateTime getBornDate() {
+	public LocalDate getBornDate() {
 		return bornDate;
 	}
 
-	public void setBornDate(LocalDateTime bornDate) {
+	public void setBornDate(LocalDate bornDate) {
 		this.bornDate = bornDate;
 	}
 
