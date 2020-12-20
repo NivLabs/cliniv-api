@@ -16,6 +16,7 @@ import br.com.nivlabs.gp.controller.filters.PatientFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.PatientType;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt_;
 import br.com.nivlabs.gp.models.domain.HealthPlan;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.PatientAllergy;
@@ -213,7 +214,7 @@ public class PatientService implements GenericService {
     }
 
     /**
-     * Atualiza paciente
+     * Atualiza informações do paciente
      * 
      * @param id
      * @param entity
@@ -222,16 +223,20 @@ public class PatientService implements GenericService {
     public PatientInfoDTO update(Long id, PatientInfoDTO entity) {
         Patient patient = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Paciente com o identificador %s não encontrado", id)));
+        logger.info("Atualizando informações do paciente :: {} | {}", entity.getId(),
+                    entity.getFullName() == null ? "Nome não informado" : entity.getFullName());
         checkSusCode(entity, patient);
         Person entityFromDb = patient.getPerson();
         checkDocument(entity, patient, entityFromDb);
-        BeanUtils.copyProperties(entity, entityFromDb, Patient_.ID, Patient_.ALLERGIES);
+        BeanUtils.copyProperties(entity, entityFromDb, Patient_.ID, Patient_.ALLERGIES, BaseObjectWithCreatedAt_.CREATED_AT);
         addressProcess(entity, entityFromDb);
         personService.update(entityFromDb.getId(), entityFromDb);
-        BeanUtils.copyProperties(entity, patient, Patient_.ID, Patient_.ALLERGIES);
+        BeanUtils.copyProperties(entity, patient, Patient_.ID, Patient_.ALLERGIES, BaseObjectWithCreatedAt_.CREATED_AT);
         handlePatientType(patient);
         handleHealthPlah(entity, patient);
         dao.save(patient);
+
+        logger.info("Cadastro do paciente :: {} | {} :: atualizado com sucesso!", entity.getId(), entity.getFullName());
 
         return entity;
     }
@@ -245,6 +250,7 @@ public class PatientService implements GenericService {
     private void handleHealthPlah(PatientInfoDTO entity, Patient patient) {
         if (entity.getHealthPlan() != null
                 && !StringUtils.isNullOrEmpty(entity.getHealthPlan().getPatientPlanNumber())) {
+            logger.info("Iniciando processo de validação de Plano de Saúde do paciente...");
             if (entity.getHealthPlan().getPlanCode() == null) {
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O plano de saúde deve ser informado!");
             }
@@ -255,6 +261,7 @@ public class PatientService implements GenericService {
                                                                                                                            "Plano de saúde não cadastrado"));
             patient.setHealthPlanCode(entity.getHealthPlan().getPatientPlanNumber());
             patient.setHealthPlan(planFromDb);
+            logger.info("Plano de saúde validado com sucesso :: Identificador :: {}", planFromDb.getId());
         }
     }
 
@@ -343,6 +350,7 @@ public class PatientService implements GenericService {
      * @param newPatient
      */
     private void handlePatientType(Patient newPatient) {
+        logger.info("Checando tipo de paciente...");
         if (StringUtils.isNullOrEmpty(newPatient.getSusNumber())
                 && StringUtils.isNullOrEmpty(newPatient.getPerson().getMotherName())
                 && StringUtils.isNullOrEmpty(newPatient.getPerson().getCpf())) {
@@ -350,6 +358,7 @@ public class PatientService implements GenericService {
         } else {
             newPatient.setType(PatientType.IDENTIFIED);
         }
+        logger.info("Tipo de paciente :: {}", newPatient.getType());
     }
 
     /**
