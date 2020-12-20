@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.controller.filters.UserFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt_;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.models.domain.Person_;
@@ -329,7 +330,7 @@ public class UserService {
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário não encontrado! Identificador informado: " + id));
 
         entityFromDb.setPerson(getPersonFromUserInfo(entityFromDb.getPerson(), entity));
-        BeanUtils.copyProperties(entity, entityFromDb);
+        BeanUtils.copyProperties(entity, entityFromDb, BaseObjectWithCreatedAt_.CREATED_AT);
 
         entityFromDb.setRoles(Arrays.asList());
         handleRoles(entity, entityFromDb);
