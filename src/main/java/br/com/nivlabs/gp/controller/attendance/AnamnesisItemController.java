@@ -35,15 +35,16 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/attendance/anamnese-item")
 public class AnamnesisItemController {
 
-	@Autowired
-	private AnamnesisItemService service;
+    @Autowired
+    private AnamnesisItemService service;
 
-	@ApiOperation(nickname = "anamnese-item-get", value = "Busca uma página de Questões de Anamnese")
-	@GetMapping
-	@PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-	public ResponseEntity<Page<AnamnesisItemDTO>> findPage(CustomFilters filters) {
-		Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
-				Direction.valueOf(filters.getDirection()), filters.getOrderBy());
-		return ResponseEntity.ok(service.searchDTOPage(pageSettings));
-	}
+    @ApiOperation(nickname = "anamnese-item-get", value = "Busca uma página de Questões de Anamnese")
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    public ResponseEntity<Page<AnamnesisItemDTO>> findPage(CustomFilters filters) {
+        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
+                                               Direction.valueOf(filters.getDirection()), filters.getOrderBy());
+        return ResponseEntity.ok(service.searchDTOPage(pageSettings));
+    }
+
 }

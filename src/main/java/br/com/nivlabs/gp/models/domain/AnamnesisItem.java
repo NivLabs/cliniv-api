@@ -1,12 +1,16 @@
 package br.com.nivlabs.gp.models.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.beans.BeanUtils;
@@ -32,6 +36,11 @@ public class AnamnesisItem extends BaseObjectWithId {
     @Column(name = "TIPO")
     @Enumerated(EnumType.STRING)
     private MetaType metaType;
+
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_ANAMNESE_FORM")
+    @JsonIgnore
+    private AnamnesisForm form;
 
     @JsonIgnore
     public AnamnesisItemDTO getAnamnesisItemDTOFromDomain() {
@@ -75,10 +84,19 @@ public class AnamnesisItem extends BaseObjectWithId {
         this.metaType = metaType;
     }
 
+    public AnamnesisForm getForm() {
+        return form;
+    }
+
+    public void setForm(AnamnesisForm form) {
+        this.form = form;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((form == null) ? 0 : form.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((metaType == null) ? 0 : metaType.hashCode());
         result = prime * result + ((question == null) ? 0 : question.hashCode());
@@ -94,6 +112,11 @@ public class AnamnesisItem extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         AnamnesisItem other = (AnamnesisItem) obj;
+        if (form == null) {
+            if (other.form != null)
+                return false;
+        } else if (!form.equals(other.form))
+            return false;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -111,7 +134,7 @@ public class AnamnesisItem extends BaseObjectWithId {
 
     @Override
     public String toString() {
-        return "AnamnesisItem [id=" + id + ", question=" + question + ", metaType=" + metaType + "]";
+        return "AnamnesisItem [id=" + id + ", question=" + question + ", metaType=" + metaType + ", form=" + form + "]";
     }
 
 }

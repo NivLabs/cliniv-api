@@ -59,7 +59,7 @@ public class JasperReportsCreator {
             reportCompiled = JasperCompileManager.compileReport(reportStream);
             return JasperFillManager.fillReport(reportCompiled, paramsToReport.getParams(), datasource.getConnection());
         } catch (Exception e) {
-            logger.error("Falha ao tentar criar um datasource para o Jasper", e);
+            logger.error("Falha ao tentar compilar o relatório para o Jasper", e);
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha na criação do relatório");
         }
     }
