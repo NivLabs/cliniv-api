@@ -3,7 +3,6 @@
  */
 package br.com.nivlabs.gp.service;
 
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,10 +21,12 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
+import br.com.nivlabs.gp.models.domain.AnamnesisForm;
 import br.com.nivlabs.gp.models.domain.Anamnesis_;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
+import br.com.nivlabs.gp.models.dto.AnamnesisFormDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
@@ -35,6 +36,7 @@ import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
+import br.com.nivlabs.gp.repository.AnamnesisFormRepository;
 import br.com.nivlabs.gp.repository.AnamnesisRepository;
 import br.com.nivlabs.gp.util.StringUtils;
 
@@ -53,13 +55,15 @@ public class AnamnesisService implements GenericService {
     private static final String VISIT_ID = "VISIT_ID";
     private static final String FALSE = "false";
     private static final String TRUE = "true";
-    private static final InputStream REPORT_SOURCE = ClassLoader.getSystemResourceAsStream("reports/Anamnese.jrxml");
+    private static final String RESPOT_PATH = "reports/Anamnese.jrxml";
 
     @Autowired
     private Logger logger;
 
     @Autowired
     private AnamnesisRepository dao;
+    @Autowired
+    private AnamnesisFormRepository formDao;
 
     @Autowired
     private ReportService reportService;
@@ -163,7 +167,7 @@ public class AnamnesisService implements GenericService {
         logger.info("Preparando documento de anamnese...");
         DigitalDocumentDTO document = reportService
                 .createDocumentFromReport(request.getAttendanceId(), "Relatório de Anamnese", getAnamnesisReportParams(request, user),
-                                          REPORT_SOURCE);
+                                          ClassLoader.getSystemResourceAsStream(RESPOT_PATH));
 
         createAnamneseDocumentEvent(request, medicalRecord, document, user);
 
@@ -313,6 +317,47 @@ public class AnamnesisService implements GenericService {
     public Anamnesis persist(Anamnesis entity) {
         entity.setId(null);
         return dao.save(entity);
+    }
+
+    /**
+     * Busca um formulário de anamnese pelo identificador do mesmo
+     * 
+     * @param id Identificador único do formulário de Anamnese
+     * @return Formulário de Anamnese com título e perguntas
+     */
+    public AnamnesisFormDTO findFormById(Long id) {
+        logger.info("Iniciando processo de busca de formulário de anamnese pelo identificador :: {}", id);
+
+        AnamnesisForm objFromDb = formDao.findById(id)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                        String.format("Formulário com o identificador %s não encontrado", id)));
+        logger.info("Formulário encontrado :: {} | {} :: Iniciando processo de conversão...", objFromDb.getId(), objFromDb.getTitle());
+
+        AnamnesisFormDTO response = new AnamnesisFormDTO();
+        BeanUtils.copyProperties(objFromDb, response);
+        logger.info("Conversão finalizada, devolvendo resposta para o client.");
+        return response;
+    }
+
+    /**
+     * Busca uma página de formulárioes de anamnese
+     * 
+     * @param pageSettings Configurações de paginação
+     * @return Página de formulários de anamnese
+     */
+    public Page<AnamnesisFormDTO> findPageOfAnamnesisForms(Pageable pageSettings) {
+        logger.info("Iniciando busca de formulários de Anamnese..");
+        Page<AnamnesisForm> pageFromDb = formDao.findAll(pageSettings);
+        if (pageFromDb.getTotalElements() == 0) {
+            throw new HttpException(HttpStatus.NOT_FOUND,
+                    "Nenhum formulário de anamnese encontrado, cadastre um antes de utilizar este recurso.");
+        }
+
+        logger.info("Um total de {} formulários encontrados, iniciando processo de conversão...", pageFromDb.getTotalElements());
+        List<AnamnesisFormDTO> newPage = new ArrayList<>();
+        pageFromDb.getContent().forEach(domain -> newPage.add(new AnamnesisFormDTO(domain.getId(), domain.getTitle(), Arrays.asList())));
+
+        return new PageImpl<>(newPage, pageSettings, pageFromDb.getTotalElements());
     }
 
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.controller.filters.ResponsibleFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt_;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.models.domain.Person_;
@@ -158,7 +159,7 @@ public class ResponsibleService {
         Responsible responsibleFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format(RESPONSIBLE_NOT_FOUND, id)));
 
-        BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), Responsible_.ID, Responsible_.CREATED_AT);
+        BeanUtils.copyProperties(responsible, responsibleFromDb.getPerson(), Responsible_.ID, BaseObjectWithCreatedAt_.CREATED_AT);
         if (responsible.getProfessionalIdentity() != null) {
             responsibleFromDb.setProfessionalIdentity(responsible.getProfessionalIdentity().getRegisterValue());
             responsibleFromDb.setInitialsIdentity(responsible.getProfessionalIdentity().getRegisterType());

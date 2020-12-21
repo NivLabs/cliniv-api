@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
+import br.com.nivlabs.gp.models.dto.AnamnesisFormDTO;
 import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
 import br.com.nivlabs.gp.service.AnamnesisService;
 import io.swagger.annotations.Api;
@@ -91,14 +92,24 @@ public class AnamnesisController {
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         service.deleteAnamnesisFromAttendance(id);
         return ResponseEntity.noContent().build();
-
     }
 
-    @ApiOperation(nickname = "anamnese-get-id", value = "Busca uma anamnese baseada no identificador")
-    @GetMapping("/{id}")
+    @ApiOperation(nickname = "anamnese-form-get-id", value = "Busca um formulário de anamnese baseado no identificador")
+    @GetMapping("/form/{id}")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-    public ResponseEntity<AnamnesisDTO> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findById(id).getAnamneseDTOFromDomain());
+    public ResponseEntity<AnamnesisFormDTO> findFormById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findFormById(id));
+    }
+
+    @ApiOperation(nickname = "anamnese-form-page", value = "Busca uma anamnese baseada no identificador")
+    @GetMapping("/form")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
+    public ResponseEntity<Page<AnamnesisFormDTO>> findPageOfAnamnesisForms(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                                           @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
+                                                                           @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
+                                                                           @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+        Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+        return ResponseEntity.ok(service.findPageOfAnamnesisForms(pageSettings));
     }
 
 }

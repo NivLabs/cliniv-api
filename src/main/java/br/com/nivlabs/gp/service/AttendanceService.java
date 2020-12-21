@@ -360,7 +360,7 @@ public class AttendanceService implements GenericService {
             throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
-        logger.info("Realizando processamento do profissional para a requisição de evolução clínica");
+        logger.info("Realizando processamento do profissional para a requisição de criação de evento de atendimento");
         ResponsibleInfoDTO responsible = new ResponsibleInfoDTO();
         BeanUtils.copyProperties(responsibleInformations, responsible);
         return responsible;
