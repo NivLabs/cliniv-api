@@ -35,7 +35,7 @@ public class Responsible extends BaseObjectWithCreatedAt {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "ID_PESSOA")
     private Person person;
 

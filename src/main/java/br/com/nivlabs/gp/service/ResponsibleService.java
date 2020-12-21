@@ -222,7 +222,7 @@ public class ResponsibleService {
      * @param responsible
      * @return
      */
-    public ResponsibleDTO persistDTO(ResponsibleInfoDTO responsible) {
+    public ResponsibleInfoDTO persistDTO(ResponsibleInfoDTO responsible) {
         logger.info("Inciando processo de criação de profissional ou responsável...");
         Responsible responsibleFromDb = new Responsible();
 
@@ -241,9 +241,13 @@ public class ResponsibleService {
         if (responsible.getDocument() != null && responsible.getDocument().getType().equals(DocumentType.CPF)) {
             personFromDb.setCpf(responsible.getDocument().getValue());
         }
+        logger.info("Verificando endereço");
         if (responsible.getAddress() != null) {
             PersonAddress address = new PersonAddress();
+            if (personFromDb.getAddress() != null)
+                address = personFromDb.getAddress();
             BeanUtils.copyProperties(responsible.getAddress(), address);
+            address.setPerson(personFromDb);
             personFromDb.setAddress(address);
         }
 
@@ -251,15 +255,15 @@ public class ResponsibleService {
 
         if (personFromDb.getId() == null) {
             personService.persist(personFromDb);
+        } else {
+            personService.update(personFromDb.getId(), personFromDb);
         }
         responsibleFromDb.setPerson(personFromDb);
         responsibleFromDb.setCreatedAt(LocalDateTime.now());
         persist(responsibleFromDb);
 
-        ResponsibleDTO newResponsible = new ResponsibleDTO();
-        newResponsible.setId(responsibleFromDb.getId());
-        BeanUtils.copyProperties(responsibleFromDb.getPerson(), newResponsible, "id");
+        responsible.setId(responsibleFromDb.getId());
 
-        return newResponsible;
+        return responsible;
     }
 }

@@ -40,7 +40,7 @@ public class PersonService implements GenericService {
         BeanUtils.copyProperties(entity, person, Person_.ID);
         if (StringUtils.isNullOrEmpty(entity.getCpf()))
             person.setCpf(null);
-        person = dao.save(person);
+        person = dao.saveAndFlush(person);
         return person;
     }
 
