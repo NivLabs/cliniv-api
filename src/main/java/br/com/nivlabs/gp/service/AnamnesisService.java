@@ -3,6 +3,7 @@
  */
 package br.com.nivlabs.gp.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +57,7 @@ public class AnamnesisService implements GenericService {
     private static final String VISIT_ID = "VISIT_ID";
     private static final String FALSE = "false";
     private static final String TRUE = "true";
-    private static final String RESPOT_PATH = "reports/Anamnese.jrxml";
+    private static final String REPORT_PATH = "reports/Anamnese.jrxml";
 
     @Autowired
     private Logger logger;
@@ -163,13 +165,18 @@ public class AnamnesisService implements GenericService {
             item.setAttendanceId(request.getAttendanceId());
             persist(item.getAnamnesesDomainFromDTO());
         });
+        try {
 
-        logger.info("Preparando documento de anamnese...");
-        DigitalDocumentDTO document = reportService
-                .createDocumentFromReport(request.getAttendanceId(), "Relatório de Anamnese", getAnamnesisReportParams(request, user),
-                                          ClassLoader.getSystemResourceAsStream(RESPOT_PATH));
+            logger.info("Preparando documento de anamnese...");
 
-        createAnamneseDocumentEvent(request, medicalRecord, document, user);
+            DigitalDocumentDTO document = reportService
+                    .createDocumentFromReport(request.getAttendanceId(), "Relatório de Anamnese", getAnamnesisReportParams(request, user),
+                                              new ClassPathResource(REPORT_PATH).getInputStream());
+            createAnamneseDocumentEvent(request, medicalRecord, document, user);
+        } catch (IOException e) {
+            logger.error("Falha ao gerar documento de Anamnese", e);
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento de anamnese");
+        }
 
         return request;
     }
