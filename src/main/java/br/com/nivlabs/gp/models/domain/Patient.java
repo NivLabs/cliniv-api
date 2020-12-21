@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.nivlabs.gp.enums.PatientType;
@@ -40,7 +41,7 @@ public class Patient extends BaseObjectWithCreatedAt {
     @Column(name = "CODIGO_SUS")
     private String susNumber;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "ID_PESSOA")
     private Person person;
 

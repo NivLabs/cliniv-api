@@ -59,9 +59,9 @@ public class ResponsibleController {
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo responsável na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('PROFISSIONAL_ESCRITA', 'ADMIN')")
-    public ResponseEntity<ResponsibleDTO> persist(@Validated @RequestBody(required = true) ResponsibleInfoDTO responsible,
-                                                  HttpServletResponse response) {
-        ResponsibleDTO createdResponsible = service.persistDTO(responsible);
+    public ResponseEntity<ResponsibleInfoDTO> persist(@Validated @RequestBody(required = true) ResponsibleInfoDTO responsible,
+                                                      HttpServletResponse response) {
+        ResponsibleInfoDTO createdResponsible = service.persistDTO(responsible);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdResponsible.getId()));
 
