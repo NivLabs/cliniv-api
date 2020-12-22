@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,6 +23,7 @@ public class UserInfoDTO extends PersonInfoDTO {
 
     @ApiModelProperty("Nome de usuário")
     @NotNull(message = "Informe o nome de usuário")
+    @Size(max = 80, min = 2, message = "O nome de usuário deve conter de 2 a 80 caracteres")
     private String userName;
 
     @ApiModelProperty("Data de criação do usuário")
