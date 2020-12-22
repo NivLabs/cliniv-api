@@ -2,12 +2,20 @@ package br.com.nivlabs.gp.config.security;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import br.com.nivlabs.gp.exception.HttpException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 /**
  * Classe JwtUtils.java
@@ -18,6 +26,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
  */
 @Component
 public class JwtUtils {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     @Value("${jwt.secret}")
     private String secret;
@@ -54,8 +64,17 @@ public class JwtUtils {
     private Claims getClaims(String token) {
         try {
             return Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
-        } catch (Exception e) {
+        } catch (SignatureException ex) {
+            throw new HttpException(HttpStatus.UNAUTHORIZED, "Assinatura do token inválida!");
+        } catch (MalformedJwtException ex) {
+            throw new HttpException(HttpStatus.UNAUTHORIZED, "Token inválido!");
+        } catch (ExpiredJwtException ex) {
+            throw new HttpException(HttpStatus.UNAUTHORIZED, "Token expirado!");
+        } catch (UnsupportedJwtException ex) {
+            logger.error("Erro de JWT não suportado: ", ex);
             return null;
+        } catch (IllegalArgumentException ex) {
+            throw new HttpException(HttpStatus.UNAUTHORIZED, "As claims JWT estão vazias");
         }
     }
 
