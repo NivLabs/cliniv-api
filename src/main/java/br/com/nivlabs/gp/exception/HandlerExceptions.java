@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.com.nivlabs.gp.models.exception.ErrorItem;
+import io.jsonwebtoken.ExpiredJwtException;
 
 @ControllerAdvice
 public class HandlerExceptions {
@@ -55,6 +56,15 @@ public class HandlerExceptions {
                 "Erro da requisição", Arrays.asList(), e.getMessage(), req.getRequestURI());
 
         return ResponseEntity.status(e.getStatus()).body(err);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<StandardErrorSpring> expiredJwtException(ExpiredJwtException e, HttpServletRequest req) {
+        logger.error("Token expirado", e);
+        StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.UNAUTHORIZED.value(),
+                "Token expirado", Arrays.asList(), "Token expirado!", req.getRequestURI());
+
+        return ResponseEntity.status(err.getStatus()).body(err);
     }
 
     /**

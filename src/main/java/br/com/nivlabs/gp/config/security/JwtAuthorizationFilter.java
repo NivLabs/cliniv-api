@@ -1,18 +1,22 @@
 package br.com.nivlabs.gp.config.security;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import br.com.nivlabs.gp.exception.HttpException;
 
 /**
  * Classe AuthorizationFilter.java
@@ -23,44 +27,79 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
  */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-	private JwtUtils jwtUtils;
-	private UserDetailsService userDetailsService;
+    private JwtUtils jwtUtils;
+    private UserDetailsService userDetailsService;
 
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
-			UserDetailsService userDetailsService) {
-		super(authenticationManager);
-		this.jwtUtils = jwtUtils;
-		this.userDetailsService = userDetailsService;
-	}
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
+            UserDetailsService userDetailsService) {
+        super(authenticationManager);
+        this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
+    }
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain)
-			throws IOException, ServletException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse resp, FilterChain filterChain)
+            throws IOException, ServletException {
 
-		String authorizationHeader = req.getHeader("Authorization");
+        String authorizationHeader = req.getHeader("Authorization");
 
-		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-			UsernamePasswordAuthenticationToken auth = getAuthentication(authorizationHeader.substring(7));
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 
-			if (auth != null)
-				SecurityContextHolder.getContext().setAuthentication(auth);
-		}
+            UsernamePasswordAuthenticationToken auth = null;
+            try {
+                auth = getAuthentication(authorizationHeader.substring(7));
+            } catch (HttpException e) {
+                if (e.getStatus() == HttpStatus.UNAUTHORIZED) {
+                    resp.setStatus(401);
+                    resp.setContentType("application/json;charset=utf-8");
+                    resp.getWriter().append(json(req, e));
+                    return;
+                }
+            }
 
-		filterChain.doFilter(req, resp);
-	}
+            if (auth != null)
+                SecurityContextHolder.getContext().setAuthentication(auth);
+        }
 
-	/**
-	 * Pega informações do token
-	 * 
-	 * @param token
-	 * @return
-	 */
-	private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-		if (jwtUtils.isValidToken(token)) {
-			String userName = jwtUtils.getUserName(token);
-			UserDetails user = userDetailsService.loadUserByUsername(userName);
-			return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-		}
-		return null;
-	}
+        filterChain.doFilter(req, resp);
+    }
+
+    /**
+     * Converte os erros tratador Http da camada de utilidades de Token para objetos de resposta do filtro
+     * 
+     * @param req Requisição http
+     * @param e Exception lançada pelo utilitário
+     * @return Json em String para setar no Stream da resposta do filtro
+     */
+    private String json(HttpServletRequest req, HttpException e) {
+        String jsonResponse = """
+                {
+                   "timestamp": DATE,
+                   "status": 401,
+                   "error": "ERROR",
+                   "message": "MESSAGE",
+                   "path": "PATH"
+                }
+                """;
+        return ("" + jsonResponse)
+                .replace("DATE", String.valueOf(new Date().getTime()))
+                .replace("ERROR", "Não autorizado")
+                .replace("MESSAGE", e.getMessage())
+                .replace("PATH", req.getServletPath());
+    }
+
+    /**
+     * Pega informações do token
+     * 
+     * @param token
+     * @return
+     */
+    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        if (jwtUtils.isValidToken(token)) {
+            String userName = jwtUtils.getUserName(token);
+            UserDetails user = userDetailsService.loadUserByUsername(userName);
+            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        }
+        return null;
+    }
 }
