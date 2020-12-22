@@ -64,6 +64,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         filterChain.doFilter(req, resp);
     }
 
+    /**
+     * Converte os erros tratador Http da camada de utilidades de Token para objetos de resposta do filtro
+     * 
+     * @param req Requisição http
+     * @param e Exception lançada pelo utilitário
+     * @return Json em String para setar no Stream da resposta do filtro
+     */
     private String json(HttpServletRequest req, HttpException e) {
         String jsonResponse = """
                 {
@@ -74,12 +81,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                    "path": "PATH"
                 }
                 """;
-        jsonResponse = jsonResponse.replace("DATE", String.valueOf(new Date().getTime()));
-        jsonResponse = jsonResponse.replace("ERROR", "Não autorizado");
-        jsonResponse = jsonResponse.replace("MESSAGE", e.getMessage());
-        jsonResponse = jsonResponse.replace("PATH", req.getServletPath());
-
-        return jsonResponse;
+        return ("" + jsonResponse)
+                .replace("DATE", String.valueOf(new Date().getTime()))
+                .replace("ERROR", "Não autorizado")
+                .replace("MESSAGE", e.getMessage())
+                .replace("PATH", req.getServletPath());
     }
 
     /**
