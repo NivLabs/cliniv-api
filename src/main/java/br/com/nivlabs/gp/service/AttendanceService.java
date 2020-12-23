@@ -223,8 +223,21 @@ public class AttendanceService implements GenericService {
                 convertedAttendance.setLevel(request.getLevel());
                 convertedAttendance.setPatient(new Patient(savedPatient.getId()));
                 convertedAttendance.setCurrentAccommodation(new Accommodation(request.getAccommodationId(), null, null, null));
-                convertedAttendance.setEntryType(
-                                                 request.getEventTypeId().intValue() == 2 ? EntryType.EMERGENCY : EntryType.CLINICAL);
+
+                switch (request.getEventTypeId().intValue()) {
+                    case 2:
+                        convertedAttendance.setEntryType(EntryType.EMERGENCY);
+                        break;
+                    case 3:
+                        convertedAttendance.setEntryType(EntryType.CLINICAL);
+                        break;
+                    case 21:
+                        convertedAttendance.setEntryType(EntryType.REMOTE);
+                        break;
+                    default:
+                        throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                                "O tipo de evento informado não é válido para este processo.");
+                }
                 convertedAttendance = persist(convertedAttendance);
                 createEntryEvent(convertedAttendance, request);
                 attendance = getActiveMedicalRecord(request.getPatientId());
@@ -256,9 +269,10 @@ public class AttendanceService implements GenericService {
             // Verificar Responsável
             entryEvent.setResponsible(new Responsible(request.getResponsibleId()));
 
-        if (request.getEventTypeId() != 1L && request.getEventTypeId() != 2L && request.getEventTypeId() != 3L)
+        if (request.getEventTypeId() != 1L && request.getEventTypeId() != 2L && request.getEventTypeId() != 3L
+                && request.getEventTypeId() != 21)
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "O tipo de evento informado é inválido. Tipos de eventos esperados: Entrada de paciente (1 - Entrada, 2 - Entrada Emergência ou 3 - Entrada Ambulatório)");
+                    "O tipo de evento informado é inválido. Tipos de eventos esperados: Entrada de paciente (1 - Entrada, 2 - Entrada Emergência, 3 - Entrada Ambulatório ou 21 - Consulta Remota)");
         // Verificar Tipo do evento
         entryEvent.setEventType(new EventType(request.getEventTypeId()));
 
