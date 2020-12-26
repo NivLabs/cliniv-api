@@ -165,6 +165,7 @@ public class AttendanceEventService implements GenericService {
         documents.forEach(doc -> {
             logger.info("Documento sendo processado :: Código do evento -> {} | Nome -> {}", attendanceEventId, doc.getName());
             doc.setAttendanceEventId(attendanceEventId);
+            doc.setCreatedAt(LocalDateTime.now());
             docService.persist(doc);
             logger.info("Documentos criados com sucesso!");
         });
