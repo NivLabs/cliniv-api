@@ -1,41 +1,54 @@
-package br.com.nivlabs.gp.models.dto;
+package br.com.nivlabs.gp.models.domain;
 
 import java.time.LocalDateTime;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import br.com.nivlabs.gp.enums.ScheduleStatus;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt;
 
-@ApiModel("Informações do agendamento")
-public class ScheduleInfoDTO extends DataTransferObjectBase {
+/**
+ * Entidade que representa um agendamento no banco
+ * 
+ * @author viniciosarodrigues
+ *
+ */
+@Entity(name = "AGENDAMENTO")
+public class Schedule extends BaseObjectWithCreatedAt {
 
-    private static final long serialVersionUID = -7082539967186369611L;
+    private static final long serialVersionUID = 4186684259235415032L;
 
-    @ApiModelProperty("Identificador único do agendamento")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ApiModelProperty("Paciente do agendamento")
-    private PatientInfoDTO patient;
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_PACIENTE")
+    private Patient patient;
 
-    @ApiModelProperty("Profissional do agendamento")
-    private ResponsibleInfoDTO professional;
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_RESPONSAVEL")
+    private Responsible professional;
 
-    @ApiModelProperty("Data/Hora do agendamento")
-    @DateTimeFormat(iso = ISO.DATE)
+    @Column(name = "DATA_HORA")
     private LocalDateTime schedulingDateAndTime;
 
-    @ApiModelProperty("Anotações sobre o agendamento")
+    @Column(name = "ANOTACOES")
     private String annotation;
 
-    @ApiModelProperty("Situação atual do agendamento")
+    @Column(name = "SITUACAO")
+    @Enumerated(EnumType.STRING)
     private ScheduleStatus status;
-
-    public ScheduleInfoDTO() {
-        super();
-    }
 
     public Long getId() {
         return id;
@@ -45,19 +58,19 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
         this.id = id;
     }
 
-    public PatientInfoDTO getPatient() {
+    public Patient getPatient() {
         return patient;
     }
 
-    public void setPatient(PatientInfoDTO patient) {
+    public void setPatient(Patient patient) {
         this.patient = patient;
     }
 
-    public ResponsibleInfoDTO getProfessional() {
+    public Responsible getProfessional() {
         return professional;
     }
 
-    public void setProfessional(ResponsibleInfoDTO professional) {
+    public void setProfessional(Responsible professional) {
         this.professional = professional;
     }
 
@@ -85,10 +98,12 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
         this.status = status;
     }
 
+
+    
     @Override
     public String toString() {
-        return "ScheduleInfoDTO [id=" + id + ", patient=" + patient + ", professional=" + professional + ", schedulingDateAndTime="
-                + schedulingDateAndTime + ", annotation=" + annotation + ", status=" + status + "]";
+        return "Schedule [id=" + id + ", patient=" + patient + ", professional=" + professional + ", annotation=" + annotation + ", status="
+                + status + "]";
     }
 
     @Override
@@ -99,7 +114,6 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((patient == null) ? 0 : patient.hashCode());
         result = prime * result + ((professional == null) ? 0 : professional.hashCode());
-        result = prime * result + ((schedulingDateAndTime == null) ? 0 : schedulingDateAndTime.hashCode());
         result = prime * result + ((status == null) ? 0 : status.hashCode());
         return result;
     }
@@ -112,7 +126,7 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ScheduleInfoDTO other = (ScheduleInfoDTO) obj;
+        Schedule other = (Schedule) obj;
         if (annotation == null) {
             if (other.annotation != null)
                 return false;
@@ -132,11 +146,6 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
             if (other.professional != null)
                 return false;
         } else if (!professional.equals(other.professional))
-            return false;
-        if (schedulingDateAndTime == null) {
-            if (other.schedulingDateAndTime != null)
-                return false;
-        } else if (!schedulingDateAndTime.equals(other.schedulingDateAndTime))
             return false;
         if (status != other.status)
             return false;
