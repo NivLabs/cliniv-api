@@ -2,6 +2,9 @@ package br.com.nivlabs.gp.controller.filters;
 
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 
 /**
@@ -16,13 +19,10 @@ public class ScheduleFilters extends CustomFilters {
 
     private String professionalId;
 
+    @DateTimeFormat(iso = ISO.DATE)
     private LocalDate selectedDate;
 
-    private Boolean isConfirmed;
-
-    private Boolean isMissed;
-
-    private Boolean isCanceled;
+    private String status;
 
     public String getProfessionalId() {
         return professionalId;
@@ -40,45 +40,26 @@ public class ScheduleFilters extends CustomFilters {
         this.selectedDate = selectedDate;
     }
 
-    public Boolean getIsConfirmed() {
-        return isConfirmed;
+    public String getStatus() {
+        return status;
     }
 
-    public void setIsConfirmed(Boolean isConfirmed) {
-        this.isConfirmed = isConfirmed;
-    }
-
-    public Boolean getIsMissed() {
-        return isMissed;
-    }
-
-    public void setIsMissed(Boolean isMissed) {
-        this.isMissed = isMissed;
-    }
-
-    public Boolean getIsCanceled() {
-        return isCanceled;
-    }
-
-    public void setIsCanceled(Boolean isCanceled) {
-        this.isCanceled = isCanceled;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
-        return "ScheduleFilters [professionalId=" + professionalId + ", selectedDate=" + selectedDate + ", isConfirmed=" + isConfirmed
-                + ", isMissed=" + isMissed + ", isCanceled=" + isCanceled + "]";
+        return "ScheduleFilters [professionalId=" + professionalId + ", selectedDate=" + selectedDate + ", status=" + status + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + ((isCanceled == null) ? 0 : isCanceled.hashCode());
-        result = prime * result + ((isConfirmed == null) ? 0 : isConfirmed.hashCode());
-        result = prime * result + ((isMissed == null) ? 0 : isMissed.hashCode());
         result = prime * result + ((professionalId == null) ? 0 : professionalId.hashCode());
         result = prime * result + ((selectedDate == null) ? 0 : selectedDate.hashCode());
+        result = prime * result + ((status == null) ? 0 : status.hashCode());
         return result;
     }
 
@@ -91,21 +72,6 @@ public class ScheduleFilters extends CustomFilters {
         if (getClass() != obj.getClass())
             return false;
         ScheduleFilters other = (ScheduleFilters) obj;
-        if (isCanceled == null) {
-            if (other.isCanceled != null)
-                return false;
-        } else if (!isCanceled.equals(other.isCanceled))
-            return false;
-        if (isConfirmed == null) {
-            if (other.isConfirmed != null)
-                return false;
-        } else if (!isConfirmed.equals(other.isConfirmed))
-            return false;
-        if (isMissed == null) {
-            if (other.isMissed != null)
-                return false;
-        } else if (!isMissed.equals(other.isMissed))
-            return false;
         if (professionalId == null) {
             if (other.professionalId != null)
                 return false;
@@ -115,6 +81,11 @@ public class ScheduleFilters extends CustomFilters {
             if (other.selectedDate != null)
                 return false;
         } else if (!selectedDate.equals(other.selectedDate))
+            return false;
+        if (status == null) {
+            if (other.status != null)
+                return false;
+        } else if (!status.equals(other.status))
             return false;
         return true;
     }

@@ -3,6 +3,9 @@ package br.com.nivlabs.gp.controller.patient;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +30,9 @@ public class ScheduleController {
     @GetMapping
     @PreAuthorize("hasAnyRole('AGENDA_LEITURA', 'PACIENTE_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<List<ScheduleInfoDTO>> getSchedulesByFilters(ScheduleFilters filters) {
-        return ResponseEntity.ok(principalService.findByFilters(filters));
+        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
+                                               Direction.valueOf(filters.getDirection()), filters.getOrderBy());
+        return ResponseEntity.ok(principalService.findByFilters(filters, pageSettings));
     }
 
 }
