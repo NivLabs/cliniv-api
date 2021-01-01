@@ -23,9 +23,13 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Profissional do agendamento")
     private ResponsibleInfoDTO professional;
 
-    @ApiModelProperty("Data/Hora do agendamento")
+    @ApiModelProperty("Data/Hora agendada")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime schedulingDateAndTime;
+
+    @ApiModelProperty("Data/Hora do agendamento")
+    @DateTimeFormat(iso = ISO.DATE)
+    private LocalDateTime createdAt;
 
     @ApiModelProperty("Anotações sobre o agendamento")
     private String annotation;
@@ -85,10 +89,18 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
         this.status = status;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
         return "ScheduleInfoDTO [id=" + id + ", patient=" + patient + ", professional=" + professional + ", schedulingDateAndTime="
-                + schedulingDateAndTime + ", annotation=" + annotation + ", status=" + status + "]";
+                + schedulingDateAndTime + ", createdAt=" + createdAt + ", annotation=" + annotation + ", status=" + status + "]";
     }
 
     @Override
@@ -96,6 +108,7 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((annotation == null) ? 0 : annotation.hashCode());
+        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((patient == null) ? 0 : patient.hashCode());
         result = prime * result + ((professional == null) ? 0 : professional.hashCode());
@@ -117,6 +130,11 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
             if (other.annotation != null)
                 return false;
         } else if (!annotation.equals(other.annotation))
+            return false;
+        if (createdAt == null) {
+            if (other.createdAt != null)
+                return false;
+        } else if (!createdAt.equals(other.createdAt))
             return false;
         if (id == null) {
             if (other.id != null)
