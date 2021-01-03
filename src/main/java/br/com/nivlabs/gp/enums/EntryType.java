@@ -1,5 +1,5 @@
 package br.com.nivlabs.gp.enums;
 
 public enum EntryType {
-    CLINICAL, EMERGENCY, REMOTE
+    CLINICAL, EMERGENCY, REMOTE, GENERIC
 }

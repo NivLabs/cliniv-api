@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import br.com.nivlabs.gp.enums.EventType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -30,7 +31,7 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Tipo do evento")
     @NotNull(message = "Informar o tipo do evento é obrigatório")
-    private EventTypeDTO eventType;
+    private EventType eventType;
 
     @ApiModelProperty("Obsevações (se houver)")
     private String observations;
@@ -70,11 +71,11 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
         this.documents = documents;
     }
 
-    public EventTypeDTO getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 
-    public void setEventType(EventTypeDTO eventType) {
+    public void setEventType(EventType eventType) {
         this.eventType = eventType;
     }
 

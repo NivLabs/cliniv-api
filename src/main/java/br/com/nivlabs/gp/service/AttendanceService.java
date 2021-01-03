@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,11 +18,11 @@ import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.EntryType;
+import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
-import br.com.nivlabs.gp.models.domain.EventType;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.PatientAllergy;
 import br.com.nivlabs.gp.models.domain.Person;
@@ -33,7 +32,6 @@ import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
-import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.MedicineInfoDTO;
@@ -54,16 +52,8 @@ import br.com.nivlabs.gp.repository.AttendanceRepository;
 @Service
 public class AttendanceService implements GenericService {
 
-    private static final long EVENT_ID = 15L;
-
-    private static final String CLOSE_ATTENDANCE_TEXT = "Encerramento de atendimento";
-
-    private static final Long START_RANGE_MEDICAL_ID = 12L;
-
-    private static final Long END_RANGE_MEDICA_ID = 14L;
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    @Autowired
+    private Logger logger;
     @Autowired
     private AttendanceRepository dao;
     @Autowired
@@ -157,9 +147,9 @@ public class AttendanceService implements GenericService {
      */
     private void processEvent(MedicalRecordDTO medicalRecord, AttendanceEvent event) {
         medicalRecord.getEvents().add(event.getDTO());
-        if (event.getEventType().getId().equals(EVENT_ID)) {
+        if (event.getEventType() == EventType.EVOLUTION) {
             processEvolution(medicalRecord, event);
-        } else if (event.getEventType().getId() > START_RANGE_MEDICAL_ID && event.getEventType().getId() <= END_RANGE_MEDICA_ID) {
+        } else if (event.getEventType() == EventType.MEDICINE) {
             processMedications(medicalRecord, event);
         }
     }
@@ -224,19 +214,18 @@ public class AttendanceService implements GenericService {
                 convertedAttendance.setPatient(new Patient(savedPatient.getId()));
                 convertedAttendance.setCurrentAccommodation(new Accommodation(request.getAccommodationId(), null, null, null));
 
-                switch (request.getEventTypeId().intValue()) {
-                    case 2:
+                switch (request.getEventType()) {
+                    case MEDICAL_EMERGENCY:
                         convertedAttendance.setEntryType(EntryType.EMERGENCY);
                         break;
-                    case 3:
+                    case MEDICAL_APPOINTMENT:
                         convertedAttendance.setEntryType(EntryType.CLINICAL);
                         break;
-                    case 21:
+                    case REMOTE_MEDICAL_APPOINTMENT:
                         convertedAttendance.setEntryType(EntryType.REMOTE);
                         break;
                     default:
-                        throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                                "O tipo de evento informado não é válido para este processo.");
+                        convertedAttendance.setEntryType(EntryType.GENERIC);
                 }
                 convertedAttendance = persist(convertedAttendance);
                 createEntryEvent(convertedAttendance, request);
@@ -269,12 +258,7 @@ public class AttendanceService implements GenericService {
             // Verificar Responsável
             entryEvent.setResponsible(new Responsible(request.getResponsibleId()));
 
-        if (request.getEventTypeId() != 1L && request.getEventTypeId() != 2L && request.getEventTypeId() != 3L
-                && request.getEventTypeId() != 21)
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "O tipo de evento informado é inválido. Tipos de eventos esperados: Entrada de paciente (1 - Entrada, 2 - Entrada Emergência, 3 - Entrada Ambulatório ou 21 - Consulta Remota)");
-        // Verificar Tipo do evento
-        entryEvent.setEventType(new EventType(request.getEventTypeId()));
+        entryEvent.setEventType(request.getEventType());
 
         attendanceEventRepo.save(entryEvent);
     }
@@ -347,7 +331,7 @@ public class AttendanceService implements GenericService {
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
         event.setAttendanceId(attendance.getId());
         event.setEventDateTime(LocalDateTime.now());
-        event.setEventType(new EventTypeDTO(request.getEventTypeId(), CLOSE_ATTENDANCE_TEXT, CLOSE_ATTENDANCE_TEXT));
+        event.setEventType(request.getEventType());
         event.setAccommodation(new AccommodationDTO(attendance.getCurrentAccommodation().getId()));
         event.setResponsible(getResponsibleFromUserSession());
         event.setObservations(request.getObservations());

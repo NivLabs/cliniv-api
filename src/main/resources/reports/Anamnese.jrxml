@@ -146,6 +146,7 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 	<pageHeader>
 		<band height="230" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
 			<image hAlign="Center">
 				<reportElement x="0" y="0" width="179" height="79" uuid="893db2f2-5d90-4191-985f-f2cca18b90ec">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -340,47 +341,29 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="57" splitType="Stretch">
-			<textField>
-				<reportElement x="67" y="10" width="482" height="19" uuid="d9f6a75a-536d-46bc-a57f-0cee5e635d24"/>
+		<band height="58" splitType="Prevent">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="0" y="0" width="555" height="58" uuid="d9f6a75a-536d-46bc-a57f-0cee5e635d24"/>
 				<textElement>
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PERGUNTA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{PERGUNTA}.toUpperCase() + "\n\n" +
+$F{RESPOSTA} + "\n__________________________________________________________________________________________________"
+]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="7" y="10" width="60" height="18" uuid="ceb0abb3-0490-462b-acce-d316f5f06491"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[PERGUNTA]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="67" y="30" width="482" height="18" uuid="35f8aa13-bfbe-4b44-8356-3faf807f9a36"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{RESPOSTA}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="7" y="30" width="60" height="19" uuid="de8d1f51-b07b-45db-b4bc-4a92faa35af1"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[RESPOSTA]]></text>
-			</staticText>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="83" splitType="Stretch">
+		<band height="54" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<textField>
-				<reportElement x="265" y="60" width="290" height="19" forecolor="#000000" uuid="d53bb85a-f1fe-4df4-bf03-f9c485f1f13d"/>
+				<reportElement x="258" y="34" width="290" height="19" forecolor="#000000" uuid="d53bb85a-f1fe-4df4-bf03-f9c485f1f13d"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="7" y="36" width="52" height="12" uuid="8d0ac5c6-b265-4ced-aa8f-f7f08b95a3f7">
+				<reportElement x="0" y="10" width="52" height="12" uuid="8d0ac5c6-b265-4ced-aa8f-f7f08b95a3f7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -389,7 +372,7 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 				<text><![CDATA[Profissional:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="48" width="72" height="12" uuid="937ebee9-0d75-47ec-be8a-b3403144225a">
+				<reportElement x="0" y="22" width="72" height="12" uuid="937ebee9-0d75-47ec-be8a-b3403144225a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -398,19 +381,23 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 				<text><![CDATA[Data da geração:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="80" y="48" width="100" height="12" uuid="12771c67-bae7-4783-844e-08419caa8122"/>
+				<reportElement x="73" y="22" width="100" height="12" uuid="12771c67-bae7-4783-844e-08419caa8122"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{TODAY}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="80" y="36" width="160" height="12" uuid="3f5819ea-eb3a-466e-abd0-fe66c2c4eee0"/>
+				<reportElement x="73" y="10" width="160" height="12" uuid="3f5819ea-eb3a-466e-abd0-fe66c2c4eee0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{READER_NAME}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="0" y="1" width="554" height="8" uuid="6d22047a-f66e-4d4a-a404-e5bfdb1a20ce"/>
+				<text><![CDATA[__________________________________________________________________________________________]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 </jasperReport>
