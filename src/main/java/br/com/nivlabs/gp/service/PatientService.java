@@ -388,7 +388,7 @@ public class PatientService implements GenericService {
         PatientInfoDTO patient = findByCpf(cpf);
         if (patient != null && patient.getId() != null && !patient.getId().equals(id)) {
             logger.warn("Paciente com o CPF {} já cadastrado.", cpf);
-            throw new HttpException(HttpStatus.NOT_FOUND,
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     String.format("Paciente com o CPF informado já está cadastrado, não é possível realizar um outro cadastro com o mesmo CPF(%s).",
                                   cpf));
         }
