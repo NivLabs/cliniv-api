@@ -386,7 +386,7 @@ public class PatientService implements GenericService {
     private void patientCheckIfExistsByCpf(String cpf, Long id) {
         logger.info("Verificando se já há cadastro de paciente na base de dados :: CPF da busca -> {}", cpf);
         PatientInfoDTO patient = findByCpf(cpf);
-        if (patient != null && patient.getId() != null && id != null && !patient.getId().equals(id)) {
+        if (patient != null && patient.getId() != null && !patient.getId().equals(id)) {
             logger.warn("Paciente com o CPF {} já cadastrado.", cpf);
             throw new HttpException(HttpStatus.NOT_FOUND,
                     String.format("Paciente com o CPF informado já está cadastrado, não é possível realizar um outro cadastro com o mesmo CPF(%s).",
