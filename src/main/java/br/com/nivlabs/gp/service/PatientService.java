@@ -305,8 +305,9 @@ public class PatientService implements GenericService {
      */
     private Person getValidPerson(PatientInfoDTO entity) {
         Person personFromDb;
-        if (entity.getDocument() != null && entity.getDocument().getType() != DocumentType.CPF) {
-            logger.error("Tipo do documento inválido, informe um documento válido");
+        if (entity.getDocument() == null || (entity.getDocument() != null
+                && (entity.getDocument().getValue() == null || entity.getDocument().getType() != DocumentType.CPF))) {
+            logger.error("Informe um documento válido");
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Tipo do documento inválido, informe um documento válido.");
         }
