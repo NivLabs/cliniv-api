@@ -226,6 +226,7 @@ public class PatientService implements GenericService {
         logger.info("Atualizando informações do paciente :: {} | {}", entity.getId(),
                     entity.getFullName() == null ? "Nome não informado" : entity.getFullName());
         checkSusCode(entity, patient);
+        checkDocument(entity);
         Person entityFromDb = patient.getPerson();
         checkDocument(entity, patient, entityFromDb);
         BeanUtils.copyProperties(entity, entityFromDb, Patient_.ID, Patient_.ALLERGIES, BaseObjectWithCreatedAt_.CREATED_AT);
@@ -367,14 +368,15 @@ public class PatientService implements GenericService {
      * 
      * @param entity
      */
-    private void patientCheckIfExistsByCpf(String cpf) {
+    private void patientCheckIfExistsByCpf(String cpf, Long id) {
         try {
             logger.info("Verificando se já há cadastro de paciente na base de dados :: CPF da busca -> {}", cpf);
             PatientInfoDTO patient = findByCpf(cpf);
-            if (patient != null && patient.getId() != null) {
+            if (patient != null && patient.getId() != null && !patient.getId().equals(id)) {
                 logger.warn("Paciente com o CPF {} já cadastrado.", cpf);
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                        "Paciente com o CPF informado já está cadastrado.");
+                        String.format("Paciente com o CPF informado já está cadastrado, não é possível realizar um outro cadastro com o mesmo CPF(%s).",
+                                      cpf));
             }
         } catch (HttpException e) {
             logger.info("Nenhum cadastro de paciente encontrado :: CPF da busca -> {}", cpf);
@@ -391,7 +393,7 @@ public class PatientService implements GenericService {
         if (entity.getDocument() != null && StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
             entity.setDocument(null);
         } else if (entity.getDocument() != null && !StringUtils.isNullOrEmpty(entity.getDocument().getValue()))
-            patientCheckIfExistsByCpf(entity.getDocument().getValue());
+            patientCheckIfExistsByCpf(entity.getDocument().getValue(), entity.getId());
     }
 
     /**
