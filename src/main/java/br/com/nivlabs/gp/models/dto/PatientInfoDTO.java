@@ -84,7 +84,7 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     private PatientType type;
 
     @ApiModelProperty("Anotações sobre o paciente")
-    @Size(max = 300, message = "As anotações não devem passar de 300 caracteres")
+    @Size(max = 10000, message = "As anotações não devem passar de 300 caracteres")
     private String annotations;
 
     @ApiModelProperty("Data de criação do registro")
