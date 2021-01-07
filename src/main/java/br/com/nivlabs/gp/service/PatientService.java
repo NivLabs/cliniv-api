@@ -232,7 +232,15 @@ public class PatientService implements GenericService {
         logger.info("Atualizando informações do paciente :: {} | {}", entity.getId(),
                     entity.getFullName() == null ? "Nome não informado" : entity.getFullName());
         checkSusCode(entity, patient);
-        patientCheckIfExistsByCpf(entity.getDocument().getValue(), patient.getId());
+        try {
+            patientCheckIfExistsByCpf(entity.getDocument().getValue(), patient.getId());
+        } catch (HttpException e) {
+            if (e.getStatus() == HttpStatus.NOT_FOUND) {
+                logger.info("O CPF {} está disponível para uso...", entity.getDocument().getValue());
+            } else {
+                throw e;
+            }
+        }
         Person entityFromDb = patient.getPerson();
         checkDocument(entity, patient, entityFromDb);
         BeanUtils.copyProperties(entity, entityFromDb, Patient_.ID, Patient_.ALLERGIES, BaseObjectWithCreatedAt_.CREATED_AT);
