@@ -7,6 +7,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
@@ -47,8 +50,8 @@ public class AttendanceEvent extends BaseObjectWithId {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "ID_TIPO_EVENTO")
+    @Column(name = "TIPO_EVENTO")
+    @Enumerated(EnumType.STRING)
     private EventType eventType;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)

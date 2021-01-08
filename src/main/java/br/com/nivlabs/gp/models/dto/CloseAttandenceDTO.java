@@ -2,6 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import javax.validation.constraints.NotNull;
 
+import br.com.nivlabs.gp.enums.EventType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -16,15 +17,15 @@ public class CloseAttandenceDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4058913578939379862L;
 
-    @ApiModelProperty("Identificador único do Tipo do evento de encerramento")
-    @NotNull(message = "Informe o código interno único do tipo de evento de encerramento")
-    private Long eventTypeId;
+    @ApiModelProperty("Identificador do Tipo do evento de encerramento")
+    @NotNull(message = "Informe o tipo de evento de encerramento")
+    private EventType eventType;
 
     @ApiModelProperty("Observações do encerramento (se houver)")
     private String observations;
 
-    public CloseAttandenceDTO(Long eventTypeId, String observations) {
-        this.eventTypeId = eventTypeId;
+    public CloseAttandenceDTO(EventType eventType, String observations) {
+        this.eventType = eventType;
         this.observations = observations;
     }
 
@@ -32,12 +33,12 @@ public class CloseAttandenceDTO extends DataTransferObjectBase {
         super();
     }
 
-    public Long getEventTypeId() {
-        return eventTypeId;
+    public EventType getEventType() {
+        return eventType;
     }
 
-    public void setEventTypeId(Long eventTypeId) {
-        this.eventTypeId = eventTypeId;
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
     }
 
     public String getObservations() {
@@ -50,14 +51,14 @@ public class CloseAttandenceDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "CloseAttandenceDTO [eventTypeId=" + eventTypeId + ", observations=" + observations + "]";
+        return "CloseAttandenceDTO [eventType=" + eventType + ", observations=" + observations + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((eventTypeId == null) ? 0 : eventTypeId.hashCode());
+        result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
         result = prime * result + ((observations == null) ? 0 : observations.hashCode());
         return result;
     }
@@ -71,10 +72,7 @@ public class CloseAttandenceDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         CloseAttandenceDTO other = (CloseAttandenceDTO) obj;
-        if (eventTypeId == null) {
-            if (other.eventTypeId != null)
-                return false;
-        } else if (!eventTypeId.equals(other.eventTypeId))
+        if (eventType != other.eventType)
             return false;
         if (observations == null) {
             if (other.observations != null)

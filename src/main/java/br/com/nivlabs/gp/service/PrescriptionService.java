@@ -12,9 +12,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
@@ -115,7 +115,7 @@ public class PrescriptionService implements GenericService {
                                      MedicalRecordDTO medicalRecord) {
         logger.info("Iniciando criação de Evento de atendimento para prescrição...");
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
-        event.setEventType(new EventTypeDTO(6L, "PRESCRICAO", "Geração de Prescrição"));
+        event.setEventType(EventType.MEDICAL_CONTROL);
         event.setAttendanceId(request.getAttendanceId());
         event.setDocuments(Arrays.asList(document));
         event.setEventDateTime(LocalDateTime.now());

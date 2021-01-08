@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
 import br.com.nivlabs.gp.models.domain.AnamnesisForm;
@@ -30,7 +31,6 @@ import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisFormDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
@@ -192,7 +192,7 @@ public class AnamnesisService implements GenericService {
                                              UserInfoDTO requestOwner) {
         logger.info("Iniciando criação de Evento de atendimento para anamnese...");
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
-        event.setEventType(new EventTypeDTO(4L, "ANAMNESE", "Geração de Anamnese"));
+        event.setEventType(EventType.ANAMESIS);
         event.setAttendanceId(request.getAttendanceId());
         event.setDocuments(Arrays.asList(document));
         event.setEventDateTime(LocalDateTime.now());

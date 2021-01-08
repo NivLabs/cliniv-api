@@ -3,7 +3,7 @@ package br.com.nivlabs.gp.models.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import br.com.nivlabs.gp.models.domain.EventType;
+import br.com.nivlabs.gp.enums.EventType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

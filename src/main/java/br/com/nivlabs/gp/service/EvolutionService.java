@@ -12,13 +12,13 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.Evolution;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
@@ -42,16 +42,12 @@ public class EvolutionService implements GenericService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String ADD_EVOLUTION_TEXT = "Adição de evolução clínica";
-
     private static final String TODAY = "TODAY";
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
     private static final String READER_NAME = "READER_NAME";
     private static final String VISIT_ID = "VISIT_ID";
     private static final String DESCIPTION = "DESCRICAO";
     private static final String REPORT_SOURCE = "reports/Evolucao.jrxml";
-
-    private static final Long EVOLUTION_ID = 15L;
 
     @Autowired
     private EvolutionRepository repository;
@@ -129,12 +125,12 @@ public class EvolutionService implements GenericService {
 
         event.setAttendanceId(request.getAttendanceId());
         event.setEventDateTime(request.getDatetime());
-        event.setEventType(new EventTypeDTO(EVOLUTION_ID, ADD_EVOLUTION_TEXT, ADD_EVOLUTION_TEXT));
+        event.setEventType(EventType.EVOLUTION);
         setAccommodationIntoAttendanceEvent(request, medicalRecord, event);
 
         UserInfoDTO userInfo = userService.findByUserName(userFromSession);
         event.setResponsible(getResponsibleFromUser(userInfo));
-        event.setObservations(ADD_EVOLUTION_TEXT);
+        event.setObservations(EventType.EVOLUTION.getDescription());
 
         DigitalDocumentDTO document;
 

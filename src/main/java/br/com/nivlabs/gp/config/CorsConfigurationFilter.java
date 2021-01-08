@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
  * 
  * @since 18 de out de 2019
  */
-
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsConfigurationFilter implements Filter {
