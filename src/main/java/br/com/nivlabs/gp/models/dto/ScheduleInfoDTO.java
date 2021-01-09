@@ -35,7 +35,7 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
     private String annotation;
 
     @ApiModelProperty("Situação atual do agendamento")
-    private ScheduleStatus status;
+    private ScheduleStatus status = ScheduleStatus.WAITING_CONFIRMATION;
 
     public ScheduleInfoDTO() {
         super();
