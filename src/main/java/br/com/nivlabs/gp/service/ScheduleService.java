@@ -16,6 +16,7 @@ import br.com.nivlabs.gp.controller.filters.ScheduleFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Patient;
+import br.com.nivlabs.gp.models.domain.Patient_;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.Responsible;
@@ -107,12 +108,15 @@ public class ScheduleService implements GenericService {
      */
     private void validateRequest(Long id, ScheduleInfoDTO request) {
         if (id != null) {
-            principalRepo.findById(id)
+            Schedule schedule = principalRepo.findById(id)
                     .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Agendamento não encontrado"));
+            logger.warn("Agendamento localizado, prosseguindo com as validações :: Cod: {} | Paciente: {} | Profissional {}",
+                        schedule.getId(), schedule.getPatient().getPerson().getFullName(),
+                        schedule.getProfessional().getPerson().getFullName());
         }
         request.setId(id);
-        checkPatient(request.getPatient());
-        checkProfessional(request.getProfessional());
+        checkPatient(request);
+        checkProfessional(request);
         logger.info("Verificando data de criação do agendamento...");
         if (request.getCreatedAt() == null) {
             request.setCreatedAt(LocalDateTime.now());
@@ -129,14 +133,16 @@ public class ScheduleService implements GenericService {
      * 
      * @param professional
      */
-    private void checkProfessional(ResponsibleInfoDTO professional) {
+    private void checkProfessional(ScheduleInfoDTO request) {
+        ResponsibleInfoDTO professional = request.getProfessional();
         logger.info("Verificando se o profissional já está cadastrado...");
-        if (professional.getId() == null) {
+        if (professional == null || professional.getId() == null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "O identificador do profissional deve ser informado para o agendamento");
         }
-        ResponsibleInfoDTO professionalFromDb = responsibleService.findById(professional.getId());
-        logger.info("Profissional encontrado :: Cod: {} | Nome: {}", professionalFromDb.getId(), professionalFromDb.getFullName());
+        professional = responsibleService.findById(professional.getId());
+        logger.info("Profissional encontrado :: Cod: {} | Nome: {}", professional.getId(), professional.getFullName());
+        request.setProfessional(professional);
 
     }
 
@@ -145,13 +151,15 @@ public class ScheduleService implements GenericService {
      * 
      * @param patient
      */
-    private void checkPatient(PatientInfoDTO patient) {
+    private void checkPatient(ScheduleInfoDTO request) {
+        PatientInfoDTO patient = request.getPatient();
         logger.info("Verificando se o paciente já está cadastrado...");
-        if (patient.getId() == null) {
+        if (patient == null || patient.getId() == null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O identificador do paciente deve ser informado para o agendamento");
         }
-        PatientInfoDTO patientFromDb = patientService.findByPatientId(patient.getId());
-        logger.info("Paciente encontrado :: Cod: {} | Nome: {}", patientFromDb.getId(), patientFromDb.getFullName());
+        patient = patientService.findByPatientId(patient.getId());
+        logger.info("Paciente encontrado :: Cod: {} | Nome: {}", patient.getId(), patient.getFullName());
+        request.setPatient(patient);
     }
 
     /**
@@ -173,7 +181,8 @@ public class ScheduleService implements GenericService {
         logger.info("Iniciando conversão de entidade Paciente para resposta...");
         response.setPatient(new PatientInfoDTO());
         BeanUtils.copyProperties(objFromDb.getPatient().getPerson(), response.getPatient(), Person_.ID);
-        BeanUtils.copyProperties(objFromDb.getPatient(), response.getPatient());
+        BeanUtils.copyProperties(objFromDb.getPatient(), response.getPatient(), Patient_.ALLERGIES, Patient_.HEALTH_PLAN,
+                                 Patient_.HEALTH_PLAN_CODE);
         handleDocument(objFromDb.getPatient().getPerson(), response.getPatient());
 
         logger.info("Iniciando conversão de entidade Responsável para resposta...");
