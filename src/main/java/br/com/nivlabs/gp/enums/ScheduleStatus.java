@@ -7,6 +7,7 @@ package br.com.nivlabs.gp.enums;
  *
  */
 public enum ScheduleStatus {
+    WAITING_CONFIRMATION, // Aguardando confirmação do paciente
     CONFIRMED,  // Paciente confirmou
     COMPLETED,  // Paciente compareceu
     CANCELED,   // Paciente cancelou
