@@ -74,8 +74,14 @@ public class Institute implements Serializable {
     @Column(name = "TIPO_DE_INSTITUICAO")
     private String instituteType;
 
-    @Column(name = "GESTAO")
-    private String management;
+    @Column(name = "GESTOR")
+    private String managerName;
+
+    @Column(name = "TELEFONE_GESTOR")
+    private String managerPhone;
+
+    @Column(name = "EMAIL_GESTOR")
+    private String managerMail;
 
     @Column(name = "DATA_DE_REGISTRO")
     private Date licenseDate;
@@ -224,14 +230,6 @@ public class Institute implements Serializable {
         this.instituteType = instituteType;
     }
 
-    public String getManagement() {
-        return management;
-    }
-
-    public void setManagement(String management) {
-        this.management = management;
-    }
-
     public Date getLicenseDate() {
         return licenseDate;
     }
@@ -272,6 +270,30 @@ public class Institute implements Serializable {
         this.endDate = endDate;
     }
 
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
+    public String getManagerPhone() {
+        return managerPhone;
+    }
+
+    public void setManagerPhone(String managerPhone) {
+        this.managerPhone = managerPhone;
+    }
+
+    public String getManagerMail() {
+        return managerMail;
+    }
+
+    public void setManagerMail(String managerMail) {
+        this.managerMail = managerMail;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -289,7 +311,9 @@ public class Institute implements Serializable {
         result = prime * result + ((key == null) ? 0 : key.hashCode());
         result = prime * result + ((legalNature == null) ? 0 : legalNature.hashCode());
         result = prime * result + ((licenseDate == null) ? 0 : licenseDate.hashCode());
-        result = prime * result + ((management == null) ? 0 : management.hashCode());
+        result = prime * result + ((managerMail == null) ? 0 : managerMail.hashCode());
+        result = prime * result + ((managerName == null) ? 0 : managerName.hashCode());
+        result = prime * result + ((managerPhone == null) ? 0 : managerPhone.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((neighborhood == null) ? 0 : neighborhood.hashCode());
         result = prime * result + ((phone == null) ? 0 : phone.hashCode());
@@ -375,10 +399,20 @@ public class Institute implements Serializable {
                 return false;
         } else if (!licenseDate.equals(other.licenseDate))
             return false;
-        if (management == null) {
-            if (other.management != null)
+        if (managerMail == null) {
+            if (other.managerMail != null)
                 return false;
-        } else if (!management.equals(other.management))
+        } else if (!managerMail.equals(other.managerMail))
+            return false;
+        if (managerName == null) {
+            if (other.managerName != null)
+                return false;
+        } else if (!managerName.equals(other.managerName))
+            return false;
+        if (managerPhone == null) {
+            if (other.managerPhone != null)
+                return false;
+        } else if (!managerPhone.equals(other.managerPhone))
             return false;
         if (name == null) {
             if (other.name != null)
@@ -429,8 +463,8 @@ public class Institute implements Serializable {
                 + corporativeName + ", legalNature=" + legalNature + ", street=" + street + ", addressNumber=" + addressNumber
                 + ", complement=" + complement + ", postalCode=" + postalCode + ", state=" + state + ", neighborhood=" + neighborhood
                 + ", city=" + city + ", phone=" + phone + ", dependency=" + dependency + ", instituteType=" + instituteType
-                + ", management=" + management + ", licenseDate=" + licenseDate + ", userOfRegister=" + userOfRegister + ", key=" + key
-                + ", startDate=" + startDate + ", endDate=" + endDate + "]";
+                + ", managerName=" + managerName + ", managerPhone=" + managerPhone + ", managerMail=" + managerMail + ", licenseDate="
+                + licenseDate + ", userOfRegister=" + userOfRegister + ", key=" + key + ", startDate=" + startDate + ", endDate=" + endDate
+                + "]";
     }
-
 }
