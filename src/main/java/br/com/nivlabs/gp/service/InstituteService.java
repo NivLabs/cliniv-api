@@ -150,7 +150,7 @@ public class InstituteService implements GenericService {
     }
 
     public InstituteDTO persist(InstituteDTO instituteDTO) {
-        logger.debug("persist");
+        logger.debug("Iniciando processo de persistência dos dados da instituição");
         Institute institute = new Institute();
         CustomerInfoDTO customer = instituteDTO.getCustomerInfo();
         AddressDTO address = customer.getAddress();
@@ -161,6 +161,37 @@ public class InstituteService implements GenericService {
 
         this.instituteRepo.save(institute);
         return instituteDTO;
+    }
+
+    /**
+     * Cria ou atualiza informações cadastrais da instituição principal
+     * 
+     * @param request informações do cliente
+     */
+    public void createOrUpdate(CustomerInfoDTO request) {
+        logger.info("Iniciando processo de atualização de dados cadastrais da instituição principal");
+        Institute entity = null;
+        List<Institute> institutes = instituteRepo.findAll();
+        logger.info("Checando se já existe cadastro para a instituição principal...");
+        if (institutes.isEmpty()) {
+            logger.info("Nenhum cadastro encontrado, iniciando um novo cadastro...");
+            entity = new Institute();
+            CustomerInfoDTO customer = request;
+            AddressDTO address = customer.getAddress();
+            BeanUtils.copyProperties(address, entity);
+            BeanUtils.copyProperties(customer, entity);
+
+        } else {
+            logger.info("Cadastro encontrado, atualizando o mesmo...");
+            entity = instituteRepo.findAll().get(0);
+            CustomerInfoDTO customer = request;
+            AddressDTO address = customer.getAddress();
+            BeanUtils.copyProperties(address, entity);
+            BeanUtils.copyProperties(customer, entity);
+        }
+        logger.info("Iniciando processo de persistência");
+        instituteRepo.saveAndFlush(entity);
+        logger.info("Dados cadastrais atualizados com sucesso!");
     }
 
 }
