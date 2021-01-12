@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nivlabs.gp.models.dto.CustomerInfoDTO;
 import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.service.InstituteService;
@@ -51,6 +52,14 @@ public class InstituteController {
     @PreAuthorize("hasAnyRole('INSTITUTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> uploadCustomInfoCrypto(@RequestBody(required = true) FileDTO file) {
         instituteService.checkAndActiveLicense(file);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(nickname = "institute-customerinfo-create-update", value = "Cria ou altera informações da instituição")
+    @PostMapping
+    @PreAuthorize("hasAnyRole('INSTITUTO_ESCRITA', 'ADMIN')")
+    public ResponseEntity<Void> create(@RequestBody(required = true) CustomerInfoDTO request) {
+        instituteService.createOrUpdate(request);
         return ResponseEntity.ok().build();
     }
 }
