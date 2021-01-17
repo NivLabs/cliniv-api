@@ -40,6 +40,39 @@ public class ProcedureDTO extends DataTransferObjectBase {
     @ApiModelProperty("Indicativo de atividade do procedimento")
     private boolean active;
 
+    /**
+     * Construtor padrão para paginação
+     * 
+     * @param id
+     * @param description
+     * @param baseValue
+     * @param frequency
+     * @param specialAuthorization
+     * @param previousAudit
+     * @param specialty
+     * @param maxAge
+     * @param minAge
+     * @param active
+     */
+    public ProcedureDTO(Long id, String description, BigDecimal baseValue, String frequency, boolean specialAuthorization,
+            boolean previousAudit, boolean specialty, String maxAge, String minAge, boolean active) {
+        super();
+        this.id = id;
+        this.description = description;
+        this.baseValue = baseValue;
+        this.frequency = frequency;
+        this.specialAuthorization = specialAuthorization;
+        this.previousAudit = previousAudit;
+        this.specialty = specialty;
+        this.maxAge = maxAge;
+        this.minAge = minAge;
+        this.active = active;
+    }
+
+    public ProcedureDTO() {
+        super();
+    }
+
     public BigDecimal getBaseValue() {
         return baseValue;
     }

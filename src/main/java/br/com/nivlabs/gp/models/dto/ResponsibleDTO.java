@@ -1,8 +1,10 @@
 package br.com.nivlabs.gp.models.dto;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.nivlabs.gp.enums.Gender;
 import io.swagger.annotations.ApiModel;
 
 /**
@@ -22,71 +24,102 @@ public class ResponsibleDTO extends PersonDTO {
 
     private List<SpecialityDTO> specializations = new ArrayList<>();
 
-	public String getProfessionalIdentity() {
-		return professionalIdentity;
-	}
+    /**
+     * Construtor padrão para paginação
+     * 
+     * @param id
+     * @param fullName
+     * @param socialName
+     * @param cpf
+     * @param bornDate
+     * @param principalNumber
+     * @param gender
+     * @param professionalIdentity
+     * @param initialsIdentity
+     */
+    public ResponsibleDTO(Long id, String fullName, String socialName, String cpf, LocalDate bornDate, String principalNumber,
+            Gender gender, String professionalIdentity, String initialsIdentity) {
+        super();
+        super.setId(id);
+        super.setFullName(fullName);
+        super.setSocialName(socialName);
+        super.setCpf(cpf);
+        super.setBornDate(bornDate);
+        super.setPrincipalNumber(principalNumber);
+        super.setGender(gender);
+        this.professionalIdentity = professionalIdentity;
+        this.initialsIdentity = initialsIdentity;
+    }
 
-	public void setProfessionalIdentity(String professionalIdentity) {
-		this.professionalIdentity = professionalIdentity;
-	}
+    public ResponsibleDTO() {
+        super();
+    }
 
-	public String getInitialsIdentity() {
-		return initialsIdentity;
-	}
+    public String getProfessionalIdentity() {
+        return professionalIdentity;
+    }
 
-	public void setInitialsIdentity(String initialsIdentity) {
-		this.initialsIdentity = initialsIdentity;
-	}
+    public void setProfessionalIdentity(String professionalIdentity) {
+        this.professionalIdentity = professionalIdentity;
+    }
 
-	public List<SpecialityDTO> getSpecializations() {
-		return specializations;
-	}
+    public String getInitialsIdentity() {
+        return initialsIdentity;
+    }
 
-	public void setSpecializations(List<SpecialityDTO> specializations) {
-		this.specializations = specializations;
-	}
+    public void setInitialsIdentity(String initialsIdentity) {
+        this.initialsIdentity = initialsIdentity;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((initialsIdentity == null) ? 0 : initialsIdentity.hashCode());
-		result = prime * result + ((professionalIdentity == null) ? 0 : professionalIdentity.hashCode());
-		result = prime * result + ((specializations == null) ? 0 : specializations.hashCode());
-		return result;
-	}
+    public List<SpecialityDTO> getSpecializations() {
+        return specializations;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ResponsibleDTO other = (ResponsibleDTO) obj;
-		if (initialsIdentity == null) {
-			if (other.initialsIdentity != null)
-				return false;
-		} else if (!initialsIdentity.equals(other.initialsIdentity))
-			return false;
-		if (professionalIdentity == null) {
-			if (other.professionalIdentity != null)
-				return false;
-		} else if (!professionalIdentity.equals(other.professionalIdentity))
-			return false;
-		if (specializations == null) {
-			if (other.specializations != null)
-				return false;
-		} else if (!specializations.equals(other.specializations))
-			return false;
-		return true;
-	}
+    public void setSpecializations(List<SpecialityDTO> specializations) {
+        this.specializations = specializations;
+    }
 
-	@Override
-	public String toString() {
-		return "ResponsibleDTO [professionalIdentity=" + professionalIdentity + ", initialsIdentity=" + initialsIdentity
-				+ ", specializations=" + specializations + "]";
-	}
-    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((initialsIdentity == null) ? 0 : initialsIdentity.hashCode());
+        result = prime * result + ((professionalIdentity == null) ? 0 : professionalIdentity.hashCode());
+        result = prime * result + ((specializations == null) ? 0 : specializations.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ResponsibleDTO other = (ResponsibleDTO) obj;
+        if (initialsIdentity == null) {
+            if (other.initialsIdentity != null)
+                return false;
+        } else if (!initialsIdentity.equals(other.initialsIdentity))
+            return false;
+        if (professionalIdentity == null) {
+            if (other.professionalIdentity != null)
+                return false;
+        } else if (!professionalIdentity.equals(other.professionalIdentity))
+            return false;
+        if (specializations == null) {
+            if (other.specializations != null)
+                return false;
+        } else if (!specializations.equals(other.specializations))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "ResponsibleDTO [professionalIdentity=" + professionalIdentity + ", initialsIdentity=" + initialsIdentity
+                + ", specializations=" + specializations + "]";
+    }
+
 }

@@ -53,11 +53,40 @@ public class AttendanceDTO extends DataTransferObjectBase {
     @ApiModelProperty("Código SUS")
     private String susNumber;
 
-    @ApiModelProperty("Descrição|nome do setor")
-    private String sectorDescripton;
-
     @ApiModelProperty("Nível de risco do paciente do atendimento")
     private AttendanceLevel level;
+
+    /**
+     * Construtor usado para paginação
+     * 
+     * @param id
+     * @param fullName
+     * @param socialName
+     * @param entryDatetime
+     * @param entryCause
+     * @param isFinished
+     * @param type
+     * @param patientType
+     * @param patientId
+     * @param sectorDescription
+     * @param susNumber
+     * @param sectorDescripton
+     * @param level
+     */
+    public AttendanceDTO(Long id, String fullName, String socialName, LocalDateTime entryDatetime, String entryCause,
+            EntryType type, Long patientId, String sectorDescription, String susNumber, AttendanceLevel level) {
+        super();
+        this.id = id;
+        this.fullName = fullName;
+        this.socialName = socialName;
+        this.entryDatetime = entryDatetime;
+        this.entryCause = entryCause;
+        this.type = type;
+        this.patientId = patientId;
+        this.sectorDescription = sectorDescription;
+        this.susNumber = susNumber;
+        this.level = level;
+    }
 
     public AttendanceDTO() {
         super();
@@ -151,14 +180,6 @@ public class AttendanceDTO extends DataTransferObjectBase {
         this.susNumber = susNumber;
     }
 
-    public String getSectorDescripton() {
-        return sectorDescripton;
-    }
-
-    public void setSectorDescripton(String sectorDescripton) {
-        this.sectorDescripton = sectorDescripton;
-    }
-
     public AttendanceLevel getLevel() {
         return level;
     }
@@ -180,7 +201,6 @@ public class AttendanceDTO extends DataTransferObjectBase {
         result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
         result = prime * result + ((patientType == null) ? 0 : patientType.hashCode());
         result = prime * result + ((sectorDescription == null) ? 0 : sectorDescription.hashCode());
-        result = prime * result + ((sectorDescripton == null) ? 0 : sectorDescripton.hashCode());
         result = prime * result + ((socialName == null) ? 0 : socialName.hashCode());
         result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
         result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -235,11 +255,6 @@ public class AttendanceDTO extends DataTransferObjectBase {
                 return false;
         } else if (!sectorDescription.equals(other.sectorDescription))
             return false;
-        if (sectorDescripton == null) {
-            if (other.sectorDescripton != null)
-                return false;
-        } else if (!sectorDescripton.equals(other.sectorDescripton))
-            return false;
         if (socialName == null) {
             if (other.socialName != null)
                 return false;
@@ -260,7 +275,7 @@ public class AttendanceDTO extends DataTransferObjectBase {
         return "AttendanceDTO [id=" + id + ", fullName=" + fullName + ", socialName=" + socialName + ", entryDatetime=" + entryDatetime
                 + ", entryCause=" + entryCause + ", isFinished=" + isFinished + ", type=" + type + ", patientType=" + patientType
                 + ", patientId=" + patientId + ", sectorDescription=" + sectorDescription + ", susNumber=" + susNumber
-                + ", sectorDescripton=" + sectorDescripton + ", level=" + level + "]";
+                + ", level=" + level + "]";
     }
 
 }

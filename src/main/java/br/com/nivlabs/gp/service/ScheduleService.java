@@ -24,6 +24,7 @@ import br.com.nivlabs.gp.models.domain.Schedule;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
+import br.com.nivlabs.gp.models.dto.ScheduleDTO;
 import br.com.nivlabs.gp.models.dto.ScheduleInfoDTO;
 import br.com.nivlabs.gp.repository.ScheduleRepository;
 import br.com.nivlabs.gp.util.StringUtils;
@@ -52,11 +53,12 @@ public class ScheduleService implements GenericService {
      * @param filters Filtros da requisição (Query Param)
      * @return Lista filtrada de Agendamentos
      */
-    public List<ScheduleInfoDTO> findByFilters(ScheduleFilters filters, Pageable pageRequest) {
+    public List<ScheduleDTO> findByFilters(ScheduleFilters filters, Pageable pageRequest) {
         logger.info("Iniciando a busca filtrada por informações da agenda");
         if (filters.getSelectedDate() == null) {
             filters.setSelectedDate(LocalDate.now());
         }
+        filters.setSize(100);
         return principalRepo.resumedList(filters, pageRequest).getContent();
     }
 

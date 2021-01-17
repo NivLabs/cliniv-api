@@ -1,5 +1,8 @@
 package br.com.nivlabs.gp.models.dto;
 
+import java.time.LocalDate;
+
+import br.com.nivlabs.gp.enums.Gender;
 import io.swagger.annotations.ApiModel;
 
 /**
@@ -15,42 +18,55 @@ public class UserDTO extends PersonDTO {
 
     private String userName;
 
-	public String getUserName() {
-		return userName;
-	}
+    public UserDTO(Long id, String fullName, String socialName, String cpf, LocalDate bornDate, String principalNumber,
+            Gender gender, String userName) {
+        super();
+        super.setId(id);
+        super.setFullName(fullName);
+        super.setSocialName(socialName);
+        super.setCpf(cpf);
+        super.setBornDate(bornDate);
+        super.setPrincipalNumber(principalNumber);
+        super.setGender(gender);
+        this.userName = userName;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-		return result;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UserDTO other = (UserDTO) obj;
-		if (userName == null) {
-			if (other.userName != null)
-				return false;
-		} else if (!userName.equals(other.userName))
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+        return result;
+    }
 
-	@Override
-	public String toString() {
-		return "UserDTO [userName=" + userName + "]";
-	}
-    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        UserDTO other = (UserDTO) obj;
+        if (userName == null) {
+            if (other.userName != null)
+                return false;
+        } else if (!userName.equals(other.userName))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO [userName=" + userName + "]";
+    }
+
 }
