@@ -3,19 +3,23 @@ package br.com.nivlabs.gp.repository.custom.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.gp.controller.filters.UserFilters;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.UserApplication;
 import br.com.nivlabs.gp.models.domain.UserApplication_;
 import br.com.nivlabs.gp.models.dto.UserDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
-import br.com.nivlabs.gp.repository.custom.IExpression;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
@@ -24,50 +28,51 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @author viniciosarodrigues
  *
  */
-public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplication> implements UserRepositoryCustom {
+public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplication, UserDTO> implements UserRepositoryCustom {
 
-    /**
-     * Realiza o filtro por
-     */
     @Override
     public Page<UserDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
-        Page<UserApplication> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
 
-        List<UserDTO> newContentToPage = new ArrayList<>();
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserDTO> criteria = builder.createQuery(resumedClass);
+        Root<UserApplication> root = criteria.from(persistentClass);
 
-        pageFromDatabase.getContent().forEach(item -> {
-            UserDTO userDTO = new UserDTO();
-            BeanUtils.copyProperties(item.getPerson(), userDTO);
-            BeanUtils.copyProperties(item, userDTO);
-            newContentToPage.add(userDTO);
-        });
-
-        return new PageImpl<>(newContentToPage, pageSettings, pageFromDatabase.getTotalElements());
+        criteria.select(builder.construct(resumedClass,
+                                          root.get(UserApplication_.id),
+                                          root.get(UserApplication_.person).get(Person_.fullName),
+                                          root.get(UserApplication_.person).get(Person_.socialName),
+                                          root.get(UserApplication_.person).get(Person_.cpf),
+                                          root.get(UserApplication_.person).get(Person_.bornDate),
+                                          root.get(UserApplication_.person).get(Person_.principalNumber),
+                                          root.get(UserApplication_.person).get(Person_.gender),
+                                          root.get(UserApplication_.userName)));
+        return getPage(filters, pageSettings, builder, criteria, root);
     }
 
     @Override
-    protected List<IExpression<UserApplication>> createRestrictions(CustomFilters customFilters) {
-
+    protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<UserApplication> root) {
+        if (!(customFilters instanceof UserFilters)) {
+            throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de profissional");
+        }
         UserFilters filters = (UserFilters) customFilters;
-
-        List<IExpression<UserApplication>> attributes = new ArrayList<>();
+        List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getUserName())) {
-            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.userName), filters.getUserName()));
+            predicates.add(builder.like(root.get(UserApplication_.userName), filters.getUserName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
-            attributes.add((cb, from) -> cb.equal(from.get(UserApplication_.person).get(Person_.cpf), filters.getCpf()));
+            predicates.add(builder.equal(root.get(UserApplication_.person).get(Person_.cpf), filters.getCpf()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getFullName())) {
-            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.person).get(Person_.fullName), filters.getFullName()));
+            predicates.add(builder.like(root.get(UserApplication_.person).get(Person_.fullName), filters.getFullName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getSocialName())) {
-            attributes.add((cb, from) -> cb.like(from.get(UserApplication_.person).get(Person_.socialName), filters.getSocialName()));
+            predicates.add(builder.like(root.get(UserApplication_.person).get(Person_.socialName), filters.getSocialName()));
         }
         if (filters.getGender() != null) {
-            attributes.add((cb, from) -> cb.equal(from.get(UserApplication_.person).get(Person_.gender), filters.getGender()));
+            predicates.add(builder.equal(root.get(UserApplication_.person).get(Person_.gender), filters.getGender()));
         }
 
-        return attributes;
+        return predicates.toArray(new Predicate[predicates.size()]);
     }
 }

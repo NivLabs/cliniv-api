@@ -27,6 +27,26 @@ public class HealthOperatorDTO extends DataTransferObjectBase {
     @ApiModelProperty("Modalidade da operadora")
     private Modality modality;
 
+    /**
+     * Construtor padrão para paginação
+     * 
+     * @param id
+     * @param ansCode
+     * @param cnpj
+     * @param companyName
+     * @param fantasyName
+     * @param modality
+     */
+    public HealthOperatorDTO(Long id, String ansCode, String cnpj, String companyName, String fantasyName, Modality modality) {
+        super();
+        this.id = id;
+        this.ansCode = ansCode;
+        this.cnpj = cnpj;
+        this.companyName = companyName;
+        this.fantasyName = fantasyName;
+        this.modality = modality;
+    }
+
     public HealthOperatorDTO() {
         super();
     }

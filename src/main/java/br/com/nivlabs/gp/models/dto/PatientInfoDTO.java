@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.Gender;
 import br.com.nivlabs.gp.enums.GenderIdentity;
 import br.com.nivlabs.gp.enums.PatientType;
@@ -98,6 +99,24 @@ public class PatientInfoDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Plano de saúde do paciente")
     private HealthPlanDTO healthPlan;
+
+    public PatientInfoDTO(Long id, String fullName, String socialName, LocalDate bornDate, String document, Gender gender,
+            GenderIdentity genderIdentity, String principalNumber, String susNumber) {
+        super();
+        this.id = id;
+        this.fullName = fullName;
+        this.socialName = socialName;
+        this.bornDate = bornDate;
+        this.document = new DocumentDTO(DocumentType.CPF, document);
+        this.gender = gender;
+        this.genderIdentity = genderIdentity;
+        this.principalNumber = principalNumber;
+        this.susNumber = susNumber;
+    }
+
+    public PatientInfoDTO() {
+        super();
+    }
 
     public Long getId() {
         return id;

@@ -5,81 +5,77 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.gp.controller.filters.ScheduleFilters;
-import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.ScheduleStatus;
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.Patient_;
-import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.Person_;
-import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.domain.Responsible_;
 import br.com.nivlabs.gp.models.domain.Schedule;
 import br.com.nivlabs.gp.models.domain.Schedule_;
-import br.com.nivlabs.gp.models.dto.AddressDTO;
-import br.com.nivlabs.gp.models.dto.DocumentDTO;
-import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
-import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.models.dto.ProfessionalIdentityDTO;
-import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.gp.models.dto.ScheduleInfoDTO;
+import br.com.nivlabs.gp.models.dto.ScheduleDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
-import br.com.nivlabs.gp.repository.custom.IExpression;
 import br.com.nivlabs.gp.util.StringUtils;
 
-public class ScheduleRepositoryCustomImpl extends GenericCustomRepository<Schedule> implements ScheduleRepositoryCustom {
-
+/**
+ * Implementação customizada de paginação para agendamentos
+ * 
+ * @author viniciosarodrigues
+ *
+ */
+public class ScheduleRepositoryCustomImpl extends GenericCustomRepository<Schedule, ScheduleDTO> implements ScheduleRepositoryCustom {
     @Override
-    public Page<ScheduleInfoDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
-        // TODO: Revisar esta rotina em breve
-        filters.setSize(100);
-        Page<Schedule> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
-        List<ScheduleInfoDTO> listOfScheduleFromDb = new ArrayList<>();
+    public Page<ScheduleDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
 
-        pageFromDatabase.forEach(schedule -> {
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<ScheduleDTO> criteria = builder.createQuery(resumedClass);
+        Root<Schedule> root = criteria.from(persistentClass);
 
-            ScheduleInfoDTO converted = new ScheduleInfoDTO();
-            BeanUtils.copyProperties(schedule, converted);
-
-            converted.setPatient(convertPatient(schedule.getPatient()));
-            converted.setProfessional(convertResponsible(schedule.getProfessional()));
-
-            listOfScheduleFromDb.add(converted);
-
-        });
-        return new PageImpl<>(listOfScheduleFromDb, pageSettings, pageFromDatabase.getTotalElements());
+        criteria.select(builder.construct(resumedClass,
+                                          root.get(Schedule_.id),
+                                          root.get(Schedule_.patient).get(Patient_.person)
+                                                  .get(Person_.fullName),
+                                          root.get(Schedule_.patient).get(Patient_.person).get(Person_.cpf),
+                                          root.get(Schedule_.professional).get(Responsible_.id),
+                                          root.get(Schedule_.professional).get(Responsible_.person).get(Person_.fullName),
+                                          root.get(Schedule_.schedulingDateAndTime),
+                                          root.get(Schedule_.status)));
+        return getPage(filters, pageSettings, builder, criteria, root);
     }
 
     @Override
-    protected List<IExpression<Schedule>> createRestrictions(CustomFilters customFilters) {
+    protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Schedule> root) {
+        if (!(customFilters instanceof ScheduleFilters)) {
+            throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de agendamento");
+        }
         ScheduleFilters filters = (ScheduleFilters) customFilters;
-
-        List<IExpression<Schedule>> attributes = new ArrayList<>();
+        List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getProfessionalId()) && StringUtils.isNumeric(filters.getProfessionalId())) {
-            attributes.add((cb, from) -> cb.equal(from.get(Schedule_.professional).get(Responsible_.id),
-                                                  Long.parseLong(filters.getProfessionalId())));
+            predicates.add(builder.equal(root.get(Schedule_.professional).get(Responsible_.id),
+                                         Long.parseLong(filters.getProfessionalId())));
         }
         if (filters.getSelectedDate() != null) {
-            attributes.add((cb, from) -> cb
-                    .and(cb.greaterThan(from.get(Schedule_.schedulingDateAndTime),
-                                        LocalDateTime.of(filters.getSelectedDate(), LocalTime.MIN)),
-                         cb.lessThan(from.get(Schedule_.schedulingDateAndTime),
-                                     LocalDateTime.of(filters.getSelectedDate(), LocalTime.MAX))));
+            predicates.add(builder.and(builder.greaterThan(root.get(Schedule_.schedulingDateAndTime),
+                                                           LocalDateTime.of(filters.getSelectedDate(), LocalTime.MIN)),
+                                       builder.lessThan(root.get(Schedule_.schedulingDateAndTime),
+                                                        LocalDateTime.of(filters.getSelectedDate(), LocalTime.MAX))));
         }
         if (!StringUtils.isNullOrEmpty(filters.getStatus())) {
-            attributes.add((cb, from) -> cb.equal(from.get(Schedule_.status), handleScheduleStatus(filters.getStatus())));
+            predicates.add(builder.equal(root.get(Schedule_.status), handleScheduleStatus(filters.getStatus())));
         }
 
-        return attributes;
+        return predicates.toArray(new Predicate[predicates.size()]);
     }
 
     private ScheduleStatus handleScheduleStatus(String statusFromRequest) {
@@ -91,66 +87,4 @@ public class ScheduleRepositoryCustomImpl extends GenericCustomRepository<Schedu
         }
     }
 
-    /**
-     * Converte os objetos internos em DTO
-     * 
-     * @param responsibleOrigin
-     * @return
-     */
-    private static ResponsibleInfoDTO convertResponsible(Responsible responsibleOrigin) {
-        Person person = responsibleOrigin.getPerson();
-
-        ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
-        BeanUtils.copyProperties(responsibleOrigin.getPerson(), responsibleConverted, Person_.ID);
-        BeanUtils.copyProperties(responsibleOrigin, responsibleConverted);
-        responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
-
-        if (person.getAddress() != null) {
-            AddressDTO address = new AddressDTO();
-            BeanUtils.copyProperties(person.getAddress(), address);
-            responsibleConverted.setAddress(address);
-        }
-        if (responsibleOrigin.getProfessionalIdentity() != null) {
-            ProfessionalIdentityDTO professionalIdentity = new ProfessionalIdentityDTO();
-            professionalIdentity.setRegisterValue(responsibleOrigin.getProfessionalIdentity());
-            if (responsibleOrigin.getInitialsIdentity() != null) {
-                professionalIdentity.setRegisterType(responsibleOrigin.getInitialsIdentity());
-            }
-            responsibleConverted.setProfessionalIdentity(professionalIdentity);
-        }
-
-        responsibleConverted.setId(responsibleOrigin.getId());
-
-        return responsibleConverted;
-    }
-
-    /**
-     * Converte os objetos internos em DTO
-     * 
-     * @param patient
-     * @return
-     */
-    private PatientInfoDTO convertPatient(Patient patient) {
-        Person person = patient.getPerson();
-        PatientInfoDTO patientInfo = new PatientInfoDTO();
-        BeanUtils.copyProperties(person, patientInfo, Person_.ID);
-        patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
-
-        if (person.getAddress() != null) {
-            AddressDTO address = new AddressDTO();
-            BeanUtils.copyProperties(person.getAddress(), address);
-            patientInfo.setAddress(address);
-        }
-        if (patient.getHealthPlan() != null) {
-            HealthPlanDTO healthPlan = new HealthPlanDTO();
-            BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
-            healthPlan.setPatientPlanNumber(patient.getHealthPlanCode());
-            healthPlan.setOperatorCode(patient.getHealthPlan().getHealthOperator().getAnsCode());
-            healthPlan.setOperatorName(patient.getHealthPlan().getHealthOperator().getFantasyName());
-            patientInfo.setHealthPlan(healthPlan);
-        }
-        BeanUtils.copyProperties(patient, patientInfo, Patient_.ALLERGIES);
-        patient.getAllergies().forEach(allergy -> patientInfo.getAllergies().add(allergy.getDescription()));
-        return patientInfo;
-    }
 }
