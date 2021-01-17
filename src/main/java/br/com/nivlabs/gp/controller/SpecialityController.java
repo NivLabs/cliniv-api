@@ -10,9 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nivlabs.gp.controller.filters.SpecialityFilter;
 import br.com.nivlabs.gp.models.dto.SpecialityDTO;
 import br.com.nivlabs.gp.models.dto.SpecialityInfoDTO;
 import br.com.nivlabs.gp.service.SpecialityService;
@@ -34,11 +34,9 @@ public class SpecialityController {
     private SpecialityService specService;
 
     @GetMapping
-    public ResponseEntity<List<SpecialityDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                        @RequestParam(value = "linesPerPage", defaultValue = "100") Integer linesPerPage,
-                                                        @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
-                                                        @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-        Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+    public ResponseEntity<List<SpecialityDTO>> findPage(SpecialityFilter filters) {
+        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
+                                               filters.getOrderBy());
         return ResponseEntity.ok(specService.searchEntityPage(pageSettings).getContent());
     }
 

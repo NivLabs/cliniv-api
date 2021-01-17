@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.ScheduleFilters;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
+import br.com.nivlabs.gp.models.dto.ScheduleDTO;
 import br.com.nivlabs.gp.models.dto.ScheduleInfoDTO;
 import br.com.nivlabs.gp.service.ScheduleService;
 import io.swagger.annotations.Api;
@@ -41,7 +42,7 @@ public class ScheduleController {
     @ApiOperation(nickname = "schedule-get", value = "Busca informações de agendamentos baseados num filtro")
     @GetMapping
     @PreAuthorize("hasAnyRole('AGENDA_LEITURA', 'AGENDA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-    public ResponseEntity<List<ScheduleInfoDTO>> getSchedulesByFilters(ScheduleFilters filters) {
+    public ResponseEntity<List<ScheduleDTO>> getSchedulesByFilters(ScheduleFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
                                                Direction.valueOf(filters.getDirection()), filters.getOrderBy());
         return ResponseEntity.ok(principalService.findByFilters(filters, pageSettings));

@@ -3,19 +3,23 @@ package br.com.nivlabs.gp.repository.custom.responsible;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.gp.controller.filters.ResponsibleFilters;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.domain.Responsible_;
 import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
-import br.com.nivlabs.gp.repository.custom.IExpression;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
@@ -24,50 +28,55 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @author viniciosarodrigues
  *
  */
-public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Responsible>
+public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Responsible, ResponsibleDTO>
         implements ResponsibleRepositoryCustom {
 
     @Override
     public Page<ResponsibleDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
-        Page<Responsible> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<ResponsibleDTO> criteria = builder.createQuery(resumedClass);
+        Root<Responsible> root = criteria.from(persistentClass);
 
-        List<ResponsibleDTO> listOfResponsibleDTO = new ArrayList<>();
-
-        pageFromDatabase.forEach(responsible -> {
-            ResponsibleDTO responsibleConverted = new ResponsibleDTO();
-            BeanUtils.copyProperties(responsible.getPerson(), responsibleConverted, Person_.ID);
-            BeanUtils.copyProperties(responsible, responsibleConverted);
-            listOfResponsibleDTO.add(responsibleConverted);
-        });
-        return new PageImpl<>(listOfResponsibleDTO, pageSettings, pageFromDatabase.getTotalElements());
+        criteria.select(builder.construct(resumedClass,
+                                          root.get(Responsible_.id),
+                                          root.get(Responsible_.person).get(Person_.fullName),
+                                          root.get(Responsible_.person).get(Person_.socialName),
+                                          root.get(Responsible_.person).get(Person_.cpf),
+                                          root.get(Responsible_.person).get(Person_.bornDate),
+                                          root.get(Responsible_.person).get(Person_.principalNumber),
+                                          root.get(Responsible_.person).get(Person_.gender),
+                                          root.get(Responsible_.professionalIdentity),
+                                          root.get(Responsible_.initialsIdentity)));
+        return getPage(filters, pageSettings, builder, criteria, root);
     }
 
     @Override
-    protected List<IExpression<Responsible>> createRestrictions(CustomFilters customFilters) {
+    protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Responsible> root) {
+        if (!(customFilters instanceof ResponsibleFilters)) {
+            throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de profissional");
+        }
         ResponsibleFilters filters = (ResponsibleFilters) customFilters;
-
-        List<IExpression<Responsible>> attributes = new ArrayList<>();
+        List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-            attributes.add((cb, from) -> cb.equal(from.get(Responsible_.id), Long.parseLong(filters.getId())));
+            predicates.add(builder.equal(root.get(Responsible_.id), Long.parseLong(filters.getId())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getProfessionalIdentity())) {
-            attributes.add((cb, from) -> cb.equal(from.get(Responsible_.professionalIdentity),
-                                                  filters.getProfessionalIdentity()));
+            predicates.add(builder.equal(root.get(Responsible_.professionalIdentity),
+                                         filters.getProfessionalIdentity()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
-            attributes.add((cb, from) -> cb.equal(from.get(Responsible_.person).get(Person_.cpf), filters.getCpf()));
+            predicates.add(builder.equal(root.get(Responsible_.person).get(Person_.cpf), filters.getCpf()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getFullName())) {
-            attributes.add((cb, from) -> cb.like(from.get(Responsible_.person).get(Person_.fullName),
-                                                 filters.getFullName()));
+            predicates.add(builder.like(root.get(Responsible_.person).get(Person_.fullName),
+                                        filters.getFullName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getSocialName())) {
-            attributes.add(
-                           (cb, from) -> cb.like(from.get(Responsible_.person).get(Person_.socialName), filters.getSocialName()));
+            predicates.add(builder.like(root.get(Responsible_.person).get(Person_.socialName), filters.getSocialName()));
         }
 
-        return attributes;
+        return predicates.toArray(new Predicate[predicates.size()]);
     }
 
 }

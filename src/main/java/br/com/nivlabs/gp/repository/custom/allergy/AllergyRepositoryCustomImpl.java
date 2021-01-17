@@ -3,46 +3,57 @@ package br.com.nivlabs.gp.repository.custom.allergy;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.gp.controller.filters.AllergyFilters;
+import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Allergy;
 import br.com.nivlabs.gp.models.domain.Allergy_;
 import br.com.nivlabs.gp.models.dto.AllergyDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
-import br.com.nivlabs.gp.repository.custom.IExpression;
 import br.com.nivlabs.gp.util.StringUtils;
 
-public class AllergyRepositoryCustomImpl extends GenericCustomRepository<Allergy> implements AllergyRepositoryCustom {
+/**
+ * Repositório customizado para buscas paginadas de alergias
+ * 
+ * @author viniciosarodrigues
+ *
+ */
+public class AllergyRepositoryCustomImpl extends GenericCustomRepository<Allergy, AllergyDTO> implements AllergyRepositoryCustom {
 
     @Override
     public Page<AllergyDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
-        Page<Allergy> pageFromDatabase = pagination(createRestrictions(filters), pageSettings);
+        CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
+        CriteriaQuery<AllergyDTO> criteria = builder.createQuery(resumedClass);
+        Root<Allergy> root = criteria.from(persistentClass);
 
-        List<AllergyDTO> listOfDTO = new ArrayList<>();
-
-        pageFromDatabase.forEach(entity -> {
-            AllergyDTO dtoConverted = new AllergyDTO();
-            BeanUtils.copyProperties(entity, dtoConverted);
-            listOfDTO.add(dtoConverted);
-        });
-        return new PageImpl<>(listOfDTO, pageSettings, pageFromDatabase.getTotalElements());
+        criteria.select(builder.construct(resumedClass,
+                                          root.get(Allergy_.id),
+                                          root.get(Allergy_.description)));
+        return getPage(filters, pageSettings, builder, criteria, root);
     }
 
     @Override
-    protected List<IExpression<Allergy>> createRestrictions(CustomFilters customFilters) {
+    protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Allergy> root) {
+        if (!(customFilters instanceof AllergyFilters)) {
+            throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de alergias");
+        }
         AllergyFilters filters = (AllergyFilters) customFilters;
 
-        List<IExpression<Allergy>> attributes = new ArrayList<>();
+        List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getDescription())) {
-            attributes.add((cb, from) -> cb.like(from.get(Allergy_.description), filters.getDescription()));
+            predicates.add(builder.like(root.get(Allergy_.description), filters.getDescription()));
         }
 
-        return attributes;
+        return predicates.toArray(new Predicate[predicates.size()]);
     }
 }

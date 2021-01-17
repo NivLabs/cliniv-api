@@ -3,7 +3,6 @@ package br.com.nivlabs.gp.repository.custom;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,20 +17,23 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 /**
- * Classe genérica para criação de repositórios customizados.
+ * Classe gerénica para implementação de repositórios customizados com paginação
  * 
  * @author viniciosarodrigues
  *
+ * @param <T> Tipo da entidade principal
+ * @param <R> Tipo da entidade resumida
  */
-public abstract class GenericCustomRepository<T extends Serializable> {
+public abstract class GenericCustomRepository<T extends Serializable, R extends Serializable> {
 
     @PersistenceContext
     protected EntityManager entityManager;
 
     protected Class<T> persistentClass;
+    protected Class<R> resumedClass;
 
     @SuppressWarnings("unchecked")
-    private Class<T> getGenericTypeArgument(final Class<?> clazz, final int idx) {
+    private Class<T> getPersistentClass(final Class<?> clazz) {
         final Type type = clazz.getGenericSuperclass();
 
         ParameterizedType paramType;
@@ -41,14 +43,45 @@ public abstract class GenericCustomRepository<T extends Serializable> {
         } else {
             paramType = (ParameterizedType) ((Class<T>) type).getGenericSuperclass();
         }
-        return (Class<T>) paramType.getActualTypeArguments()[idx];
+        return (Class<T>) paramType.getActualTypeArguments()[0];
     }
 
+    @SuppressWarnings("unchecked")
+    private Class<R> getResumedClass(final Class<?> clazz) {
+        final Type type = clazz.getGenericSuperclass();
+
+        ParameterizedType paramType;
+
+        if (type instanceof ParameterizedType) {
+            paramType = (ParameterizedType) type;
+        } else {
+            paramType = (ParameterizedType) ((Class<R>) type).getGenericSuperclass();
+        }
+        return (Class<R>) paramType.getActualTypeArguments()[1];
+    }
+
+    /**
+     * Inicializa a entidade de persistência
+     * 
+     * @return
+     */
     protected Class<T> getDelegateClass() {
         if (this.persistentClass == null) {
-            this.persistentClass = this.getGenericTypeArgument(this.getClass(), 0);
+            this.persistentClass = this.getPersistentClass(this.getClass());
         }
         return this.persistentClass;
+    }
+
+    /**
+     * Inicializa a entidade resumida DTO
+     * 
+     * @return
+     */
+    protected Class<R> getResumedClass() {
+        if (this.resumedClass == null) {
+            this.resumedClass = this.getResumedClass(this.getClass());
+        }
+        return this.resumedClass;
     }
 
     /**
@@ -56,91 +89,76 @@ public abstract class GenericCustomRepository<T extends Serializable> {
      */
     protected GenericCustomRepository() {
         this.getDelegateClass();
+        this.getResumedClass();
     }
 
     /**
-     * Realiza uma busca paginada baseada em Expressões
+     * Cria a query de pesquisa
      * 
-     * @param attributes
+     * @param criteria
      * @param pageSettings
      * @return
      */
-    public Page<T> pagination(List<IExpression<T>> attributes, Pageable pageSettings) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<T> criteria = builder.createQuery(persistentClass);
-        Root<T> root = criteria.from(persistentClass);
-
-        Predicate predicates = createRestrictions(attributes, builder, root);
-
-        criteria.where(predicates);
-
-        TypedQuery<T> query = entityManager.createQuery(criteria);
-
-        addPageRestrinctions(query, pageSettings.getPageNumber(), pageSettings.getPageSize());
-        List<T> resultList = query.getResultList();
-
-        return setPageSettings(attributes, pageSettings, resultList);
-    }
-
-    private Page<T> setPageSettings(List<IExpression<T>> attributes, Pageable pageSettings,
-                                    List<T> resultList) {
-        return new PageImpl<>(resultList, pageSettings, getCount(attributes));
+    protected TypedQuery<R> createQuery(CriteriaQuery<R> criteria, Pageable pageSettings) {
+        TypedQuery<R> query = entityManager.createQuery(criteria);
+        createPaginationRestrictions(query, pageSettings);
+        return query;
     }
 
     /**
-     * Realiza o select count para usar na paginação
-     * 
-     * @param attributes
-     * @return
-     */
-    private Integer getCount(List<IExpression<T>> attributes) {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
-        Root<T> root = criteriaQuery.from(persistentClass);
-
-        Predicate predicates = createRestrictions(attributes, builder, root);
-
-        criteriaQuery.where(predicates);
-        criteriaQuery.select(builder.count(root));
-
-        return entityManager.createQuery(criteriaQuery).getSingleResult().intValue();
-    }
-
-    /**
-     * Realiza as restrições de paginação
-     * 
-     * @param query
-     * @param currentPage
-     * @param totalItems
-     */
-    private void addPageRestrinctions(TypedQuery<T> query, Integer currentPage, Integer totalItems) {
-        query.setFirstResult(currentPage * totalItems);
-        query.setMaxResults(totalItems);
-    }
-
-    /**
-     * Cria as restrições baseadas em IExpressions
-     * 
-     * @param attributes
-     * @param builder
-     * @param root
-     * @return
-     */
-    private Predicate createRestrictions(List<IExpression<T>> attributes, CriteriaBuilder builder, Root<T> root) {
-        Predicate predicate = builder.conjunction();
-        if (attributes != null)
-            for (IExpression<T> iExpression : attributes) {
-                predicate = builder.and(predicate, iExpression.expression(builder, root));
-            }
-        return predicate;
-    }
-
-    /**
-     * Cria restrições baseadas em filtros customizados
+     * Busca o total de elementos da pesquisa
      * 
      * @param filters
      * @return
      */
-    protected abstract List<IExpression<T>> createRestrictions(CustomFilters customFilters);
+    protected Long getTotalElements(CustomFilters filters) {
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> criteriaQuery = builder.createQuery(Long.class);
+        Root<T> root = criteriaQuery.from(persistentClass);
+
+        Predicate[] predicates = createRestrictions(filters, builder, root);
+        criteriaQuery.where(predicates);
+        criteriaQuery.select(builder.count(root));
+
+        return entityManager.createQuery(criteriaQuery).getSingleResult();
+    }
+
+    /**
+     * Devolve a página solicitada à partir dos filtros
+     * 
+     * @param filters
+     * @param pageSettings
+     * @return
+     */
+    protected Page<R> getPage(CustomFilters filters, Pageable pageSettings, CriteriaBuilder builder, CriteriaQuery<R> criteria,
+                              Root<T> root) {
+
+        criteria.where(createRestrictions(filters, builder, root));
+        TypedQuery<R> query = createQuery(criteria, pageSettings);
+
+        return new PageImpl<>(query.getResultList(), pageSettings, getTotalElements(filters));
+    }
+
+    /**
+     * Cria restrições de paginação
+     * 
+     * @param query
+     * @param pageSettings
+     */
+    protected void createPaginationRestrictions(TypedQuery<R> query, Pageable pageSettings) {
+        query.setFirstResult(pageSettings.getPageNumber() * pageSettings.getPageSize());
+        query.setMaxResults(pageSettings.getPageSize());
+
+    }
+
+    /**
+     * Método usado para criar restrições de consulta com filtros
+     * 
+     * @param customFilters
+     * @param builder
+     * @param root
+     * @return
+     */
+    protected abstract Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<T> root);
 
 }
