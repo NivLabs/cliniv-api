@@ -38,7 +38,7 @@ public class SpecialityService {
         List<SpecialityDTO> convertedContent = new ArrayList<>();
 
         for (Speciality spec : pageFromDb.getContent()) {
-            convertedContent.add(new SpecialityDTO(spec.getId(), spec.getName(), spec.getDescription()));
+            convertedContent.add(new SpecialityDTO(spec.getId(), spec.getName()));
         }
         return new PageImpl<>(convertedContent, pageRequest, pageFromDb.getTotalElements());
     }
@@ -61,7 +61,7 @@ public class SpecialityService {
         return convertedSpec;
     }
 
-    public SpecialityDTO update(Long id, SpecialityDTO dto) {
+    public SpecialityInfoDTO update(Long id, SpecialityInfoDTO dto) {
         Speciality specToDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Especialidade com identificador %s não encontrada", id)));
 
@@ -80,7 +80,7 @@ public class SpecialityService {
         dao.deleteById(id);
     }
 
-    public SpecialityDTO persist(SpecialityDTO dto) {
+    public SpecialityInfoDTO persist(SpecialityInfoDTO dto) {
         dto.setId(null);
         Speciality specToDb = new Speciality();
         BeanUtils.copyProperties(dto, specToDb);
