@@ -47,14 +47,16 @@ public class SpecialityController {
 
     @ApiOperation(nickname = "speciality-get-page", value = "Busca uma página de especialidades")
     @GetMapping
+    @PreAuthorize("hasAnyRole('ESPECIALIDADE_ESCRITA', 'ESPECIALIDADE_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<SpecialityDTO>> findList(SpecialityFilter filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
                                                filters.getOrderBy());
-        return ResponseEntity.ok(specService.searchEntityPage(pageSettings));
+        return ResponseEntity.ok(specService.searchEntityPage(filters, pageSettings));
     }
 
     @ApiOperation(nickname = "speciality-get-id", value = "Busca informações detalhadas de uma especialidade")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ESPECIALIDADE_ESCRITA', 'ESPECIALIDADE_ESCRITA', 'ADMIN')")
     public ResponseEntity<SpecialityInfoDTO> findById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(specService.findById(id));
     }

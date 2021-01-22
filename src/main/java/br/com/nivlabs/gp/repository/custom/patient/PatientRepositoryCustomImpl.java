@@ -34,10 +34,10 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
     public Page<PatientDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<PatientDTO> criteria = builder.createQuery(resumedClass);
-        Root<Patient> root = criteria.from(persistentClass);
+        CriteriaQuery<PatientDTO> criteria = builder.createQuery(PatientDTO.class);
+        Root<Patient> root = criteria.from(Patient.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(PatientDTO.class,
                                           root.get(Patient_.id),
                                           root.get(Patient_.person).get(Person_.fullName),
                                           root.get(Patient_.person).get(Person_.socialName),

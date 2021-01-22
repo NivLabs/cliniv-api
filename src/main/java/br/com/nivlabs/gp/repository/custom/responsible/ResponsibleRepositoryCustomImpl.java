@@ -34,10 +34,10 @@ public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Res
     @Override
     public Page<ResponsibleDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<ResponsibleDTO> criteria = builder.createQuery(resumedClass);
-        Root<Responsible> root = criteria.from(persistentClass);
+        CriteriaQuery<ResponsibleDTO> criteria = builder.createQuery(ResponsibleDTO.class);
+        Root<Responsible> root = criteria.from(Responsible.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(ResponsibleDTO.class,
                                           root.get(Responsible_.id),
                                           root.get(Responsible_.person).get(Person_.fullName),
                                           root.get(Responsible_.person).get(Person_.socialName),

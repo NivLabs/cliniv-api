@@ -1,6 +1,5 @@
 package br.com.nivlabs.gp.models.domain;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +17,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.nivlabs.gp.models.BaseObjectWithId;
+
 /**
  * Classe Specialty.java
  * 
@@ -27,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "ESPECIALIDADE")
-public class Speciality implements Serializable {
+public class Speciality extends BaseObjectWithId {
 
     private static final long serialVersionUID = 5635833259887178379L;
 

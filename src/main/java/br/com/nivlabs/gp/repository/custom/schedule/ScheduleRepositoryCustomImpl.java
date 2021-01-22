@@ -38,10 +38,10 @@ public class ScheduleRepositoryCustomImpl extends GenericCustomRepository<Schedu
     public Page<ScheduleDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<ScheduleDTO> criteria = builder.createQuery(resumedClass);
-        Root<Schedule> root = criteria.from(persistentClass);
+        CriteriaQuery<ScheduleDTO> criteria = builder.createQuery(ScheduleDTO.class);
+        Root<Schedule> root = criteria.from(Schedule.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(ScheduleDTO.class,
                                           root.get(Schedule_.id),
                                           root.get(Schedule_.patient).get(Patient_.person)
                                                   .get(Person_.fullName),
