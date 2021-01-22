@@ -34,10 +34,10 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
     public Page<UserDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<UserDTO> criteria = builder.createQuery(resumedClass);
-        Root<UserApplication> root = criteria.from(persistentClass);
+        CriteriaQuery<UserDTO> criteria = builder.createQuery(UserDTO.class);
+        Root<UserApplication> root = criteria.from(UserApplication.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(UserDTO.class,
                                           root.get(UserApplication_.id),
                                           root.get(UserApplication_.person).get(Person_.fullName),
                                           root.get(UserApplication_.person).get(Person_.socialName),

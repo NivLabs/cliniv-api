@@ -1,16 +1,13 @@
 package br.com.nivlabs.gp.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.controller.filters.SpecialityFilter;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Responsible_;
 import br.com.nivlabs.gp.models.domain.Speciality;
@@ -33,14 +30,8 @@ public class SpecialityService {
     @Autowired
     private SpecialityRepository dao;
 
-    public Page<SpecialityDTO> searchEntityPage(Pageable pageRequest) {
-        Page<Speciality> pageFromDb = dao.findAll(pageRequest);
-        List<SpecialityDTO> convertedContent = new ArrayList<>();
-
-        for (Speciality spec : pageFromDb.getContent()) {
-            convertedContent.add(new SpecialityDTO(spec.getId(), spec.getName(), spec.getDescription()));
-        }
-        return new PageImpl<>(convertedContent, pageRequest, pageFromDb.getTotalElements());
+    public Page<SpecialityDTO> searchEntityPage(SpecialityFilter filter, Pageable pageSettings) {
+        return dao.resumedList(filter, pageSettings);
     }
 
     public SpecialityInfoDTO findById(Long id) {
@@ -61,11 +52,11 @@ public class SpecialityService {
         return convertedSpec;
     }
 
-    public SpecialityDTO update(Long id, SpecialityDTO dto) {
+    public SpecialityInfoDTO update(Long id, SpecialityInfoDTO dto) {
         Speciality specToDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Especialidade com identificador %s não encontrada", id)));
 
-        BeanUtils.copyProperties(dto, specToDb, Speciality_.ID);
+        BeanUtils.copyProperties(dto, specToDb, Speciality_.ID, Speciality_.RESPONSIBLES);
         dao.save(specToDb);
         BeanUtils.copyProperties(specToDb, dto);
 
@@ -80,7 +71,7 @@ public class SpecialityService {
         dao.deleteById(id);
     }
 
-    public SpecialityDTO persist(SpecialityDTO dto) {
+    public SpecialityInfoDTO persist(SpecialityInfoDTO dto) {
         dto.setId(null);
         Speciality specToDb = new Speciality();
         BeanUtils.copyProperties(dto, specToDb);

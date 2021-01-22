@@ -30,7 +30,6 @@ public abstract class GenericCustomRepository<T extends Serializable, R extends 
     protected EntityManager entityManager;
 
     protected Class<T> persistentClass;
-    protected Class<R> resumedClass;
 
     @SuppressWarnings("unchecked")
     private Class<T> getPersistentClass(final Class<?> clazz) {
@@ -46,20 +45,6 @@ public abstract class GenericCustomRepository<T extends Serializable, R extends 
         return (Class<T>) paramType.getActualTypeArguments()[0];
     }
 
-    @SuppressWarnings("unchecked")
-    private Class<R> getResumedClass(final Class<?> clazz) {
-        final Type type = clazz.getGenericSuperclass();
-
-        ParameterizedType paramType;
-
-        if (type instanceof ParameterizedType) {
-            paramType = (ParameterizedType) type;
-        } else {
-            paramType = (ParameterizedType) ((Class<R>) type).getGenericSuperclass();
-        }
-        return (Class<R>) paramType.getActualTypeArguments()[1];
-    }
-
     /**
      * Inicializa a entidade de persistência
      * 
@@ -73,23 +58,10 @@ public abstract class GenericCustomRepository<T extends Serializable, R extends 
     }
 
     /**
-     * Inicializa a entidade resumida DTO
-     * 
-     * @return
-     */
-    protected Class<R> getResumedClass() {
-        if (this.resumedClass == null) {
-            this.resumedClass = this.getResumedClass(this.getClass());
-        }
-        return this.resumedClass;
-    }
-
-    /**
      * Construtor privado Inicializa a estrutura básica do JPA
      */
     protected GenericCustomRepository() {
         this.getDelegateClass();
-        this.getResumedClass();
     }
 
     /**

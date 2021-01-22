@@ -34,10 +34,10 @@ public class HealthOperatorRepositoryCustomImpl extends GenericCustomRepository<
     public Page<HealthOperatorDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<HealthOperatorDTO> criteria = builder.createQuery(resumedClass);
-        Root<HealthOperator> root = criteria.from(persistentClass);
+        CriteriaQuery<HealthOperatorDTO> criteria = builder.createQuery(HealthOperatorDTO.class);
+        Root<HealthOperator> root = criteria.from(HealthOperator.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(HealthOperatorDTO.class,
                                           root.get(HealthOperator_.id),
                                           root.get(HealthOperator_.ansCode),
                                           root.get(HealthOperator_.cnpj),
