@@ -1,8 +1,0 @@
-UPDATE APP_PARAM SET TIPO = 'PASSWORD' where TIPO = 'password';
-UPDATE APP_PARAM SET TIPO = 'STRING' where TIPO = 'string';
-UPDATE APP_PARAM SET TIPO = 'BOOL' where TIPO = 'bool';
-UPDATE APP_PARAM SET TIPO = 'GROUP' where TIPO = 'group';
-UPDATE APP_PARAM SET TIPO = 'NUMBER' where TIPO = 'number';
-
-UPDATE SALA_LEITO SET TIPO = 'BED' where TIPO = 'bed';
-UPDATE SALA_LEITO SET TIPO = 'ROOM' where TIPO = 'room';
