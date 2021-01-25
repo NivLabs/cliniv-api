@@ -24,9 +24,6 @@ public class ReportLayoutParameterDTO extends DataTransferObjectBase {
 	@ApiModelProperty("Nome do parâmetro")
 	private String name;
 	
-	@ApiModelProperty("Label do parâmetro")
-	private String label;
-	
 	@ApiModelProperty("Tipo do parâmetro")
 	private String type;
 
@@ -46,14 +43,6 @@ public class ReportLayoutParameterDTO extends DataTransferObjectBase {
 		this.name = name;
 	}
 
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
-
 	public String getType() {
 		return type;
 	}
@@ -64,7 +53,7 @@ public class ReportLayoutParameterDTO extends DataTransferObjectBase {
 
 	@Override
 	public String toString() {
-		return "ReportLayoutParameterDTO [id=" + id + ", name=" + name + ", label=" + label + ", type=" + type + "]";
+		return "ReportLayoutParameterDTO [id=" + id + ", name=" + name + ", type=" + type + "]";
 	}
 
 	@Override

@@ -35,9 +35,6 @@ public class ReportLayoutDTO extends DataTransferObjectBase {
 	@ApiModelProperty("Data da criação do layout")
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDateTime createdAt;
-
-	@ApiModelProperty("SQL do layout")
-	private String sql;
 	
 	@ApiModelProperty("Lista de parâmetros do layout")
 	private List<ReportLayoutParameterDTO> params;
@@ -74,14 +71,6 @@ public class ReportLayoutDTO extends DataTransferObjectBase {
 		this.createdAt = createdAt;
 	}
 
-	public String getSql() {
-		return sql;
-	}
-
-	public void setSql(String sql) {
-		this.sql = sql;
-	}
-
 	public List<ReportLayoutParameterDTO> getParams() {
 		return params;
 	}
@@ -93,7 +82,7 @@ public class ReportLayoutDTO extends DataTransferObjectBase {
 	@Override
 	public String toString() {
 		return "ReportLayoutDTO [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
-				+ createdAt + ", sql=" + sql + ", params=" + params + "]";
+				+ createdAt + ", params=" + params + "]";
 	}
 
 	@Override

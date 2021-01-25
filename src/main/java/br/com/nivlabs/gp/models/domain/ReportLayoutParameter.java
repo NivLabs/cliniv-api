@@ -32,9 +32,6 @@ public class ReportLayoutParameter extends BaseObject {
     @Column(name = "NOME")
 	private String name;
 	
-    @Column(name = "LABEL")
-	private String label;
-	
     @Column(name = "TIPO")
 	private String type;
 
@@ -54,13 +51,6 @@ public class ReportLayoutParameter extends BaseObject {
 		this.name = name;
 	}
 
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
 
 	public String getType() {
 		return type;
@@ -72,7 +62,7 @@ public class ReportLayoutParameter extends BaseObject {
 
 	@Override
 	public String toString() {
-		return "ReportLayoutParameter [id=" + id + ", name=" + name + ", label=" + label + ", type=" + type + "]";
+		return "ReportLayoutParameter [id=" + id + ", name=" + name + ", type=" + type + "]";
 	}
 
 	@Override

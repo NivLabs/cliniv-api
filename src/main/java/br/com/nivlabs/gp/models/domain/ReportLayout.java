@@ -44,9 +44,6 @@ public class ReportLayout extends BaseObjectWithCreatedAt {
 	
     @Column(name = "DATA")
 	private LocalDateTime createdAt;
-
-    @Column(name = "SQL")
-	private String sql;
 	
     @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "COD_LAYOUT", referencedColumnName = "ID")
@@ -84,14 +81,6 @@ public class ReportLayout extends BaseObjectWithCreatedAt {
 		this.createdAt = createdAt;
 	}
 
-	public String getSql() {
-		return sql;
-	}
-
-	public void setSql(String sql) {
-		this.sql = sql;
-	}
-
 	public List<ReportLayoutParameter> getParams() {
 		return params;
 	}
@@ -103,7 +92,7 @@ public class ReportLayout extends BaseObjectWithCreatedAt {
 	@Override
 	public String toString() {
 		return "ReportLayout [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
-				+ createdAt + ", sql=" + sql + ", params=" + params + "]";
+				+ createdAt + ", params=" + params + "]";
 	}
 
 	@Override
