@@ -30,6 +30,7 @@ import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisFormDTO;
+import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
@@ -341,7 +342,15 @@ public class AnamnesisService implements GenericService {
         logger.info("Formulário encontrado :: {} | {} :: Iniciando processo de conversão...", objFromDb.getId(), objFromDb.getTitle());
 
         AnamnesisFormDTO response = new AnamnesisFormDTO();
-        BeanUtils.copyProperties(objFromDb, response);
+
+        BeanUtils.copyProperties(objFromDb, response, Anamnesis_.QUESTION);
+        logger.info("Convertendo as questões do formulário :: Total de questões: {}", objFromDb.getQuestions().size());
+        objFromDb.getQuestions().forEach(question -> {
+            AnamnesisItemDTO convertedQuestion = new AnamnesisItemDTO();
+            BeanUtils.copyProperties(question, convertedQuestion);
+            logger.info("Adicionando questão :: {}", convertedQuestion);
+            response.getQuestions().add(convertedQuestion);
+        });
         logger.info("Conversão finalizada, devolvendo resposta para o client.");
         return response;
     }
