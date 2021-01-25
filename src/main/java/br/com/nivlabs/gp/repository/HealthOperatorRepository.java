@@ -11,7 +11,7 @@ import br.com.nivlabs.gp.repository.custom.healthoperator.HealthOperatorReposito
 /**
  * Repositório de dados para Operadoras de planos de saúde
  * 
- * @author viniciosarodrigues
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  *
  */
 @Repository

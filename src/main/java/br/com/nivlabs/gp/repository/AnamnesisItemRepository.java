@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import br.com.nivlabs.gp.models.domain.AnamnesisItem;
 
 /**
- * AnamnesisItemDao.java
+ * AnamnesisItemRepository.java
  *
  * @author <a href="henriquedreyer@gmail.com">Henrique Dreyer</a>
  *

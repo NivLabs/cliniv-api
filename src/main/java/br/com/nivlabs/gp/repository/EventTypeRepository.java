@@ -7,7 +7,7 @@ import br.com.nivlabs.gp.models.domain.EventType;
 
 /**
  * 
-* Classe EventTypeDao.java
+* Classe EventTypeRepository.java
 *
 * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
 *

@@ -8,7 +8,7 @@ import br.com.nivlabs.gp.models.domain.AnamnesisForm;
 /**
  * Repositório para controle de formulários de anamnese
  * 
- * @author viniciosarodrigues
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  *
  */
 @Repository

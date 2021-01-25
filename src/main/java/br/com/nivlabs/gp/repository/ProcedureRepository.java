@@ -8,7 +8,7 @@ import br.com.nivlabs.gp.repository.custom.procedureorevent.ProcedureRepositoryC
 
 /**
  * 
- * @author viniciosarodrigues
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  *
  */
 @Repository
