@@ -1,11 +1,9 @@
 package br.com.nivlabs.gp.service;
 
-import java.beans.Beans;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Base64;
-import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +16,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.enums.DigitalDocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.AnamnesisItem;
-import br.com.nivlabs.gp.models.domain.AnamnesisItem_;
 import br.com.nivlabs.gp.models.domain.ReportLayout;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.FileDTO;
