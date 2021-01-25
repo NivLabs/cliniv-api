@@ -8,7 +8,7 @@ import br.com.nivlabs.gp.models.domain.Evolution;
 /**
  * Repositório de manipulação de dados relacionais para evoluções clínicas dos pacientes
  * 
- * @author viniciosarodrigues
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  *
  */
 @Repository

@@ -7,9 +7,9 @@ import br.com.nivlabs.gp.models.domain.DigitalDocument;
 
 /**
  * 
- * Classe PatientDao.java
+ * Classe DigitalDocumentRepository.java
  *
- * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  *
  * @since 15 de set de 2019
  */
