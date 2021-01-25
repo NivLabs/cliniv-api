@@ -1,2 +1,0 @@
-UPDATE `APP_PARAM` SET `APP_PARAM`.`VALOR` = 'true' WHERE `APP_PARAM`.`ID` = 1;
-UPDATE `APP_PARAM` SET `APP_PARAM`.`TIPO` = 'password' where `APP_PARAM`.`ID` = 4;

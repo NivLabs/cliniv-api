@@ -34,10 +34,10 @@ public class ProcedureRepositoryCustomImpl extends GenericCustomRepository<Proce
     @Override
     public Page<ProcedureDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<ProcedureDTO> criteria = builder.createQuery(resumedClass);
-        Root<Procedure> root = criteria.from(persistentClass);
+        CriteriaQuery<ProcedureDTO> criteria = builder.createQuery(ProcedureDTO.class);
+        Root<Procedure> root = criteria.from(Procedure.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(ProcedureDTO.class,
                                           root.get(Procedure_.id),
                                           root.get(Procedure_.description),
                                           root.get(Procedure_.baseValue),

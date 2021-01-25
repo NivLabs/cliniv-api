@@ -46,10 +46,10 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
     public Page<AttendanceDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<AttendanceDTO> criteria = builder.createQuery(resumedClass);
-        Root<Attendance> root = criteria.from(persistentClass);
+        CriteriaQuery<AttendanceDTO> criteria = builder.createQuery(AttendanceDTO.class);
+        Root<Attendance> root = criteria.from(Attendance.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(AttendanceDTO.class,
                                           root.get(Attendance_.id),
                                           root.get(Attendance_.patient).get(Patient_.person).get(Person_.fullName),
                                           root.get(Attendance_.patient).get(Patient_.person).get(Person_.socialName),

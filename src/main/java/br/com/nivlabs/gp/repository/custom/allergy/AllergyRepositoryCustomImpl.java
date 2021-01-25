@@ -32,10 +32,10 @@ public class AllergyRepositoryCustomImpl extends GenericCustomRepository<Allergy
     @Override
     public Page<AllergyDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<AllergyDTO> criteria = builder.createQuery(resumedClass);
-        Root<Allergy> root = criteria.from(persistentClass);
+        CriteriaQuery<AllergyDTO> criteria = builder.createQuery(AllergyDTO.class);
+        Root<Allergy> root = criteria.from(Allergy.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(AllergyDTO.class,
                                           root.get(Allergy_.id),
                                           root.get(Allergy_.description)));
         return getPage(filters, pageSettings, builder, criteria, root);

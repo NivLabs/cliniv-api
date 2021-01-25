@@ -32,10 +32,10 @@ public class SectorRepositoryCustomImpl extends GenericCustomRepository<Sector, 
     @Override
     public Page<SectorDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<SectorDTO> criteria = builder.createQuery(resumedClass);
-        Root<Sector> root = criteria.from(persistentClass);
+        CriteriaQuery<SectorDTO> criteria = builder.createQuery(SectorDTO.class);
+        Root<Sector> root = criteria.from(Sector.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(SectorDTO.class,
                                           root.get(Sector_.id),
                                           root.get(Sector_.description)));
         return getPage(filters, pageSettings, builder, criteria, root);

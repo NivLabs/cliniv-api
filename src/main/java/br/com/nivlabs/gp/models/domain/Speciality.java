@@ -1,9 +1,9 @@
 package br.com.nivlabs.gp.models.domain;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,6 +17,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.nivlabs.gp.models.BaseObjectWithId;
+
 /**
  * Classe Specialty.java
  * 
@@ -26,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "ESPECIALIDADE")
-public class Speciality implements Serializable {
+public class Speciality extends BaseObjectWithId {
 
     private static final long serialVersionUID = 5635833259887178379L;
 
@@ -41,7 +43,7 @@ public class Speciality implements Serializable {
     private String description;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinTable(name = "ESPECIALIDADE_RESPONSAVEL", joinColumns = @JoinColumn(name = "ID_ESPECIALIDADE"), inverseJoinColumns = @JoinColumn(name = "ID_RESPONSAVEL"))
     private List<Responsible> responsibles = new ArrayList<>();
 

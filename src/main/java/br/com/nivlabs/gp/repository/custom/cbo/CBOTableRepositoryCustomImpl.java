@@ -33,10 +33,10 @@ public class CBOTableRepositoryCustomImpl extends GenericCustomRepository<CBOTab
     public Page<CBOTableDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
-        CriteriaQuery<CBOTableDTO> criteria = builder.createQuery(resumedClass);
-        Root<CBOTable> root = criteria.from(persistentClass);
+        CriteriaQuery<CBOTableDTO> criteria = builder.createQuery(CBOTableDTO.class);
+        Root<CBOTable> root = criteria.from(CBOTable.class);
 
-        criteria.select(builder.construct(resumedClass,
+        criteria.select(builder.construct(CBOTableDTO.class,
                                           root.get(CBOTable_.id),
                                           root.get(CBOTable_.description)));
         return getPage(filters, pageSettings, builder, criteria, root);
