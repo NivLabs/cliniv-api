@@ -25,6 +25,7 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Identificador único da especialidade")
     private Long id;
 
+    @ApiModelProperty("Nome da especialidade")
     @NotNull(message = "Informe o nome da especialidade")
     private String name;
 
