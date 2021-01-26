@@ -56,7 +56,7 @@ public class SpecialityController {
 
     @ApiOperation(nickname = "speciality-get-id", value = "Busca informações detalhadas de uma especialidade")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ESPECIALIDADE_ESCRITA', 'ESPECIALIDADE_ESCRITA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ESPECIALIDADE_ESCRITA', 'ESPECIALIDADE_LEITURA', 'ADMIN')")
     public ResponseEntity<SpecialityInfoDTO> findById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(specService.findById(id));
     }

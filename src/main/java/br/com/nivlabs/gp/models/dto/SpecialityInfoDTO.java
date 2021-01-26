@@ -26,13 +26,24 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
     private Long id;
 
     @NotNull(message = "Informe o nome da especialidade")
-    @Min(value = 3, message = "Informe pelo menos 3 caracteres nonome da especialidade")
     private String name;
 
     @ApiModelProperty("Descrição da especialidade")
     private String description;
 
     private List<ResponsibleDTO> responsibles = new ArrayList<>();
+
+    public SpecialityInfoDTO() {
+        super();
+    }
+
+    public SpecialityInfoDTO(Long id, String name, String description, List<ResponsibleDTO> responsibles) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.responsibles = responsibles;
+    }
 
     public Long getId() {
         return id;
