@@ -99,7 +99,7 @@ public class HandlerExceptions {
     }
 
     /**
-     * Requisição má formada - BAD_REQUEST
+     * Erro de validação
      * 
      * @param e
      * @param req
@@ -110,7 +110,7 @@ public class HandlerExceptions {
                                                                                HttpServletRequest req) {
         logger.error("Erro de validação :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(),
-                HttpStatus.UNPROCESSABLE_ENTITY.value(), "Requisição mal formada", getValidations(e),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de validação", getValidations(e),
                 "Erro de validação", req.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
