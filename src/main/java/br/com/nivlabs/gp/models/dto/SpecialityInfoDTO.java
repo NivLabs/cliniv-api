@@ -3,7 +3,6 @@ package br.com.nivlabs.gp.models.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import io.swagger.annotations.ApiModel;
@@ -79,11 +78,6 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
     }
 
     @Override
-    public String toString() {
-        return "SpecialityInfoDTO [id=" + id + ", name=" + name + ", description=" + description + ", responsibles=" + responsibles + "]";
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -124,6 +118,11 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
         } else if (!responsibles.equals(other.responsibles))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "SpecialityInfoDTO [id=" + id + ", name=" + name + ", description=" + description + ", responsibles=" + responsibles + "]";
     }
 
 }
