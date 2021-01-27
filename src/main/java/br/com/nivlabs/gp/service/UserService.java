@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -332,7 +333,7 @@ public class UserService {
         entityFromDb.setPerson(getPersonFromUserInfo(entityFromDb.getPerson(), entity));
         BeanUtils.copyProperties(entity, entityFromDb, BaseObjectWithCreatedAt_.CREATED_AT);
 
-        entityFromDb.setRoles(Arrays.asList());
+        entityFromDb.setRoles(new ArrayList<>());
         handleRoles(entity, entityFromDb);
 
         userRepo.saveAndFlush(entityFromDb);
