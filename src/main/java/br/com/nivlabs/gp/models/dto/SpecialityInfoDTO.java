@@ -25,7 +25,7 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Identificador único da especialidade")
     private Long id;
 
-    @ApiModelProperty("Nome da especialidade")
+  @ApiModelProperty("Nome da especialidade")
     @NotNull(message = "Informe o nome da especialidade")
     private String name;
 
@@ -33,6 +33,7 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
     private String description;
 
     private List<ResponsibleDTO> responsibles = new ArrayList<>();
+
 
     public SpecialityInfoDTO() {
         super();
@@ -126,4 +127,8 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return "SpecialityInfoDTO [id=" + id + ", description=" + description + ", responsibles=" + responsibles + "]";
+    }
 }
