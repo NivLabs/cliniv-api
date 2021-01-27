@@ -124,5 +124,4 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
     public String toString() {
         return "SpecialityInfoDTO [id=" + id + ", name=" + name + ", description=" + description + ", responsibles=" + responsibles + "]";
     }
-
 }
