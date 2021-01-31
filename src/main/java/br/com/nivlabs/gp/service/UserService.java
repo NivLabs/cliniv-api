@@ -2,7 +2,6 @@ package br.com.nivlabs.gp.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -24,6 +23,7 @@ import br.com.nivlabs.gp.models.domain.PersonAddress;
 import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.Role;
 import br.com.nivlabs.gp.models.domain.UserApplication;
+import br.com.nivlabs.gp.models.domain.UserApplication_;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.RoleDTO;
@@ -118,10 +118,7 @@ public class UserService {
                         entity.getUserName() + " não encontrado, não é possível atualizar o perfil"));
 
         entityFromDb.setPerson(getPersonFromUserInfo(entityFromDb.getPerson(), entity));
-        BeanUtils.copyProperties(entity, entityFromDb);
-
-        entityFromDb.setRoles(Arrays.asList());
-        handleRoles(entity, entityFromDb);
+        BeanUtils.copyProperties(entity, entityFromDb, UserApplication_.ROLES);
 
         userRepo.saveAndFlush(entityFromDb);
 
