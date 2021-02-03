@@ -44,6 +44,9 @@ public class ReportLayout extends BaseObjectWithCreatedAt {
 	
     @Column(name = "DATA")
 	private LocalDateTime createdAt;
+    
+    @Column(name = "XML")
+    private String xml;
 	
     @OneToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "COD_LAYOUT", referencedColumnName = "ID")
@@ -89,6 +92,14 @@ public class ReportLayout extends BaseObjectWithCreatedAt {
 		this.params = params;
 	}
 
+	public String getXml() {
+		return xml;
+	}
+	
+	public void setXml(String xml) {
+		this.xml = xml;
+	}
+	
 	@Override
 	public String toString() {
 		return "ReportLayout [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
@@ -102,6 +113,7 @@ public class ReportLayout extends BaseObjectWithCreatedAt {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
+	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -119,5 +131,8 @@ public class ReportLayout extends BaseObjectWithCreatedAt {
 			return false;
 		return true;
 	}
+
+	
+	
 	
 }
