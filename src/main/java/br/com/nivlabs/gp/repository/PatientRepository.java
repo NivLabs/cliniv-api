@@ -12,7 +12,7 @@ import br.com.nivlabs.gp.repository.custom.patient.PatientRepositoryCustom;
 
 /**
  * 
- * Classe PatientDao.java
+ * Classe PatientRepository.java
  *
  * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
  *

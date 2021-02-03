@@ -9,7 +9,7 @@ import br.com.nivlabs.gp.repository.custom.cbo.CBOTableRepositoryCustom;
 /**
  * Repositório para Classificação Brasileira de Ocupação
  * 
- * @author viniciosarodrigues
+ * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  *
  */
 @Repository

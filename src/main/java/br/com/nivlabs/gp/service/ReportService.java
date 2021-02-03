@@ -1,21 +1,37 @@
 package br.com.nivlabs.gp.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.enums.DigitalDocumentType;
+import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.domain.ReportLayout;
+import br.com.nivlabs.gp.models.domain.ReportLayoutParameter;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
+import br.com.nivlabs.gp.models.dto.FileDTO;
+import br.com.nivlabs.gp.models.dto.ReportLayoutDTO;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
+import br.com.nivlabs.gp.repository.ReportRepository;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -36,8 +52,11 @@ public class ReportService implements GenericService {
 
     @Autowired
     private JasperReportsCreator report;
+    
+    @Autowired
+    private ReportRepository repository;
 
-    public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
+	public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
                                                        InputStream reportInputStream) {
         try {
             logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: Instância -> {}",
@@ -63,4 +82,104 @@ public class ReportService implements GenericService {
         }
 
     }
+    
+    public ReportLayoutDTO newReporLayout(String reportName, String description, FileDTO file) {
+
+    	ReportLayoutDTO reportLayoutDTO = new ReportLayoutDTO();
+    	ReportLayout reportLayout = new ReportLayout();
+    	reportLayout.setId(null);
+    	reportLayout.setName(reportName);
+    	reportLayout.setDescription(description);
+    	reportLayout.setXml(file.getBase64());
+    	reportLayout.setCreatedAt(LocalDateTime.now());
+    	reportLayout.setParams(readParamsXml(file));
+    	repository.save(reportLayout);
+    	
+    	BeanUtils.copyProperties(reportLayout, reportLayoutDTO);
+    	
+		return reportLayoutDTO;
+    	
+    }
+    
+    private List<ReportLayoutParameter> readParamsXml(FileDTO file) {
+		
+    	List<ReportLayoutParameter> parameters = new ArrayList<ReportLayoutParameter>();
+    	
+    	Stream<String> lines = null;
+    	
+    	try {
+			lines = Files.lines(Paths.get(file.getUrl()));
+		} catch (IOException e) {
+			 logger.error("Erro ao ler xml = "+file.getUrl());
+		}
+    	
+    	lines.parallel().forEach(line -> 
+    	{
+    		if (line.startsWith("<parameter")) {
+    			ReportLayoutParameter param = new ReportLayoutParameter();
+    			if (line.contains("name=")) {
+    				int indexName = line.indexOf("name=\"");
+    				param.setName(line.substring(indexName, line.indexOf("\"", indexName)));
+    			}
+    			
+    			if (line.contains("class=")) {
+    				int indexType = line.indexOf("class=\"");
+    				String type = line.substring(indexType, line.indexOf("\"", indexType));
+    				param.setName(convertType(type));
+    			}
+    			parameters.add(param);
+    			
+    		}
+    	});
+    	
+		return parameters;
+	}
+
+	private String convertType(String type) {
+		switch (type) {
+		case "java.lang.String": {
+			
+			return MetaType.STRING.name();
+		}
+		case "java.util.Date": {
+			
+			return MetaType.DATE.name();
+		}
+		case "java.lang.Long": {
+			
+			return MetaType.NUMBER.name();
+		}
+		default:
+			throw new IllegalArgumentException("Unexpected value: " + type);
+		}
+	}
+
+	public ReportLayoutDTO findReportLayoutById(Long id) {
+
+    	ReportLayout reportLayout = findById(id);
+    	ReportLayoutDTO dto = new ReportLayoutDTO();
+		BeanUtils.copyProperties(reportLayout, dto);
+		return dto;
+    }
+    
+    private ReportLayout findById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+        		String.format("Layout ID: [%s] não encontrado!", id)));
+    }
+    
+    public Page<ReportLayoutDTO> findPageOfReportLayout(Pageable pageSettings) {
+    	  Page<ReportLayout> page = repository.findAll(pageSettings);
+          List<ReportLayoutDTO> newPage = new ArrayList<>();
+          page.getContent().forEach(domain -> {
+        	  ReportLayoutDTO reportLayoutDTO = new ReportLayoutDTO();
+        	  BeanUtils.copyProperties(domain, reportLayoutDTO);
+        	  newPage.add(reportLayoutDTO);
+          }); 
+          return new PageImpl<>(newPage, pageSettings, page.getTotalElements());
+    }
+    
+    public DigitalDocumentDTO createDocumentFromReportLayout(Long id, ReportParam params) {
+		return null;
+    }
+    
 }

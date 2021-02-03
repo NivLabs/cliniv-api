@@ -12,7 +12,7 @@ import br.com.nivlabs.gp.repository.custom.attendance.AttendanceRepositoryCustom
 
 /**
  * 
- * Classe VisitDao.java
+ * Classe AttendanceRepository.java
  *
  * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
  *
