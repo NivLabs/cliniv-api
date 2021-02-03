@@ -41,58 +41,54 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping(value = "/report")
 public class ReportController {
-	
-	@Autowired
-	private ReportService service;
-	
+
+    @Autowired
+    private ReportService service;
+
     @Autowired
     private ApplicationEventPublisher publisher;
-	
+
     @ApiOperation(nickname = "report-layout-get-page", value = "Busca uma página de layouts de relatórios")
     @GetMapping
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<ReportLayoutDTO>> findList(CustomFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
                                                filters.getOrderBy());
-        return ResponseEntity.ok(service.findPageOfReportLayout( pageSettings));
+        return ResponseEntity.ok(service.findPageOfReportLayout(pageSettings));
     }
-    
+
     @ApiOperation(nickname = "report-layout-get-id", value = "Busca um layout de relatório baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<ReportLayoutDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findReportLayoutById(id));
     }
-	
-	
+
     @ApiOperation(nickname = "report-layout-post", value = "Insere um novo layout de relatório")
     @PostMapping()
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
-    public ResponseEntity<ReportLayoutDTO> persist(@Validated @RequestBody(required = true) FileDTO file, 
-    		@NotNull @PathVariable("reportName")String reportName, @NotNull @PathVariable("description")String description,
-                                                  HttpServletResponse response) {
-    	ReportLayoutDTO createdReportLayout = service.newReporLayout(reportName, description, file);
+    public ResponseEntity<ReportLayoutDTO> persist(@Validated @RequestBody(required = true) FileDTO file,
+                                                   @NotNull @PathVariable("reportName") String reportName,
+                                                   @NotNull @PathVariable("description") String description,
+                                                   HttpServletResponse response) {
+        ReportLayoutDTO createdReportLayout = service.newReporLayout(reportName, description, file);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdReportLayout.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReportLayout);
     }
-    
-    
+
     @ApiOperation(nickname = "report-layout-post", value = "Insere um novo layout de relatório")
-    @PostMapping()
+    @PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
-    public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportParam reportParam, 
-    		@NotNull @PathVariable("id")Long id,
-                                                  HttpServletResponse response) {
-    	DigitalDocumentDTO digitalDocumentDTO = service.createDocumentFromReportLayout(null, reportParam);
+    public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportParam reportParam,
+                                                             @NotNull @PathVariable("id") Long id,
+                                                             HttpServletResponse response) {
+        DigitalDocumentDTO digitalDocumentDTO = service.createDocumentFromReportLayout(null, reportParam);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, digitalDocumentDTO.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(digitalDocumentDTO);
     }
-	
-    
-    
 
 }
