@@ -113,7 +113,6 @@ public class ReportLayout extends BaseObjectWithCreatedAt {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -131,6 +130,7 @@ public class ReportLayout extends BaseObjectWithCreatedAt {
 			return false;
 		return true;
 	}
+
 
 	
 	

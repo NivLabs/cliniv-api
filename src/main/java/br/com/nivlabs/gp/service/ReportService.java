@@ -155,6 +155,7 @@ public class ReportService implements GenericService {
 	}
 
 	public ReportLayoutDTO findReportLayoutById(Long id) {
+
     	ReportLayout reportLayout = findById(id);
     	ReportLayoutDTO dto = new ReportLayoutDTO();
 		BeanUtils.copyProperties(reportLayout, dto);

@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
+import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.ReportLayoutDTO;
+import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.service.ReportService;
 import io.swagger.annotations.Api;
@@ -74,6 +76,20 @@ public class ReportController {
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdReportLayout.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReportLayout);
+    }
+    
+    
+    @ApiOperation(nickname = "report-layout-post", value = "Insere um novo layout de relatório")
+    @PostMapping()
+    @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
+    public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportParam reportParam, 
+    		@NotNull @PathVariable("id")Long id,
+                                                  HttpServletResponse response) {
+    	DigitalDocumentDTO digitalDocumentDTO = service.createDocumentFromReportLayout(null, reportParam);
+
+        publisher.publishEvent(new CreatedResourceEvent(this, response, digitalDocumentDTO.getId()));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(digitalDocumentDTO);
     }
 	
     
