@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -11,10 +12,12 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -179,7 +182,27 @@ public class ReportService implements GenericService {
     }
     
     public DigitalDocumentDTO createDocumentFromReportLayout(Long id, ReportParam params) {
-		return null;
+    	
+    	ReportLayout reportLayout = this.findById(id);
+    	
+    	reportLayout.getXml();
+    	File file = new File("reports/generico.xml");
+    	byte[] bytes = Base64.getDecoder().decode(reportLayout.getXml());
+    	try {
+			FileUtils.writeByteArrayToFile( file, bytes );
+		} catch (IOException e) {
+			//TODO log
+		}
+    	
+    	InputStream reportInputStream = null;
+    	try {
+    		reportInputStream = new ClassPathResource("reports/generico.xml").getInputStream();
+		} catch (IOException e) {
+			//TODO log
+		}
+    	
+    	
+		return this.createDocumentFromReport(0L,reportLayout.getName(), params,reportInputStream);
     }
     
 }
