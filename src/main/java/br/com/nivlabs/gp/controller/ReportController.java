@@ -24,6 +24,7 @@ import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.ReportLayoutDTO;
+import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.service.ReportService;
@@ -81,10 +82,10 @@ public class ReportController {
     @ApiOperation(nickname = "report-layout-post", value = "Gera um relatório a partir de um layout")
     @PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
-    public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportParam reportParam,
+    public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportParameterDTO reportParam,
                                                              @NotNull @PathVariable("id") Long id,
                                                              HttpServletResponse response) {
-        DigitalDocumentDTO digitalDocumentDTO = service.createDocumentFromReportLayout(null, reportParam);
+        DigitalDocumentDTO digitalDocumentDTO = service.createDocumentFromReportLayout(id, reportParam);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, digitalDocumentDTO.getId()));
 
