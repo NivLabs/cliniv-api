@@ -52,15 +52,15 @@ public class ReportService implements GenericService {
 
     @Autowired
     private JasperReportsCreator report;
-    
+
     @Autowired
     private ReportRepository repository;
 
-	public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
+    public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
                                                        InputStream reportInputStream) {
         try {
-            logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: Instância -> {}",
-                        reportInputStream);
+            logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: {} :: Instância -> {}",
+                        reportName, reportInputStream);
             JasperPrint jasperPrint = report.create(params, reportInputStream);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
@@ -82,104 +82,103 @@ public class ReportService implements GenericService {
         }
 
     }
-    
+
     public ReportLayoutDTO newReporLayout(String reportName, String description, FileDTO file) {
 
-    	ReportLayoutDTO reportLayoutDTO = new ReportLayoutDTO();
-    	ReportLayout reportLayout = new ReportLayout();
-    	reportLayout.setId(null);
-    	reportLayout.setName(reportName);
-    	reportLayout.setDescription(description);
-    	reportLayout.setXml(file.getBase64());
-    	reportLayout.setCreatedAt(LocalDateTime.now());
-    	reportLayout.setParams(readParamsXml(file));
-    	repository.save(reportLayout);
-    	
-    	BeanUtils.copyProperties(reportLayout, reportLayoutDTO);
-    	
-		return reportLayoutDTO;
-    	
+        ReportLayoutDTO reportLayoutDTO = new ReportLayoutDTO();
+        ReportLayout reportLayout = new ReportLayout();
+        reportLayout.setId(null);
+        reportLayout.setName(reportName);
+        reportLayout.setDescription(description);
+        reportLayout.setXml(file.getBase64());
+        reportLayout.setCreatedAt(LocalDateTime.now());
+        reportLayout.setParams(readParamsXml(file));
+        repository.save(reportLayout);
+
+        BeanUtils.copyProperties(reportLayout, reportLayoutDTO);
+
+        return reportLayoutDTO;
+
     }
-    
+
     private List<ReportLayoutParameter> readParamsXml(FileDTO file) {
-		
-    	List<ReportLayoutParameter> parameters = new ArrayList<ReportLayoutParameter>();
-    	
-    	Stream<String> lines = null;
-    	
-    	try {
-			lines = Files.lines(Paths.get(file.getUrl()));
-		} catch (IOException e) {
-			 logger.error("Erro ao ler xml = "+file.getUrl());
-		}
-    	
-    	lines.parallel().forEach(line -> 
-    	{
-    		if (line.startsWith("<parameter")) {
-    			ReportLayoutParameter param = new ReportLayoutParameter();
-    			if (line.contains("name=")) {
-    				int indexName = line.indexOf("name=\"");
-    				param.setName(line.substring(indexName, line.indexOf("\"", indexName)));
-    			}
-    			
-    			if (line.contains("class=")) {
-    				int indexType = line.indexOf("class=\"");
-    				String type = line.substring(indexType, line.indexOf("\"", indexType));
-    				param.setName(convertType(type));
-    			}
-    			parameters.add(param);
-    			
-    		}
-    	});
-    	
-		return parameters;
-	}
 
-	private String convertType(String type) {
-		switch (type) {
-		case "java.lang.String": {
-			
-			return MetaType.STRING.name();
-		}
-		case "java.util.Date": {
-			
-			return MetaType.DATE.name();
-		}
-		case "java.lang.Long": {
-			
-			return MetaType.NUMBER.name();
-		}
-		default:
-			throw new IllegalArgumentException("Unexpected value: " + type);
-		}
-	}
+        List<ReportLayoutParameter> parameters = new ArrayList<ReportLayoutParameter>();
 
-	public ReportLayoutDTO findReportLayoutById(Long id) {
+        Stream<String> lines = null;
 
-    	ReportLayout reportLayout = findById(id);
-    	ReportLayoutDTO dto = new ReportLayoutDTO();
-		BeanUtils.copyProperties(reportLayout, dto);
-		return dto;
+        try {
+            lines = Files.lines(Paths.get(file.getUrl()));
+        } catch (IOException e) {
+            logger.error("Erro ao ler xml = " + file.getUrl());
+        }
+
+        lines.parallel().forEach(line -> {
+            if (line.startsWith("<parameter")) {
+                ReportLayoutParameter param = new ReportLayoutParameter();
+                if (line.contains("name=")) {
+                    int indexName = line.indexOf("name=\"");
+                    param.setName(line.substring(indexName, line.indexOf("\"", indexName)));
+                }
+
+                if (line.contains("class=")) {
+                    int indexType = line.indexOf("class=\"");
+                    String type = line.substring(indexType, line.indexOf("\"", indexType));
+                    param.setName(convertType(type));
+                }
+                parameters.add(param);
+
+            }
+        });
+
+        return parameters;
     }
-    
+
+    private String convertType(String type) {
+        switch (type) {
+            case "java.lang.String": {
+
+                return MetaType.STRING.name();
+            }
+            case "java.util.Date": {
+
+                return MetaType.DATE.name();
+            }
+            case "java.lang.Long": {
+
+                return MetaType.NUMBER.name();
+            }
+            default:
+                throw new IllegalArgumentException("Unexpected value: " + type);
+        }
+    }
+
+    public ReportLayoutDTO findReportLayoutById(Long id) {
+
+        ReportLayout reportLayout = findById(id);
+        ReportLayoutDTO dto = new ReportLayoutDTO();
+        BeanUtils.copyProperties(reportLayout, dto);
+        return dto;
+    }
+
     private ReportLayout findById(Long id) {
         return repository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-        		String.format("Layout ID: [%s] não encontrado!", id)));
+                String.format("Layout ID: [%s] não encontrado!", id)));
     }
-    
+
     public Page<ReportLayoutDTO> findPageOfReportLayout(Pageable pageSettings) {
-    	  Page<ReportLayout> page = repository.findAll(pageSettings);
-          List<ReportLayoutDTO> newPage = new ArrayList<>();
-          page.getContent().forEach(domain -> {
-        	  ReportLayoutDTO reportLayoutDTO = new ReportLayoutDTO();
-        	  BeanUtils.copyProperties(domain, reportLayoutDTO);
-        	  newPage.add(reportLayoutDTO);
-          }); 
-          return new PageImpl<>(newPage, pageSettings, page.getTotalElements());
+        Page<ReportLayout> page = repository.findAll(pageSettings);
+        List<ReportLayoutDTO> newPage = new ArrayList<>();
+        page.getContent().forEach(domain -> {
+            ReportLayoutDTO reportLayoutDTO = new ReportLayoutDTO();
+            BeanUtils.copyProperties(domain, reportLayoutDTO);
+            newPage.add(reportLayoutDTO);
+        });
+        return new PageImpl<>(newPage, pageSettings, page.getTotalElements());
     }
-    
+
     public DigitalDocumentDTO createDocumentFromReportLayout(Long id, ReportParam params) {
-		return null;
+        return null;
     }
-    
+
 }

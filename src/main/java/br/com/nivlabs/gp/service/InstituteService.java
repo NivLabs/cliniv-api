@@ -4,6 +4,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -21,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Institute;
+import br.com.nivlabs.gp.models.domain.Institute_;
 import br.com.nivlabs.gp.models.domain.Parameter;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.CustomerInfoDTO;
@@ -91,10 +93,10 @@ public class InstituteService implements GenericService {
     public void setCompanyLogo(FileDTO file) {
         if (file == null || StringUtils.isNullOrEmpty(file.getBase64()))
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A propriedade de Base64 da imagem não pode ser nula");
-        List<Institute> institutes = instituteRepo.findAll();
-        if (!institutes.isEmpty()) {
-            Institute institute = institutes.get(0);
+        Optional<Institute> optionalRet = instituteRepo.findById(1L);
+        if (optionalRet.isPresent()) {
             logger.info("Inserindo a Logo");
+            Institute institute = optionalRet.get();
             institute.setCompanyLogo(file.getBase64());
             instituteRepo.save(institute);
             logger.info("Logo Inserida");
@@ -170,20 +172,20 @@ public class InstituteService implements GenericService {
      */
     public void createOrUpdate(CustomerInfoDTO request) {
         logger.info("Iniciando processo de atualização de dados cadastrais da instituição principal");
-        Institute entity = null;
-        List<Institute> institutes = instituteRepo.findAll();
+        Institute entity;
+        Optional<Institute> institute = instituteRepo.findById(1L);
         logger.info("Checando se já existe cadastro para a instituição principal...");
-        if (institutes.isEmpty()) {
-            logger.info("Nenhum cadastro encontrado, iniciando um novo cadastro...");
-            entity = new Institute();
+
+        if (institute.isPresent()) {
+            logger.info("Cadastro encontrado, atualizando o mesmo...");
+            entity = institute.get();
             CustomerInfoDTO customer = request;
             AddressDTO address = customer.getAddress();
-            BeanUtils.copyProperties(address, entity);
-            BeanUtils.copyProperties(customer, entity);
-
+            BeanUtils.copyProperties(address, entity, Institute_.ID);
+            BeanUtils.copyProperties(customer, entity, Institute_.ID);
         } else {
-            logger.info("Cadastro encontrado, atualizando o mesmo...");
-            entity = instituteRepo.findAll().get(0);
+            logger.info("Nenhum cadastro encontrado, iniciando um novo cadastro...");
+            entity = new Institute();
             CustomerInfoDTO customer = request;
             AddressDTO address = customer.getAddress();
             BeanUtils.copyProperties(address, entity);

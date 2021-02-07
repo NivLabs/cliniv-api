@@ -6,6 +6,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -25,6 +27,9 @@ public class Institute implements Serializable {
     private static final long serialVersionUID = -8389926388826078313L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "CNPJ")
     private String cnpj;
 
@@ -100,6 +105,14 @@ public class Institute implements Serializable {
 
     public Institute() {
         super();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getCnpj() {
@@ -295,174 +308,11 @@ public class Institute implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((addressNumber == null) ? 0 : addressNumber.hashCode());
-        result = prime * result + ((city == null) ? 0 : city.hashCode());
-        result = prime * result + ((cnes == null) ? 0 : cnes.hashCode());
-        result = prime * result + ((cnpj == null) ? 0 : cnpj.hashCode());
-        result = prime * result + ((companyLogo == null) ? 0 : companyLogo.hashCode());
-        result = prime * result + ((complement == null) ? 0 : complement.hashCode());
-        result = prime * result + ((corporativeName == null) ? 0 : corporativeName.hashCode());
-        result = prime * result + ((dependency == null) ? 0 : dependency.hashCode());
-        result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
-        result = prime * result + ((instituteType == null) ? 0 : instituteType.hashCode());
-        result = prime * result + ((key == null) ? 0 : key.hashCode());
-        result = prime * result + ((legalNature == null) ? 0 : legalNature.hashCode());
-        result = prime * result + ((licenseDate == null) ? 0 : licenseDate.hashCode());
-        result = prime * result + ((managerMail == null) ? 0 : managerMail.hashCode());
-        result = prime * result + ((managerName == null) ? 0 : managerName.hashCode());
-        result = prime * result + ((managerPhone == null) ? 0 : managerPhone.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((neighborhood == null) ? 0 : neighborhood.hashCode());
-        result = prime * result + ((phone == null) ? 0 : phone.hashCode());
-        result = prime * result + ((postalCode == null) ? 0 : postalCode.hashCode());
-        result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
-        result = prime * result + ((state == null) ? 0 : state.hashCode());
-        result = prime * result + ((street == null) ? 0 : street.hashCode());
-        result = prime * result + ((userOfRegister == null) ? 0 : userOfRegister.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Institute other = (Institute) obj;
-        if (addressNumber == null) {
-            if (other.addressNumber != null)
-                return false;
-        } else if (!addressNumber.equals(other.addressNumber))
-            return false;
-        if (city == null) {
-            if (other.city != null)
-                return false;
-        } else if (!city.equals(other.city))
-            return false;
-        if (cnes == null) {
-            if (other.cnes != null)
-                return false;
-        } else if (!cnes.equals(other.cnes))
-            return false;
-        if (cnpj == null) {
-            if (other.cnpj != null)
-                return false;
-        } else if (!cnpj.equals(other.cnpj))
-            return false;
-        if (companyLogo == null) {
-            if (other.companyLogo != null)
-                return false;
-        } else if (!companyLogo.equals(other.companyLogo))
-            return false;
-        if (complement == null) {
-            if (other.complement != null)
-                return false;
-        } else if (!complement.equals(other.complement))
-            return false;
-        if (corporativeName == null) {
-            if (other.corporativeName != null)
-                return false;
-        } else if (!corporativeName.equals(other.corporativeName))
-            return false;
-        if (dependency == null) {
-            if (other.dependency != null)
-                return false;
-        } else if (!dependency.equals(other.dependency))
-            return false;
-        if (endDate == null) {
-            if (other.endDate != null)
-                return false;
-        } else if (!endDate.equals(other.endDate))
-            return false;
-        if (instituteType == null) {
-            if (other.instituteType != null)
-                return false;
-        } else if (!instituteType.equals(other.instituteType))
-            return false;
-        if (key == null) {
-            if (other.key != null)
-                return false;
-        } else if (!key.equals(other.key))
-            return false;
-        if (legalNature == null) {
-            if (other.legalNature != null)
-                return false;
-        } else if (!legalNature.equals(other.legalNature))
-            return false;
-        if (licenseDate == null) {
-            if (other.licenseDate != null)
-                return false;
-        } else if (!licenseDate.equals(other.licenseDate))
-            return false;
-        if (managerMail == null) {
-            if (other.managerMail != null)
-                return false;
-        } else if (!managerMail.equals(other.managerMail))
-            return false;
-        if (managerName == null) {
-            if (other.managerName != null)
-                return false;
-        } else if (!managerName.equals(other.managerName))
-            return false;
-        if (managerPhone == null) {
-            if (other.managerPhone != null)
-                return false;
-        } else if (!managerPhone.equals(other.managerPhone))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (neighborhood == null) {
-            if (other.neighborhood != null)
-                return false;
-        } else if (!neighborhood.equals(other.neighborhood))
-            return false;
-        if (phone == null) {
-            if (other.phone != null)
-                return false;
-        } else if (!phone.equals(other.phone))
-            return false;
-        if (postalCode == null) {
-            if (other.postalCode != null)
-                return false;
-        } else if (!postalCode.equals(other.postalCode))
-            return false;
-        if (startDate == null) {
-            if (other.startDate != null)
-                return false;
-        } else if (!startDate.equals(other.startDate))
-            return false;
-        if (state == null) {
-            if (other.state != null)
-                return false;
-        } else if (!state.equals(other.state))
-            return false;
-        if (street == null) {
-            if (other.street != null)
-                return false;
-        } else if (!street.equals(other.street))
-            return false;
-        if (userOfRegister == null) {
-            if (other.userOfRegister != null)
-                return false;
-        } else if (!userOfRegister.equals(other.userOfRegister))
-            return false;
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "Institute [cnpj=" + cnpj + ", cnes=" + cnes + ", companyLogo=" + companyLogo + ", name=" + name + ", corporativeName="
-                + corporativeName + ", legalNature=" + legalNature + ", street=" + street + ", addressNumber=" + addressNumber
-                + ", complement=" + complement + ", postalCode=" + postalCode + ", state=" + state + ", neighborhood=" + neighborhood
-                + ", city=" + city + ", phone=" + phone + ", dependency=" + dependency + ", instituteType=" + instituteType
+        return "Institute [id=" + id + ", cnpj=" + cnpj + ", cnes=" + cnes + ", companyLogo=" + companyLogo + ", name=" + name
+                + ", corporativeName=" + corporativeName + ", legalNature=" + legalNature + ", street=" + street + ", addressNumber="
+                + addressNumber + ", complement=" + complement + ", postalCode=" + postalCode + ", state=" + state + ", neighborhood="
+                + neighborhood + ", city=" + city + ", phone=" + phone + ", dependency=" + dependency + ", instituteType=" + instituteType
                 + ", managerName=" + managerName + ", managerPhone=" + managerPhone + ", managerMail=" + managerMail + ", licenseDate="
                 + licenseDate + ", userOfRegister=" + userOfRegister + ", key=" + key + ", startDate=" + startDate + ", endDate=" + endDate
                 + "]";
