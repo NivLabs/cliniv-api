@@ -4,8 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Date;
@@ -223,6 +221,10 @@ public class ReportService implements GenericService {
 						break;
 						case NUMBER: {
 							obj = Long.valueOf(v);
+						}
+						
+						case BOOL: {
+							obj = Boolean.valueOf(v);
 						}
 						break;
 						default:
