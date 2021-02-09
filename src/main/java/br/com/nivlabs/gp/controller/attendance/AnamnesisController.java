@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nivlabs.gp.controller.filters.AnamnesisFormFilters;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisFormDTO;
@@ -88,12 +89,10 @@ public class AnamnesisController {
     @ApiOperation(nickname = "anamnese-form-page", value = "Busca uma anamnese baseada no identificador")
     @GetMapping("/form")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-    public ResponseEntity<Page<AnamnesisFormDTO>> findPageOfAnamnesisForms(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                                           @RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-                                                                           @RequestParam(value = "orderBy", defaultValue = "id") String orderBy,
-                                                                           @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-        Pageable pageSettings = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-        return ResponseEntity.ok(service.findPageOfAnamnesisForms(pageSettings));
+    public ResponseEntity<Page<AnamnesisFormDTO>> findPageOfAnamnesisForms(AnamnesisFormFilters filters) {
+        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
+                                               filters.getOrderBy());
+        return ResponseEntity.ok(service.findPageOfAnamnesisForms(filters, pageSettings));
     }
 
 }

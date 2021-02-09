@@ -34,6 +34,12 @@ public class AnamnesisFormDTO extends DataTransferObjectBase {
         this.questions = questions;
     }
 
+    public AnamnesisFormDTO(Long id, String title) {
+        this.id = id;
+        this.title = title;
+
+    }
+
     public Long getId() {
         return id;
     }

@@ -66,7 +66,7 @@ public class ReportController {
 
     @ApiOperation(nickname = "report-layout-post", value = "Insere um novo layout de relatório")
     @PostMapping()
-    @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<ReportLayoutDTO> persist(@Validated @RequestBody(required = true) FileDTO file,
                                                    @NotNull @PathVariable("reportName") String reportName,
                                                    @NotNull @PathVariable("description") String description,

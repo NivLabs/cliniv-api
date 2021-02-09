@@ -64,9 +64,9 @@ public class ReportService implements GenericService {
     public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
                                                        InputStream reportInputStream) {
         try {
-            logger.info(
-                        "Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: Instância -> {}",
-                        reportInputStream);
+            logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: {} :: Instância -> {}",
+                        reportName, reportInputStream);
+
             JasperPrint jasperPrint = report.create(params, reportInputStream);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
@@ -168,9 +168,9 @@ public class ReportService implements GenericService {
     }
 
     private ReportLayout findById(Long id) {
-        return repository.findById(id).orElseThrow(
-                                                   () -> new HttpException(HttpStatus.NOT_FOUND,
-                                                           String.format("Layout ID: [%s] não encontrado!", id)));
+
+        return repository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format("Layout ID: [%s] não encontrado!", id)));
     }
 
     public Page<ReportLayoutDTO> findPageOfReportLayout(Pageable pageSettings) {

@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import br.com.nivlabs.gp.controller.filters.AnamnesisFormFilters;
 import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
@@ -361,19 +362,9 @@ public class AnamnesisService implements GenericService {
      * @param pageSettings Configurações de paginação
      * @return Página de formulários de anamnese
      */
-    public Page<AnamnesisFormDTO> findPageOfAnamnesisForms(Pageable pageSettings) {
+    public Page<AnamnesisFormDTO> findPageOfAnamnesisForms(AnamnesisFormFilters filters, Pageable pageSettings) {
         logger.info("Iniciando busca de formulários de Anamnese..");
-        Page<AnamnesisForm> pageFromDb = formDao.findAll(pageSettings);
-        if (pageFromDb.getTotalElements() == 0) {
-            throw new HttpException(HttpStatus.NOT_FOUND,
-                    "Nenhum formulário de anamnese encontrado, cadastre um antes de utilizar este recurso.");
-        }
-
-        logger.info("Um total de {} formulários encontrados, iniciando processo de conversão...", pageFromDb.getTotalElements());
-        List<AnamnesisFormDTO> newPage = new ArrayList<>();
-        pageFromDb.getContent().forEach(domain -> newPage.add(new AnamnesisFormDTO(domain.getId(), domain.getTitle(), Arrays.asList())));
-
-        return new PageImpl<>(newPage, pageSettings, pageFromDb.getTotalElements());
+        return formDao.resumedList(filters, pageSettings);
     }
 
 }
