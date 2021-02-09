@@ -16,5 +16,4 @@ import br.com.nivlabs.gp.models.domain.ReportLayout;
 @Repository
 public interface ReportRepository extends JpaRepository<ReportLayout, Long> {
 
-
 }

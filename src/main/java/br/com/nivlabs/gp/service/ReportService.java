@@ -1,14 +1,18 @@
 package br.com.nivlabs.gp.service;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -29,6 +33,7 @@ import br.com.nivlabs.gp.models.domain.ReportLayoutParameter;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.ReportLayoutDTO;
+import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.ReportRepository;
@@ -61,6 +66,7 @@ public class ReportService implements GenericService {
         try {
             logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: {} :: Instância -> {}",
                         reportName, reportInputStream);
+
             JasperPrint jasperPrint = report.create(params, reportInputStream);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
@@ -162,6 +168,7 @@ public class ReportService implements GenericService {
     }
 
     private ReportLayout findById(Long id) {
+
         return repository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Layout ID: [%s] não encontrado!", id)));
     }
@@ -177,8 +184,61 @@ public class ReportService implements GenericService {
         return new PageImpl<>(newPage, pageSettings, page.getTotalElements());
     }
 
-    public DigitalDocumentDTO createDocumentFromReportLayout(Long id, ReportParam params) {
-        return null;
+    public DigitalDocumentDTO createDocumentFromReportLayout(Long id, ReportParameterDTO params) {
+
+        ReportLayout reportLayout = this.findById(id);
+
+        byte[] bytes = Base64.getDecoder().decode(reportLayout.getXml());
+
+        InputStream reportInputStream = new ByteArrayInputStream(bytes);
+
+        ReportParam reportParam = validateParams(reportLayout, params);
+
+        return this.createDocumentFromReport(0L, reportLayout.getName(), reportParam, reportInputStream);
+    }
+
+    private ReportParam validateParams(ReportLayout reportLayout, ReportParameterDTO params) {
+
+        ReportParam reportParam = new ReportParam();
+        Map<String, Object> map = new HashMap<>();
+
+        params.getParams().forEach((k, v) -> {
+            reportLayout.getParams().forEach(param -> {
+
+                if (param.getName().equals(k)) {
+
+                    Object obj = new Object();
+                    try {
+                        switch (MetaType.valueOf(param.getType())) {
+                            case STRING: {
+                                obj = String.valueOf(v);
+                            }
+                                break;
+                            case DATE: {
+                                obj = Date.valueOf(v);
+                            }
+                                break;
+                            case NUMBER: {
+                                obj = Long.valueOf(v);
+                            }
+
+                            case BOOL: {
+                                obj = Boolean.valueOf(v);
+                            }
+                                break;
+                            default:
+                                throw new IllegalArgumentException("Unexpected value: " + k + ", " + v);
+                        }
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("Unexpected value: " + k + ", " + v);
+                    }
+                    map.put(k, obj);
+                }
+            });
+        });
+        reportParam.setParams(map);
+
+        return reportParam;
     }
 
 }
