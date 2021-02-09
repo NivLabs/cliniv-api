@@ -25,7 +25,6 @@ import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.ReportLayoutDTO;
 import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
-import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.service.ReportService;
 import io.swagger.annotations.Api;
