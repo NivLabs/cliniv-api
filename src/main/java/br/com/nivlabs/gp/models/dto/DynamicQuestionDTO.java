@@ -11,7 +11,7 @@ public class DynamicQuestionDTO extends DataTransferObjectBase {
 
     @NotBlank(message = "Informar o item da pergunta da anamnese é obrigatório.")
     @ApiModelProperty("Item da anamese com pertunga e tipo da resposta")
-    private DynamicFormQuestionDTO anamnesisItem;
+    private DynamicFormQuestionDTO dynamicFormQuestion;
 
     @NotBlank(message = "Informar a resposta é obrigatório.")
     @ApiModelProperty("Resposta")
@@ -22,19 +22,19 @@ public class DynamicQuestionDTO extends DataTransferObjectBase {
     }
 
     public DynamicQuestionDTO(
-            @NotBlank(message = "Informar o item da pergunta da anamnese é obrigatório.") DynamicFormQuestionDTO anamnesisItem,
+            @NotBlank(message = "Informar o item da pergunta da anamnese é obrigatório.") DynamicFormQuestionDTO dynamicFormQuestion,
             @NotBlank(message = "Informar a resposta é obrigatório.") String response) {
         super();
-        this.anamnesisItem = anamnesisItem;
+        this.dynamicFormQuestion = dynamicFormQuestion;
         this.response = response;
     }
 
-    public DynamicFormQuestionDTO getAnamnesisItem() {
-        return anamnesisItem;
+    public DynamicFormQuestionDTO getDynamicFormQuestion() {
+        return dynamicFormQuestion;
     }
 
-    public void setAnamnesisItem(DynamicFormQuestionDTO anamnesisItem) {
-        this.anamnesisItem = anamnesisItem;
+    public void setDynamicFormQuestion(DynamicFormQuestionDTO dynamicFormQuestion) {
+        this.dynamicFormQuestion = dynamicFormQuestion;
     }
 
     public String getResponse() {
@@ -46,10 +46,15 @@ public class DynamicQuestionDTO extends DataTransferObjectBase {
     }
 
     @Override
+    public String toString() {
+        return "DynamicQuestionDTO [dynamicFormQuestion=" + dynamicFormQuestion + ", response=" + response + "]";
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((anamnesisItem == null) ? 0 : anamnesisItem.hashCode());
+        result = prime * result + ((dynamicFormQuestion == null) ? 0 : dynamicFormQuestion.hashCode());
         result = prime * result + ((response == null) ? 0 : response.hashCode());
         return result;
     }
@@ -63,10 +68,10 @@ public class DynamicQuestionDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         DynamicQuestionDTO other = (DynamicQuestionDTO) obj;
-        if (anamnesisItem == null) {
-            if (other.anamnesisItem != null)
+        if (dynamicFormQuestion == null) {
+            if (other.dynamicFormQuestion != null)
                 return false;
-        } else if (!anamnesisItem.equals(other.anamnesisItem))
+        } else if (!dynamicFormQuestion.equals(other.dynamicFormQuestion))
             return false;
         if (response == null) {
             if (other.response != null)
@@ -74,11 +79,6 @@ public class DynamicQuestionDTO extends DataTransferObjectBase {
         } else if (!response.equals(other.response))
             return false;
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "DynamicQuestionDTO [anamnesisItem=" + anamnesisItem + ", response=" + response + "]";
     }
 
 }

@@ -206,39 +206,39 @@ public class DynamicFormService implements GenericService {
     /**
      * Valita as questões
      * 
-     * @param anamnese
+     * @param dynamicFormQuestion
      */
-    private void validateQuestions(DynamicQuestionDTO anamnese) {
+    private void validateQuestions(DynamicQuestionDTO dynamicFormQuestion) {
         logger.info("Iniciando validação da questão...");
-        if (anamnese.getAnamnesisItem() == null)
+        if (dynamicFormQuestion.getDynamicFormQuestion() == null)
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Seu questionário está com questão nula");
-        else if (StringUtils.isNullOrEmpty(anamnese.getAnamnesisItem().getQuestion())
-                || anamnese.getAnamnesisItem().getMetaType() == null)
+        else if (StringUtils.isNullOrEmpty(dynamicFormQuestion.getDynamicFormQuestion().getQuestion())
+                || dynamicFormQuestion.getDynamicFormQuestion().getMetaType() == null)
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Seu questionário não está nulo mas está incompleto. Informe a questão e o tipo da questão");
-        else if (StringUtils.isNullOrEmpty(anamnese.getResponse()))
+        else if (StringUtils.isNullOrEmpty(dynamicFormQuestion.getResponse()))
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Você possui questão sem resposta, revise seu questionário");
-        logger.info("Pergunta :: -> {}", anamnese.getAnamnesisItem().getQuestion());
-        checkMetaTypes(anamnese);
+        logger.info("Pergunta :: -> {}", dynamicFormQuestion.getDynamicFormQuestion().getQuestion());
+        checkMetaTypes(dynamicFormQuestion);
     }
 
     /**
      * Valida os tipos das respostas
      * 
-     * @param anamnese
+     * @param dynamicFormQuestion
      */
-    private void checkMetaTypes(DynamicQuestionDTO anamnese) {
+    private void checkMetaTypes(DynamicQuestionDTO dynamicFormQuestion) {
         logger.info("Verificando meta tipos das respostas");
-        switch (anamnese.getAnamnesisItem().getMetaType()) {
+        switch (dynamicFormQuestion.getDynamicFormQuestion().getMetaType()) {
             case NUMBER:
-                if (!StringUtils.isNumeric(anamnese.getResponse()))
+                if (!StringUtils.isNumeric(dynamicFormQuestion.getResponse()))
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O valor da resposta deve ser numérica");
                 break;
             case BOOL:
-                if (StringUtils.isNullOrEmpty(anamnese.getResponse())
-                        || (!anamnese.getResponse().equalsIgnoreCase(TRUE)
-                                && !anamnese.getResponse().equalsIgnoreCase(FALSE)))
+                if (StringUtils.isNullOrEmpty(dynamicFormQuestion.getResponse())
+                        || (!dynamicFormQuestion.getResponse().equalsIgnoreCase(TRUE)
+                                && !dynamicFormQuestion.getResponse().equalsIgnoreCase(FALSE)))
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                             "O valor da resposta só pode ser true ou false");
                 break;
