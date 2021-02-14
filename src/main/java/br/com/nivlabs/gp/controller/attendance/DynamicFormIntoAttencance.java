@@ -29,7 +29,7 @@ public class DynamicFormIntoAttencance {
     private DynamicFormService service;
 
     @ApiOperation(nickname = "dynamic-form-into-attendance-post", value = "Insere um novo formulário respondido na aplicação")
-    @PostMapping("/{idAttendance}/anamnesis")
+    @PostMapping("/{idAttendance}/dynamic-form")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<NewDynamicFormAnsweredDTO> persist(@PathVariable("idAttendance") Long idAttendance,
                                                              @Validated @RequestBody(required = true) NewDynamicFormAnsweredDTO request,
