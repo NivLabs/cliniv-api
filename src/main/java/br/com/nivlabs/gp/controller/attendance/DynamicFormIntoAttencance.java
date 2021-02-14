@@ -38,7 +38,7 @@ public class DynamicFormIntoAttencance {
                 .getPrincipal();
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(service.newAnamnesisResponse(idAttendance, request, userFromSession.getUsername()));
+                .body(service.newDynamicFormAnswered(idAttendance, request, userFromSession.getUsername()));
     }
 
 }

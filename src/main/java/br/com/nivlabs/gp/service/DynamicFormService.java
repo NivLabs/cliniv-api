@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -27,11 +28,11 @@ import br.com.nivlabs.gp.models.domain.DynamicForm_;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.DynamicFormDTO;
 import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
-import br.com.nivlabs.gp.models.dto.QuestionDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.NewDynamicFormAnsweredDTO;
+import br.com.nivlabs.gp.models.dto.QuestionDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
@@ -54,7 +55,7 @@ public class DynamicFormService implements GenericService {
     private static final String VISIT_ID = "VISIT_ID";
     private static final String FALSE = "false";
     private static final String TRUE = "true";
-    private static final String REPORT_PATH = "reports/Anamnese.jrxml";
+    private static final String REPORT_PATH = "reports/dynamicForm.jrxml";
 
     @Autowired
     private Logger logger;
@@ -102,18 +103,15 @@ public class DynamicFormService implements GenericService {
      * @param request
      * @return
      */
-    public NewDynamicFormAnsweredDTO newAnamnesisResponse(Long attendanceId, NewDynamicFormAnsweredDTO request, String requestOwner) {
-        logger.info("Iniciando o preenchimento de um novo questionário de anamnese...");
+    public NewDynamicFormAnsweredDTO newDynamicFormAnswered(Long attendanceId, NewDynamicFormAnsweredDTO request, String requestOwner) {
+        logger.info("Iniciando o preenchimento de um novo formulário dinâmico...");
         MedicalRecordDTO medicalRecord = attendanceService.findMedicalRecordByAttendanceId(attendanceId);
         logger.info("Verificando o usuário da solicitação");
         UserInfoDTO user = userSerive.findByUserName(requestOwner);
 
-        logger.info("Processand respostas");
-        request.getListOfResponse().forEach(item -> {
-            validateQuestions(item);
-        });
+        logger.info("Validando respostas...");
+        request.getListOfResponse().forEach(this::validateQuestions);
         try {
-
             logger.info("Preparando documento de anamnese...");
 
             DigitalDocumentDTO document = reportService
@@ -145,7 +143,7 @@ public class DynamicFormService implements GenericService {
         event.setAttendanceId(attendanceId);
         event.setDocuments(Arrays.asList(document));
         event.setEventDateTime(LocalDateTime.now());
-        event.setObservations("Criação da anamnese");
+        event.setObservations(request.getDocumentTitle());
         event.setResponsible(getResponsibleFromUser(requestOwner));
         event.setAccommodation(medicalRecord.getLastAccommodation());
         logger.info("Evento processado, inserindo evento na base de dados...");
@@ -197,10 +195,20 @@ public class DynamicFormService implements GenericService {
         params.getParams().put(REQUESTER_NAME, requestOwner.getFullName());
         params.getParams().put(HOSPITAL_LOGO, logoBase64);
         params.getParams().put(TODAY, new Date());
+        params.getParams().put("TEXT", formatText(request.getListOfResponse()));
 
         logger.info("Parâmetros configurados e prontos para a criação do documento");
 
         return params;
+    }
+
+    private String formatText(Set<QuestionDTO> listOfResponse) {
+        StringBuilder sb = new StringBuilder();
+        listOfResponse.forEach(question -> sb.append(question.getDynamicFormQuestion().getQuestion().toUpperCase())
+                .append("\n")
+                .append(question.getResponse())
+                .append("\n__________________________________________________________________________________________________\n"));
+        return sb.toString();
     }
 
     /**
