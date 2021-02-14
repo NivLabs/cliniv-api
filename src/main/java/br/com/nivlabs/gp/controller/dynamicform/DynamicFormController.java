@@ -2,7 +2,7 @@
 /**
  * 
  */
-package br.com.nivlabs.gp.controller;
+package br.com.nivlabs.gp.controller.dynamicform;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,10 +48,6 @@ public class DynamicFormController {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    /**************************************
-     ** Operações com Formulário completo *
-     **************************************/
-
     /**
      * Busca informações detalhadas de um formulário dinâmico
      * 
@@ -75,7 +71,7 @@ public class DynamicFormController {
     }
 
     @ApiOperation(nickname = "dynamic-form-delete-id", value = "Deleta um formulário dinâmico pelo identificador")
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
         service.deleteFormById(id);
@@ -102,9 +98,5 @@ public class DynamicFormController {
                                                      @Validated @RequestBody(required = true) DynamicFormDTO request) {
         return ResponseEntity.ok().body(service.update(id, request));
     }
-
-    /***************************************
-     *** Operações com itens do Formulário *
-     ***************************************/
 
 }

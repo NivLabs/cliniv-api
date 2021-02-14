@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
-import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
+import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 
 @Entity
 @Table(name = "ANAMNESE_ITEM")
@@ -43,8 +43,8 @@ public class AnamnesisItem extends BaseObjectWithId {
     private DynamicForm form;
 
     @JsonIgnore
-    public AnamnesisItemDTO getAnamnesisItemDTOFromDomain() {
-        AnamnesisItemDTO domain = new AnamnesisItemDTO();
+    public DynamicFormQuestionDTO getAnamnesisItemDTOFromDomain() {
+        DynamicFormQuestionDTO domain = new DynamicFormQuestionDTO();
         BeanUtils.copyProperties(this, domain);
         return domain;
     }

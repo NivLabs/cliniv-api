@@ -22,7 +22,7 @@ public class AnamnesisDTO extends DataTransferObjectBase {
 
     @NotBlank(message = "Informar o item da pergunta da anamnese é obrigatório.")
     @ApiModelProperty("Item da anamese com pertunga e tipo da resposta")
-    private AnamnesisItemDTO anamnesisItem;
+    private DynamicFormQuestionDTO anamnesisItem;
 
     @NotBlank(message = "Informar a resposta é obrigatório.")
     @ApiModelProperty("Resposta")
@@ -48,11 +48,11 @@ public class AnamnesisDTO extends DataTransferObjectBase {
         this.attendanceId = attendanceId;
     }
 
-    public AnamnesisItemDTO getAnamnesisItem() {
+    public DynamicFormQuestionDTO getAnamnesisItem() {
         return anamnesisItem;
     }
 
-    public void setAnamnesisItem(AnamnesisItemDTO anamnesisItem) {
+    public void setAnamnesisItem(DynamicFormQuestionDTO anamnesisItem) {
         this.anamnesisItem = anamnesisItem;
     }
 

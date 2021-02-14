@@ -29,9 +29,9 @@ import br.com.nivlabs.gp.models.domain.DynamicForm;
 import br.com.nivlabs.gp.models.domain.DynamicForm_;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
-import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.DynamicFormDTO;
+import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
@@ -44,7 +44,7 @@ import br.com.nivlabs.gp.repository.DynamicFormResponseRepository;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
- * Camada de serviço de anamenese do paciente
+ * Camada de serviço de formulários dinâmicos da aplicação
  * 
  * @author viniciosarodrigues
  *
@@ -341,7 +341,7 @@ public class DynamicFormService implements GenericService {
         BeanUtils.copyProperties(objFromDb, response, Anamnesis_.QUESTION);
         logger.info("Convertendo as questões do formulário :: Total de questões: {}", objFromDb.getQuestions().size());
         objFromDb.getQuestions().forEach(question -> {
-            AnamnesisItemDTO convertedQuestion = new AnamnesisItemDTO();
+            DynamicFormQuestionDTO convertedQuestion = new DynamicFormQuestionDTO();
             BeanUtils.copyProperties(question, convertedQuestion);
             logger.info("Adicionando questão :: {}", convertedQuestion);
             response.getQuestions().add(convertedQuestion);
@@ -393,6 +393,21 @@ public class DynamicFormService implements GenericService {
         BeanUtils.copyProperties(entity, request);
         logger.info("Formulário atualizado com sucesso :: {} | {}", request.getId(), request.getTitle());
         return request;
+    }
+
+    public void deleteQuestionById(Long id) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public DynamicFormQuestionDTO createQuestion(Long idForm, DynamicFormQuestionDTO request) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public DynamicFormQuestionDTO updateQuestion(Long id, DynamicFormQuestionDTO request) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
