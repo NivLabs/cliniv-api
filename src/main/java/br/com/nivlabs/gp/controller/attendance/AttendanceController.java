@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,15 +22,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
-import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
-import br.com.nivlabs.gp.service.DynamicFormService;
 import br.com.nivlabs.gp.service.AttendanceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,8 +47,6 @@ public class AttendanceController {
 
     @Autowired
     private AttendanceService service;
-    @Autowired
-    private DynamicFormService anamnesisServices;
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -138,17 +132,5 @@ public class AttendanceController {
     @PreAuthorize("hasAnyRole('ATENDIMENTO_LEITURA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<MedicalRecordDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findMedicalRecordByAttendanceId(id));
-    }
-
-    @ApiOperation(nickname = "anamnese-post", value = "Insere uma nova anamnese na aplicação")
-    @PostMapping("/anamnesis")
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
-    public ResponseEntity<NewAnamnesisDTO> persist(@Validated @RequestBody(required = true) NewAnamnesisDTO request,
-                                                   HttpServletResponse response) {
-        UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(anamnesisServices.newAnamnesisResponse(request, userFromSession.getUsername()));
     }
 }
