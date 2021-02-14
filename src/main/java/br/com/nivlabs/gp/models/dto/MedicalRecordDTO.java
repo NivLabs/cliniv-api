@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 11 de out de 2019
  */
-@ApiModel("Prontuário")
+@ApiModel(description = "Prontuário")
 public class MedicalRecordDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6838739544914003033L;

@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 30 de nov de 2019
  */
-@ApiModel("Informações detalhadas da instituição")
+@ApiModel(description = "Informações detalhadas da instituição")
 public class InstituteInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -3104969606567859458L;

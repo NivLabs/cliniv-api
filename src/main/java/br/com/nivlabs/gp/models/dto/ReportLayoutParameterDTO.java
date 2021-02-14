@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 24 de janeiro de 2021
  */
-@ApiModel("Parametros do layout de relatorio")
+@ApiModel(description = "Parametros do layout de relatorio")
 public class ReportLayoutParameterDTO extends DataTransferObjectBase {
 
 	/**

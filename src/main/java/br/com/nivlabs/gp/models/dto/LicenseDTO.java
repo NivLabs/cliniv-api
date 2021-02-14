@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Licença de uso")
+@ApiModel(description = "Licença de uso")
 public class LicenseDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 5513329730873896353L;

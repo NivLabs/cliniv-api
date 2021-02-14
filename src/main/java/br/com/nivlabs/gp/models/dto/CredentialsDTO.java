@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 15 de set de 2019
  */
-@ApiModel("Credenciais - Utilizar e-mail ou senha para realizar o login")
+@ApiModel(description = "Credenciais - Utilizar e-mail ou senha para realizar o login")
 public class CredentialsDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -7495190733306523606L;

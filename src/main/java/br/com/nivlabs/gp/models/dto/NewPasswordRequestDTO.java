@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModel;
  * @since 27 de jan de 2020
  */
 
-@ApiModel("Requisição de nova senha")
+@ApiModel(description = "Requisição de nova senha")
 public class NewPasswordRequestDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -173297306237874136L;

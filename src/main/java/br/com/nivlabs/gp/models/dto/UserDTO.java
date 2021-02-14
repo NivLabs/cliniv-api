@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModel;
  * @author viniciosarodrigues
  *
  */
-@ApiModel("Usuário")
+@ApiModel(description = "Usuário")
 public class UserDTO extends PersonDTO {
 
     private static final long serialVersionUID = 2375401831562989624L;

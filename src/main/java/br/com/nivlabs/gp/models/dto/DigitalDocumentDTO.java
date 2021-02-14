@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel("Documento Digital")
+@ApiModel(description = "Documento Digital")
 public class DigitalDocumentDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -870502165996369141L;

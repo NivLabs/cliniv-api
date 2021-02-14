@@ -4,7 +4,7 @@ import br.com.nivlabs.gp.enums.FileType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Arquivo")
+@ApiModel(description = "Arquivo")
 public class FileDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -4952673680887120451L;

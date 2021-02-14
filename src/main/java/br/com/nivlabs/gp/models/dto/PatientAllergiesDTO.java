@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @NotEmpty
-@ApiModel("Alergias do paciente")
+@ApiModel(description = "Alergias do paciente")
 public class PatientAllergiesDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 7849783306168301683L;

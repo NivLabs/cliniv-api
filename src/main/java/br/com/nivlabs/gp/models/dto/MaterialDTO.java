@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 22 de jul de 2020
  */
-@ApiModel("Materiais")
+@ApiModel(description = "Materiais")
 public class MaterialDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -906864967600182992L;

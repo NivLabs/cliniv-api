@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel("API Status")
+@ApiModel(description = "API Status")
 public class ServerStatusDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -8293328535500084535L;
 

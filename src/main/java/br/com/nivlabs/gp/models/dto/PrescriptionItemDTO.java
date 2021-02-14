@@ -7,7 +7,7 @@ import br.com.nivlabs.gp.enums.PrescriptionItemType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Item da prescrição do paciente")
+@ApiModel(description = "Item da prescrição do paciente")
 public class PrescriptionItemDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 2268618756493323347L;

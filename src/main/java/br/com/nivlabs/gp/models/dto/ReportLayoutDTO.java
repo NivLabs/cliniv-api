@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 24 de janeiro de 2021
  */
-@ApiModel("Layout de Relatório")
+@ApiModel(description = "Layout de Relatório")
 public class ReportLayoutDTO extends DataTransferObjectBase {
 
 	/**

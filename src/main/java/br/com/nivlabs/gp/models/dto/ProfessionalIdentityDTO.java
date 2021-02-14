@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModel;
  * @author viniciosarodrigues
  *
  */
-@ApiModel("Identidade Profissional")
+@ApiModel(description = "Identidade Profissional")
 public class ProfessionalIdentityDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -5712585514927819479L;

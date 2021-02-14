@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Requisição de preenchimento de formulário dinâmico")
+@ApiModel(description = "Requisição de preenchimento de formulário dinâmico")
 public class NewDynamicFormAnsweredDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 1489473679769549274L;

@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 22 de jul de 2020
  */
-@ApiModel("Procedimento")
+@ApiModel(description = "Procedimento")
 public class MedicalProcedureDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8019585889759791849L;
