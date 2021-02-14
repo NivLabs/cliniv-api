@@ -40,7 +40,7 @@ public class AnamnesisItem extends BaseObjectWithId {
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ANAMNESE_FORM")
     @JsonIgnore
-    private AnamnesisForm form;
+    private DynamicForm form;
 
     @JsonIgnore
     public AnamnesisItemDTO getAnamnesisItemDTOFromDomain() {
@@ -84,11 +84,11 @@ public class AnamnesisItem extends BaseObjectWithId {
         this.metaType = metaType;
     }
 
-    public AnamnesisForm getForm() {
+    public DynamicForm getForm() {
         return form;
     }
 
-    public void setForm(AnamnesisForm form) {
+    public void setForm(DynamicForm form) {
         this.form = form;
     }
 

@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("Formulário de Anamnese")
-public class AnamnesisFormDTO extends DataTransferObjectBase {
+public class DynamicFormDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6122041136613519207L;
 
@@ -23,18 +23,18 @@ public class AnamnesisFormDTO extends DataTransferObjectBase {
     @ApiModelProperty("Questões do formulário de anamnese")
     private List<AnamnesisItemDTO> questions = new ArrayList<>();
 
-    public AnamnesisFormDTO() {
+    public DynamicFormDTO() {
         super();
     }
 
-    public AnamnesisFormDTO(Long id, String title, List<AnamnesisItemDTO> questions) {
+    public DynamicFormDTO(Long id, String title, List<AnamnesisItemDTO> questions) {
         super();
         this.id = id;
         this.title = title;
         this.questions = questions;
     }
 
-    public AnamnesisFormDTO(Long id, String title) {
+    public DynamicFormDTO(Long id, String title) {
         this.id = id;
         this.title = title;
 
@@ -87,7 +87,7 @@ public class AnamnesisFormDTO extends DataTransferObjectBase {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AnamnesisFormDTO other = (AnamnesisFormDTO) obj;
+        DynamicFormDTO other = (DynamicFormDTO) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

@@ -31,7 +31,7 @@ import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
-import br.com.nivlabs.gp.service.AnamnesisService;
+import br.com.nivlabs.gp.service.DynamicFormService;
 import br.com.nivlabs.gp.service.AttendanceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,7 +52,7 @@ public class AttendanceController {
     @Autowired
     private AttendanceService service;
     @Autowired
-    private AnamnesisService anamnesisServices;
+    private DynamicFormService anamnesisServices;
 
     @Autowired
     private ApplicationEventPublisher publisher;

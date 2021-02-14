@@ -5,7 +5,6 @@ package br.com.nivlabs.gp.service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -16,23 +15,22 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.nivlabs.gp.controller.filters.AnamnesisFormFilters;
+import br.com.nivlabs.gp.controller.filters.DynamicFormFilters;
 import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Anamnesis;
-import br.com.nivlabs.gp.models.domain.AnamnesisForm;
 import br.com.nivlabs.gp.models.domain.Anamnesis_;
 import br.com.nivlabs.gp.models.domain.Attendance;
+import br.com.nivlabs.gp.models.domain.DynamicForm;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
-import br.com.nivlabs.gp.models.dto.AnamnesisFormDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
+import br.com.nivlabs.gp.models.dto.DynamicFormDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAnamnesisDTO;
@@ -40,8 +38,8 @@ import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
-import br.com.nivlabs.gp.repository.AnamnesisFormRepository;
-import br.com.nivlabs.gp.repository.AnamnesisRepository;
+import br.com.nivlabs.gp.repository.DynamicFormRepository;
+import br.com.nivlabs.gp.repository.DynamicFormResponseRepository;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
@@ -51,7 +49,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  *
  */
 @Service
-public class AnamnesisService implements GenericService {
+public class DynamicFormService implements GenericService {
 
     private static final String TODAY = "TODAY";
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
@@ -65,9 +63,9 @@ public class AnamnesisService implements GenericService {
     private Logger logger;
 
     @Autowired
-    private AnamnesisRepository dao;
+    private DynamicFormResponseRepository dynamicFormResponseDao;
     @Autowired
-    private AnamnesisFormRepository formDao;
+    private DynamicFormRepository dynamicFormDao;
 
     @Autowired
     private ReportService reportService;
@@ -87,21 +85,13 @@ public class AnamnesisService implements GenericService {
     @Autowired
     private ResponsibleService responsibleService;
 
-    public Page<AnamnesisDTO> searchDTOPage(Pageable pageSettings) {
-        Page<Anamnesis> page = dao.findAll(pageSettings);
-        List<AnamnesisDTO> newPage = new ArrayList<>();
-        page.getContent().forEach(domain -> newPage.add(domain.getAnamneseDTOFromDomain()));
-
-        return new PageImpl<>(newPage, pageSettings, page.getTotalElements());
-    }
-
     public List<Anamnesis> findByAttendance(Attendance attendance) {
-        return dao.findByAttendance(attendance);
+        return dynamicFormResponseDao.findByAttendance(attendance);
     }
 
     public Anamnesis findById(Long id) {
         try {
-            return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+            return dynamicFormResponseDao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                     String.format("Item da anamnese com o identificador %s não encontrado!", id)));
 
         } catch (HttpException e) {
@@ -118,7 +108,21 @@ public class AnamnesisService implements GenericService {
 
     public void deleteById(Long id) {
         Anamnesis anamnese = findById(id);
-        dao.delete(anamnese);
+        dynamicFormResponseDao.delete(anamnese);
+    }
+
+    /**
+     * Realiza a exclusão física do formulário dinâmico
+     * 
+     * @param id Identificador único do formulário dinâmico
+     */
+    public void deleteFormById(Long id) {
+        logger.info("Iniciando exclusão de formulário dinâmico :: {}", id);
+        DynamicForm entity = dynamicFormDao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format("Formulários dinâmico com o identificador %s não encontrado.", id)));
+        logger.info("Formulário encontrado :: {} | {} ", entity.getId(), entity.getTitle());
+        dynamicFormDao.delete(entity);
+        logger.info("Formulário excluído com sucesso!");
     }
 
     /**
@@ -135,7 +139,7 @@ public class AnamnesisService implements GenericService {
         else
             logger.info("Foram encontradas um total de {} questões respondidas, inicializando exclusão dos itens...",
                         listOfAnamesesis.size());
-        listOfAnamesesis.forEach(id -> dao.deleteById(id));
+        listOfAnamesesis.forEach(id -> dynamicFormResponseDao.deleteById(id));
         logger.info("Processo finalizado com sucesso");
 
     }
@@ -223,7 +227,8 @@ public class AnamnesisService implements GenericService {
      * @param request
      */
     private void undoProcess(NewAnamnesisDTO request) {
-        dao.findByAttendance(new Attendance(request.getAttendanceId())).stream().map(Anamnesis::getId).forEach(dao::deleteById);
+        dynamicFormResponseDao.findByAttendance(new Attendance(request.getAttendanceId())).stream().map(Anamnesis::getId)
+                .forEach(dynamicFormResponseDao::deleteById);
     }
 
     /**
@@ -325,7 +330,7 @@ public class AnamnesisService implements GenericService {
      */
     public Anamnesis persist(Anamnesis entity) {
         entity.setId(null);
-        return dao.save(entity);
+        return dynamicFormResponseDao.save(entity);
     }
 
     /**
@@ -334,15 +339,15 @@ public class AnamnesisService implements GenericService {
      * @param id Identificador único do formulário de Anamnese
      * @return Formulário de Anamnese com título e perguntas
      */
-    public AnamnesisFormDTO findFormById(Long id) {
+    public DynamicFormDTO findFormById(Long id) {
         logger.info("Iniciando processo de busca de formulário de anamnese pelo identificador :: {}", id);
 
-        AnamnesisForm objFromDb = formDao.findById(id)
+        DynamicForm objFromDb = dynamicFormDao.findById(id)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                         String.format("Formulário com o identificador %s não encontrado", id)));
         logger.info("Formulário encontrado :: {} | {} :: Iniciando processo de conversão...", objFromDb.getId(), objFromDb.getTitle());
 
-        AnamnesisFormDTO response = new AnamnesisFormDTO();
+        DynamicFormDTO response = new DynamicFormDTO();
 
         BeanUtils.copyProperties(objFromDb, response, Anamnesis_.QUESTION);
         logger.info("Convertendo as questões do formulário :: Total de questões: {}", objFromDb.getQuestions().size());
@@ -362,9 +367,9 @@ public class AnamnesisService implements GenericService {
      * @param pageSettings Configurações de paginação
      * @return Página de formulários de anamnese
      */
-    public Page<AnamnesisFormDTO> findPageOfAnamnesisForms(AnamnesisFormFilters filters, Pageable pageSettings) {
+    public Page<DynamicFormDTO> findPageOfDymicaForm(DynamicFormFilters filters, Pageable pageSettings) {
         logger.info("Iniciando busca de formulários de Anamnese..");
-        return formDao.resumedList(filters, pageSettings);
+        return dynamicFormDao.resumedList(filters, pageSettings);
     }
 
 }

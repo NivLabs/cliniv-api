@@ -3,7 +3,7 @@ package br.com.nivlabs.gp.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.nivlabs.gp.models.domain.AnamnesisForm;
+import br.com.nivlabs.gp.models.domain.DynamicForm;
 import br.com.nivlabs.gp.repository.custom.anamnesisform.AnamnesisFormRepositoryCustom;
 
 /**
@@ -13,6 +13,6 @@ import br.com.nivlabs.gp.repository.custom.anamnesisform.AnamnesisFormRepository
  *
  */
 @Repository
-public interface AnamnesisFormRepository extends JpaRepository<AnamnesisForm, Long>, AnamnesisFormRepositoryCustom {
+public interface DynamicFormRepository extends JpaRepository<DynamicForm, Long>, AnamnesisFormRepositoryCustom {
 
 }

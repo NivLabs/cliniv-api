@@ -17,7 +17,7 @@ import br.com.nivlabs.gp.models.domain.Attendance;
  * 
  */
 @Repository
-public interface AnamnesisRepository extends JpaRepository<Anamnesis, Long> {
+public interface DynamicFormResponseRepository extends JpaRepository<Anamnesis, Long> {
 
     public List<Anamnesis> findByAttendance(Attendance attendance);
 
