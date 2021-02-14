@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 
 /**
- * Classe VisitEventRepository.java
+ * Classe AttendanceEventRepository.java
  * 
  * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
  *

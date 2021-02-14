@@ -5,7 +5,7 @@ import java.util.Set;
 
 import io.swagger.annotations.ApiModel;
 
-@ApiModel("Informações da instituição")
+@ApiModel(description = "Informações da instituição")
 public class InstituteDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -5796305672599055540L;

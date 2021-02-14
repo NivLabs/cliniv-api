@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 9 de fev de 2020
  */
-@ApiModel("Informações detalhadas da pessoa")
+@ApiModel(description = "Informações detalhadas da pessoa")
 public abstract class PersonInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4735834196671409605L;

@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 31 de out de 2019
  */
 
-@ApiModel("Documento")
+@ApiModel(description = "Documento")
 public class DocumentDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8977997168527769344L;

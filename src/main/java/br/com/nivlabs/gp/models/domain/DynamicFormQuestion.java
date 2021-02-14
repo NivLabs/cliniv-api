@@ -19,11 +19,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
-import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
+import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 
 @Entity
 @Table(name = "ANAMNESE_ITEM")
-public class AnamnesisItem extends BaseObjectWithId {
+public class DynamicFormQuestion extends BaseObjectWithId {
     private static final long serialVersionUID = -5324023359826888215L;
 
     @Id
@@ -40,20 +40,20 @@ public class AnamnesisItem extends BaseObjectWithId {
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_ANAMNESE_FORM")
     @JsonIgnore
-    private AnamnesisForm form;
+    private DynamicForm form;
 
     @JsonIgnore
-    public AnamnesisItemDTO getAnamnesisItemDTOFromDomain() {
-        AnamnesisItemDTO domain = new AnamnesisItemDTO();
+    public DynamicFormQuestionDTO getAnamnesisItemDTOFromDomain() {
+        DynamicFormQuestionDTO domain = new DynamicFormQuestionDTO();
         BeanUtils.copyProperties(this, domain);
         return domain;
     }
 
-    public AnamnesisItem() {
+    public DynamicFormQuestion() {
         super();
     }
 
-    public AnamnesisItem(Long id, String question, MetaType metaType) {
+    public DynamicFormQuestion(Long id, String question, MetaType metaType) {
         super();
         this.id = id;
         this.question = question;
@@ -84,11 +84,11 @@ public class AnamnesisItem extends BaseObjectWithId {
         this.metaType = metaType;
     }
 
-    public AnamnesisForm getForm() {
+    public DynamicForm getForm() {
         return form;
     }
 
-    public void setForm(AnamnesisForm form) {
+    public void setForm(DynamicForm form) {
         this.form = form;
     }
 
@@ -111,7 +111,7 @@ public class AnamnesisItem extends BaseObjectWithId {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AnamnesisItem other = (AnamnesisItem) obj;
+        DynamicFormQuestion other = (DynamicFormQuestion) obj;
         if (form == null) {
             if (other.form != null)
                 return false;

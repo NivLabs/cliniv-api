@@ -8,30 +8,36 @@ import javax.validation.constraints.NotBlank;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Formulário de Anamnese")
-public class AnamnesisFormDTO extends DataTransferObjectBase {
+@ApiModel(description = "Formulário dinâmico")
+public class DynamicFormDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6122041136613519207L;
 
-    @ApiModelProperty("Identificador único do formulário de anamnese, não é obrigatório para a inserção")
+    @ApiModelProperty("Identificador único do formulário, não é obrigatório para a inserção")
     private Long id;
 
     @NotBlank(message = "Informar do título do formulário é obrigatório")
-    @ApiModelProperty("Descrição do título do formulário de anamnese")
+    @ApiModelProperty("Descrição do título do formulário")
     private String title;
 
-    @ApiModelProperty("Questões do formulário de anamnese")
-    private List<AnamnesisItemDTO> questions = new ArrayList<>();
+    @ApiModelProperty("Questões do formulário dinâmico")
+    private List<DynamicFormQuestionDTO> questions = new ArrayList<>();
 
-    public AnamnesisFormDTO() {
+    public DynamicFormDTO() {
         super();
     }
 
-    public AnamnesisFormDTO(Long id, String title, List<AnamnesisItemDTO> questions) {
+    public DynamicFormDTO(Long id, String title, List<DynamicFormQuestionDTO> questions) {
         super();
         this.id = id;
         this.title = title;
         this.questions = questions;
+    }
+
+    public DynamicFormDTO(Long id, String title) {
+        this.id = id;
+        this.title = title;
+
     }
 
     public Long getId() {
@@ -50,17 +56,17 @@ public class AnamnesisFormDTO extends DataTransferObjectBase {
         this.title = title;
     }
 
-    public List<AnamnesisItemDTO> getQuestions() {
+    public List<DynamicFormQuestionDTO> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<AnamnesisItemDTO> questions) {
+    public void setQuestions(List<DynamicFormQuestionDTO> questions) {
         this.questions = questions;
     }
 
     @Override
     public String toString() {
-        return "AnamnesisFormDTO [id=" + id + ", title=" + title + ", questions=" + questions + "]";
+        return "DynamicFormDTO [id=" + id + ", title=" + title + ", questions=" + questions + "]";
     }
 
     @Override
@@ -81,7 +87,7 @@ public class AnamnesisFormDTO extends DataTransferObjectBase {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AnamnesisFormDTO other = (AnamnesisFormDTO) obj;
+        DynamicFormDTO other = (DynamicFormDTO) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

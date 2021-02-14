@@ -9,7 +9,7 @@ import br.com.nivlabs.gp.models.domain.PersonAddress;
 
 /**
  * 
- * Classe PersonRepository.java
+ * Classe PersonAddressRepository.java
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  * 

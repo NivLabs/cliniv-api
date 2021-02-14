@@ -10,7 +10,7 @@ import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.repository.custom.responsible.ResponsibleRepositoryCustom;
 
 /**
- * Classe ResponsibleDao.java
+ * Classe ResponsibleRepository.java
  * 
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
  * 

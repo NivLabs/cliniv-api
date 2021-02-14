@@ -9,7 +9,7 @@ import br.com.nivlabs.gp.enums.ScheduleStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Informações resumidas do agendamento")
+@ApiModel(description = "Informações resumidas do agendamento")
 public class ScheduleDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 3038808084714295686L;

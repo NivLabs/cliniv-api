@@ -17,7 +17,7 @@ import br.com.nivlabs.gp.models.BaseObjectWithId;
 
 @Entity
 @Table(name = "ANAMNESE_FORM")
-public class AnamnesisForm extends BaseObjectWithId {
+public class DynamicForm extends BaseObjectWithId {
 
     private static final long serialVersionUID = 362387950381152902L;
 
@@ -29,13 +29,13 @@ public class AnamnesisForm extends BaseObjectWithId {
     private String title;
 
     @OneToMany(cascade = CascadeType.DETACH, mappedBy = "form", fetch = FetchType.LAZY)
-    private List<AnamnesisItem> questions = new ArrayList<>();
+    private List<DynamicFormQuestion> questions = new ArrayList<>();
 
-    public AnamnesisForm() {
+    public DynamicForm() {
         super();
     }
 
-    public AnamnesisForm(Long id, String title, List<AnamnesisItem> questions) {
+    public DynamicForm(Long id, String title, List<DynamicFormQuestion> questions) {
         super();
         this.id = id;
         this.title = title;
@@ -65,7 +65,7 @@ public class AnamnesisForm extends BaseObjectWithId {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AnamnesisForm other = (AnamnesisForm) obj;
+        DynamicForm other = (DynamicForm) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -100,11 +100,11 @@ public class AnamnesisForm extends BaseObjectWithId {
         this.title = title;
     }
 
-    public List<AnamnesisItem> getQuestions() {
+    public List<DynamicFormQuestion> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<AnamnesisItem> questions) {
+    public void setQuestions(List<DynamicFormQuestion> questions) {
         this.questions = questions;
     }
 

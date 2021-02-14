@@ -2,7 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import io.swagger.annotations.ApiModel;
 
-@ApiModel("Requisição de novo parâmetro")
+@ApiModel(description = "Requisição de novo parâmetro")
 public class NewParameterValueDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 1842321490525613622L;

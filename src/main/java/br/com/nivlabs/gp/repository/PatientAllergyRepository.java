@@ -10,7 +10,7 @@ import br.com.nivlabs.gp.models.domain.PatientAllergyID;
 
 /**
  * 
- * Classe PatientDao.java
+ * Classe PatientAllergyRepository.java
  *
  * @author <a href="carolexc@gmail.com">Caroline Aguiar</a>
  *

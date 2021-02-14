@@ -6,7 +6,7 @@ import java.util.List;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Prescrição do paciente")
+@ApiModel(description = "Prescrição do paciente")
 public class PrescriptionInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 6743345972601222205L;

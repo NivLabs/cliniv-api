@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModel;
  * @author viniciosarodrigues
  *
  */
-@ApiModel("Parâmetro da apliação")
+@ApiModel(description = "Parâmetro da apliação")
 public class ParameterDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 647659232405015211L;

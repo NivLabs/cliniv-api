@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Procedimento ou Evento")
+@ApiModel(description = "Procedimento ou Evento")
 public class ProcedureDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4991985626952633251L;

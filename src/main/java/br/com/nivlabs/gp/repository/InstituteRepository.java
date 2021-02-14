@@ -13,6 +13,6 @@ import br.com.nivlabs.gp.models.domain.Institute;
  * @since 30 de nov de 2019
  */
 @Repository
-public interface InstituteRepository extends JpaRepository<Institute, String> {
+public interface InstituteRepository extends JpaRepository<Institute, Long> {
 
 }
