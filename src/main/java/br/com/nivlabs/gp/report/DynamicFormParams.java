@@ -3,15 +3,15 @@ package br.com.nivlabs.gp.report;
 import java.util.List;
 
 import br.com.nivlabs.gp.models.dto.AllergyDTO;
-import br.com.nivlabs.gp.models.dto.DynamicQuestionDTO;
+import br.com.nivlabs.gp.models.dto.QuestionDTO;
 
 /**
- * Classe que representa os parâmetros de um relatório de anamnese
+ * Classe que representa os parâmetros de um relatório dinâmico
  * 
  * @author viniciosarodrigues
  *
  */
-public class AnamnesisParams extends ReportParam {
+public class DynamicFormParams extends ReportParam {
     private static final long serialVersionUID = -7425109036420315805L;
 
     private Long attendanceId;
@@ -22,10 +22,10 @@ public class AnamnesisParams extends ReportParam {
 
     private List<AllergyDTO> allergies;
 
-    private List<DynamicQuestionDTO> responses;
+    private List<QuestionDTO> responses;
 
-    public AnamnesisParams(Long attendanceId, String patientName, String patientGender, List<AllergyDTO> allergies,
-            List<DynamicQuestionDTO> responses) {
+    public DynamicFormParams(Long attendanceId, String patientName, String patientGender, List<AllergyDTO> allergies,
+            List<QuestionDTO> responses) {
         super();
         this.attendanceId = attendanceId;
         this.patientName = patientName;
@@ -34,7 +34,7 @@ public class AnamnesisParams extends ReportParam {
         this.responses = responses;
     }
 
-    public AnamnesisParams() {
+    public DynamicFormParams() {
         super();
     }
 
@@ -70,11 +70,11 @@ public class AnamnesisParams extends ReportParam {
         this.allergies = allergies;
     }
 
-    public List<DynamicQuestionDTO> getResponses() {
+    public List<QuestionDTO> getResponses() {
         return responses;
     }
 
-    public void setResponses(List<DynamicQuestionDTO> responses) {
+    public void setResponses(List<QuestionDTO> responses) {
         this.responses = responses;
     }
 
@@ -98,7 +98,7 @@ public class AnamnesisParams extends ReportParam {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AnamnesisParams other = (AnamnesisParams) obj;
+        DynamicFormParams other = (DynamicFormParams) obj;
         if (allergies == null) {
             if (other.allergies != null)
                 return false;

@@ -27,8 +27,8 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @author viniciosarodrigues
  *
  */
-public class AnamnesisFormRepositoryCustomImpl extends GenericCustomRepository<DynamicForm, DynamicFormDTO>
-        implements AnamnesisFormRepositoryCustom {
+public class DynamicFormRepositoryCustomImpl extends GenericCustomRepository<DynamicForm, DynamicFormDTO>
+        implements DynamicFormRepositoryCustom {
 
     @Override
     public Page<DynamicFormDTO> resumedList(CustomFilters filters, Pageable pageSettings) {

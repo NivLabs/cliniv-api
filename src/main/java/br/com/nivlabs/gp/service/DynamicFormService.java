@@ -27,7 +27,7 @@ import br.com.nivlabs.gp.models.domain.DynamicForm_;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.DynamicFormDTO;
 import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
-import br.com.nivlabs.gp.models.dto.DynamicQuestionDTO;
+import br.com.nivlabs.gp.models.dto.QuestionDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
@@ -208,7 +208,7 @@ public class DynamicFormService implements GenericService {
      * 
      * @param dynamicFormQuestion
      */
-    private void validateQuestions(DynamicQuestionDTO dynamicFormQuestion) {
+    private void validateQuestions(QuestionDTO dynamicFormQuestion) {
         logger.info("Iniciando validação da questão...");
         if (dynamicFormQuestion.getDynamicFormQuestion() == null)
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Seu questionário está com questão nula");
@@ -228,7 +228,7 @@ public class DynamicFormService implements GenericService {
      * 
      * @param dynamicFormQuestion
      */
-    private void checkMetaTypes(DynamicQuestionDTO dynamicFormQuestion) {
+    private void checkMetaTypes(QuestionDTO dynamicFormQuestion) {
         logger.info("Verificando meta tipos das respostas");
         switch (dynamicFormQuestion.getDynamicFormQuestion().getMetaType()) {
             case NUMBER:

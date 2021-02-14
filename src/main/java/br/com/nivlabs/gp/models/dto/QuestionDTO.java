@@ -6,22 +6,22 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("Questão do formulário dinâmico")
-public class DynamicQuestionDTO extends DataTransferObjectBase {
+public class QuestionDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -7700694137849034946L;
 
-    @NotBlank(message = "Informar o item da pergunta da anamnese é obrigatório.")
-    @ApiModelProperty("Item da anamese com pertunga e tipo da resposta")
+    @ApiModelProperty("Questão do formulário dinâmico")
+    @NotBlank(message = "Informar a questão do formulário é obrigatório.")
     private DynamicFormQuestionDTO dynamicFormQuestion;
 
+    @ApiModelProperty("Resposta da questão")
     @NotBlank(message = "Informar a resposta é obrigatório.")
-    @ApiModelProperty("Resposta")
     private String response;
 
-    public DynamicQuestionDTO() {
+    public QuestionDTO() {
         super();
     }
 
-    public DynamicQuestionDTO(
+    public QuestionDTO(
             @NotBlank(message = "Informar o item da pergunta da anamnese é obrigatório.") DynamicFormQuestionDTO dynamicFormQuestion,
             @NotBlank(message = "Informar a resposta é obrigatório.") String response) {
         super();
@@ -67,7 +67,7 @@ public class DynamicQuestionDTO extends DataTransferObjectBase {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        DynamicQuestionDTO other = (DynamicQuestionDTO) obj;
+        QuestionDTO other = (QuestionDTO) obj;
         if (dynamicFormQuestion == null) {
             if (other.dynamicFormQuestion != null)
                 return false;
