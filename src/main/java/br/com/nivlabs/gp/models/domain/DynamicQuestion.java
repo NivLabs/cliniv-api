@@ -23,7 +23,7 @@ import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 
 @Entity
 @Table(name = "ANAMNESE_ITEM")
-public class AnamnesisItem extends BaseObjectWithId {
+public class DynamicQuestion extends BaseObjectWithId {
     private static final long serialVersionUID = -5324023359826888215L;
 
     @Id
@@ -49,11 +49,11 @@ public class AnamnesisItem extends BaseObjectWithId {
         return domain;
     }
 
-    public AnamnesisItem() {
+    public DynamicQuestion() {
         super();
     }
 
-    public AnamnesisItem(Long id, String question, MetaType metaType) {
+    public DynamicQuestion(Long id, String question, MetaType metaType) {
         super();
         this.id = id;
         this.question = question;
@@ -111,7 +111,7 @@ public class AnamnesisItem extends BaseObjectWithId {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AnamnesisItem other = (AnamnesisItem) obj;
+        DynamicQuestion other = (DynamicQuestion) obj;
         if (form == null) {
             if (other.form != null)
                 return false;

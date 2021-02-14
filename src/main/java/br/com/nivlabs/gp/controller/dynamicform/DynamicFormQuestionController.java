@@ -43,7 +43,7 @@ public class DynamicFormQuestionController {
     private ApplicationEventPublisher publisher;
 
     @ApiOperation(nickname = "question-delete-id", value = "Deleta um formulário dinâmico pelo identificador")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/question/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
         service.deleteQuestionById(id);
@@ -65,7 +65,7 @@ public class DynamicFormQuestionController {
     }
 
     @ApiOperation(nickname = "question-put", value = "Atualiza um formulário na aplicação")
-    @PutMapping("/{id}")
+    @PutMapping("/question/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<DynamicFormQuestionDTO> update(@PathVariable("id") Long id,
                                                          @Validated @RequestBody(required = true) DynamicFormQuestionDTO request) {

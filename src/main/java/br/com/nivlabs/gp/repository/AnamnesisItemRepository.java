@@ -5,7 +5,7 @@ package br.com.nivlabs.gp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.nivlabs.gp.models.domain.AnamnesisItem;
+import br.com.nivlabs.gp.models.domain.DynamicQuestion;
 
 /**
  * AnamnesisItemRepository.java
@@ -15,6 +15,6 @@ import br.com.nivlabs.gp.models.domain.AnamnesisItem;
  * @since 12 de set de 2019
  * 
  */
-public interface AnamnesisItemRepository extends JpaRepository<AnamnesisItem, Long> {
+public interface AnamnesisItemRepository extends JpaRepository<DynamicQuestion, Long> {
 
 }
