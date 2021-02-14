@@ -360,8 +360,18 @@ public class DynamicFormService implements GenericService {
         return dynamicFormDao.resumedList(filters, pageSettings);
     }
 
-    public DynamicFormDTO persist(DynamicFormDTO request) {
-        return null;
+    /**
+     * Cria um formulário dinâmico na aplicação
+     * 
+     * @param request Informações para criação de formulário dinâmico
+     * @return Formulário dinâmico criado
+     */
+    public DynamicFormDTO create(DynamicFormDTO request) {
+        DynamicForm entity = new DynamicForm();
+        entity.setTitle(request.getTitle());
+        entity = dynamicFormDao.save(entity);
+        request.setId(entity.getId());
+        return request;
     }
 
 }
