@@ -6,15 +6,14 @@ import br.com.nivlabs.gp.enums.MetaType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Item da Anamnese")
-public class AnamnesisItemDTO extends DataTransferObjectBase {
+@ApiModel("Questão do formulário dinâmico")
+public class DynamicFormQuestionDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -1666755500493520346L;
 
-    @NotNull
-    @ApiModelProperty("Identificador único do item da anamnese")
+    @ApiModelProperty("Identificador único da questão do formulário dinâmico")
     private Long id;
 
-    @ApiModelProperty("Questão do item da anamnese")
+    @ApiModelProperty("Questão do formulário dinâmico")
     @NotNull(message = "Informe a questão")
     private String question;
 
@@ -22,11 +21,11 @@ public class AnamnesisItemDTO extends DataTransferObjectBase {
     @NotNull(message = "Informe o tipo da questão")
     private MetaType metaType;
 
-    public AnamnesisItemDTO() {
+    public DynamicFormQuestionDTO() {
         super();
     }
 
-    public AnamnesisItemDTO(@NotNull Long id, @NotNull(message = "Informe a questão") String question,
+    public DynamicFormQuestionDTO(Long id, @NotNull(message = "Informe a questão") String question,
             @NotNull(message = "Informe o tipo da questão") MetaType metaType) {
         super();
         this.id = id;
@@ -76,7 +75,7 @@ public class AnamnesisItemDTO extends DataTransferObjectBase {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AnamnesisItemDTO other = (AnamnesisItemDTO) obj;
+        DynamicFormQuestionDTO other = (DynamicFormQuestionDTO) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

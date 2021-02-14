@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
-import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
+import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 
 @Entity
 @Table(name = "ANAMNESE")
@@ -55,7 +55,7 @@ public class Anamnesis extends BaseObjectWithId {
         AnamnesisDTO dto = new AnamnesisDTO();
 
         dto.setId(id);
-        dto.setAnamnesisItem(new AnamnesisItemDTO(null, question, null));
+        dto.setAnamnesisItem(new DynamicFormQuestionDTO(null, question, null));
         dto.setAttendanceId(attendance.getId());
         dto.setResponse(response);
 

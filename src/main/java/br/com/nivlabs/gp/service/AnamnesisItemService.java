@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.AnamnesisItem;
 import br.com.nivlabs.gp.models.domain.AnamnesisItem_;
-import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
+import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 import br.com.nivlabs.gp.repository.AnamnesisItemRepository;
 
 /**
@@ -34,9 +34,9 @@ public class AnamnesisItemService implements GenericService {
     @Autowired
     private AnamnesisItemRepository dao;
 
-    public Page<AnamnesisItemDTO> searchDTOPage(Pageable pageRequest) {
+    public Page<DynamicFormQuestionDTO> searchDTOPage(Pageable pageRequest) {
         Page<AnamnesisItem> pageFromDb = dao.findAll(pageRequest);
-        List<AnamnesisItemDTO> responseList = new ArrayList<>();
+        List<DynamicFormQuestionDTO> responseList = new ArrayList<>();
         pageFromDb.getContent().stream().map(AnamnesisItem::getAnamnesisItemDTOFromDomain).forEach(responseList::add);
         return new PageImpl<>(responseList, pageRequest, pageFromDb.getTotalElements());
     }
