@@ -15,8 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.DynamicQuestion;
-import br.com.nivlabs.gp.models.domain.AnamnesisItem_;
+import br.com.nivlabs.gp.models.domain.DynamicFormQuestion;
+import br.com.nivlabs.gp.models.domain.DynamicFormQuestion_;
 import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 import br.com.nivlabs.gp.repository.AnamnesisItemRepository;
 
@@ -35,24 +35,24 @@ public class AnamnesisItemService implements GenericService {
     private AnamnesisItemRepository dao;
 
     public Page<DynamicFormQuestionDTO> searchDTOPage(Pageable pageRequest) {
-        Page<DynamicQuestion> pageFromDb = dao.findAll(pageRequest);
+        Page<DynamicFormQuestion> pageFromDb = dao.findAll(pageRequest);
         List<DynamicFormQuestionDTO> responseList = new ArrayList<>();
-        pageFromDb.getContent().stream().map(DynamicQuestion::getAnamnesisItemDTOFromDomain).forEach(responseList::add);
+        pageFromDb.getContent().stream().map(DynamicFormQuestion::getAnamnesisItemDTOFromDomain).forEach(responseList::add);
         return new PageImpl<>(responseList, pageRequest, pageFromDb.getTotalElements());
     }
 
-    public DynamicQuestion findById(Long id) {
+    public DynamicFormQuestion findById(Long id) {
         return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Anamnesis Item ID: [%s] não encontrado!", id)));
+                String.format("Questão com o identificador %s não encontrada.", id)));
     }
 
-    public DynamicQuestion update(Long id, DynamicQuestion entity) {
-        DynamicQuestion anamnesisItem = findById(id);
-        BeanUtils.copyProperties(entity, anamnesisItem, AnamnesisItem_.ID);
+    public DynamicFormQuestion update(Long id, DynamicFormQuestion entity) {
+        DynamicFormQuestion anamnesisItem = findById(id);
+        BeanUtils.copyProperties(entity, anamnesisItem, DynamicFormQuestion_.ID);
         return dao.save(anamnesisItem);
     }
 
-    public DynamicQuestion persist(DynamicQuestion entity) {
+    public DynamicFormQuestion persist(DynamicFormQuestion entity) {
         entity.setId(null);
         return dao.save(entity);
     }
