@@ -3,7 +3,7 @@ package br.com.nivlabs.gp.report;
 import java.util.List;
 
 import br.com.nivlabs.gp.models.dto.AllergyDTO;
-import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
+import br.com.nivlabs.gp.models.dto.DynamicQuestionDTO;
 
 /**
  * Classe que representa os parâmetros de um relatório de anamnese
@@ -22,10 +22,10 @@ public class AnamnesisParams extends ReportParam {
 
     private List<AllergyDTO> allergies;
 
-    private List<AnamnesisDTO> responses;
+    private List<DynamicQuestionDTO> responses;
 
     public AnamnesisParams(Long attendanceId, String patientName, String patientGender, List<AllergyDTO> allergies,
-            List<AnamnesisDTO> responses) {
+            List<DynamicQuestionDTO> responses) {
         super();
         this.attendanceId = attendanceId;
         this.patientName = patientName;
@@ -70,11 +70,11 @@ public class AnamnesisParams extends ReportParam {
         this.allergies = allergies;
     }
 
-    public List<AnamnesisDTO> getResponses() {
+    public List<DynamicQuestionDTO> getResponses() {
         return responses;
     }
 
-    public void setResponses(List<AnamnesisDTO> responses) {
+    public void setResponses(List<DynamicQuestionDTO> responses) {
         this.responses = responses;
     }
 
