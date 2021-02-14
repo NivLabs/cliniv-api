@@ -403,10 +403,10 @@ public class DynamicFormService implements GenericService {
     /**
      * Deleta uma questão do formulário dinâmico
      * 
-     * @param id
+     * @param id Identificador único da questão do formulário dinâmico
      */
     public void deleteQuestionById(Long id) {
-        logger.info("Iniciando processo de remoção de questão do formulário dinâmico :: {)");
+        logger.info("Iniciando processo de remoção de questão do formulário dinâmico :: {}", id);
         DynamicFormQuestion entity = dynamicFormQuestionDao.findById(id)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                         String.format("Questão com o identificador %s não encontrado.", id)));
@@ -415,8 +415,33 @@ public class DynamicFormService implements GenericService {
         logger.info("Remoção realizada com sucesso!");
     }
 
+    /**
+     * Cria uma questão para o formulário dinâmico
+     * 
+     * @param idForm Identificador único do formulário dinâmico que terá uma questão adicionada
+     * @param request Questão que será criada no formulário
+     * @return Questão criada
+     */
     public DynamicFormQuestionDTO createQuestion(Long idForm, DynamicFormQuestionDTO request) {
-        return null;
+        logger.info("Iniciando processo de criação de questão do formulário dinâmico :: {} | {}", request.getQuestion(),
+                    request.getMetaType());
+        DynamicForm form = dynamicFormDao.findById(idForm).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String
+                .format("Formulários dinâmico com o identificador %s não encontrado, não será possível criar uma pergunta para o mesmo.",
+                        idForm)));
+        logger.info("Formulário localizado :: {} | {}", idForm, form.getTitle());
+
+        logger.info("Criando entidade para criação da questão...");
+        DynamicFormQuestion question = new DynamicFormQuestion();
+        question.setForm(new DynamicForm(idForm, null, null));
+        question.setMetaType(request.getMetaType());
+        question.setQuestion(request.getQuestion());
+        dynamicFormQuestionDao.saveAndFlush(question);
+
+        request.setId(question.getId());
+
+        logger.info("Questão adicionada ao formulário :: FormId -> {} + QuestId -> {}", idForm, request.getId());
+
+        return request;
     }
 
     /**
