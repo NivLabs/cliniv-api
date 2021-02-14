@@ -29,13 +29,13 @@ public class DynamicForm extends BaseObjectWithId {
     private String title;
 
     @OneToMany(cascade = CascadeType.DETACH, mappedBy = "form", fetch = FetchType.LAZY)
-    private List<DynamicQuestion> questions = new ArrayList<>();
+    private List<DynamicFormQuestion> questions = new ArrayList<>();
 
     public DynamicForm() {
         super();
     }
 
-    public DynamicForm(Long id, String title, List<DynamicQuestion> questions) {
+    public DynamicForm(Long id, String title, List<DynamicFormQuestion> questions) {
         super();
         this.id = id;
         this.title = title;
@@ -100,11 +100,11 @@ public class DynamicForm extends BaseObjectWithId {
         this.title = title;
     }
 
-    public List<DynamicQuestion> getQuestions() {
+    public List<DynamicFormQuestion> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(List<DynamicQuestion> questions) {
+    public void setQuestions(List<DynamicFormQuestion> questions) {
         this.questions = questions;
     }
 
