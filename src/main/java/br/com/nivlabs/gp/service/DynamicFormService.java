@@ -26,6 +26,8 @@ import br.com.nivlabs.gp.models.domain.Anamnesis;
 import br.com.nivlabs.gp.models.domain.Anamnesis_;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.DynamicForm;
+import br.com.nivlabs.gp.models.domain.DynamicFormQuestion;
+import br.com.nivlabs.gp.models.domain.DynamicFormQuestion_;
 import br.com.nivlabs.gp.models.domain.DynamicForm_;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
@@ -39,6 +41,7 @@ import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
+import br.com.nivlabs.gp.repository.DynamicFormQuestionRepository;
 import br.com.nivlabs.gp.repository.DynamicFormRepository;
 import br.com.nivlabs.gp.repository.DynamicFormResponseRepository;
 import br.com.nivlabs.gp.util.StringUtils;
@@ -67,6 +70,8 @@ public class DynamicFormService implements GenericService {
     private DynamicFormResponseRepository dynamicFormResponseDao;
     @Autowired
     private DynamicFormRepository dynamicFormDao;
+    @Autowired
+    private DynamicFormQuestionRepository dynamicFormQuestionDao;
 
     @Autowired
     private ReportService reportService;
@@ -395,19 +400,44 @@ public class DynamicFormService implements GenericService {
         return request;
     }
 
+    /**
+     * Deleta uma questão do formulário dinâmico
+     * 
+     * @param id
+     */
     public void deleteQuestionById(Long id) {
-        // TODO Auto-generated method stub
-
+        logger.info("Iniciando processo de remoção de questão do formulário dinâmico :: {)");
+        DynamicFormQuestion entity = dynamicFormQuestionDao.findById(id)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                        String.format("Questão com o identificador %s não encontrado.", id)));
+        logger.info("Questão encontrada :: Formulário -> {} :: Questão -> {}", entity.getForm().getTitle(), entity.getQuestion());
+        dynamicFormQuestionDao.delete(entity);
+        logger.info("Remoção realizada com sucesso!");
     }
 
     public DynamicFormQuestionDTO createQuestion(Long idForm, DynamicFormQuestionDTO request) {
-        // TODO Auto-generated method stub
         return null;
     }
 
+    /**
+     * Atualiza uma questão do formulário dinâmico
+     * 
+     * @param id Identificador único da questão do formulário
+     * @param request Objeto com dados modificados da questão do formulário
+     * @return Questão atualizada
+     */
     public DynamicFormQuestionDTO updateQuestion(Long id, DynamicFormQuestionDTO request) {
-        // TODO Auto-generated method stub
-        return null;
+        request.setId(id);
+        logger.info("Iniciando processo de atualização de questão de formulário :: {} | {} | {}", request.getId(), request.getQuestion(),
+                    request.getMetaType());
+        DynamicFormQuestion entity = dynamicFormQuestionDao.findById(id)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                        String.format("Questão com o identificador %s não encontrado.", id)));
+        logger.info("Formulário à ser alterado :: {} | {} | {}", entity.getId(), entity.getQuestion(), entity.getMetaType());
+        BeanUtils.copyProperties(request, entity, DynamicFormQuestion_.ID);
+        dynamicFormQuestionDao.saveAndFlush(entity);
+        logger.info("Formulário alterado com sucesso!");
+        return request;
     }
 
 }
