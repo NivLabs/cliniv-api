@@ -22,71 +22,71 @@ public class NewAnamnesisDTO extends DataTransferObjectBase {
 
     private Set<AnamnesisDTO> listOfResponse = new HashSet<>();
 
-	public Long getAttendanceId() {
-		return attendanceId;
-	}
+    public Long getAttendanceId() {
+        return attendanceId;
+    }
 
-	public void setAttendanceId(Long attendanceId) {
-		this.attendanceId = attendanceId;
-	}
+    public void setAttendanceId(Long attendanceId) {
+        this.attendanceId = attendanceId;
+    }
 
-	public Long getAccommodationId() {
-		return accommodationId;
-	}
+    public Long getAccommodationId() {
+        return accommodationId;
+    }
 
-	public void setAccommodationId(Long accommodationId) {
-		this.accommodationId = accommodationId;
-	}
+    public void setAccommodationId(Long accommodationId) {
+        this.accommodationId = accommodationId;
+    }
 
-	public Set<AnamnesisDTO> getListOfResponse() {
-		return listOfResponse;
-	}
+    public Set<AnamnesisDTO> getListOfResponse() {
+        return listOfResponse;
+    }
 
-	public void setListOfResponse(Set<AnamnesisDTO> listOfResponse) {
-		this.listOfResponse = listOfResponse;
-	}
+    public void setListOfResponse(Set<AnamnesisDTO> listOfResponse) {
+        this.listOfResponse = listOfResponse;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((accommodationId == null) ? 0 : accommodationId.hashCode());
-		result = prime * result + ((attendanceId == null) ? 0 : attendanceId.hashCode());
-		result = prime * result + ((listOfResponse == null) ? 0 : listOfResponse.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((accommodationId == null) ? 0 : accommodationId.hashCode());
+        result = prime * result + ((attendanceId == null) ? 0 : attendanceId.hashCode());
+        result = prime * result + ((listOfResponse == null) ? 0 : listOfResponse.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		NewAnamnesisDTO other = (NewAnamnesisDTO) obj;
-		if (accommodationId == null) {
-			if (other.accommodationId != null)
-				return false;
-		} else if (!accommodationId.equals(other.accommodationId))
-			return false;
-		if (attendanceId == null) {
-			if (other.attendanceId != null)
-				return false;
-		} else if (!attendanceId.equals(other.attendanceId))
-			return false;
-		if (listOfResponse == null) {
-			if (other.listOfResponse != null)
-				return false;
-		} else if (!listOfResponse.equals(other.listOfResponse))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        NewAnamnesisDTO other = (NewAnamnesisDTO) obj;
+        if (accommodationId == null) {
+            if (other.accommodationId != null)
+                return false;
+        } else if (!accommodationId.equals(other.accommodationId))
+            return false;
+        if (attendanceId == null) {
+            if (other.attendanceId != null)
+                return false;
+        } else if (!attendanceId.equals(other.attendanceId))
+            return false;
+        if (listOfResponse == null) {
+            if (other.listOfResponse != null)
+                return false;
+        } else if (!listOfResponse.equals(other.listOfResponse))
+            return false;
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return "NewAnamnesisDTO [attendanceId=" + attendanceId + ", accommodationId=" + accommodationId
-				+ ", listOfResponse=" + listOfResponse + "]";
-	}
-	
+    @Override
+    public String toString() {
+        return "NewAnamnesisDTO [attendanceId=" + attendanceId + ", accommodationId=" + accommodationId
+                + ", listOfResponse=" + listOfResponse + "]";
+    }
+
 }

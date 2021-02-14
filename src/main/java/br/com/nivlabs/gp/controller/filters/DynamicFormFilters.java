@@ -8,7 +8,7 @@ import br.com.nivlabs.gp.repository.custom.CustomFilters;
  * @author viniciosarodrigues
  *
  */
-public class AnamnesisFormFilters extends CustomFilters {
+public class DynamicFormFilters extends CustomFilters {
 
     private static final long serialVersionUID = -3760484564774275094L;
 
@@ -54,7 +54,7 @@ public class AnamnesisFormFilters extends CustomFilters {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        AnamnesisFormFilters other = (AnamnesisFormFilters) obj;
+        DynamicFormFilters other = (DynamicFormFilters) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
