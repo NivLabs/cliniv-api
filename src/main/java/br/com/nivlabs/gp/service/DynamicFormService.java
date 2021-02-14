@@ -26,6 +26,7 @@ import br.com.nivlabs.gp.models.domain.Anamnesis;
 import br.com.nivlabs.gp.models.domain.Anamnesis_;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.DynamicForm;
+import br.com.nivlabs.gp.models.domain.DynamicForm_;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisDTO;
 import br.com.nivlabs.gp.models.dto.AnamnesisItemDTO;
@@ -360,8 +361,34 @@ public class DynamicFormService implements GenericService {
         return dynamicFormDao.resumedList(filters, pageSettings);
     }
 
-    public DynamicFormDTO persist(DynamicFormDTO request) {
-        return null;
+    /**
+     * Cria um formulário dinâmico na aplicação
+     * 
+     * @param request Informações para criação de formulário dinâmico
+     * @return Formulário dinâmico criado
+     */
+    public DynamicFormDTO create(DynamicFormDTO request) {
+        DynamicForm entity = new DynamicForm();
+        entity.setTitle(request.getTitle());
+        entity = dynamicFormDao.saveAndFlush(entity);
+        request.setId(entity.getId());
+        return request;
+    }
+
+    /**
+     * Atualiza informações do formulário dinâmico
+     * 
+     * @param id Identificador único do formulário
+     * @param request Informações a serem atualizadas
+     * @return Formulário atualizado
+     */
+    public DynamicFormDTO update(Long id, DynamicFormDTO request) {
+        DynamicForm entity = dynamicFormDao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                String.format("Formulário dinâmico com o identificador %s não encontrado.", id)));
+        BeanUtils.copyProperties(request, entity, DynamicForm_.ID, DynamicForm_.QUESTIONS);
+        entity = dynamicFormDao.saveAndFlush(entity);
+        BeanUtils.copyProperties(entity, request);
+        return request;
     }
 
 }

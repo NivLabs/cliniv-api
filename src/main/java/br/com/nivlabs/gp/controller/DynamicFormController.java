@@ -86,7 +86,7 @@ public class DynamicFormController {
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<DynamicFormDTO> persist(@Validated @RequestBody(required = true) DynamicFormDTO request,
                                                   HttpServletResponse response) {
-        DynamicFormDTO createdPatient = service.persist(request);
+        DynamicFormDTO createdPatient = service.create(request);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdPatient.getId()));
 
