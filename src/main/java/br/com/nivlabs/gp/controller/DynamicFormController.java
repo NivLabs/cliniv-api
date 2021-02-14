@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -92,6 +93,14 @@ public class DynamicFormController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPatient);
 
+    }
+
+    @ApiOperation(nickname = "dynamic-form-put", value = "Atualiza um formulário na aplicação")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
+    public ResponseEntity<DynamicFormDTO> updateForm(@PathVariable("id") Long id,
+                                                     @Validated @RequestBody(required = true) DynamicFormDTO request) {
+        return ResponseEntity.ok().body(service.update(id, request));
     }
 
     /***************************************

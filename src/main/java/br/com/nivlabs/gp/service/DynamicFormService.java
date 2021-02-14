@@ -368,10 +368,12 @@ public class DynamicFormService implements GenericService {
      * @return Formulário dinâmico criado
      */
     public DynamicFormDTO create(DynamicFormDTO request) {
+        logger.info("Inicianco processo de criação de formulário dinâmico :: {}", request.getTitle());
         DynamicForm entity = new DynamicForm();
         entity.setTitle(request.getTitle());
         entity = dynamicFormDao.saveAndFlush(entity);
         request.setId(entity.getId());
+        logger.info("Formulário criado com sucesso :: {} | {}", request.getId(), request.getTitle());
         return request;
     }
 
@@ -383,13 +385,13 @@ public class DynamicFormService implements GenericService {
      * @return Formulário atualizado
      */
     public DynamicFormDTO update(Long id, DynamicFormDTO request) {
+        logger.info("Inicianco processo de atualização de formulário dinâmico :: {} | {} ", request.getId(), request.getTitle());
         DynamicForm entity = dynamicFormDao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Formulário dinâmico com o identificador %s não encontrado.", id)));
         BeanUtils.copyProperties(request, entity, DynamicForm_.ID, DynamicForm_.QUESTIONS);
         entity = dynamicFormDao.saveAndFlush(entity);
         BeanUtils.copyProperties(entity, request);
-        entity = dynamicFormDao.save(entity);
-        request.setId(entity.getId());
+        logger.info("Formulário atualizado com sucesso :: {} | {}", request.getId(), request.getTitle());
         return request;
     }
 
