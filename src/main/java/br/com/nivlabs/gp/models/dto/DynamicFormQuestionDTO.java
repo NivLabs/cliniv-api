@@ -6,7 +6,7 @@ import br.com.nivlabs.gp.enums.MetaType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Questão do formulário dinâmico")
+@ApiModel("Questão")
 public class DynamicFormQuestionDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -1666755500493520346L;
 

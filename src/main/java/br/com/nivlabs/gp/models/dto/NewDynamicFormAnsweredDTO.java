@@ -18,16 +18,17 @@ public class NewDynamicFormAnsweredDTO extends DataTransferObjectBase {
     private String documentTitle;
 
     @ApiModelProperty("Respostas do formulário")
-    private Set<DynamicQuestionDTO> listOfResponse = new HashSet<>();
-
-    public NewDynamicFormAnsweredDTO(String documentTitle, Set<DynamicQuestionDTO> listOfResponse) {
-        super();
-        this.documentTitle = documentTitle;
-        this.listOfResponse = listOfResponse;
-    }
+    private Set<QuestionDTO> listOfResponse = new HashSet<>();
 
     public NewDynamicFormAnsweredDTO() {
         super();
+    }
+
+    public NewDynamicFormAnsweredDTO(@NotNull(message = "O título do documento deve ser informado") String documentTitle,
+            Set<QuestionDTO> listOfResponse) {
+        super();
+        this.documentTitle = documentTitle;
+        this.listOfResponse = listOfResponse;
     }
 
     public String getDocumentTitle() {
@@ -38,11 +39,11 @@ public class NewDynamicFormAnsweredDTO extends DataTransferObjectBase {
         this.documentTitle = documentTitle;
     }
 
-    public Set<DynamicQuestionDTO> getListOfResponse() {
+    public Set<QuestionDTO> getListOfResponse() {
         return listOfResponse;
     }
 
-    public void setListOfResponse(Set<DynamicQuestionDTO> listOfResponse) {
+    public void setListOfResponse(Set<QuestionDTO> listOfResponse) {
         this.listOfResponse = listOfResponse;
     }
 

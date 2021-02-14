@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.nivlabs.gp.models.domain.DynamicForm;
-import br.com.nivlabs.gp.repository.custom.anamnesisform.AnamnesisFormRepositoryCustom;
+import br.com.nivlabs.gp.repository.custom.anamnesisform.DynamicFormRepositoryCustom;
 
 /**
  * Repositório para controle de formulários de anamnese
@@ -13,6 +13,6 @@ import br.com.nivlabs.gp.repository.custom.anamnesisform.AnamnesisFormRepository
  *
  */
 @Repository
-public interface DynamicFormRepository extends JpaRepository<DynamicForm, Long>, AnamnesisFormRepositoryCustom {
+public interface DynamicFormRepository extends JpaRepository<DynamicForm, Long>, DynamicFormRepositoryCustom {
 
 }
