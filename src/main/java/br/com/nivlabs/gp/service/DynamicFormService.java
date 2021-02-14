@@ -206,9 +206,18 @@ public class DynamicFormService implements GenericService {
         StringBuilder sb = new StringBuilder();
         listOfResponse.forEach(question -> sb.append(question.getDynamicFormQuestion().getQuestion().toUpperCase())
                 .append("\n")
-                .append(question.getResponse())
+                .append(handleQuestion(question.getResponse()))
                 .append("\n__________________________________________________________________________________________________\n"));
         return sb.toString();
+    }
+
+    private String handleQuestion(String response) {
+        if (response.equals(TRUE)) {
+            return "Sim";
+        } else if (response.equals(FALSE)) {
+            return "Não";
+        }
+        return response;
     }
 
     /**
