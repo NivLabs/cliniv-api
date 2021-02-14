@@ -169,7 +169,6 @@ public class DynamicFormService implements GenericService {
         request.getListOfResponse().forEach(item -> {
             validateQuestions(item);
             item.setAttendanceId(request.getAttendanceId());
-            persist(item.getAnamnesesDomainFromDTO());
         });
         try {
 
@@ -323,17 +322,6 @@ public class DynamicFormService implements GenericService {
     }
 
     /**
-     * Insere na base de dados
-     * 
-     * @param entity
-     * @return
-     */
-    public Anamnesis persist(Anamnesis entity) {
-        entity.setId(null);
-        return dynamicFormResponseDao.save(entity);
-    }
-
-    /**
      * Busca um formulário de anamnese pelo identificador do mesmo
      * 
      * @param id Identificador único do formulário de Anamnese
@@ -370,6 +358,10 @@ public class DynamicFormService implements GenericService {
     public Page<DynamicFormDTO> findPageOfDymicaForm(DynamicFormFilters filters, Pageable pageSettings) {
         logger.info("Iniciando busca de formulários de Anamnese..");
         return dynamicFormDao.resumedList(filters, pageSettings);
+    }
+
+    public DynamicFormDTO persist(DynamicFormDTO request) {
+        return null;
     }
 
 }

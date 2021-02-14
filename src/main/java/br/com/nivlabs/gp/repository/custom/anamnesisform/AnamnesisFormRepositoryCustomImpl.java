@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import br.com.nivlabs.gp.controller.filters.DynamicFormFilters;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.DynamicForm;
-import br.com.nivlabs.gp.models.domain.AnamnesisForm_;
+import br.com.nivlabs.gp.models.domain.DynamicForm_;
 import br.com.nivlabs.gp.models.dto.DynamicFormDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
@@ -37,8 +37,8 @@ public class AnamnesisFormRepositoryCustomImpl extends GenericCustomRepository<D
         Root<DynamicForm> root = criteria.from(DynamicForm.class);
 
         criteria.select(builder.construct(DynamicFormDTO.class,
-                                          root.get(AnamnesisForm_.id),
-                                          root.get(AnamnesisForm_.title)));
+                                          root.get(DynamicForm_.id),
+                                          root.get(DynamicForm_.title)));
 
         return getPage(filters, pageSettings, builder, criteria, root);
     }
@@ -52,10 +52,10 @@ public class AnamnesisFormRepositoryCustomImpl extends GenericCustomRepository<D
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-            predicates.add(builder.equal(root.get(AnamnesisForm_.id), Long.parseLong(filters.getId())));
+            predicates.add(builder.equal(root.get(DynamicForm_.id), Long.parseLong(filters.getId())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getTitle())) {
-            predicates.add(builder.like(root.get(AnamnesisForm_.title), filters.getTitle()));
+            predicates.add(builder.like(root.get(DynamicForm_.title), filters.getTitle()));
         }
 
         return predicates.toArray(new Predicate[predicates.size()]);
