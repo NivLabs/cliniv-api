@@ -388,6 +388,8 @@ public class DynamicFormService implements GenericService {
         BeanUtils.copyProperties(request, entity, DynamicForm_.ID, DynamicForm_.QUESTIONS);
         entity = dynamicFormDao.saveAndFlush(entity);
         BeanUtils.copyProperties(entity, request);
+        entity = dynamicFormDao.save(entity);
+        request.setId(entity.getId());
         return request;
     }
 
