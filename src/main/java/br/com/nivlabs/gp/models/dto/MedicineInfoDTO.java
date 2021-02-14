@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModel;
  * @since 5 de dez de 2019
  */
 
-@ApiModel("Informações de medicamento")
+@ApiModel(description = "Informações de medicamento")
 public class MedicineInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -1687147074910399813L;

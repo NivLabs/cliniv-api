@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 3 de out de 2019
  */
-@ApiModel("Informações detalhadas do paciente")
+@ApiModel(description = "Informações detalhadas do paciente")
 public class PatientInfoDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = 1575416178033511932L;
 

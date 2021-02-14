@@ -4,7 +4,7 @@ import br.com.nivlabs.gp.enums.Modality;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Operadora de plano de saúde")
+@ApiModel(description = "Operadora de plano de saúde")
 public class HealthOperatorDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -8486624597576546424L;

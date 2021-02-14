@@ -16,6 +16,7 @@
 	<parameter name="HOSPITAL_LOGO" class="java.lang.String"/>
 	<parameter name="DOC_TITLE" class="java.lang.String"/>
 	<parameter name="READER_NAME" class="java.lang.String"/>
+	<parameter name="TEXT" class="java.lang.String"/>
 	<parameter name="TODAY" class="java.util.Date"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
@@ -59,22 +60,13 @@
 		WHEN VISITA.DH_SAIDA IS NOT NULL THEN VISITA.DH_SAIDA
         ELSE 'N/I'
 	END DH_SAIDA,
-    
-    -- INFORMAÇÕES DA ANAMNESE
-    ANAMNESE.PERGUNTA,
-    CASE ANAMNESE.RESPOSTA
-		WHEN 'true' THEN 'SIM'
-        WHEN 'false' THEN 'NÃO'
-        ELSE ANAMNESE.RESPOSTA
-	END AS RESPOSTA,
     CONCAT(INSTITUTO.LOGRADOURO, ', ', INSTITUTO.NUMERO, CASE WHEN INSTITUTO.COMPLEMENTO IS NULL THEN ' - ' ELSE CONCAT(' - Complemento: ', INSTITUTO.COMPLEMENTO, " - ") END,  INSTITUTO.BAIRRO, " - ", INSTITUTO.CIDADE, " - ", INSTITUTO.ESTADO) AS HOSP_ENDERECO,
     INSTITUTO.TELEFONE AS HOSP_TELEFONE
-FROM ANAMNESE ANAMNESE
-	INNER JOIN VISITA VISITA ON VISITA.ID = ANAMNESE.ID_VISITA
+FROM VISITA VISITA
 	INNER JOIN PACIENTE PACIENTE ON PACIENTE.ID = VISITA.ID_PACIENTE
 	INNER JOIN PESSOA_FISICA PESSOA ON PESSOA.ID = PACIENTE.ID_PESSOA
     INNER JOIN INSTITUTO
-WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
+WHERE VISITA.ID = $P{VISIT_ID};]]>
 	</queryString>
 	<field name="ID_PACIENTE" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.label" value="ID_PACIENTE"/>
@@ -125,14 +117,6 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 		<property name="com.jaspersoft.studio.field.label" value="DH_SAIDA"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
 	</field>
-	<field name="PERGUNTA" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="PERGUNTA"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ANAMNESE"/>
-	</field>
-	<field name="RESPOSTA" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="RESPOSTA"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ANAMNESE"/>
-	</field>
 	<field name="HOSP_ENDERECO" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="HOSP_ENDERECO"/>
 	</field>
@@ -161,7 +145,7 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 				<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($P{HOSPITAL_LOGO}.getBytes()))]]></imageExpression>
 			</image>
 			<rectangle>
-				<reportElement x="0" y="102" width="555" height="128" uuid="ac6587b4-3039-40c9-bc85-4d8b35dc0909"/>
+				<reportElement x="0" y="102" width="555" height="108" uuid="ac6587b4-3039-40c9-bc85-4d8b35dc0909"/>
 			</rectangle>
 			<rectangle>
 				<reportElement x="380" y="0" width="175" height="79" uuid="d5dd515f-6857-4350-815f-6a12a9f509fd"/>
@@ -348,9 +332,7 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PERGUNTA}.toUpperCase() + "\n\n" +
-$F{RESPOSTA} + "\n__________________________________________________________________________________________________"
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{TEXT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

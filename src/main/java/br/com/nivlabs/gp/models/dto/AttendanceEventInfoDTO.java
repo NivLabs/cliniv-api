@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel("Informações do evento do atendimento")
+@ApiModel(description = "Informações do evento do atendimento")
 public class AttendanceEventInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4230965183543396561L;

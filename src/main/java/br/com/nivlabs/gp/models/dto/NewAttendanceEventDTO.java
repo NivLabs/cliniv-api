@@ -13,7 +13,7 @@ import br.com.nivlabs.gp.enums.EventType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Evento de Atendimento")
+@ApiModel(description = "Evento de Atendimento")
 public class NewAttendanceEventDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 9069758427814475745L;

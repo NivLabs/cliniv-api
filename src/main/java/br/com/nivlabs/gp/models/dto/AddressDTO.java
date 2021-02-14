@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 18 de out de 2019
  */
-@ApiModel("Endereço")
+@ApiModel(description = "Endereço")
 public class AddressDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 5868142007921449692L;

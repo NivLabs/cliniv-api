@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Alergia")
+@ApiModel(description = "Alergia")
 public class AllergyDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8445432329934001912L;

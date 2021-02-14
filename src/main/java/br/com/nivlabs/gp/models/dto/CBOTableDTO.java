@@ -3,7 +3,7 @@ package br.com.nivlabs.gp.models.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Tabela CBO")
+@ApiModel(description = "Tabela CBO")
 public class CBOTableDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 480715163245338513L;

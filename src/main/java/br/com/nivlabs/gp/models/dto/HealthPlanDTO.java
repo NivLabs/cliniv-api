@@ -8,7 +8,7 @@ import br.com.nivlabs.gp.enums.Segmentation;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Plano de saúde")
+@ApiModel(description = "Plano de saúde")
 public class HealthPlanDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6773781566276160000L;

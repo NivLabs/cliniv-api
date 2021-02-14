@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 9 de fev de 2020
  */
-@ApiModel("Responsible or professional informations")
+@ApiModel(description = "Responsible or professional informations")
 public class ResponsibleInfoDTO extends PersonInfoDTO {
 
     private static final long serialVersionUID = 3558512431533807447L;

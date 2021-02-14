@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 15 de set de 2019
  */
-@ApiModel("Requisição de Senha perdida")
+@ApiModel(description = "Requisição de Senha perdida")
 public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8663867905476131957L;

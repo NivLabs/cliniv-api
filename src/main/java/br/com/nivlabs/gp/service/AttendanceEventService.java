@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.config.security.UserOfSystem;
+import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
@@ -92,9 +93,12 @@ public class AttendanceEventService implements GenericService {
         newAttendanceEvent.setResponsible(convertResponsible(request.getResponsible()));
         newAttendanceEvent.setAccommodation(convertAccommodation(request.getAccommodation()));
         newAttendanceEvent.setTitle(request.getEventType().getDescription());
-        if (request.getProcedure() != null && !StringUtils.isNullOrEmpty(request.getProcedure().getDescription()))
+        if (request.getProcedure() != null && !StringUtils.isNullOrEmpty(request.getProcedure().getDescription())) {
             newAttendanceEvent
                     .setTitle(request.getProcedure().getId().toString().concat(" - ").concat(request.getProcedure().getDescription()));
+        } else if (request.getEventType() == EventType.REPORT && !StringUtils.isNullOrEmpty(request.getObservations())) {
+            newAttendanceEvent.setTitle(request.getObservations());
+        }
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
 
         Long newEventId = dao.save(newAttendanceEvent).getId();

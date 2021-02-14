@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 10 de jan de 2020
  */
 
-@ApiModel("Informações da especialidade")
+@ApiModel(description = "Informações da especialidade")
 public class SpecialityInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4419810660458356444L;

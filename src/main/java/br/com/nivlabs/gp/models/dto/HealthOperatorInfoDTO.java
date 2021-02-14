@@ -12,7 +12,7 @@ import br.com.nivlabs.gp.exception.HttpException;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Operadora de plano de saúde")
+@ApiModel(description = "Operadora de plano de saúde")
 public class HealthOperatorInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -8630352370406381983L;

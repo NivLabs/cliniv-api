@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 22 de jul de 2020
  */
-@ApiModel("Taxas")
+@ApiModel(description = "Taxas")
 public class FeeDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 139714345053962715L;

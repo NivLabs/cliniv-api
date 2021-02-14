@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import br.com.nivlabs.gp.enums.AccommodationType;
 import io.swagger.annotations.ApiModel;
 
-@ApiModel("Sala (ambulatório) ou Leito")
+@ApiModel(value = "Accomodation", description = "Sala (ambulatório) ou Leito")
 public class AccommodationDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 1574668174638044648L;

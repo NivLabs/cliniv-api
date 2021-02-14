@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Questão do formulário dinâmico")
+@ApiModel(description = "Questão do formulário dinâmico")
 public class QuestionDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -7700694137849034946L;
 

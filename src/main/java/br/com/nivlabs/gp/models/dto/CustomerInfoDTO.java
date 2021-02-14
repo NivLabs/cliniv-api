@@ -3,7 +3,7 @@ package br.com.nivlabs.gp.models.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("Informações do cliente")
+@ApiModel(description = "Informações do cliente")
 public class CustomerInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 6019817310193995713L;

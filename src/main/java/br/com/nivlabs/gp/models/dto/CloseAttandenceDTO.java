@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel("Encerramento de atendimento")
+@ApiModel(description = "Encerramento de atendimento")
 public class CloseAttandenceDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4058913578939379862L;

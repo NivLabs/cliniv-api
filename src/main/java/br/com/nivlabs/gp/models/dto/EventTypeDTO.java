@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  * @since 8 de set de 2019
  */
-@ApiModel("Tipo de Evento")
+@ApiModel(description = "Tipo de Evento")
 public class EventTypeDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 2370290606342755763L;
