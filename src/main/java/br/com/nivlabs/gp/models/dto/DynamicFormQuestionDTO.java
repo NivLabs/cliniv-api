@@ -93,7 +93,7 @@ public class DynamicFormQuestionDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "AnamnesisItemDTO [id=" + id + ", question=" + question + ", metaType=" + metaType + "]";
+        return "DynamicFormQuestionDTO [id=" + id + ", question=" + question + ", metaType=" + metaType + "]";
     }
 
 }
