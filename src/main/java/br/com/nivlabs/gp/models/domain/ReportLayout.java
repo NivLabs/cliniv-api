@@ -14,7 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt;
+import br.com.nivlabs.gp.models.BaseObject;
 
 /**
  * Classe ReportLayout.java
@@ -25,7 +25,7 @@ import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt;
  */
 @Entity
 @Table(name = "LAYOUT_RELATORIO")
-public class ReportLayout extends BaseObjectWithCreatedAt {
+public class ReportLayout extends BaseObject {
 
 	/**
 	 * 

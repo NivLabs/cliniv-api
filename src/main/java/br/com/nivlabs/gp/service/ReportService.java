@@ -88,13 +88,13 @@ public class ReportService implements GenericService {
 
     }
 
-    public ReportLayoutDTO newReporLayout(Long id, String reportName, String description, FileDTO file) {
+    public ReportLayoutDTO newReporLayout(Long id, FileDTO file) {
 
         ReportLayoutDTO reportLayoutDTO = new ReportLayoutDTO();
         ReportLayout reportLayout = new ReportLayout();
         reportLayout.setId(id);
-        reportLayout.setName(reportName);
-        reportLayout.setDescription(description);
+        reportLayout.setName(file.getName());
+        reportLayout.setDescription(file.getUrl());
         reportLayout.setXml(file.getBase64());
         reportLayout.setCreatedAt(LocalDateTime.now());
         try {
@@ -250,7 +250,7 @@ public class ReportService implements GenericService {
 
     public ReportLayoutDTO update(Long id, FileDTO file, String reportName, String description) {
         
-        return this.newReporLayout(id, reportName, description, file);
+        return this.newReporLayout(id, file);
         
     }
 

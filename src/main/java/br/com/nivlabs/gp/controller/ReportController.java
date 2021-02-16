@@ -70,10 +70,8 @@ public class ReportController {
     @PostMapping()
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<ReportLayoutDTO> persist(@Validated @RequestBody(required = true) FileDTO file,
-                                                   @NotNull @PathVariable("reportName") String reportName,
-                                                   @NotNull @PathVariable("description") String description,
                                                    HttpServletResponse response) {
-        ReportLayoutDTO createdReportLayout = service.newReporLayout(null, reportName, description, file);
+        ReportLayoutDTO createdReportLayout = service.newReporLayout(null, file);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdReportLayout.getId()));
 
