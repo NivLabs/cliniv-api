@@ -39,7 +39,7 @@ public class ReportLayoutParameter extends BaseObject {
     @Column(name = "TIPO")
     private String type;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_LAYOUT_RELATORIO")
     private ReportLayout layout;
 
