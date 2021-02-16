@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -36,6 +36,7 @@ import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.ReportRepository;
+import br.com.nivlabs.gp.util.StringUtils;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -218,7 +219,8 @@ public class ReportService implements GenericService {
                             }
                                 break;
                             case DATE: {
-                                obj = Date.valueOf(v);
+                                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                                obj = formato.parse(v);
                             }
                                 break;
                             case NUMBER: {
