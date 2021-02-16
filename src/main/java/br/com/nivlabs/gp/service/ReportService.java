@@ -32,6 +32,7 @@ import br.com.nivlabs.gp.models.domain.ReportLayoutParameter;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.ReportLayoutDTO;
+import br.com.nivlabs.gp.models.dto.ReportLayoutParameterDTO;
 import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
@@ -168,6 +169,15 @@ public class ReportService implements GenericService {
         ReportLayout reportLayout = findById(id);
         ReportLayoutDTO dto = new ReportLayoutDTO();
         BeanUtils.copyProperties(reportLayout, dto);
+        List<ReportLayoutParameterDTO> listParam = new ArrayList<ReportLayoutParameterDTO>();
+        if (reportLayout.getParams() != null) {
+            for (ReportLayoutParameter param : reportLayout.getParams()) {
+                ReportLayoutParameterDTO paramDto = new ReportLayoutParameterDTO();
+                BeanUtils.copyProperties(param, paramDto);
+                listParam.add(paramDto);
+            }
+            dto.setParams(listParam);
+        }
         return dto;
     }
 
@@ -219,7 +229,7 @@ public class ReportService implements GenericService {
                             }
                                 break;
                             case DATE: {
-                                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                                 obj = formato.parse(v);
                             }
                                 break;
