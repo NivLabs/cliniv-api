@@ -104,10 +104,8 @@ public class ReportController {
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<ReportLayoutDTO> update(@PathVariable("id") Long id,
                                                    @Validated @RequestBody(required = true) FileDTO file,
-                                                   @NotNull @PathVariable("reportName") String reportName,
-                                                   @NotNull @PathVariable("description") String description,
                                                    HttpServletResponse response) {
-        return ResponseEntity.ok().body(service.update(id, file, reportName, description));
+        return ResponseEntity.ok().body(service.update(id, file));
     }
 
 }

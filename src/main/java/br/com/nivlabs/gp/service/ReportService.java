@@ -94,7 +94,7 @@ public class ReportService implements GenericService {
         ReportLayout reportLayout = new ReportLayout();
         reportLayout.setId(id);
         reportLayout.setName(file.getName());
-        reportLayout.setDescription(file.getUrl());
+        reportLayout.setDescription(file.getName());
         reportLayout.setXml(file.getBase64());
         reportLayout.setCreatedAt(LocalDateTime.now());
         try {
@@ -249,10 +249,9 @@ public class ReportService implements GenericService {
         repository.deleteById(id);
     }
 
-    public ReportLayoutDTO update(Long id, FileDTO file, String reportName, String description) {
-        
+    public ReportLayoutDTO update(Long id, FileDTO file) {
+        this.deleteLayoutById(id);
         return this.newReporLayout(id, file);
-        
     }
 
 }
