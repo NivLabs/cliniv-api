@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import br.com.nivlabs.gp.models.domain.AnamnesisForm;
+import br.com.nivlabs.gp.repository.custom.anamnesisform.AnamnesisFormRepositoryCustom;
 
 /**
  * Repositório para controle de formulários de anamnese
@@ -12,6 +13,6 @@ import br.com.nivlabs.gp.models.domain.AnamnesisForm;
  *
  */
 @Repository
-public interface AnamnesisFormRepository extends JpaRepository<AnamnesisForm, Long> {
+public interface AnamnesisFormRepository extends JpaRepository<AnamnesisForm, Long>, AnamnesisFormRepositoryCustom {
 
 }
