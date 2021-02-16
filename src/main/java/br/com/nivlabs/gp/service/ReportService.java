@@ -1,11 +1,11 @@
 package br.com.nivlabs.gp.service;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +13,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,16 +88,20 @@ public class ReportService implements GenericService {
 
     }
 
-    public ReportLayoutDTO newReporLayout(String reportName, String description, FileDTO file) {
+    public ReportLayoutDTO newReporLayout(Long id, FileDTO file) {
 
         ReportLayoutDTO reportLayoutDTO = new ReportLayoutDTO();
         ReportLayout reportLayout = new ReportLayout();
-        reportLayout.setId(null);
-        reportLayout.setName(reportName);
-        reportLayout.setDescription(description);
+        reportLayout.setId(id);
+        reportLayout.setName(file.getName());
+        reportLayout.setDescription(file.getUrl());
         reportLayout.setXml(file.getBase64());
         reportLayout.setCreatedAt(LocalDateTime.now());
-        reportLayout.setParams(readParamsXml(file));
+        try {
+            reportLayout.setParams(readParamsXml(file.getBase64()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         repository.save(reportLayout);
 
         BeanUtils.copyProperties(reportLayout, reportLayoutDTO);
@@ -107,35 +110,34 @@ public class ReportService implements GenericService {
 
     }
 
-    private List<ReportLayoutParameter> readParamsXml(FileDTO file) {
+    private List<ReportLayoutParameter> readParamsXml(String file) throws IOException {
 
         List<ReportLayoutParameter> parameters = new ArrayList<ReportLayoutParameter>();
 
-        Stream<String> lines = null;
 
-        try {
-            lines = Files.lines(Paths.get(file.getUrl()));
-        } catch (IOException e) {
-            logger.error("Erro ao ler xml = " + file.getUrl());
-        }
+        byte[] bytes = Base64.getDecoder().decode(file);
 
-        lines.parallel().forEach(line -> {
-            if (line.startsWith("<parameter")) {
+        InputStream reportInputStream = new ByteArrayInputStream(bytes);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(reportInputStream));
+
+        while(reader.ready()) {
+            String line = reader.readLine();
+            if (line.contains("<parameter")) {
                 ReportLayoutParameter param = new ReportLayoutParameter();
                 if (line.contains("name=")) {
                     int indexName = line.indexOf("name=\"");
-                    param.setName(line.substring(indexName, line.indexOf("\"", indexName)));
+                    param.setName(line.substring(indexName+6, line.indexOf("\"", indexName+6)));
                 }
 
                 if (line.contains("class=")) {
                     int indexType = line.indexOf("class=\"");
-                    String type = line.substring(indexType, line.indexOf("\"", indexType));
-                    param.setName(convertType(type));
+                    String type = line.substring(indexType+7, line.indexOf("\"", indexType+7));
+                    param.setType(convertType(type));
                 }
                 parameters.add(param);
 
             }
-        });
+        }
 
         return parameters;
     }
@@ -239,6 +241,17 @@ public class ReportService implements GenericService {
         reportParam.setParams(map);
 
         return reportParam;
+    }
+
+    public void deleteLayoutById(Long id) {
+        this.findById(id);
+        repository.deleteById(id);
+    }
+
+    public ReportLayoutDTO update(Long id, FileDTO file, String reportName, String description) {
+        
+        return this.newReporLayout(id, file);
+        
     }
 
 }
