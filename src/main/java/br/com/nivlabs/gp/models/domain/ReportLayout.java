@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.models.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -47,8 +48,8 @@ public class ReportLayout extends BaseObject {
     @Column(name = "XML")
     private String xml;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "layout", fetch = FetchType.LAZY)
-    private List<ReportLayoutParameter> params;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "layout", fetch = FetchType.EAGER)
+    private List<ReportLayoutParameter> params = new ArrayList<ReportLayoutParameter>();
 
     public Long getId() {
         return id;

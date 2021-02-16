@@ -94,11 +94,11 @@ public class ReportService implements GenericService {
         ReportLayout reportLayout = new ReportLayout();
         reportLayout.setId(id);
         reportLayout.setName(file.getName());
-        reportLayout.setDescription(file.getUrl());
+        reportLayout.setDescription(file.getName());
         reportLayout.setXml(file.getBase64());
         reportLayout.setCreatedAt(LocalDateTime.now());
         try {
-            reportLayout.setParams(readParamsXml(file.getBase64()));
+            reportLayout.setParams(readParamsXml(file.getBase64(), reportLayout));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,7 +110,7 @@ public class ReportService implements GenericService {
 
     }
 
-    private List<ReportLayoutParameter> readParamsXml(String file) throws IOException {
+    private List<ReportLayoutParameter> readParamsXml(String file, ReportLayout reportLayout) throws IOException {
 
         List<ReportLayoutParameter> parameters = new ArrayList<ReportLayoutParameter>();
 
@@ -122,8 +122,9 @@ public class ReportService implements GenericService {
 
         while(reader.ready()) {
             String line = reader.readLine();
-            if (line.contains("<parameter")) {
+            if (line.contains("<parameter ")) {
                 ReportLayoutParameter param = new ReportLayoutParameter();
+                param.setLayout(reportLayout);
                 if (line.contains("name=")) {
                     int indexName = line.indexOf("name=\"");
                     param.setName(line.substring(indexName+6, line.indexOf("\"", indexName+6)));
@@ -248,10 +249,9 @@ public class ReportService implements GenericService {
         repository.deleteById(id);
     }
 
-    public ReportLayoutDTO update(Long id, FileDTO file, String reportName, String description) {
-        
+    public ReportLayoutDTO update(Long id, FileDTO file) {
+        this.deleteLayoutById(id);
         return this.newReporLayout(id, file);
-        
     }
 
 }
