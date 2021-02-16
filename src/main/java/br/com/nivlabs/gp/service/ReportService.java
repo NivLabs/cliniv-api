@@ -122,17 +122,17 @@ public class ReportService implements GenericService {
 
         while(reader.ready()) {
             String line = reader.readLine();
-            if (line.startsWith("<parameter")) {
+            if (line.contains("<parameter")) {
                 ReportLayoutParameter param = new ReportLayoutParameter();
                 if (line.contains("name=")) {
                     int indexName = line.indexOf("name=\"");
-                    param.setName(line.substring(indexName, line.indexOf("\"", indexName)));
+                    param.setName(line.substring(indexName+6, line.indexOf("\"", indexName+6)));
                 }
 
                 if (line.contains("class=")) {
                     int indexType = line.indexOf("class=\"");
-                    String type = line.substring(indexType, line.indexOf("\"", indexType));
-                    param.setName(convertType(type));
+                    String type = line.substring(indexType+7, line.indexOf("\"", indexType+7));
+                    param.setType(convertType(type));
                 }
                 parameters.add(param);
 
