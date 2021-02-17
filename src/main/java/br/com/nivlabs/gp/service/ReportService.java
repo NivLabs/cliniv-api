@@ -36,8 +36,8 @@ import br.com.nivlabs.gp.models.dto.ReportLayoutParameterDTO;
 import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
+import br.com.nivlabs.gp.repository.ReportParamRepository;
 import br.com.nivlabs.gp.repository.ReportRepository;
-import br.com.nivlabs.gp.util.StringUtils;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -61,6 +61,9 @@ public class ReportService implements GenericService {
 
     @Autowired
     private ReportRepository repository;
+    
+    @Autowired
+    private ReportParamRepository paramRepository;
 
     public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
                                                        InputStream reportInputStream) {
@@ -262,7 +265,8 @@ public class ReportService implements GenericService {
     }
 
     public ReportLayoutDTO update(Long id, FileDTO file) {
-        this.deleteLayoutById(id);
+        ReportLayout layout = findById(id);
+        this.paramRepository.deleteByLayout(layout);
         return this.newReporLayout(id, file);
     }
 
