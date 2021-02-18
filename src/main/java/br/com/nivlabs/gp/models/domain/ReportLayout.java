@@ -45,7 +45,7 @@ public class ReportLayout extends BaseObject {
     @Column(name = "XML")
     private String xml;
 
-    @OneToMany(cascade = CascadeType.DETACH, mappedBy = "layout", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "layout", fetch = FetchType.EAGER)
     private List<ReportLayoutParameter> params = new ArrayList<>();
 
     public ReportLayout() {
