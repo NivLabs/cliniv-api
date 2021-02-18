@@ -33,8 +33,8 @@ public class ReportLayoutDTO extends DataTransferObjectBase {
     @ApiModelProperty("Descrição do layout")
     private String description;
 
-    @ApiModelProperty("XML do layout")
-    private String xml;
+    @ApiModelProperty("Base64 do layout")
+    private String base64;
 
     @ApiModelProperty("Data da criação do layout")
     @DateTimeFormat(iso = ISO.DATE)
@@ -83,18 +83,18 @@ public class ReportLayoutDTO extends DataTransferObjectBase {
         this.params = params;
     }
 
-    public String getXml() {
-        return xml;
+    public String getBase64() {
+        return base64;
     }
 
-    public void setXml(String xml) {
-        this.xml = xml;
+    public void setBase64(String base64) {
+        this.base64 = base64;
     }
 
     @Override
     public String toString() {
         return "ReportLayoutDTO [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
-                + createdAt + ", xml=" + xml +", params=" + params + "]";
+                + createdAt + ", xml=" + base64 + ", params=" + params + "]";
     }
 
     @Override

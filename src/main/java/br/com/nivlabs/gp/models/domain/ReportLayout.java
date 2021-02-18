@@ -45,7 +45,7 @@ public class ReportLayout extends BaseObject {
     @Column(name = "XML")
     private String xml;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "layout", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.DETACH, mappedBy = "layout", fetch = FetchType.EAGER)
     private List<ReportLayoutParameter> params = new ArrayList<>();
 
     public ReportLayout() {
@@ -62,7 +62,8 @@ public class ReportLayout extends BaseObject {
         this.params = params;
     }
 
-    public ReportLayout(Long id2) {
+    public ReportLayout(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
@@ -117,61 +118,6 @@ public class ReportLayout extends BaseObject {
     public String toString() {
         return "ReportLayout [id=" + id + ", name=" + name + ", description=" + description + ", createdAt=" + createdAt + ", xml=" + xml
                 + ", params=" + params + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((params == null) ? 0 : params.hashCode());
-        result = prime * result + ((xml == null) ? 0 : xml.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ReportLayout other = (ReportLayout) obj;
-        if (createdAt == null) {
-            if (other.createdAt != null)
-                return false;
-        } else if (!createdAt.equals(other.createdAt))
-            return false;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (params == null) {
-            if (other.params != null)
-                return false;
-        } else if (!params.equals(other.params))
-            return false;
-        if (xml == null) {
-            if (other.xml != null)
-                return false;
-        } else if (!xml.equals(other.xml))
-            return false;
-        return true;
     }
 
 }
