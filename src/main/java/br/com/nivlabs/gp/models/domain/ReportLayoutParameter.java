@@ -89,10 +89,10 @@ public class ReportLayoutParameter extends BaseObject {
         if (getClass() != obj.getClass())
             return false;
         ReportLayoutParameter other = (ReportLayoutParameter) obj;
-        if (id == null) {
-            if (other.id != null)
+        if (layout == null) {
+            if (other.layout != null)
                 return false;
-        } else if (!id.equals(other.id))
+        } else if (!layout.equals(other.layout))
             return false;
         return true;
     }
