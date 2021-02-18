@@ -19,6 +19,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(description = "Layout de Relatório")
 public class ReportLayoutDTO extends DataTransferObjectBase {
 
+    /**
+     * 
+     */
     private static final long serialVersionUID = 2490746870311098179L;
 
     @ApiModelProperty("Identificador único do layout")
@@ -29,6 +32,9 @@ public class ReportLayoutDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Descrição do layout")
     private String description;
+
+    @ApiModelProperty("XML do layout")
+    private String xml;
 
     @ApiModelProperty("Data da criação do layout")
     @DateTimeFormat(iso = ISO.DATE)
@@ -77,10 +83,18 @@ public class ReportLayoutDTO extends DataTransferObjectBase {
         this.params = params;
     }
 
+    public String getXml() {
+        return xml;
+    }
+
+    public void setXml(String xml) {
+        this.xml = xml;
+    }
+
     @Override
     public String toString() {
         return "ReportLayoutDTO [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
-                + createdAt + ", params=" + params + "]";
+                + createdAt + ", xml=" + xml +", params=" + params + "]";
     }
 
     @Override
