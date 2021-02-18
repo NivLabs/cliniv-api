@@ -54,7 +54,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 @Service
 public class ReportService implements GenericService {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private JasperReportsCreator report;
@@ -117,7 +117,7 @@ public class ReportService implements GenericService {
 
     private List<ReportLayoutParameter> readParamsXml(String file, ReportLayout reportLayout) throws IOException {
 
-        List<ReportLayoutParameter> parameters = new ArrayList<ReportLayoutParameter>();
+        List<ReportLayoutParameter> parameters = new ArrayList<>();
 
         byte[] bytes = Base64.getDecoder().decode(file);
 
@@ -196,7 +196,7 @@ public class ReportService implements GenericService {
 
     public DigitalDocumentDTO createDocumentFromReportLayout(Long id, ReportParameterDTO params) {
 
-        ReportLayout reportLayout = this.findById(id);
+        ReportLayout reportLayout = findById(id);
 
         byte[] bytes = Base64.getDecoder().decode(reportLayout.getXml());
 
@@ -204,7 +204,7 @@ public class ReportService implements GenericService {
 
         ReportParam reportParam = validateParams(reportLayout, params);
 
-        return this.createDocumentFromReport(0L, reportLayout.getName(), reportParam, reportInputStream);
+        return createDocumentFromReport(0L, reportLayout.getName(), reportParam, reportInputStream);
     }
 
     private ReportParam validateParams(ReportLayout reportLayout, ReportParameterDTO params) {
@@ -249,13 +249,21 @@ public class ReportService implements GenericService {
     }
 
     public void deleteLayoutById(Long id) {
-        this.findById(id);
+        findById(id);
         repository.deleteById(id);
     }
 
     public ReportLayoutDTO update(Long id, FileDTO file) {
+        logger.info("Buscando layout do relatório...");
         ReportLayout layout = findById(id);
-        paramRepository.deleteByLayout(layout);
+        logger.info("Layout encontrado :: {}", layout.getName());
+        logger.info("Iniciando remoção dos antigos parâmetros...");
+        layout.getParams().forEach(param -> {
+            logger.info("Deletando :: {}", param.getName());
+            paramRepository.deleteById(param.getId());
+            paramRepository.flush();
+        });
+        repository.flush();
         return newReporLayout(id, file);
     }
 
