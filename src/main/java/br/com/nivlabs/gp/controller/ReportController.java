@@ -90,7 +90,7 @@ public class ReportController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(digitalDocumentDTO);
     }
-    
+
     @ApiOperation(nickname = "report-layout-delete", value = "Deleta um layout de relatório baseado no identificador")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
@@ -98,13 +98,13 @@ public class ReportController {
         service.deleteLayoutById(id);
         return ResponseEntity.noContent().build();
     }
-    
+
     @ApiOperation(nickname = "report-layout-put", value = "Atualiza um layout de relatório")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<ReportLayoutDTO> update(@PathVariable("id") Long id,
-                                                   @Validated @RequestBody(required = true) FileDTO file,
-                                                   HttpServletResponse response) {
+                                                  @Validated @RequestBody(required = true) FileDTO file,
+                                                  HttpServletResponse response) {
         return ResponseEntity.ok().body(service.update(id, file));
     }
 

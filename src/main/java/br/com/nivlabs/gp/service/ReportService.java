@@ -36,8 +36,8 @@ import br.com.nivlabs.gp.models.dto.ReportLayoutParameterDTO;
 import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
+import br.com.nivlabs.gp.repository.ReportParamRepository;
 import br.com.nivlabs.gp.repository.ReportRepository;
-import br.com.nivlabs.gp.util.StringUtils;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -61,6 +61,9 @@ public class ReportService implements GenericService {
 
     @Autowired
     private ReportRepository repository;
+
+    @Autowired
+    private ReportParamRepository paramRepository;
 
     public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
                                                        InputStream reportInputStream) {
@@ -104,7 +107,7 @@ public class ReportService implements GenericService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        repository.save(reportLayout);
+        repository.saveAndFlush(reportLayout);
 
         BeanUtils.copyProperties(reportLayout, reportLayoutDTO);
 
@@ -116,25 +119,24 @@ public class ReportService implements GenericService {
 
         List<ReportLayoutParameter> parameters = new ArrayList<ReportLayoutParameter>();
 
-
         byte[] bytes = Base64.getDecoder().decode(file);
 
         InputStream reportInputStream = new ByteArrayInputStream(bytes);
         BufferedReader reader = new BufferedReader(new InputStreamReader(reportInputStream));
 
-        while(reader.ready()) {
+        while (reader.ready()) {
             String line = reader.readLine();
             if (line.contains("<parameter ")) {
                 ReportLayoutParameter param = new ReportLayoutParameter();
                 param.setLayout(reportLayout);
                 if (line.contains("name=")) {
                     int indexName = line.indexOf("name=\"");
-                    param.setName(line.substring(indexName+6, line.indexOf("\"", indexName+6)));
+                    param.setName(line.substring(indexName + 6, line.indexOf("\"", indexName + 6)));
                 }
 
                 if (line.contains("class=")) {
                     int indexType = line.indexOf("class=\"");
-                    String type = line.substring(indexType+7, line.indexOf("\"", indexType+7));
+                    String type = line.substring(indexType + 7, line.indexOf("\"", indexType + 7));
                     param.setType(convertType(type));
                 }
                 parameters.add(param);
@@ -147,18 +149,12 @@ public class ReportService implements GenericService {
 
     private String convertType(String type) {
         switch (type) {
-            case "java.lang.String": {
-
+            case "java.lang.String":
                 return MetaType.STRING.name();
-            }
-            case "java.util.Date": {
-
+            case "java.util.Date":
                 return MetaType.DATE.name();
-            }
-            case "java.lang.Long": {
-
+            case "java.lang.Long":
                 return MetaType.NUMBER.name();
-            }
             default:
                 throw new IllegalArgumentException("Unexpected value: " + type);
         }
@@ -224,22 +220,18 @@ public class ReportService implements GenericService {
                     Object obj = new Object();
                     try {
                         switch (MetaType.valueOf(param.getType())) {
-                            case STRING: {
+                            case STRING:
                                 obj = String.valueOf(v);
-                            }
                                 break;
-                            case DATE: {
+                            case DATE:
                                 SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                                 obj = formato.parse(v);
-                            }
                                 break;
-                            case NUMBER: {
+                            case NUMBER:
                                 obj = Long.valueOf(v);
-                            }
-
-                            case BOOL: {
+                                break;
+                            case BOOL:
                                 obj = Boolean.valueOf(v);
-                            }
                                 break;
                             default:
                                 throw new IllegalArgumentException("Unexpected value: " + k + ", " + v);
@@ -262,8 +254,9 @@ public class ReportService implements GenericService {
     }
 
     public ReportLayoutDTO update(Long id, FileDTO file) {
-        this.deleteLayoutById(id);
-        return this.newReporLayout(id, file);
+        ReportLayout layout = findById(id);
+        paramRepository.deleteByLayout(layout);
+        return newReporLayout(id, file);
     }
 
 }
