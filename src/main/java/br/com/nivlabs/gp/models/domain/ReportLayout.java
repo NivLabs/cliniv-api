@@ -27,9 +27,6 @@ import br.com.nivlabs.gp.models.BaseObject;
 @Table(name = "LAYOUT_RELATORIO")
 public class ReportLayout extends BaseObject {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 545660687640626225L;
 
     @Id
@@ -48,8 +45,26 @@ public class ReportLayout extends BaseObject {
     @Column(name = "XML")
     private String xml;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "layout", fetch = FetchType.EAGER)
-    private List<ReportLayoutParameter> params = new ArrayList<ReportLayoutParameter>();
+    @OneToMany(cascade = CascadeType.DETACH, mappedBy = "layout", fetch = FetchType.EAGER)
+    private List<ReportLayoutParameter> params = new ArrayList<>();
+
+    public ReportLayout() {
+        super();
+    }
+
+    public ReportLayout(Long id, String name, String description, LocalDateTime createdAt, String xml, List<ReportLayoutParameter> params) {
+        super();
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.xml = xml;
+        this.params = params;
+    }
+
+    public ReportLayout(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
@@ -83,14 +98,6 @@ public class ReportLayout extends BaseObject {
         this.createdAt = createdAt;
     }
 
-    public List<ReportLayoutParameter> getParams() {
-        return params;
-    }
-
-    public void setParams(List<ReportLayoutParameter> params) {
-        this.params = params;
-    }
-
     public String getXml() {
         return xml;
     }
@@ -99,35 +106,18 @@ public class ReportLayout extends BaseObject {
         this.xml = xml;
     }
 
+    public List<ReportLayoutParameter> getParams() {
+        return params;
+    }
+
+    public void setParams(List<ReportLayoutParameter> params) {
+        this.params = params;
+    }
+
     @Override
     public String toString() {
-        return "ReportLayout [id=" + id + ", name=" + name + ", description=" + description + ", createdAt="
-                + createdAt + ", params=" + params + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ReportLayout other = (ReportLayout) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+        return "ReportLayout [id=" + id + ", name=" + name + ", description=" + description + ", createdAt=" + createdAt + ", xml=" + xml
+                + ", params=" + params + "]";
     }
 
 }
