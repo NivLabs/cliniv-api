@@ -36,20 +36,43 @@ public class ReportLayoutParameter extends BaseObject {
     @Column(name = "TIPO")
     private String type;
 
+    @Column(name = "DESCRICAO")
+    private String description;
+
+    @Column(name = "VALOR_PADRAO")
+    private String defaultValue;
+
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_LAYOUT_RELATORIO")
     private ReportLayout layout;
 
-    public ReportLayoutParameter() {
-        super();
-    }
-
-    public ReportLayoutParameter(Long id, String name, String type, ReportLayout layout) {
+    public ReportLayoutParameter(Long id, String name, String type, String description, String defaultValue, ReportLayout layout) {
         super();
         this.id = id;
         this.name = name;
         this.type = type;
+        this.description = description;
+        this.defaultValue = defaultValue;
         this.layout = layout;
+    }
+
+    public ReportLayoutParameter() {
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     public Long getId() {
@@ -86,7 +109,8 @@ public class ReportLayoutParameter extends BaseObject {
 
     @Override
     public String toString() {
-        return "ReportLayoutParameter [id=" + id + ", name=" + name + ", type=" + type + ", layout=" + layout + "]";
+        return "ReportLayoutParameter [id=" + id + ", name=" + name + ", type=" + type + ", description=" + description + ", defaultValue="
+                + defaultValue + ", layout=" + layout + "]";
     }
 
 }

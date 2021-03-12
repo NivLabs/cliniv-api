@@ -1,11 +1,9 @@
 package br.com.nivlabs.gp.service;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+
 import br.com.nivlabs.gp.enums.DigitalDocumentType;
 import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.exception.HttpException;
@@ -37,6 +37,7 @@ import br.com.nivlabs.gp.models.dto.ReportLayoutParameterDTO;
 import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
+import br.com.nivlabs.gp.report.entities.JasperReportXml;
 import br.com.nivlabs.gp.repository.ReportParamRepository;
 import br.com.nivlabs.gp.repository.ReportRepository;
 import net.sf.jasperreports.engine.JRException;
@@ -66,14 +67,23 @@ public class ReportService implements GenericService {
     @Autowired
     private ReportParamRepository paramRepository;
 
+    /**
+     * Cria um documento digital anexado a um atendimento
+     * 
+     * @param attendanceEventId
+     * @param reportName
+     * @param params
+     * @param reportInputStream
+     * @return
+     */
     public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
                                                        InputStream reportInputStream) {
-        try {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: {} :: Instância -> {}",
                         reportName, reportInputStream);
 
             JasperPrint jasperPrint = report.create(params, reportInputStream);
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
             logger.info("Documento criado com sucesso!");
 
@@ -86,10 +96,12 @@ public class ReportService implements GenericService {
             document.setAttendanceEventId(attendanceEventId);
 
             return document;
-
         } catch (JRException e) {
             logger.error("Falha ao tentar gerar o relatório! Motivo :: {}", e.getMessage(), e);
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        } catch (IOException e1) {
+            logger.error("Falha ao tentar gerar o relatório! Motivo :: {}", e1.getMessage(), e1);
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, e1.getMessage());
         }
 
     }
@@ -116,10 +128,12 @@ public class ReportService implements GenericService {
             logger.info("Persistindo layout na base de dados...");
             repository.saveAndFlush(reportLayout);
             BeanUtils.copyProperties(reportLayout, reportLayoutDTO);
+            reportLayoutDTO.setBase64(reportLayout.getXml());
             logger.info("Layout criado, iniciando persistência de parâmetros...");
 
             List<ReportLayoutParameter> params = readParamsXml(file.getBase64(), reportLayout.getId());
             paramRepository.saveAll(params);
+            paramRepository.flush();
             reportLayoutDTO.setParams(convertParams(params));
             logger.info("Parâmetros salvos, devolvendo resposta para o canal de requisição.");
         } catch (IOException e) {
@@ -133,46 +147,42 @@ public class ReportService implements GenericService {
     /**
      * Realiza a leitura do XML para a separação dos parâmetros
      * 
-     * @param file
-     * @param reportLayoutId
-     * @return
+     * @param file Base64 do XML Jasper
+     * @param reportLayoutId Identificador único do relatório
+     * @return Lista de parâmetros do XML
      * @throws IOException
      */
     private List<ReportLayoutParameter> readParamsXml(String file, Long reportLayoutId) throws IOException {
         logger.info("Preparando parâmetros do XML...");
-
         List<ReportLayoutParameter> parameters = new ArrayList<>();
 
         byte[] bytes = Base64.getDecoder().decode(file);
 
-        InputStream reportInputStream = new ByteArrayInputStream(bytes);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(reportInputStream));
+        try (InputStream reportInputStream = new ByteArrayInputStream(bytes)) {
+            XmlMapper mapper = new XmlMapper();
+            JasperReportXml reportObject = mapper.readValue(reportInputStream, JasperReportXml.class);
 
-        logger.info("Iniciando leitura linha por linha...");
-        while (reader.ready()) {
-            String line = reader.readLine();
-            if (line.contains("<parameter ")) {
-                logger.info("Primeiro parâmetro encontrado :: {}", line);
-                ReportLayoutParameter param = new ReportLayoutParameter();
-                param.setLayout(new ReportLayout(reportLayoutId));
-                if (line.contains("name=")) {
-                    int indexName = line.indexOf("name=\"");
-                    param.setName(line.substring(indexName + 6, line.indexOf("\"", indexName + 6)));
-                    logger.info("Nome do parâmetro :: {}", param.getName());
-                }
+            logger.info("Iniciando parse dos parâmetros...");
+            reportObject.getParameters().forEach(parameter -> {
+                logger.info("Primeiro parâmetro encontrado :: {} | {} ", parameter.getName(), parameter.getType());
 
-                if (line.contains("class=")) {
-                    int indexType = line.indexOf("class=\"");
-                    String type = line.substring(indexType + 7, line.indexOf("\"", indexType + 7));
-                    param.setType(convertType(type));
-                    logger.info("Tipo do parâmetro :: {}", param.getType());
-                }
+                ReportLayoutParameter param = new ReportLayoutParameter(
+                        null,
+                        parameter.getName(),
+                        convertType(parameter.getType()),
+                        parameter.getParameterDescription(),
+                        parameter.getDefaultValueExpression(),
+                        new ReportLayout(reportLayoutId));
+
                 logger.info("Adicionando parâmetro à lista...");
                 parameters.add(param);
-            }
+
+            });
         }
+
         logger.info("Leitura finalizada. Total de parâmetros manipulados :: {}", parameters.size());
         return parameters;
+
     }
 
     private String convertType(String type) {
@@ -185,15 +195,15 @@ public class ReportService implements GenericService {
                 return MetaType.NUMBER.name();
             default:
                 throw new HttpException(HttpStatus.BAD_REQUEST,
-                        "Tipo do parâmetro não mapeado pelo servidor, entrar em contato com o suporte...".concat(type));
+                        "Tipo do parâmetro não mapeado pelo servidor, entrar em contato com o suporte :: Tipo - ".concat(type));
         }
     }
 
     public ReportLayoutDTO findReportLayoutById(Long id) {
-
         ReportLayout reportLayout = findById(id);
         ReportLayoutDTO dto = new ReportLayoutDTO();
         BeanUtils.copyProperties(reportLayout, dto);
+        dto.setBase64(reportLayout.getXml());
         List<ReportLayoutParameterDTO> listParam = new ArrayList<>();
         if (reportLayout.getParams() != null) {
             for (ReportLayoutParameter param : reportLayout.getParams()) {
@@ -207,7 +217,6 @@ public class ReportService implements GenericService {
     }
 
     private ReportLayout findById(Long id) {
-
         return repository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Layout com o identificador %s não encontrado!", id)));
     }
@@ -229,11 +238,14 @@ public class ReportService implements GenericService {
 
         byte[] bytes = Base64.getDecoder().decode(reportLayout.getXml());
 
-        InputStream reportInputStream = new ByteArrayInputStream(bytes);
+        try (InputStream reportInputStream = new ByteArrayInputStream(bytes)) {
+            ReportParam reportParam = validateParams(reportLayout, params);
+            return createDocumentFromReport(0L, reportLayout.getName(), reportParam, reportInputStream);
+        } catch (IOException e) {
+            logger.error("Falha ao gerar relatório", e);
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento...\n".concat(e.getMessage()));
+        }
 
-        ReportParam reportParam = validateParams(reportLayout, params);
-
-        return createDocumentFromReport(0L, reportLayout.getName(), reportParam, reportInputStream);
     }
 
     private ReportParam validateParams(ReportLayout reportLayout, ReportParameterDTO params) {
@@ -241,39 +253,37 @@ public class ReportService implements GenericService {
         ReportParam reportParam = new ReportParam();
         Map<String, Object> map = new HashMap<>();
 
-        params.getParams().forEach((k, v) -> {
-            reportLayout.getParams().forEach(param -> {
+        params.getParams().forEach((k, v) -> reportLayout.getParams().forEach(param -> {
 
-                if (param.getName().equals(k)) {
+            if (param.getName().equals(k)) {
 
-                    Object obj = new Object();
-                    try {
-                        switch (MetaType.valueOf(param.getType())) {
-                            case STRING:
-                                obj = String.valueOf(v);
-                                break;
-                            case DATE:
-                                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-                                obj = formato.parse(v);
-                                break;
-                            case NUMBER:
-                                obj = Long.valueOf(v);
-                                break;
-                            case BOOL:
-                                obj = Boolean.valueOf(v);
-                                break;
-                            default:
-                                throw new HttpException(HttpStatus.BAD_REQUEST,
-                                        String.format("Valor não esperado pela aplicação %s, %s", k, v));
-                        }
-                    } catch (Exception e) {
-                        throw new HttpException(HttpStatus.BAD_REQUEST,
-                                String.format("Valor não esperado pela aplicação %s, %s", k, v));
+                Object obj = new Object();
+                try {
+                    switch (MetaType.valueOf(param.getType())) {
+                        case STRING:
+                            obj = String.valueOf(v);
+                            break;
+                        case DATE:
+                            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+                            obj = formato.parse(v);
+                            break;
+                        case NUMBER:
+                            obj = Long.valueOf(v);
+                            break;
+                        case BOOL:
+                            obj = Boolean.valueOf(v);
+                            break;
+                        default:
+                            throw new HttpException(HttpStatus.BAD_REQUEST,
+                                    String.format("Valor não esperado pela aplicação %s, %s", k, v));
                     }
-                    map.put(k, obj);
+                } catch (Exception e) {
+                    throw new HttpException(HttpStatus.BAD_REQUEST,
+                            String.format("Valor não esperado pela aplicação %s, %s", k, v));
                 }
-            });
-        });
+                map.put(k, obj);
+            }
+        }));
         reportParam.setParams(map);
 
         return reportParam;
@@ -294,12 +304,13 @@ public class ReportService implements GenericService {
         logger.info("Remoção concluída com sucesso!");
         logger.info("Iniciando criação dos novos parâmetros...");
         try {
+            layout.setName(file.getName());
             layout.setParams(readParamsXml(file.getBase64(), id));
             paramRepository.saveAll(layout.getParams());
-            repository.save(layout);
+            repository.saveAndFlush(layout);
             ReportLayoutDTO response = new ReportLayoutDTO();
             response.setId(id);
-            response.setBase64(layout.getXml());
+            response.setBase64(file.getBase64());
             response.setCreatedAt(layout.getCreatedAt());
             response.setName(layout.getName());
             response.setParams(convertParams(layout.getParams()));

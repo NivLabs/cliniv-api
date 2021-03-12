@@ -24,6 +24,12 @@ public class ReportLayoutParameterDTO extends DataTransferObjectBase {
     @ApiModelProperty("Tipo do parâmetro")
     private String type;
 
+    @ApiModelProperty("Descrição do parâmetro")
+    private String description;
+
+    @ApiModelProperty("Valor padrão do parâmetro")
+    private String defaultValue;
+
     public Long getId() {
         return id;
     }
@@ -48,11 +54,29 @@ public class ReportLayoutParameterDTO extends DataTransferObjectBase {
         this.type = type;
     }
 
-    public ReportLayoutParameterDTO(Long id, String name, String type) {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public ReportLayoutParameterDTO(Long id, String name, String type, String description, String defaultValue) {
         super();
         this.id = id;
         this.name = name;
         this.type = type;
+        this.description = description;
+        this.defaultValue = defaultValue;
     }
 
     public ReportLayoutParameterDTO() {
