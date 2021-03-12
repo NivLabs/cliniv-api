@@ -12,7 +12,7 @@
 
 	<groupId>br.com.nivlabs</groupId>
 	<artifactId>gestao-de-prontuario</artifactId>
-	<version>beta-v1.0.0</version>
+	<version>v1.0.0</version>
 	<name>Gestão de Prontuário</name>
 	<description>API da aplicação de Gestão de Prontuário</description>
 	<packaging>jar</packaging>
@@ -24,6 +24,13 @@
 	</properties>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+			<version>2.8.3</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
