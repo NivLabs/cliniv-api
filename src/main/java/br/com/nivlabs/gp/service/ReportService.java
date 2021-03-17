@@ -4,13 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,9 +31,9 @@ import br.com.nivlabs.gp.models.domain.ReportLayout;
 import br.com.nivlabs.gp.models.domain.ReportLayoutParameter;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.FileDTO;
+import br.com.nivlabs.gp.models.dto.ReportGenerationRequestDTO;
 import br.com.nivlabs.gp.models.dto.ReportLayoutDTO;
 import br.com.nivlabs.gp.models.dto.ReportLayoutParameterDTO;
-import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.report.entities.JasperReportXml;
@@ -232,14 +231,21 @@ public class ReportService implements GenericService {
         return new PageImpl<>(newPage, pageSettings, page.getTotalElements());
     }
 
-    public DigitalDocumentDTO createDocumentFromReportLayout(Long id, ReportParameterDTO params) {
+    /**
+     * Cria relatório à partir de um layout pré-configurado
+     * 
+     * @param id Identificador único de Layout de Relatório
+     * @param params Parâmetros do Layout
+     * @return Documento digital gerado do relatório
+     */
+    public DigitalDocumentDTO createDocumentFromReportLayout(Long id, ReportGenerationRequestDTO params) {
 
         ReportLayout reportLayout = findById(id);
 
         byte[] bytes = Base64.getDecoder().decode(reportLayout.getXml());
 
         try (InputStream reportInputStream = new ByteArrayInputStream(bytes)) {
-            ReportParam reportParam = validateParams(reportLayout, params);
+            ReportParam reportParam = convertParams(params);
             return createDocumentFromReport(0L, reportLayout.getName(), reportParam, reportInputStream);
         } catch (IOException e) {
             logger.error("Falha ao gerar relatório", e);
@@ -248,43 +254,42 @@ public class ReportService implements GenericService {
 
     }
 
-    private ReportParam validateParams(ReportLayout reportLayout, ReportParameterDTO params) {
+    /**
+     * Converte os parâmetros da requisição em parâmetros do relatório
+     * 
+     * @param request Requisição de geração de relatório
+     * @return Parâmetros de relatório
+     */
+    private ReportParam convertParams(ReportGenerationRequestDTO request) {
 
         ReportParam reportParam = new ReportParam();
-        Map<String, Object> map = new HashMap<>();
 
-        params.getParams().forEach((k, v) -> reportLayout.getParams().forEach(param -> {
-
-            if (param.getName().equals(k)) {
-
-                Object obj = new Object();
-                try {
-                    switch (MetaType.valueOf(param.getType())) {
-                        case STRING:
-                            obj = String.valueOf(v);
-                            break;
-                        case DATE:
-                            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-                            obj = formato.parse(v);
-                            break;
-                        case NUMBER:
-                            obj = Long.valueOf(v);
-                            break;
-                        case BOOL:
-                            obj = Boolean.valueOf(v);
-                            break;
-                        default:
-                            throw new HttpException(HttpStatus.BAD_REQUEST,
-                                    String.format("Valor não esperado pela aplicação %s, %s", k, v));
+        request.getParams().forEach(parameter -> {
+            switch (MetaType.valueOf(parameter.getType())) {
+                case STRING:
+                    reportParam.getParams().put(parameter.getName(), String.valueOf(parameter.getValue()));
+                    break;
+                case DATE:
+                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+                    try {
+                        reportParam.getParams().put(parameter.getName(), formato.parse(parameter.getValue()));
+                    } catch (ParseException e) {
+                        throw new HttpException(HttpStatus.BAD_REQUEST,
+                                "Formato de data inválido, formato esperado :: yyyy-MM-dd'T'HH:mm:ss.SSS");
                     }
-                } catch (Exception e) {
+                    break;
+                case NUMBER:
+                    reportParam.getParams().put(parameter.getName(), Long.valueOf(parameter.getValue()));
+                    break;
+                case BOOL:
+                    reportParam.getParams().put(parameter.getName(), parameter.getValue());
+                    break;
+                default:
                     throw new HttpException(HttpStatus.BAD_REQUEST,
-                            String.format("Valor não esperado pela aplicação %s, %s", k, v));
-                }
-                map.put(k, obj);
+                            String.format("Valor não esperado pela aplicação %s, %s", parameter.getName(), parameter.getValue()));
             }
-        }));
-        reportParam.setParams(map);
+
+        });
 
         return reportParam;
     }
@@ -306,6 +311,7 @@ public class ReportService implements GenericService {
         try {
             layout.setName(file.getName());
             layout.setParams(readParamsXml(file.getBase64(), id));
+            layout.setXml(file.getBase64());
             paramRepository.saveAll(layout.getParams());
             repository.saveAndFlush(layout);
             ReportLayoutDTO response = new ReportLayoutDTO();
