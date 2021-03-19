@@ -311,6 +311,7 @@ public class ReportService implements GenericService {
         try {
             layout.setName(file.getName());
             layout.setParams(readParamsXml(file.getBase64(), id));
+            layout.setXml(file.getBase64());
             paramRepository.saveAll(layout.getParams());
             repository.saveAndFlush(layout);
             ReportLayoutDTO response = new ReportLayoutDTO();
