@@ -4,8 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -270,12 +269,17 @@ public class ReportService implements GenericService {
                     reportParam.getParams().put(parameter.getName(), String.valueOf(parameter.getValue()));
                     break;
                 case DATE:
-                    SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
                     try {
-                        reportParam.getParams().put(parameter.getName(), formato.parse(parameter.getValue()));
-                    } catch (ParseException e) {
+                        String date = parameter.getValue();
+                        if (date.length() == 16) {
+                            date = date.concat(":00.000Z");
+                        } else if (date.length() == 19) {
+                            date = date.concat(".000Z");
+                        }
+                        reportParam.getParams().put(parameter.getName(), Instant.parse(date));
+                    } catch (Exception e) {
                         throw new HttpException(HttpStatus.BAD_REQUEST,
-                                "Formato de data inválido, formato esperado :: yyyy-MM-dd'T'HH:mm:ss.SSS");
+                                "Formato de data inválido, formato esperado :: yyyy-MM-ddTHH:mm:ss.SSS");
                     }
                     break;
                 case NUMBER:
