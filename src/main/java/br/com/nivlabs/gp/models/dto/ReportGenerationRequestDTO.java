@@ -17,6 +17,18 @@ public class ReportGenerationRequestDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4069593034981336944L;
 
+    @ApiModelProperty("Identificador único do layout")
+    private Long id;
+
+    @ApiModelProperty("Nome ou título do layout")
+    private String name;
+
+    @ApiModelProperty("Descrição do layout")
+    private String description;
+
+    @ApiModelProperty("Base64 do layout")
+    private String base64;
+
     @ApiModelProperty("Lista de parâmetros do layout")
     private Set<ReportLayoutParameterDTO> params;
 
