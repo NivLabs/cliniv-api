@@ -111,7 +111,7 @@ public class AttendanceService implements GenericService {
         BeanUtils.copyProperties(person, medicalRecord);
         medicalRecord.setId(objectFromDb.getId());
         medicalRecord.setPatientId(objectFromDb.getPatient().getId());
-        medicalRecord.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+        medicalRecord.setDocument(new DocumentDTO(null, DocumentType.CPF, person.getCpf(), null, null, null, null));
         medicalRecord.setSusNumber(objectFromDb.getPatient().getSusNumber());
         medicalRecord.setEntryDateTime(objectFromDb.getEntryDateTime());
         medicalRecord.setExitDateTime(objectFromDb.getExitDateTime());
@@ -278,7 +278,9 @@ public class AttendanceService implements GenericService {
         BeanUtils.copyProperties(patient, medicalRecord);
         medicalRecord.setId(attendanceFromDb.getId());
         medicalRecord.setPatientId(attendanceFromDb.getPatient().getId());
-        medicalRecord.setDocument(new DocumentDTO(patient.getDocument().getType(), patient.getDocument().getValue()));
+        medicalRecord
+                .setDocument(new DocumentDTO(null, patient.getDocument().getType(), patient.getDocument().getValue(), null, null, null,
+                        null));
         medicalRecord.setEntryDateTime(attendanceFromDb.getEntryDateTime());
         medicalRecord.setExitDateTime(attendanceFromDb.getExitDateTime());
         medicalRecord.setAttendanceLevel(attendanceFromDb.getLevel());

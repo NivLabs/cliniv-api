@@ -74,6 +74,7 @@ public class ReportService implements GenericService {
      * @param reportInputStream
      * @return
      */
+    @Transactional
     public DigitalDocumentDTO createDocumentFromReport(Long attendanceEventId, String reportName, ReportParam params,
                                                        InputStream reportInputStream) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
@@ -250,7 +251,6 @@ public class ReportService implements GenericService {
             logger.error("Falha ao gerar relatório", e);
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento...\n".concat(e.getMessage()));
         }
-
     }
 
     /**

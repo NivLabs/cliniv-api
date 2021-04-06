@@ -37,6 +37,7 @@ public class PersonService implements GenericService {
 
     public Person update(Long id, Person entity) {
         Person person = findById(id);
+        person.setDocuments(null);
         BeanUtils.copyProperties(entity, person, Person_.ID);
         if (StringUtils.isNullOrEmpty(entity.getCpf()))
             person.setCpf(null);
@@ -64,7 +65,9 @@ public class PersonService implements GenericService {
             throw new HttpException(HttpStatus.NOT_FOUND,
                     "O CPF informado é nulo, informe um CPF para que a consulta possa ser realizada");
         }
-        return dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+        Person person = dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Pessoa com CPF: [%s] não encontrado", cpf)));
+        dao.flush();
+        return person;
     }
 }

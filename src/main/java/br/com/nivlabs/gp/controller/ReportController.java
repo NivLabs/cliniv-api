@@ -78,7 +78,7 @@ public class ReportController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReportLayout);
     }
 
-    @ApiOperation(nickname = "report-layout-post", value = "Gera um relatório a partir de um layout")
+    @ApiOperation(nickname = "report-layout-post-id", value = "Gera um relatório a partir de um layout")
     @PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportGenerationRequestDTO reportParam,
