@@ -13,7 +13,8 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.gp.enums.DocumentType;
+import br.com.nivlabs.gp.enums.BloodType;
+import br.com.nivlabs.gp.enums.EthnicGroup;
 import br.com.nivlabs.gp.enums.Gender;
 import br.com.nivlabs.gp.enums.GenderIdentity;
 import br.com.nivlabs.gp.enums.PatientType;
@@ -27,12 +28,19 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 3 de out de 2019
  */
+/**
+ * @author viniciosarodrigues
+ *
+ */
 @ApiModel(description = "Informações detalhadas do paciente")
 public class PatientInfoDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = 1575416178033511932L;
 
     @ApiModelProperty("Identificador único do paciente")
     private Long id;
+
+    @ApiModelProperty("Identificador único de pessoa")
+    private Long personId;
 
     @ApiModelProperty("Nome completo do paciente")
     @NotNull(message = "Nome completo é obrigatório")
@@ -49,6 +57,8 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Documento do paciente")
     @NotNull(message = "O documento deve ser informado")
     private DocumentDTO document;
+
+    private List<DocumentDTO> documents;
 
     @ApiModelProperty("Gênero (sexo) do paciente")
     @NotNull(message = "O gênero deve ser informado")
@@ -91,7 +101,7 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Data de criação do registro")
     private LocalDateTime createdAt;
 
-    @ApiModelProperty("Alergias do pacente")
+    @ApiModelProperty("Alergias do paciente")
     private List<String> allergies = new ArrayList<>();
 
     @ApiModelProperty("Histórico de atendimentos do paciente")
@@ -100,22 +110,37 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Plano de saúde do paciente")
     private HealthPlanDTO healthPlan;
 
-    public PatientInfoDTO(Long id, String fullName, String socialName, LocalDate bornDate, String document, Gender gender,
-            GenderIdentity genderIdentity, String principalNumber, String susNumber) {
-        super();
-        this.id = id;
-        this.fullName = fullName;
-        this.socialName = socialName;
-        this.bornDate = bornDate;
-        this.document = new DocumentDTO(DocumentType.CPF, document);
-        this.gender = gender;
-        this.genderIdentity = genderIdentity;
-        this.principalNumber = principalNumber;
-        this.susNumber = susNumber;
-    }
+    @ApiModelProperty("Grupo Étnico do paciente")
+    @Enumerated(EnumType.STRING)
+    private EthnicGroup ethnicGroup;
+
+    @ApiModelProperty("Tipo sanguíneo do paciente")
+    @Enumerated(EnumType.STRING)
+    private BloodType bloodType;
+
+    @ApiModelProperty("Nacionalidade do paciente")
+    private String nationality;
+
+    private String dispatcher;
+
+    @DateTimeFormat(iso = ISO.DATE)
+    private LocalDate expeditionDate;
+
+    @DateTimeFormat(iso = ISO.DATE)
+    private LocalDate validate;
+
+    private String uf;
 
     public PatientInfoDTO() {
         super();
+    }
+
+    public Long getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Long personId) {
+        this.personId = personId;
     }
 
     public Long getId() {
@@ -278,144 +303,80 @@ public class PatientInfoDTO extends DataTransferObjectBase {
         this.attendanceHistory = attendanceHistory;
     }
 
+    public EthnicGroup getEthnicGroup() {
+        return ethnicGroup;
+    }
+
+    public void setEthnicGroup(EthnicGroup ethnicGroup) {
+        this.ethnicGroup = ethnicGroup;
+    }
+
+    public BloodType getBloodType() {
+        return bloodType;
+    }
+
+    public void setBloodType(BloodType bloodType) {
+        this.bloodType = bloodType;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getDispatcher() {
+        return dispatcher;
+    }
+
+    public void setDispatcher(String dispatcher) {
+        this.dispatcher = dispatcher;
+    }
+
+    public LocalDate getExpeditionDate() {
+        return expeditionDate;
+    }
+
+    public void setExpeditionDate(LocalDate expeditionDate) {
+        this.expeditionDate = expeditionDate;
+    }
+
+    public LocalDate getValidate() {
+        return validate;
+    }
+
+    public void setValidate(LocalDate validate) {
+        this.validate = validate;
+    }
+
+    public String getUf() {
+        return uf;
+    }
+
+    public void setUf(String uf) {
+        this.uf = uf;
+    }
+
+    public List<DocumentDTO> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<DocumentDTO> documents) {
+        this.documents = documents;
+    }
+
     @Override
     public String toString() {
-        return "PatientInfoDTO [id=" + id + ", fullName=" + fullName + ", socialName=" + socialName + ", bornDate=" + bornDate
-                + ", document=" + document + ", gender=" + gender + ", genderIdentity=" + genderIdentity + ", fatherName=" + fatherName
-                + ", motherName=" + motherName + ", principalNumber=" + principalNumber + ", secondaryNumber=" + secondaryNumber
-                + ", address=" + address + ", profilePhoto=" + profilePhoto + ", susNumber=" + susNumber + ", type=" + type
-                + ", annotations=" + annotations + ", createdAt=" + createdAt + ", allergies=" + allergies + ", attendanceHistory="
-                + attendanceHistory + ", healthPlan=" + healthPlan + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((address == null) ? 0 : address.hashCode());
-        result = prime * result + ((allergies == null) ? 0 : allergies.hashCode());
-        result = prime * result + ((annotations == null) ? 0 : annotations.hashCode());
-        result = prime * result + ((attendanceHistory == null) ? 0 : attendanceHistory.hashCode());
-        result = prime * result + ((bornDate == null) ? 0 : bornDate.hashCode());
-        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-        result = prime * result + ((document == null) ? 0 : document.hashCode());
-        result = prime * result + ((fatherName == null) ? 0 : fatherName.hashCode());
-        result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
-        result = prime * result + ((gender == null) ? 0 : gender.hashCode());
-        result = prime * result + ((genderIdentity == null) ? 0 : genderIdentity.hashCode());
-        result = prime * result + ((healthPlan == null) ? 0 : healthPlan.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((motherName == null) ? 0 : motherName.hashCode());
-        result = prime * result + ((principalNumber == null) ? 0 : principalNumber.hashCode());
-        result = prime * result + ((profilePhoto == null) ? 0 : profilePhoto.hashCode());
-        result = prime * result + ((secondaryNumber == null) ? 0 : secondaryNumber.hashCode());
-        result = prime * result + ((socialName == null) ? 0 : socialName.hashCode());
-        result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        PatientInfoDTO other = (PatientInfoDTO) obj;
-        if (address == null) {
-            if (other.address != null)
-                return false;
-        } else if (!address.equals(other.address))
-            return false;
-        if (allergies == null) {
-            if (other.allergies != null)
-                return false;
-        } else if (!allergies.equals(other.allergies))
-            return false;
-        if (annotations == null) {
-            if (other.annotations != null)
-                return false;
-        } else if (!annotations.equals(other.annotations))
-            return false;
-        if (attendanceHistory == null) {
-            if (other.attendanceHistory != null)
-                return false;
-        } else if (!attendanceHistory.equals(other.attendanceHistory))
-            return false;
-        if (bornDate == null) {
-            if (other.bornDate != null)
-                return false;
-        } else if (!bornDate.equals(other.bornDate))
-            return false;
-        if (createdAt == null) {
-            if (other.createdAt != null)
-                return false;
-        } else if (!createdAt.equals(other.createdAt))
-            return false;
-        if (document == null) {
-            if (other.document != null)
-                return false;
-        } else if (!document.equals(other.document))
-            return false;
-        if (fatherName == null) {
-            if (other.fatherName != null)
-                return false;
-        } else if (!fatherName.equals(other.fatherName))
-            return false;
-        if (fullName == null) {
-            if (other.fullName != null)
-                return false;
-        } else if (!fullName.equals(other.fullName))
-            return false;
-        if (gender != other.gender)
-            return false;
-        if (genderIdentity != other.genderIdentity)
-            return false;
-        if (healthPlan == null) {
-            if (other.healthPlan != null)
-                return false;
-        } else if (!healthPlan.equals(other.healthPlan))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (motherName == null) {
-            if (other.motherName != null)
-                return false;
-        } else if (!motherName.equals(other.motherName))
-            return false;
-        if (principalNumber == null) {
-            if (other.principalNumber != null)
-                return false;
-        } else if (!principalNumber.equals(other.principalNumber))
-            return false;
-        if (profilePhoto == null) {
-            if (other.profilePhoto != null)
-                return false;
-        } else if (!profilePhoto.equals(other.profilePhoto))
-            return false;
-        if (secondaryNumber == null) {
-            if (other.secondaryNumber != null)
-                return false;
-        } else if (!secondaryNumber.equals(other.secondaryNumber))
-            return false;
-        if (socialName == null) {
-            if (other.socialName != null)
-                return false;
-        } else if (!socialName.equals(other.socialName))
-            return false;
-        if (susNumber == null) {
-            if (other.susNumber != null)
-                return false;
-        } else if (!susNumber.equals(other.susNumber))
-            return false;
-        if (type != other.type)
-            return false;
-        return true;
+        return "PatientInfoDTO [id=" + id + ", personId=" + personId + ", fullName=" + fullName + ", socialName=" + socialName
+                + ", bornDate=" + bornDate + ", document=" + document + ", documents=" + documents + ", gender=" + gender
+                + ", genderIdentity=" + genderIdentity + ", fatherName=" + fatherName + ", motherName=" + motherName + ", principalNumber="
+                + principalNumber + ", secondaryNumber=" + secondaryNumber + ", address=" + address + ", profilePhoto=" + profilePhoto
+                + ", susNumber=" + susNumber + ", type=" + type + ", annotations=" + annotations + ", createdAt=" + createdAt
+                + ", allergies=" + allergies + ", attendanceHistory=" + attendanceHistory + ", healthPlan=" + healthPlan + ", ethnicGroup="
+                + ethnicGroup + ", bloodType=" + bloodType + ", nationality=" + nationality + ", dispatcher=" + dispatcher
+                + ", expeditionDate=" + expeditionDate + ", validate=" + validate + ", uf=" + uf + "]";
     }
 
 }

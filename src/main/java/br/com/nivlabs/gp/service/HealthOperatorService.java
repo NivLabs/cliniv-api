@@ -85,7 +85,7 @@ public class HealthOperatorService implements GenericService {
         });
 
         healthOperatorInfoDTO.setHealthPlans(plansDTO);
-        healthOperatorInfoDTO.setDocument(new DocumentDTO(DocumentType.CNPJ, healthOperator.getCnpj()));
+        healthOperatorInfoDTO.setDocument(new DocumentDTO(null, DocumentType.CNPJ, healthOperator.getCnpj(), null, null, null, null));
 
         return healthOperatorInfoDTO;
     }

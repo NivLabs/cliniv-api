@@ -85,7 +85,7 @@ public class ResponsibleService {
 
         ResponsibleInfoDTO responsibleInfo = new ResponsibleInfoDTO();
         BeanUtils.copyProperties(personFromDb, responsibleInfo, Person_.ID);
-        responsibleInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+        responsibleInfo.setDocument(new DocumentDTO(null, DocumentType.CPF, personFromDb.getCpf(), null, null, null, null));
 
         if (personFromDb.getAddress() != null) {
             AddressDTO address = new AddressDTO();
@@ -108,7 +108,7 @@ public class ResponsibleService {
         ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
         BeanUtils.copyProperties(responsibleOrigin.getPerson(), responsibleConverted, Person_.ID);
         BeanUtils.copyProperties(responsibleOrigin, responsibleConverted);
-        responsibleConverted.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+        responsibleConverted.setDocument(new DocumentDTO(null, DocumentType.CPF, person.getCpf(), null, null, null, null));
 
         if (person.getAddress() != null) {
             AddressDTO address = new AddressDTO();
