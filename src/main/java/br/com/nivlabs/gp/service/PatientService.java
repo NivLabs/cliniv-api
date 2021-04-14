@@ -42,6 +42,7 @@ import br.com.nivlabs.gp.repository.PatientAllergyRepository;
 import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.repository.PersonDocumentRepository;
 import br.com.nivlabs.gp.repository.PersonRepository;
+import br.com.nivlabs.gp.util.DocumentValidator;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
@@ -266,7 +267,8 @@ public class PatientService implements GenericService {
      */
     public PatientInfoDTO update(Long id, PatientInfoDTO entity) {
         if (entity.getDocument() != null
-                && (entity.getDocument().getValue() == null || entity.getDocument().getType() != DocumentType.CPF)) {
+                && (entity.getDocument().getValue() != null && !DocumentValidator.isValidCPF(entity.getDocument().getValue())
+                        && entity.getDocument().getType() != DocumentType.CPF)) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Tipo do documento inválido, informe um documento válido.");
         }
