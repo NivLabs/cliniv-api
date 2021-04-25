@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.config.security.UserOfSystem;
@@ -31,5 +32,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                         "Usuário não encontrado! Username: " + username + ", tipo " + UserApplication.class.getName()));
         return new UserOfSystem(user.getUserName(), user.getPassword(), user.getPerson(), user.isActive(), user.getRoles());
+    }
+    
+    public static void main(String[] args) {
+        var enc = new BCryptPasswordEncoder();
+        var s1 = enc.encode("admin");
+        var s2 = enc.encode("admin");
+        
+        System.out.println(enc.matches("admin", s2));
+        // $2a$10$iVFuX3xsA9Kxus.kl1WAo.7lcjeQVBKdE9rvuPhQ4udGlKbV/JLgO
+
     }
 }
