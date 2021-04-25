@@ -33,110 +33,110 @@ public class PrescriptionItemDTO extends DataTransferObjectBase {
     @ApiModelProperty("Instruções do item da prescrição (Se houver)")
     private String instructions;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getComponent() {
-		return component;
-	}
+    public String getComponent() {
+        return component;
+    }
 
-	public void setComponent(String component) {
-		this.component = component;
-	}
+    public void setComponent(String component) {
+        this.component = component;
+    }
 
-	public Double getQuantity() {
-		return quantity;
-	}
+    public Double getQuantity() {
+        return quantity;
+    }
 
-	public void setQuantity(Double quantity) {
-		this.quantity = quantity;
-	}
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
 
-	public String getMeasureUnit() {
-		return measureUnit;
-	}
+    public String getMeasureUnit() {
+        return measureUnit;
+    }
 
-	public void setMeasureUnit(String measureUnit) {
-		this.measureUnit = measureUnit;
-	}
+    public void setMeasureUnit(String measureUnit) {
+        this.measureUnit = measureUnit;
+    }
 
-	public PrescriptionItemType getType() {
-		return type;
-	}
+    public PrescriptionItemType getType() {
+        return type;
+    }
 
-	public void setType(PrescriptionItemType type) {
-		this.type = type;
-	}
+    public void setType(PrescriptionItemType type) {
+        this.type = type;
+    }
 
-	public String getInstructions() {
-		return instructions;
-	}
+    public String getInstructions() {
+        return instructions;
+    }
 
-	public void setInstructions(String instructions) {
-		this.instructions = instructions;
-	}
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((component == null) ? 0 : component.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((instructions == null) ? 0 : instructions.hashCode());
-		result = prime * result + ((measureUnit == null) ? 0 : measureUnit.hashCode());
-		result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((component == null) ? 0 : component.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((instructions == null) ? 0 : instructions.hashCode());
+        result = prime * result + ((measureUnit == null) ? 0 : measureUnit.hashCode());
+        result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PrescriptionItemDTO other = (PrescriptionItemDTO) obj;
-		if (component == null) {
-			if (other.component != null)
-				return false;
-		} else if (!component.equals(other.component))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (instructions == null) {
-			if (other.instructions != null)
-				return false;
-		} else if (!instructions.equals(other.instructions))
-			return false;
-		if (measureUnit == null) {
-			if (other.measureUnit != null)
-				return false;
-		} else if (!measureUnit.equals(other.measureUnit))
-			return false;
-		if (quantity == null) {
-			if (other.quantity != null)
-				return false;
-		} else if (!quantity.equals(other.quantity))
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PrescriptionItemDTO other = (PrescriptionItemDTO) obj;
+        if (component == null) {
+            if (other.component != null)
+                return false;
+        } else if (!component.equals(other.component))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (instructions == null) {
+            if (other.instructions != null)
+                return false;
+        } else if (!instructions.equals(other.instructions))
+            return false;
+        if (measureUnit == null) {
+            if (other.measureUnit != null)
+                return false;
+        } else if (!measureUnit.equals(other.measureUnit))
+            return false;
+        if (quantity == null) {
+            if (other.quantity != null)
+                return false;
+        } else if (!quantity.equals(other.quantity))
+            return false;
+        if (type != other.type)
+            return false;
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return "PrescriptionItemDTO [id=" + id + ", component=" + component + ", quantity=" + quantity
-				+ ", measureUnit=" + measureUnit + ", type=" + type + ", instructions=" + instructions + "]";
-	}
-    
+    @Override
+    public String toString() {
+        return "PrescriptionItemDTO [id=" + id + ", component=" + component + ", quantity=" + quantity
+                + ", measureUnit=" + measureUnit + ", type=" + type + ", instructions=" + instructions + "]";
+    }
+
 }

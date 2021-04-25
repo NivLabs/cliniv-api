@@ -52,10 +52,9 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Patient> root) {
-        if (!(customFilters instanceof PatientFilters)) {
+        if (!(customFilters instanceof PatientFilters filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de paciente");
         }
-        PatientFilters filters = (PatientFilters) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {

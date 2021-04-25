@@ -53,10 +53,9 @@ public class ProcedureRepositoryCustomImpl extends GenericCustomRepository<Proce
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Procedure> root) {
-        if (!(customFilters instanceof ProcedureFilters)) {
+        if (!(customFilters instanceof ProcedureFilters filters)) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo de filtro inválido para Procedimentos!");
         }
-        ProcedureFilters filters = (ProcedureFilters) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {

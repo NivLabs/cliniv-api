@@ -51,10 +51,9 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<UserApplication> root) {
-        if (!(customFilters instanceof UserFilters)) {
+        if (!(customFilters instanceof UserFilters filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de profissional");
         }
-        UserFilters filters = (UserFilters) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getUserName())) {
