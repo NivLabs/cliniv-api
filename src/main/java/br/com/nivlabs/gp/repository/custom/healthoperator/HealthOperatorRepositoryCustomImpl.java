@@ -49,10 +49,9 @@ public class HealthOperatorRepositoryCustomImpl extends GenericCustomRepository<
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<HealthOperator> root) {
-        if (!(customFilters instanceof HealthOperatorFilters)) {
+        if (!(customFilters instanceof HealthOperatorFilters filters)) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo de filtro inválido para Operadoras de saúde!");
         }
-        HealthOperatorFilters filters = (HealthOperatorFilters) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {

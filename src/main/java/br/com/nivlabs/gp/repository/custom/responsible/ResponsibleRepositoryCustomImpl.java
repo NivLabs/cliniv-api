@@ -52,10 +52,9 @@ public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Res
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Responsible> root) {
-        if (!(customFilters instanceof ResponsibleFilters)) {
+        if (!(customFilters instanceof ResponsibleFilters filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de profissional");
         }
-        ResponsibleFilters filters = (ResponsibleFilters) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {

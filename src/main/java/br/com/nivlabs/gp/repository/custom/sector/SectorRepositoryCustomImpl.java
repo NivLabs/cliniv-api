@@ -43,10 +43,9 @@ public class SectorRepositoryCustomImpl extends GenericCustomRepository<Sector, 
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Sector> root) {
-        if (!(customFilters instanceof SectorFilters)) {
+        if (!(customFilters instanceof SectorFilters filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de setor");
         }
-        SectorFilters filters = (SectorFilters) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
