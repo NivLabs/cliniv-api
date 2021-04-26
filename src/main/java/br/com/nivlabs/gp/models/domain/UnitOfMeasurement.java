@@ -17,7 +17,7 @@ public class UnitOfMeasurement extends BaseObjectWithId {
     private Long id;
 
     @Column(name = "TERMO")
-    private String abbreviation;
+    private String value;
 
     @Column(name = "DESCRICAO")
     private String description;
@@ -26,10 +26,10 @@ public class UnitOfMeasurement extends BaseObjectWithId {
         super();
     }
 
-    public UnitOfMeasurement(Long id, String abbreviation, String description) {
+    public UnitOfMeasurement(Long id, String value, String description) {
         super();
         this.id = id;
-        this.abbreviation = abbreviation;
+        this.value = value;
         this.description = description;
     }
 
@@ -41,14 +41,6 @@ public class UnitOfMeasurement extends BaseObjectWithId {
         this.id = id;
     }
 
-    public String getAbbreviation() {
-        return abbreviation;
-    }
-
-    public void setAbbreviation(String abbreviation) {
-        this.abbreviation = abbreviation;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -57,13 +49,31 @@ public class UnitOfMeasurement extends BaseObjectWithId {
         this.description = description;
     }
 
+    /**
+     * @return the value
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * @param value the value to set
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     @Override
     public String toString() {
-        return "UnitOfMeasurement ["
-                + "id=" + id
-                + ", abbreviation=" + abbreviation
-                + ", description=" + description
-                + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("UnitOfMeasurement [id=");
+        builder.append(id);
+        builder.append(", value=");
+        builder.append(value);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append("]");
+        return builder.toString();
     }
 
 }
