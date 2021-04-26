@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
@@ -29,7 +30,7 @@ public class PrescriptionInfoDTO extends DataTransferObjectBase {
     private LocalDateTime datetimeEnd;
 
     @ApiModelProperty("Itens da prescrição")
-    List<PrescriptionItemDTO> items;
+    List<PrescriptionItemDTO> items = new ArrayList<>();
 
     @ApiModelProperty("Indica uma prescrição especial com duas vias para medicamentos de receita obrigatória")
     private boolean special;

@@ -41,7 +41,9 @@ public enum EventType {
     // Entrada
     ENTRY("ENTRY", "Entrada"),
     // Fim do atendimento/consulta
-    EXIT("EXIT", "Fim do atendimento/consulta");
+    EXIT("EXIT", "Fim do atendimento/consulta"),
+    // Precrição
+    PRESCRIPTION("PRESCRIPTION", "Prescrição");
 
     private String name;
     private String description;

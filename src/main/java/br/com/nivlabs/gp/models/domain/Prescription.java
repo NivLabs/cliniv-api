@@ -48,7 +48,11 @@ public class Prescription extends BaseObjectWithId {
     @Column(name = "INSERE_EVENTO")
     private boolean insertToMedicalRecords;
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "prescription")
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_RESPONSAVEL_CANCEL")
+    private Responsible responsibleForCancel;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "prescription")
     private List<PrescriptionItem> items = new ArrayList<>();
 
     public Prescription() {
@@ -119,17 +123,43 @@ public class Prescription extends BaseObjectWithId {
         this.insertToMedicalRecords = insertToMedicalRecords;
     }
 
+    /**
+     * @return the responsibleForCancel
+     */
+    public Responsible getResponsibleForCancel() {
+        return responsibleForCancel;
+    }
+
+    /**
+     * @param responsibleForCancel the responsibleForCancel to set
+     */
+    public void setResponsibleForCancel(Responsible responsibleForCancel) {
+        this.responsibleForCancel = responsibleForCancel;
+    }
+
     @Override
     public String toString() {
-        return "Prescription ["
-                + "id=" + id
-                + ", attendance=" + attendance
-                + ", responsible=" + responsible
-                + ", datetimeInit=" + datetimeInit
-                + ", datetimeEnd=" + datetimeEnd
-                + ", special=" + special
-                + ", insertToMedicalRecords=" + insertToMedicalRecords
-                + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Prescription [id=");
+        builder.append(id);
+        builder.append(", attendance=");
+        builder.append(attendance);
+        builder.append(", responsible=");
+        builder.append(responsible);
+        builder.append(", datetimeInit=");
+        builder.append(datetimeInit);
+        builder.append(", datetimeEnd=");
+        builder.append(datetimeEnd);
+        builder.append(", special=");
+        builder.append(special);
+        builder.append(", insertToMedicalRecords=");
+        builder.append(insertToMedicalRecords);
+        builder.append(", responsibleForCancel=");
+        builder.append(responsibleForCancel);
+        builder.append(", items=");
+        builder.append(items);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

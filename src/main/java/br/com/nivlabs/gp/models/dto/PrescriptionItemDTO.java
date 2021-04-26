@@ -1,9 +1,13 @@
 package br.com.nivlabs.gp.models.dto;
 
-import javax.validation.constraints.NotEmpty;
+import java.math.BigDecimal;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
-import br.com.nivlabs.gp.enums.PrescriptionItemType;
+import br.com.nivlabs.gp.enums.TimeIntervalType;
+import br.com.nivlabs.gp.models.domain.UnitOfMeasurement;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,131 +16,118 @@ public class PrescriptionItemDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 2268618756493323347L;
 
-    @ApiModelProperty("Identificador único do item da prescrição do paciente")
-    @NotNull(message = "Informe o identificador sequencial do item da prescrição")
-    private Long id;
+    @ApiModelProperty("Sequencial do item da prescrição")
+    @NotNull(message = "Informe o sequencial do item da prescrição")
+    private Long sequential;
 
-    @ApiModelProperty("Componente do item da prescrição")
-    @NotEmpty(message = "Informe qual é o componente que o item representa (Descrição do Medicamento ou procedimento)")
-    private String component;
+    @ApiModelProperty("Descrição do item da prescrição")
+    @NotNull(message = "Informe a descrição do item da prescrição")
+    private String description;
 
-    @ApiModelProperty("Quantidade de uso (Se houver)")
-    private Double quantity;
+    @ApiModelProperty("Observações/Instruções para o item da prescrição")
+    private String observations;
 
-    @ApiModelProperty("Unidade de medida (Se houver")
-    private String measureUnit;
+    @ApiModelProperty("Via de administração da medicação")
+    private String routeOfAdministration;
 
-    @ApiModelProperty("Tipo do item (MEDICINE OU PROCEDURE")
-    @NotNull(message = "Informe o tipo do item da prescrição")
-    private PrescriptionItemType type;
+    @ApiModelProperty("Dose da medicação à ser administrada")
+    private BigDecimal dosage;
 
-    @ApiModelProperty("Instruções do item da prescrição (Se houver)")
-    private String instructions;
+    @ApiModelProperty("Unidade de medida para a dosagem do medicamento")
+    private UnitOfMeasurement unitOfMeasurement;
 
-    public Long getId() {
-        return id;
+    @ApiModelProperty("Intervalo de tempo entre o uso do medicamento/procedimento")
+    private Integer timeInterval;
+
+    @ApiModelProperty("Tipo do intervalo de tempo")
+    @Enumerated(EnumType.STRING)
+    private TimeIntervalType timeIntervalType;
+
+    public Long getSequential() {
+        return sequential;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSequential(Long sequential) {
+        this.sequential = sequential;
     }
 
-    public String getComponent() {
-        return component;
+    public String getDescription() {
+        return description;
     }
 
-    public void setComponent(String component) {
-        this.component = component;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Double getQuantity() {
-        return quantity;
+    public String getObservations() {
+        return observations;
     }
 
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
+    public void setObservations(String observations) {
+        this.observations = observations;
     }
 
-    public String getMeasureUnit() {
-        return measureUnit;
+    public String getRouteOfAdministration() {
+        return routeOfAdministration;
     }
 
-    public void setMeasureUnit(String measureUnit) {
-        this.measureUnit = measureUnit;
+    public void setRouteOfAdministration(String routeOfAdministration) {
+        this.routeOfAdministration = routeOfAdministration;
     }
 
-    public PrescriptionItemType getType() {
-        return type;
+    public BigDecimal getDosage() {
+        return dosage;
     }
 
-    public void setType(PrescriptionItemType type) {
-        this.type = type;
+    public void setDosage(BigDecimal dosage) {
+        this.dosage = dosage;
     }
 
-    public String getInstructions() {
-        return instructions;
+    public UnitOfMeasurement getUnitOfMeasurement() {
+        return unitOfMeasurement;
     }
 
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
+    public void setUnitOfMeasurement(UnitOfMeasurement unitOfMeasurement) {
+        this.unitOfMeasurement = unitOfMeasurement;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((component == null) ? 0 : component.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((instructions == null) ? 0 : instructions.hashCode());
-        result = prime * result + ((measureUnit == null) ? 0 : measureUnit.hashCode());
-        result = prime * result + ((quantity == null) ? 0 : quantity.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
+    public Integer getTimeInterval() {
+        return timeInterval;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        PrescriptionItemDTO other = (PrescriptionItemDTO) obj;
-        if (component == null) {
-            if (other.component != null)
-                return false;
-        } else if (!component.equals(other.component))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (instructions == null) {
-            if (other.instructions != null)
-                return false;
-        } else if (!instructions.equals(other.instructions))
-            return false;
-        if (measureUnit == null) {
-            if (other.measureUnit != null)
-                return false;
-        } else if (!measureUnit.equals(other.measureUnit))
-            return false;
-        if (quantity == null) {
-            if (other.quantity != null)
-                return false;
-        } else if (!quantity.equals(other.quantity))
-            return false;
-        if (type != other.type)
-            return false;
-        return true;
+    public void setTimeInterval(Integer timeInterval) {
+        this.timeInterval = timeInterval;
+    }
+
+    public TimeIntervalType getTimeIntervalType() {
+        return timeIntervalType;
+    }
+
+    public void setTimeIntervalType(TimeIntervalType timeIntervalType) {
+        this.timeIntervalType = timeIntervalType;
     }
 
     @Override
     public String toString() {
-        return "PrescriptionItemDTO [id=" + id + ", component=" + component + ", quantity=" + quantity
-                + ", measureUnit=" + measureUnit + ", type=" + type + ", instructions=" + instructions + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("PrescriptionItemDTO [sequential=");
+        builder.append(sequential);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(", observations=");
+        builder.append(observations);
+        builder.append(", routeOfAdministration=");
+        builder.append(routeOfAdministration);
+        builder.append(", dosage=");
+        builder.append(dosage);
+        builder.append(", unitOfMeasurement=");
+        builder.append(unitOfMeasurement);
+        builder.append(", timeInterval=");
+        builder.append(timeInterval);
+        builder.append(", timeIntervalType=");
+        builder.append(timeIntervalType);
+        builder.append("]");
+        return builder.toString();
     }
 
 }
