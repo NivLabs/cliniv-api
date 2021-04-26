@@ -415,6 +415,9 @@ WHERE PRESCRICAO.ID = $P{PRESC_ID};]]>
 				<reportElement x="489" y="0" width="66" height="21" uuid="5b7e2b2d-2010-4f13-bc7b-bb8491f45904"/>
 				<text><![CDATA[INTERVALO]]></text>
 			</staticText>
+			<rectangle>
+				<reportElement x="0" y="21" width="555" height="1" uuid="312d31d0-ae71-4d80-9b73-ea6b175ec253"/>
+			</rectangle>
 		</band>
 	</columnHeader>
 	<detail>
@@ -455,6 +458,11 @@ WHERE PRESCRICAO.ID = $P{PRESC_ID};]]>
 				<reportElement x="50" y="0" width="74" height="19" uuid="678f94a9-7971-4214-b3af-c41cc2ceb7cf"/>
 				<text><![CDATA[INSTRUÇÕES]]></text>
 			</staticText>
+		</band>
+		<band height="10">
+			<rectangle>
+				<reportElement x="0" y="4" width="555" height="1" uuid="6b3a23e3-d969-4fb7-b2b6-9e3c8c4d2367"/>
+			</rectangle>
 		</band>
 	</detail>
 	<pageFooter>
