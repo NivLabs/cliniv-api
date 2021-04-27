@@ -308,7 +308,7 @@ WHERE PRESCRICAO.ID = $P{PRESC_ID};]]>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DH_ENTRADA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/YYYY hh:mm").format($F{DH_ENTRADA})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="125" y="123" width="174" height="15" isRemoveLineWhenBlank="true" uuid="591f340d-9069-4b7d-b675-f07565119d64"/>
@@ -386,6 +386,34 @@ WHERE PRESCRICAO.ID = $P{PRESC_ID};]]>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DH_SAIDA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="315" y="167" width="134" height="15" uuid="3fd3e554-163f-4550-8cc3-7f58ccc69af7"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<text><![CDATA[Início de vigência:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="449" y="167" width="94" height="15" isRemoveLineWhenBlank="true" uuid="e8880eae-1169-47b5-bd08-eeb90cb37684"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/YYYY hh:mm").format($F{DH_PRESC_INI})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="315" y="182" width="134" height="15" uuid="9c87ac41-4475-4979-bdbb-8e81d6e92fc4"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<text><![CDATA[Fim de vigência:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="449" y="182" width="94" height="15" isRemoveLineWhenBlank="true" uuid="58594c83-fa55-45c2-ad03-60b4c32937ce"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/YYYY hh:mm").format($F{DH_PRESC_FIM})]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
