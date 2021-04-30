@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
-import br.com.nivlabs.gp.models.converter.IntegerToBooleanConverver;
+import br.com.nivlabs.gp.models.converter.IntegerToBooleanConverter;
 
 @Entity
 @Table(name = "PROCEDIMENTO")
@@ -52,7 +52,7 @@ public class Procedure extends BaseObjectWithId {
     private String minAge;
 
     @Column(name = "ATIVO")
-    @Convert(converter = IntegerToBooleanConverver.class)
+    @Convert(converter = IntegerToBooleanConverter.class)
     private boolean active;
 
     public Procedure() {

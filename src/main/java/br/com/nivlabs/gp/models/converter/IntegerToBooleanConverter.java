@@ -2,7 +2,7 @@ package br.com.nivlabs.gp.models.converter;
 
 import javax.persistence.AttributeConverter;
 
-public class IntegerToBooleanConverver implements AttributeConverter<Boolean, Integer> {
+public class IntegerToBooleanConverter implements AttributeConverter<Boolean, Integer> {
 
     @Override
     public Integer convertToDatabaseColumn(Boolean attribute) {
