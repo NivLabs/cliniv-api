@@ -22,7 +22,7 @@ public class BooleanConverter implements AttributeConverter<Boolean, Character> 
             }
 
         }
-        return null;
+        return 'N';
     }
 
     @Override
@@ -30,7 +30,7 @@ public class BooleanConverter implements AttributeConverter<Boolean, Character> 
         if (dbData != null) {
             return dbData.equals('S');
         }
-        return null;
+        return false;
     }
 
 }
