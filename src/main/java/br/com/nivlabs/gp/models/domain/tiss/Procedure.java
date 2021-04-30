@@ -3,6 +3,7 @@ package br.com.nivlabs.gp.models.domain.tiss;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
+import br.com.nivlabs.gp.models.converter.IntegerToBooleanConverver;
 
 @Entity
 @Table(name = "PROCEDIMENTO")
@@ -50,6 +52,7 @@ public class Procedure extends BaseObjectWithId {
     private String minAge;
 
     @Column(name = "ATIVO")
+    @Convert(converter = IntegerToBooleanConverver.class)
     private boolean active;
 
     public Procedure() {
