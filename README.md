@@ -16,7 +16,7 @@ O NLGP-API é uma API Rest criada inicialmente como doação para hospitais que 
     <img alt="License" src="https://img.shields.io/badge/license-MIT-%2304D361" />
 </p>
 
-Atualmente encontra-se na versão 1.0.0
+Atualmente encontra-se na versão 1.1.0
 [Swagger](https://gestao-prontuario.herokuapp.com/swagger-ui.html)
 
 ---
@@ -26,7 +26,6 @@ Atualmente encontra-se na versão 1.0.0
 <ul>
   <li><a href="#funcionalidades-da-api">Funcionalidades da API</a></li>
   <li><a href="#mínimo-para-rodar">Mínimo para rodar</a></li>
-  <li><a href="#projeto-lombok">Projeto Lombok</a></li>
   <li><a href="#mysql-ou-mariadb">Configurando banco de dados</a></li>
   <li><a href="#como-rodar-a-api">Como rodar a API?</a></li>
   <li><a href="#como-contribuir">Como contribuir?</a></li>
@@ -50,6 +49,12 @@ Atualmente encontra-se na versão 1.0.0
 - [x] Fluxo padrão para atendimento ambulatorial
 - [x] Fluxo padrão para atendimento emergencial
 - [x] Cadastro de medicamentos e materiais
+- [x] Prescrição
+- [x] Anamnese
+- [x] Customização de relatórios
+- [x] Cadastro de operadoras de saúde
+- [x] Cadastro de procedimentos
+- [x] Cadastro de setores
 
 ---
 
@@ -57,58 +62,10 @@ Atualmente encontra-se na versão 1.0.0
 
 Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles:
 
-- Java 15 + **(Obrigatório)**
-- MariaDB Server 10.3+ **(Obrigatório se não for rodar via docker)**
-- Lombok 1.18.0 + **(Obrigatório)**
+- Java 16 **(Obrigatório)**
+- MariaDB Server 10.5+ **(Obrigatório se não for rodar via docker)**
 - Eclipse ou STS **(Obrigatório)**
 - Docker **(Obrigatório se for rodar via script)
-
----
-
-## Projeto Lombok
-
-### O que é o Lombok?
-O [Lombok](https://projectlombok.org/) é uma biblioteca Java focada em produtividade e redução de código boilerplate que por meio de anotações adicionadas ao nosso código ensinamos o compilador (maven ou gradle) durante o processo de compilação a criar código Java.
-
-### Por qual motivo devo configurar minha IDE para usar o Lombok?
-Este projeto foi desenvolvido utilizando o Lombok para criação de POJOs e DTOs, por este motivos, faz-se necessário configurar a sua IDE.
-
-### Como configurar?
-Obs: Este processo só é válido para IDEs baseadas em [Eclipse Project](https://www.eclipse.org/) (Eclipse IDE e STS).
-
-##### Passo 1
-
-- Navegar via terminal para o repositório do Lombok
-- Windows -> cd `C:\users\{usuario}\.m2\repository\org\projectlombok\lombok\{versao_baixada}`
-- Linux e Mac -> cd `~/.m2/repository/org/projectlombok/lombok/{versao_baixada}`
-
-##### Passo 2
-
-- Executar o jar do lombok utilizando o comando `java -jar lombok.{versao}.jar`
-
-##### Passo 3
-
-- Selecionar o Eclipse/STS que irá receber o Lombok
-
-##### Passo 4
-
-- Clicar em Install/Update
-
-##### Passo 5
-
-- Sair do instalador
-
-##### Passo 6
-
-- Reiniciar a IDE
-
-##### Passo 7
-
-- Realizar um Maven Update no projeto
-
-##### Mais informações
-
-Existe um manual mais detalhado de como instalar o plugin no Eclipse: [Criando uma API Rest de cadastro de contatos em 5 minutos com Spring Boot + Lombok](https://medium.com/@niv-labs/criando-uma-api-rest-de-cadastro-de-contatos-em-5-minutos-com-spring-boot-ce5ba775d2d8)
 
 ---
 
