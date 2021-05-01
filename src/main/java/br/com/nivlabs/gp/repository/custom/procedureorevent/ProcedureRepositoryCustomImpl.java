@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.gp.controller.filters.ProcedureFilters;
-import br.com.nivlabs.gp.enums.ActiveType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure_;
@@ -42,12 +41,7 @@ public class ProcedureRepositoryCustomImpl extends GenericCustomRepository<Proce
                                           root.get(Procedure_.description),
                                           root.get(Procedure_.baseValue),
                                           root.get(Procedure_.frequency),
-                                          root.get(Procedure_.specialAuthorization),
-                                          root.get(Procedure_.previousAudit),
-                                          root.get(Procedure_.specialty),
-                                          root.get(Procedure_.maxAge),
-                                          root.get(Procedure_.minAge),
-                                          root.get(Procedure_.active)));
+                                          root.get(Procedure_.specialAuthorization)));
         return getPage(filters, pageSettings, builder, criteria, root);
     }
 
@@ -63,10 +57,6 @@ public class ProcedureRepositoryCustomImpl extends GenericCustomRepository<Proce
         }
         if (!StringUtils.isNullOrEmpty(filters.getDescription())) {
             predicates.add(builder.like(root.get(Procedure_.description), filters.getDescription()));
-        }
-        if (filters.getActiveType() != null) {
-            predicates.add(builder.equal(root.get(Procedure_.active),
-                                         filters.getActiveType() == ActiveType.ACTIVE));
         }
         return predicates.toArray(new Predicate[predicates.size()]);
     }

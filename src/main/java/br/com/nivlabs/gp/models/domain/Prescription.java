@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import br.com.nivlabs.gp.models.BaseObjectWithId;
+import br.com.nivlabs.gp.models.converter.BooleanConverter;
 
 @Entity
 @Table(name = "PRESCRICAO")
@@ -43,9 +45,11 @@ public class Prescription extends BaseObjectWithId {
     private LocalDateTime datetimeEnd;
 
     @Column(name = "PRESCRICAO_ESPECIAL")
+    @Convert(converter = BooleanConverter.class)
     private boolean special;
 
     @Column(name = "INSERE_EVENTO")
+    @Convert(converter = BooleanConverter.class)
     private boolean insertToMedicalRecords;
 
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)

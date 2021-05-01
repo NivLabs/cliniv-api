@@ -3,6 +3,7 @@
  */
 package br.com.nivlabs.gp.service;
 
+import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure_;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
+import br.com.nivlabs.gp.models.dto.ProcedureInfoDTO;
 import br.com.nivlabs.gp.repository.ProcedureRepository;
 
 /**
@@ -28,6 +30,8 @@ public class ProcedureService implements GenericService {
 
     @Autowired
     private ProcedureRepository dao;
+    @Autowired
+    private Logger logger;
 
     public Page<ProcedureDTO> getResumedPage(ProcedureFilters filters, Pageable pageRequest) {
         return dao.resumedList(filters, pageRequest);
@@ -38,30 +42,33 @@ public class ProcedureService implements GenericService {
                 String.format("Procedimento com código %s não encontrado!", id)));
     }
 
-    public Procedure update(Long id, Procedure entity) {
+    public ProcedureInfoDTO update(Long id, ProcedureInfoDTO request) {
+        logger.info("Iniciando processo de atualização de procedimento :: {}", id);
         Procedure procedureOrEvent = findById(id);
-        BeanUtils.copyProperties(entity, procedureOrEvent, Procedure_.ID);
-        return dao.save(procedureOrEvent);
-    }
+        logger.info("Procedimento encontrado :: {}", procedureOrEvent.getDescription());
+        BeanUtils.copyProperties(request, procedureOrEvent, Procedure_.ID);
+        procedureOrEvent = dao.saveAndFlush(procedureOrEvent);
+        logger.info("Atualização concluída com sucesso!");
 
-    public void delete(Procedure entity) {
-        deleteById(entity.getId());
+        return request;
     }
 
     public void deleteById(Long id) {
+        logger.info("Iniciando processo de exclusão de procedimento por identificador :: {}", id);
         Procedure procedureOrEvent = findById(id);
+        logger.info("Procedimento que será excluído :: {}", procedureOrEvent.getDescription());
         dao.delete(procedureOrEvent);
+        logger.info("Procedimento excluído com sucesso!");
     }
 
-    public Procedure persist(Procedure entity) {
-        entity.setId(null);
-        return dao.save(entity);
-    }
-
-    public void enableDisable(Long id) {
-        Procedure procedure = findById(id);
-        procedure.setActive(!procedure.isActive());
-        update(id, procedure);
+    public ProcedureInfoDTO persist(ProcedureInfoDTO request) {
+        logger.info("Iniciando a criação de um novo procedimento :: {}", request.getDescription());
+        Procedure entity = new Procedure();
+        BeanUtils.copyProperties(request, entity, Procedure_.ID);
+        dao.saveAndFlush(entity);
+        request.setId(entity.getId());
+        logger.info("Criação do novo procedimento realizada com sucesso :: {} | {}", request.getId(), request.getDescription());
+        return request;
     }
 
 }
