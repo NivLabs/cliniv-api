@@ -5,10 +5,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.enums.AttendanceLevel;
+import br.com.nivlabs.gp.enums.BloodType;
 import br.com.nivlabs.gp.enums.Gender;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -50,6 +54,10 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Nome completo do paciente")
     private String fullName;
+
+    @ApiModelProperty("Tipo sanguíneo do paciente")
+    @Enumerated(EnumType.STRING)
+    private BloodType bloodType;
 
     @ApiModelProperty("Nome social do pacienteV")
     private String socialName;
@@ -139,6 +147,20 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    /**
+     * @return the bloodType
+     */
+    public BloodType getBloodType() {
+        return bloodType;
+    }
+
+    /**
+     * @param bloodType the bloodType to set
+     */
+    public void setBloodType(BloodType bloodType) {
+        this.bloodType = bloodType;
     }
 
     public String getSocialName() {
@@ -239,139 +261,49 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "MedicalRecordDTO [id=" + id + ", entryDateTime=" + entryDateTime + ", reasonForEntry=" + reasonForEntry + ", exitDateTime="
-                + exitDateTime + ", patientId=" + patientId + ", document=" + document + ", anamnesisDigitalDocuentId="
-                + anamnesisDigitalDocuentId + ", fullName=" + fullName + ", socialName=" + socialName + ", principalNumber="
-                + principalNumber + ", susNumber=" + susNumber + ", bornDate=" + bornDate + ", lastAccommodation=" + lastAccommodation
-                + ", gender=" + gender + ", events=" + events + ", medicines=" + medicines + ", evolutions=" + evolutions + ", allergies="
-                + allergies + ", attendanceLevel=" + attendanceLevel + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((allergies == null) ? 0 : allergies.hashCode());
-        result = prime * result + ((anamnesisDigitalDocuentId == null) ? 0 : anamnesisDigitalDocuentId.hashCode());
-        result = prime * result + ((attendanceLevel == null) ? 0 : attendanceLevel.hashCode());
-        result = prime * result + ((bornDate == null) ? 0 : bornDate.hashCode());
-        result = prime * result + ((document == null) ? 0 : document.hashCode());
-        result = prime * result + ((entryDateTime == null) ? 0 : entryDateTime.hashCode());
-        result = prime * result + ((events == null) ? 0 : events.hashCode());
-        result = prime * result + ((evolutions == null) ? 0 : evolutions.hashCode());
-        result = prime * result + ((exitDateTime == null) ? 0 : exitDateTime.hashCode());
-        result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
-        result = prime * result + ((gender == null) ? 0 : gender.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((lastAccommodation == null) ? 0 : lastAccommodation.hashCode());
-        result = prime * result + ((medicines == null) ? 0 : medicines.hashCode());
-        result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
-        result = prime * result + ((principalNumber == null) ? 0 : principalNumber.hashCode());
-        result = prime * result + ((reasonForEntry == null) ? 0 : reasonForEntry.hashCode());
-        result = prime * result + ((socialName == null) ? 0 : socialName.hashCode());
-        result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        MedicalRecordDTO other = (MedicalRecordDTO) obj;
-        if (allergies == null) {
-            if (other.allergies != null)
-                return false;
-        } else if (!allergies.equals(other.allergies))
-            return false;
-        if (anamnesisDigitalDocuentId == null) {
-            if (other.anamnesisDigitalDocuentId != null)
-                return false;
-        } else if (!anamnesisDigitalDocuentId.equals(other.anamnesisDigitalDocuentId))
-            return false;
-        if (attendanceLevel != other.attendanceLevel)
-            return false;
-        if (bornDate == null) {
-            if (other.bornDate != null)
-                return false;
-        } else if (!bornDate.equals(other.bornDate))
-            return false;
-        if (document == null) {
-            if (other.document != null)
-                return false;
-        } else if (!document.equals(other.document))
-            return false;
-        if (entryDateTime == null) {
-            if (other.entryDateTime != null)
-                return false;
-        } else if (!entryDateTime.equals(other.entryDateTime))
-            return false;
-        if (events == null) {
-            if (other.events != null)
-                return false;
-        } else if (!events.equals(other.events))
-            return false;
-        if (evolutions == null) {
-            if (other.evolutions != null)
-                return false;
-        } else if (!evolutions.equals(other.evolutions))
-            return false;
-        if (exitDateTime == null) {
-            if (other.exitDateTime != null)
-                return false;
-        } else if (!exitDateTime.equals(other.exitDateTime))
-            return false;
-        if (fullName == null) {
-            if (other.fullName != null)
-                return false;
-        } else if (!fullName.equals(other.fullName))
-            return false;
-        if (gender != other.gender)
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (lastAccommodation == null) {
-            if (other.lastAccommodation != null)
-                return false;
-        } else if (!lastAccommodation.equals(other.lastAccommodation))
-            return false;
-        if (medicines == null) {
-            if (other.medicines != null)
-                return false;
-        } else if (!medicines.equals(other.medicines))
-            return false;
-        if (patientId == null) {
-            if (other.patientId != null)
-                return false;
-        } else if (!patientId.equals(other.patientId))
-            return false;
-        if (principalNumber == null) {
-            if (other.principalNumber != null)
-                return false;
-        } else if (!principalNumber.equals(other.principalNumber))
-            return false;
-        if (reasonForEntry == null) {
-            if (other.reasonForEntry != null)
-                return false;
-        } else if (!reasonForEntry.equals(other.reasonForEntry))
-            return false;
-        if (socialName == null) {
-            if (other.socialName != null)
-                return false;
-        } else if (!socialName.equals(other.socialName))
-            return false;
-        if (susNumber == null) {
-            if (other.susNumber != null)
-                return false;
-        } else if (!susNumber.equals(other.susNumber))
-            return false;
-        return true;
+        StringBuilder builder = new StringBuilder();
+        builder.append("MedicalRecordDTO [id=");
+        builder.append(id);
+        builder.append(", entryDateTime=");
+        builder.append(entryDateTime);
+        builder.append(", reasonForEntry=");
+        builder.append(reasonForEntry);
+        builder.append(", exitDateTime=");
+        builder.append(exitDateTime);
+        builder.append(", patientId=");
+        builder.append(patientId);
+        builder.append(", document=");
+        builder.append(document);
+        builder.append(", anamnesisDigitalDocuentId=");
+        builder.append(anamnesisDigitalDocuentId);
+        builder.append(", fullName=");
+        builder.append(fullName);
+        builder.append(", bloodType=");
+        builder.append(bloodType);
+        builder.append(", socialName=");
+        builder.append(socialName);
+        builder.append(", principalNumber=");
+        builder.append(principalNumber);
+        builder.append(", susNumber=");
+        builder.append(susNumber);
+        builder.append(", bornDate=");
+        builder.append(bornDate);
+        builder.append(", lastAccommodation=");
+        builder.append(lastAccommodation);
+        builder.append(", gender=");
+        builder.append(gender);
+        builder.append(", events=");
+        builder.append(events);
+        builder.append(", medicines=");
+        builder.append(medicines);
+        builder.append(", evolutions=");
+        builder.append(evolutions);
+        builder.append(", allergies=");
+        builder.append(allergies);
+        builder.append(", attendanceLevel=");
+        builder.append(attendanceLevel);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

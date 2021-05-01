@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<!-- Created with Jaspersoft Studio version 6.13.0.final using JasperReports Library version 6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="typewriter_book_cover" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c50b24eb-eb33-413f-8e75-e7e20a5341fd">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -10,40 +10,75 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<parameter name="hospitalLogo" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Logo Base64"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="hospitalName" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Nome do Hospital"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="patientName" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Nome completo do paciente"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="documentType" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Tipo do documento"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="documentValue" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Valor do documento"]]></defaultValueExpression>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDb Prod"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ID_ATENDIMENTO" class="java.lang.Long">
+		<parameterDescription><![CDATA[Identificador único do atendimento]]></parameterDescription>
+		<defaultValueExpression><![CDATA["0"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="responsibleName" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Nome do responsavel"]]></defaultValueExpression>
+		<parameterDescription><![CDATA[Nome do Profissional]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Dra. Profissional"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="responsibleDocumentType" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Tipo do documento do responsável"]]></defaultValueExpression>
+		<parameterDescription><![CDATA[Tipo do Registro Profissional]]></parameterDescription>
+		<defaultValueExpression><![CDATA["CRM"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="responsibleDocumentValue" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Valor do documento do responsável"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="startHour" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Hora de início, ex: 14:00"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="endHour" class="java.lang.String">
-		<defaultValueExpression><![CDATA["Hora de encerramento, ex: 14:30"]]></defaultValueExpression>
+		<parameterDescription><![CDATA[Registro profissional]]></parameterDescription>
+		<defaultValueExpression><![CDATA["1551387435154"]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[]]>
+		<![CDATA[SELECT
+	(SELECT NOME FROM INSTITUTO I LIMIT 1) AS INST_NOME,
+	(SELECT
+		CASE
+			WHEN I.LOGO IS NULL THEN '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'
+			ELSE I.LOGO
+		END AS LOGO
+	FROM 	
+    INSTITUTO I
+    LIMIT 1) AS LOGO,
+	VIS.ID,
+	VIS.DH_ENTRADA,
+    CASE
+		WHEN VIS.DH_SAIDA IS NULL THEN sysdate()
+        ELSE VIS.DH_SAIDA
+	END AS DH_SAIDA,
+    CASE
+		WHEN PES_PAC.NOME_SOCIAL IS NOT NULL THEN PES_PAC.NOME_SOCIAL
+        ELSE PES_PAC.NOME_COMPLETO
+	END AS NOME_COMPLETO,
+    PES_PAC.CPF
+ FROM VISITA VIS
+	INNER JOIN PACIENTE PAC ON PAC.ID = VIS.ID_PACIENTE
+    INNER JOIN PESSOA_FISICA PES_PAC ON PAC.ID_PESSOA = PES_PAC.ID
+WHERE VIS.ID = $P{ID_ATENDIMENTO}]]>
 	</queryString>
+	<field name="INST_NOME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="INST_NOME"/>
+	</field>
+	<field name="LOGO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="LOGO"/>
+	</field>
+	<field name="ID" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="ID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
+	</field>
+	<field name="DH_ENTRADA" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="DH_ENTRADA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
+	</field>
+	<field name="DH_SAIDA" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="DH_SAIDA"/>
+	</field>
+	<field name="NOME_COMPLETO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOME_COMPLETO"/>
+	</field>
+	<field name="CPF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CPF"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PESSOA_FISICA"/>
+	</field>
 	<title>
 		<band height="841" splitType="Stretch">
 			<image hAlign="Center">
@@ -51,7 +86,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($P{hospitalLogo}.getBytes()))]]></imageExpression>
+				<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{LOGO}.getBytes()))]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement positionType="Float" x="30" y="218" width="534" height="30" uuid="7f58d454-cae0-4ebb-9ccd-c885124eb525"/>
@@ -66,7 +101,7 @@
 				<textElement textAlignment="Right">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Data de geração:  " + DATEFORMAT(TODAY( ),"dd/MM/yyyy")]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Data de geração:  " + DATEFORMAT(TODAY(),"dd/MM/yyyy")]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement positionType="Float" x="30" y="141" width="534" height="50" uuid="1a3cc99a-f7aa-4688-b860-40d9d38e0db6"/>
@@ -74,7 +109,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="Monospaced" size="18"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{hospitalName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{INST_NOME}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement positionType="Float" x="24" y="278" width="547" height="120" uuid="cee6aea5-c96f-45d9-9591-6356abad57e2"/>
@@ -82,7 +117,8 @@
 				<textElement textAlignment="Justified">
 					<font fontName="Monospaced" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Declaro para os devidos fins, que o(a) Sr(a). " + $P{patientName} + ", cujo o " + $P{documentType} + " de valor " +$P{documentValue} + " , esteve em atendimento na data " +  DATEFORMAT(TODAY( ),"dd/MM/yyyy") + " no período de " + $P{startHour} + " até às " + $P{endHour}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Declaro para os devidos fins, que o(a) Sr(a). " + $F{NOME_COMPLETO} + ", cujo o documento do tipo CPF de valor " +
+$F{CPF} + ", esteve em atendimento entre " + $F{DH_ENTRADA}.toLocalDateTime().format( java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + " e " +  $F{DH_SAIDA}.toLocalDateTime().format( java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement positionType="Float" x="37" y="730" width="403" height="20" uuid="38cd7206-1531-4dcf-8d77-35442a29ebb9"/>

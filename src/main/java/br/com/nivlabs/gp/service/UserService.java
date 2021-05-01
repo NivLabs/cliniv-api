@@ -65,7 +65,7 @@ public class UserService {
         Person person = entityFromDb.getPerson();
         BeanUtils.copyProperties(person, responseDTO, Person_.ID);
         BeanUtils.copyProperties(entityFromDb, responseDTO);
-        responseDTO.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+        responseDTO.setDocument(new DocumentDTO(null, DocumentType.CPF, person.getCpf(), null, null, null, null));
 
         if (person.getAddress() != null) {
             AddressDTO address = new AddressDTO();
@@ -94,7 +94,7 @@ public class UserService {
             response.setAddress(address);
         }
 
-        response.setDocument(new DocumentDTO(DocumentType.CPF, userFromDb.getPerson().getCpf()));
+        response.setDocument(new DocumentDTO(null, DocumentType.CPF, userFromDb.getPerson().getCpf(), null, null, null, null));
 
         if (userFromDb.getRoles() != null && !userFromDb.getRoles().isEmpty()) {
             response.setRoles(userFromDb.getRoles().stream().map(this::convertRole).collect(Collectors.toList()));
@@ -176,7 +176,7 @@ public class UserService {
 
         UserInfoDTO userInfo = new UserInfoDTO();
         BeanUtils.copyProperties(personFromDb, userInfo, Person_.ID);
-        userInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+        userInfo.setDocument(new DocumentDTO(null, DocumentType.CPF, personFromDb.getCpf(), null, null, null, null));
 
         if (personFromDb.getAddress() != null) {
             AddressDTO address = new AddressDTO();
@@ -196,7 +196,7 @@ public class UserService {
             UserInfoDTO userInfo = new UserInfoDTO();
             BeanUtils.copyProperties(personFromDb, userInfo, Person_.ID);
             BeanUtils.copyProperties(user, userInfo);
-            userInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+            userInfo.setDocument(new DocumentDTO(null, DocumentType.CPF, personFromDb.getCpf(), null, null, null, null));
 
             if (personFromDb.getAddress() != null) {
                 AddressDTO address = new AddressDTO();

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.13.0.final using JasperReports Library version 6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Anamnese" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="68c5ae44-61b1-41d2-8da8-418815b473fe">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Precricao" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="68c5ae44-61b1-41d2-8da8-418815b473fe">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MariaDB Local"/>
 	<subDataset name="ProdDb" uuid="e728a847-0768-47ee-8483-3cc4246c57fc">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ProdDb"/>
@@ -10,8 +10,8 @@
 			<![CDATA[]]>
 		</queryString>
 	</subDataset>
-	<parameter name="VISIT_ID" class="java.lang.Long" nestedType="java.lang.Long">
-		<parameterDescription><![CDATA[CÓDIGO DO ATENDIMENTO]]></parameterDescription>
+	<parameter name="PRESC_ID" class="java.lang.Long" nestedType="java.lang.Long">
+		<parameterDescription><![CDATA[CÓDIGO DA PRESCRIÇÃO]]></parameterDescription>
 	</parameter>
 	<parameter name="HOSPITAL_LOGO" class="java.lang.String"/>
 	<parameter name="DOC_TITLE" class="java.lang.String"/>
@@ -61,24 +61,37 @@
 	END DH_SAIDA,
     
     -- INFORMAÇÕES DA ANAMNESE
-    ANAMNESE.PERGUNTA,
-    CASE ANAMNESE.RESPOSTA
-		WHEN 'true' THEN 'SIM'
-        WHEN 'false' THEN 'NÃO'
-        ELSE ANAMNESE.RESPOSTA
-	END AS RESPOSTA,
+    PRESCRICAO.ID AS ID_PRESCRICAO,
+    PRESCRICAO.DATA_INICIO AS DH_PRESC_INI,
+    PRESCRICAO.DATA_FIM AS DH_PRESC_FIM,
+    ITEM.SEQUENCIAL AS ITEM_SEQ,
+    ITEM.DESCRICAO AS ITEM_DESC,
+    ITEM.VIA_ADM,
+    ITEM.DOSAGEM,
+    ITEM.INTERVALO,
+    CASE
+    	WHEN ITEM.TIPO_INTERVALO = 'HOUR' THEN 'h'
+    	WHEN ITEM.TIPO_INTERVALO = 'MINUTE' THEN 'm'
+    	WHEN ITEM.TIPO_INTERVALO = 'DAY' THEN 'D'
+    	WHEN ITEM.TIPO_INTERVALO = 'WEEK' THEN 'S'
+		 ELSE 'N/I'
+    END TIPO_INTERVALO,
+    ITEM.OBSERVACOES,
+    UNID.TERMO,
     CONCAT(INSTITUTO.LOGRADOURO, ', ', INSTITUTO.NUMERO, CASE WHEN INSTITUTO.COMPLEMENTO IS NULL THEN ' - ' ELSE CONCAT(' - Complemento: ', INSTITUTO.COMPLEMENTO, " - ") END,  INSTITUTO.BAIRRO, " - ", INSTITUTO.CIDADE, " - ", INSTITUTO.ESTADO) AS HOSP_ENDERECO,
     INSTITUTO.TELEFONE AS HOSP_TELEFONE
-FROM ANAMNESE ANAMNESE
-	INNER JOIN VISITA VISITA ON VISITA.ID = ANAMNESE.ID_VISITA
+FROM PRESCRICAO PRESCRICAO
+	INNER JOIN VISITA VISITA ON VISITA.ID = PRESCRICAO.ID_VISITA
 	INNER JOIN PACIENTE PACIENTE ON PACIENTE.ID = VISITA.ID_PACIENTE
 	INNER JOIN PESSOA_FISICA PESSOA ON PESSOA.ID = PACIENTE.ID_PESSOA
-    INNER JOIN INSTITUTO
-WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
+	INNER JOIN ITEM_PRESCRICAO ITEM ON ITEM.ID_PRESCRICAO = PRESCRICAO.ID
+	LEFT JOIN UNIDADE_MEDIDA UNID ON UNID.ID = ITEM.ID_UNIDADE_MEDIDA
+   INNER JOIN INSTITUTO
+WHERE PRESCRICAO.ID = $P{PRESC_ID};]]>
 	</queryString>
 	<field name="ID_PACIENTE" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.label" value="ID_PACIENTE"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="PACIENTE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="paciente"/>
 	</field>
 	<field name="CNS" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="CNS"/>
@@ -86,6 +99,7 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 	</field>
 	<field name="NOME_COMPLETO" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="NOME_COMPLETO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pessoa_fisica"/>
 	</field>
 	<field name="DATA_NASCIMENTO" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="DATA_NASCIMENTO"/>
@@ -111,40 +125,76 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 	</field>
 	<field name="ID_VISITA" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.label" value="ID_VISITA"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visita"/>
 	</field>
 	<field name="TIPO_ENTRADA" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="TIPO_ENTRADA"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visita"/>
 	</field>
 	<field name="DH_ENTRADA" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.label" value="DH_ENTRADA"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="visita"/>
 	</field>
 	<field name="DH_SAIDA" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="DH_SAIDA"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="VISITA"/>
 	</field>
-	<field name="PERGUNTA" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="PERGUNTA"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ANAMNESE"/>
+	<field name="ID_PRESCRICAO" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="ID_PRESCRICAO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="prescricao"/>
 	</field>
-	<field name="RESPOSTA" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="RESPOSTA"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="ANAMNESE"/>
+	<field name="DH_PRESC_INI" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="DH_PRESC_INI"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="prescricao"/>
+	</field>
+	<field name="DH_PRESC_FIM" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="DH_PRESC_FIM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="prescricao"/>
+	</field>
+	<field name="ITEM_SEQ" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ITEM_SEQ"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_prescricao"/>
+	</field>
+	<field name="ITEM_DESC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ITEM_DESC"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_prescricao"/>
+	</field>
+	<field name="VIA_ADM" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="VIA_ADM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_prescricao"/>
+	</field>
+	<field name="DOSAGEM" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="DOSAGEM"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_prescricao"/>
+	</field>
+	<field name="INTERVALO" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="INTERVALO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_prescricao"/>
+	</field>
+	<field name="TIPO_INTERVALO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TIPO_INTERVALO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_prescricao"/>
+	</field>
+	<field name="OBSERVACOES" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="OBSERVACOES"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_prescricao"/>
+	</field>
+	<field name="TERMO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TERMO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="unidade_medida"/>
 	</field>
 	<field name="HOSP_ENDERECO" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="HOSP_ENDERECO"/>
 	</field>
 	<field name="HOSP_TELEFONE" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="HOSP_TELEFONE"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="INSTITUTO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="instituto"/>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="230" splitType="Stretch">
+		<band height="213" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<image hAlign="Center">
 				<reportElement x="0" y="0" width="179" height="79" uuid="893db2f2-5d90-4191-985f-f2cca18b90ec">
@@ -160,7 +210,7 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 				<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($P{HOSPITAL_LOGO}.getBytes()))]]></imageExpression>
 			</image>
 			<rectangle>
-				<reportElement x="0" y="102" width="555" height="128" uuid="ac6587b4-3039-40c9-bc85-4d8b35dc0909"/>
+				<reportElement x="0" y="102" width="555" height="108" uuid="ac6587b4-3039-40c9-bc85-4d8b35dc0909"/>
 			</rectangle>
 			<rectangle>
 				<reportElement x="380" y="0" width="175" height="79" uuid="d5dd515f-6857-4350-815f-6a12a9f509fd"/>
@@ -258,7 +308,7 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{DH_ENTRADA}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/YYYY hh:mm").format($F{DH_ENTRADA})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="125" y="123" width="174" height="15" isRemoveLineWhenBlank="true" uuid="591f340d-9069-4b7d-b675-f07565119d64"/>
@@ -337,38 +387,110 @@ WHERE ANAMNESE.ID_VISITA = $P{VISIT_ID};]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{DH_SAIDA}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="315" y="167" width="134" height="15" uuid="3fd3e554-163f-4550-8cc3-7f58ccc69af7"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<text><![CDATA[Início de vigência:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="449" y="167" width="94" height="15" isRemoveLineWhenBlank="true" uuid="e8880eae-1169-47b5-bd08-eeb90cb37684"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/YYYY hh:mm").format($F{DH_PRESC_INI})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="315" y="182" width="134" height="15" uuid="9c87ac41-4475-4979-bdbb-8e81d6e92fc4"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<text><![CDATA[Fim de vigência:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="449" y="182" width="94" height="15" isRemoveLineWhenBlank="true" uuid="58594c83-fa55-45c2-ad03-60b4c32937ce"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/YYYY hh:mm").format($F{DH_PRESC_FIM})]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
+	<columnHeader>
+		<band height="26">
+			<staticText>
+				<reportElement x="0" y="0" width="30" height="21" uuid="c08d891a-4758-4ce1-8d00-364dc7c3caf4"/>
+				<text><![CDATA[SEQ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="0" width="339" height="21" uuid="862fd072-3f5b-4781-8219-dee55528dea9"/>
+				<text><![CDATA[DESCRIÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="369" y="0" width="22" height="21" uuid="c7d88fb1-18b0-4838-9fc4-99dbfa1e102d"/>
+				<text><![CDATA[VIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="391" y="0" width="58" height="21" uuid="5ce6f3de-345d-4d89-8a49-87c852e14a66"/>
+				<text><![CDATA[DOSAGEM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="449" y="0" width="40" height="21" uuid="9ef5dd64-9abf-4446-b833-b6a2b89c9d8d"/>
+				<text><![CDATA[TERMO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="489" y="0" width="66" height="21" uuid="5b7e2b2d-2010-4f13-bc7b-bb8491f45904"/>
+				<text><![CDATA[INTERVALO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="21" width="555" height="1" uuid="312d31d0-ae71-4d80-9b73-ea6b175ec253"/>
+			</rectangle>
+		</band>
+	</columnHeader>
 	<detail>
-		<band height="57" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<textField>
-				<reportElement x="67" y="10" width="482" height="19" uuid="d9f6a75a-536d-46bc-a57f-0cee5e635d24"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PERGUNTA}]]></textFieldExpression>
+				<reportElement x="5" y="0" width="30" height="18" uuid="4e64f244-b0a2-4076-9012-a728660d57cd"/>
+				<textFieldExpression><![CDATA[$F{ITEM_SEQ}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="35" y="0" width="334" height="18" uuid="6b47f3e7-0d27-4cf1-b307-7118f1932117"/>
+				<textFieldExpression><![CDATA[$F{ITEM_DESC}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="34" height="18" uuid="bdbfc1af-96f1-4fdb-a0fc-ea7e544b4250"/>
+				<textFieldExpression><![CDATA[$F{VIA_ADM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="405" y="0" width="50" height="18" uuid="27ca6e0c-7e05-4f30-802b-4c8fe0e8812a"/>
+				<textFieldExpression><![CDATA[$F{DOSAGEM}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="455" y="0" width="44" height="18" uuid="706e7cc8-a20b-4991-ada8-04824ae72106"/>
+				<textFieldExpression><![CDATA[$F{TERMO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="500" y="0" width="48" height="18" uuid="6efc23b2-f440-4f63-8fc0-b325004500d7"/>
+				<textFieldExpression><![CDATA[$F{INTERVALO} + "" + $F{TIPO_INTERVALO} + "/" + $F{INTERVALO} + "" + $F{TIPO_INTERVALO}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="110" splitType="Immediate">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<printWhenExpression><![CDATA[new Boolean($F{OBSERVACOES} != null)]]></printWhenExpression>
+			<textField>
+				<reportElement x="59" y="20" width="483" height="90" uuid="175f741e-454e-4b4c-88c4-6419dc770ab2"/>
+				<textFieldExpression><![CDATA[$F{OBSERVACOES}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="7" y="10" width="60" height="18" uuid="ceb0abb3-0490-462b-acce-d316f5f06491"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[PERGUNTA]]></text>
+				<reportElement x="50" y="0" width="74" height="19" uuid="678f94a9-7971-4214-b3af-c41cc2ceb7cf"/>
+				<text><![CDATA[INSTRUÇÕES]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="67" y="30" width="482" height="18" uuid="35f8aa13-bfbe-4b44-8356-3faf807f9a36"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{RESPOSTA}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="7" y="30" width="60" height="19" uuid="de8d1f51-b07b-45db-b4bc-4a92faa35af1"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[RESPOSTA]]></text>
-			</staticText>
+		</band>
+		<band height="10">
+			<rectangle>
+				<reportElement x="0" y="4" width="555" height="1" uuid="6b3a23e3-d969-4fb7-b2b6-9e3c8c4d2367"/>
+			</rectangle>
 		</band>
 	</detail>
 	<pageFooter>

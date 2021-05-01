@@ -45,10 +45,9 @@ public class DynamicFormRepositoryCustomImpl extends GenericCustomRepository<Dyn
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<DynamicForm> root) {
-        if (!(customFilters instanceof DynamicFormFilters)) {
+        if (!(customFilters instanceof DynamicFormFilters filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de atendimento");
         }
-        DynamicFormFilters filters = (DynamicFormFilters) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {

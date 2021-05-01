@@ -65,10 +65,9 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Attendance> root) {
-        if (!(customFilters instanceof AttendanceFilters)) {
+        if (!(customFilters instanceof AttendanceFilters filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de atendimento");
         }
-        AttendanceFilters filters = (AttendanceFilters) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {

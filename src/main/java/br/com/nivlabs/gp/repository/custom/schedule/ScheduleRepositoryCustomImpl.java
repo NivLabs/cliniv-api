@@ -55,10 +55,9 @@ public class ScheduleRepositoryCustomImpl extends GenericCustomRepository<Schedu
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Schedule> root) {
-        if (!(customFilters instanceof ScheduleFilters)) {
+        if (!(customFilters instanceof ScheduleFilters filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de agendamento");
         }
-        ScheduleFilters filters = (ScheduleFilters) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getProfessionalId()) && StringUtils.isNumeric(filters.getProfessionalId())) {

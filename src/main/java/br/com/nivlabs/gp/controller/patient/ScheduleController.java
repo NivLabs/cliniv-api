@@ -48,7 +48,7 @@ public class ScheduleController {
         return ResponseEntity.ok(principalService.findByFilters(filters, pageSettings));
     }
 
-    @ApiOperation(nickname = "schedule-get", value = "Busca um agendamento")
+    @ApiOperation(nickname = "schedule-get-id", value = "Busca um agendamento")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('AGENDA_ESCRITA', 'AGENDA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<ScheduleInfoDTO> findById(@PathVariable("id") Long id) {

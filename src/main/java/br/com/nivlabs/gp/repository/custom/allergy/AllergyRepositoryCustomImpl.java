@@ -43,10 +43,9 @@ public class AllergyRepositoryCustomImpl extends GenericCustomRepository<Allergy
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Allergy> root) {
-        if (!(customFilters instanceof AllergyFilters)) {
+        if (!(customFilters instanceof AllergyFilters filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de alergias");
         }
-        AllergyFilters filters = (AllergyFilters) customFilters;
 
         List<Predicate> predicates = new ArrayList<>();
 

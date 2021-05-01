@@ -1,7 +1,12 @@
 package br.com.nivlabs.gp.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +28,8 @@ import br.com.nivlabs.gp.models.domain.PatientAllergy;
 import br.com.nivlabs.gp.models.domain.Patient_;
 import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.PersonAddress;
+import br.com.nivlabs.gp.models.domain.PersonDocument;
+import br.com.nivlabs.gp.models.domain.PersonDocumentPK;
 import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
@@ -33,6 +40,9 @@ import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
 import br.com.nivlabs.gp.repository.HealthPlanRepository;
 import br.com.nivlabs.gp.repository.PatientAllergyRepository;
 import br.com.nivlabs.gp.repository.PatientRepository;
+import br.com.nivlabs.gp.repository.PersonDocumentRepository;
+import br.com.nivlabs.gp.repository.PersonRepository;
+import br.com.nivlabs.gp.util.DocumentValidator;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
@@ -48,6 +58,9 @@ public class PatientService implements GenericService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Autowired
     private PatientRepository dao;
     @Autowired
@@ -58,7 +71,9 @@ public class PatientService implements GenericService {
     private AttendanceService attendanceService;
 
     @Autowired
-    private PersonService personService;
+    private PersonRepository personRepo;
+    @Autowired
+    private PersonDocumentRepository docRepo;
 
     /**
      * Busca uma página de pacientes
@@ -77,7 +92,8 @@ public class PatientService implements GenericService {
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
         BeanUtils.copyProperties(person, patientInfo, Person_.ID);
-        patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+        patientInfo.setDocument(new DocumentDTO(null, DocumentType.CPF, person.getCpf(), null, null, null, null));
+        patientInfo.setDocuments(convertDocuments(person.getDocuments()));
 
         if (person.getAddress() != null) {
             AddressDTO address = new AddressDTO();
@@ -123,11 +139,17 @@ public class PatientService implements GenericService {
      * @return
      */
     private PatientInfoDTO findPersonByCpf(String cpf) {
-        Person personFromDb = personService.findByCpf(cpf);
+        if (StringUtils.isNullOrEmpty(cpf)) {
+            throw new HttpException(HttpStatus.NOT_FOUND,
+                    "O CPF informado é nulo, informe um CPF para que a consulta possa ser realizada");
+        }
+        Person personFromDb = personRepo.findByCpf(cpf)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Paciente não encontrado no CPF " + cpf));
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
         BeanUtils.copyProperties(personFromDb, patientInfo, Person_.ID);
-        patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+        patientInfo.setDocument(new DocumentDTO(null, DocumentType.CPF, personFromDb.getCpf(), null, null, null, null));
+        patientInfo.setDocuments(convertDocuments(personFromDb.getDocuments()));
 
         if (personFromDb.getAddress() != null) {
             AddressDTO address = new AddressDTO();
@@ -137,6 +159,27 @@ public class PatientService implements GenericService {
         setPatientHistory(patientInfo);
 
         return patientInfo;
+    }
+
+    /**
+     * Converte a lista de documentos de uma pessoa
+     * 
+     * @param documents
+     * @return
+     */
+    private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
+        List<DocumentDTO> convertedDocuments = new ArrayList<>();
+
+        documents.forEach(doc -> {
+            DocumentDTO convertedDoc = new DocumentDTO();
+            BeanUtils.copyProperties(doc, convertedDoc);
+            convertedDoc.setPersonId(doc.getId().getPersonId());
+            convertedDoc.setType(doc.getId().getType());
+            convertedDoc.setValue(doc.getId().getValue());
+            convertedDocuments.add(convertedDoc);
+        });
+
+        return convertedDocuments;
     }
 
     /**
@@ -154,6 +197,7 @@ public class PatientService implements GenericService {
             PatientInfoDTO patientInfo = new PatientInfoDTO();
             BeanUtils.copyProperties(personFromDb, patientInfo, Patient_.ID);
             patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+            patientInfo.setDocuments(convertDocuments(personFromDb.getDocuments()));
 
             if (personFromDb.getAddress() != null) {
                 AddressDTO address = new AddressDTO();
@@ -191,7 +235,8 @@ public class PatientService implements GenericService {
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
         BeanUtils.copyProperties(personFromDb, patientInfo, Patient_.ID);
-        patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
+        patientInfo.setDocument(new DocumentDTO(null, DocumentType.CPF, personFromDb.getCpf(), null, null, null, null));
+        patientInfo.setDocuments(convertDocuments(personFromDb.getDocuments()));
 
         if (personFromDb.getAddress() != null) {
             AddressDTO address = new AddressDTO();
@@ -221,8 +266,9 @@ public class PatientService implements GenericService {
      * @return
      */
     public PatientInfoDTO update(Long id, PatientInfoDTO entity) {
-        if (entity.getDocument() == null || (entity.getDocument() != null
-                && (entity.getDocument().getValue() == null || entity.getDocument().getType() != DocumentType.CPF))) {
+        if (entity.getDocument() != null
+                && (entity.getDocument().getValue() != null && !DocumentValidator.isValidCPF(entity.getDocument().getValue())
+                        && entity.getDocument().getType() != DocumentType.CPF)) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Tipo do documento inválido, informe um documento válido.");
         }
@@ -233,7 +279,8 @@ public class PatientService implements GenericService {
                     entity.getFullName() == null ? "Nome não informado" : entity.getFullName());
         checkSusCode(entity, patient);
         try {
-            patientCheckIfExistsByCpf(entity.getDocument().getValue(), patient.getId());
+            if (entity.getDocument() != null && entity.getDocument().getValue() != null)
+                patientCheckIfExistsByCpf(entity.getDocument().getValue(), patient.getId());
         } catch (HttpException e) {
             if (e.getStatus() == HttpStatus.NOT_FOUND) {
                 logger.info("O CPF {} está disponível para uso...", entity.getDocument().getValue());
@@ -241,19 +288,54 @@ public class PatientService implements GenericService {
                 throw e;
             }
         }
-        Person entityFromDb = patient.getPerson();
+        Person entityFromDb = personRepo.findById(patient.getPerson().getId())
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Cadastro de pessoa não localizado!"));
+
         checkDocument(entity, patient, entityFromDb);
+
         BeanUtils.copyProperties(entity, entityFromDb, Patient_.ID, Patient_.ALLERGIES, BaseObjectWithCreatedAt_.CREATED_AT);
         addressProcess(entity, entityFromDb);
-        personService.update(entityFromDb.getId(), entityFromDb);
+        logger.info("Salvando informações da pessoa física...");
+        personRepo.saveAndFlush(entityFromDb);
+
+        documentsProcess(entity, entityFromDb);
+
         BeanUtils.copyProperties(entity, patient, Patient_.ID, Patient_.ALLERGIES, BaseObjectWithCreatedAt_.CREATED_AT);
         handlePatientType(patient);
         handleHealthPlah(entity, patient);
-        dao.save(patient);
+        logger.info("Salvando informações do paciente...");
+        dao.saveAndFlush(patient);
 
         logger.info("Cadastro do paciente :: {} | {} :: atualizado com sucesso!", entity.getId(), entity.getFullName());
 
         return entity;
+    }
+
+    /**
+     * Processa documentos antes da persistência
+     * 
+     * @param entity
+     * @param entityFromDb
+     */
+    private void documentsProcess(PatientInfoDTO entity, Person entityFromDb) {
+        logger.info("Iniciando processo de checagem de documentos...");
+        if (entityFromDb != null) {
+            logger.info("Removendo documentos anteriores...");
+            docRepo.deleteByPerson(new Person(entityFromDb.getId()));
+            docRepo.flush();
+        }
+        if (entity.getDocuments() != null && entity.getDocuments().size() > 0) {
+            logger.info("Adicionando novos documentos...");
+            entity.getDocuments().forEach(document -> {
+                PersonDocument convertedDoc = new PersonDocument();
+                BeanUtils.copyProperties(document, convertedDoc);
+                convertedDoc.setPerson(new Person(entityFromDb.getId()));
+                convertedDoc.setId(new PersonDocumentPK(entityFromDb.getId(), document.getType(), document.getValue()));
+                docRepo.saveAndFlush(convertedDoc);
+                logger.info("Documento adicionado :: {}", document);
+            });
+        }
+        logger.info("Processamento de documentos finalizado com sucesso!");
     }
 
     /**
@@ -283,6 +365,7 @@ public class PatientService implements GenericService {
     /**
      * Cria um novo paciente
      */
+    @Transactional
     public PatientInfoDTO persist(PatientInfoDTO entity) {
         entity.setId(null);
 
@@ -291,13 +374,11 @@ public class PatientService implements GenericService {
         logger.info("Copiando as propriedades da requisição para o objeto de negócio...");
         BeanUtils.copyProperties(entity, personFromDb, Person_.ID);
         personFromDb.setCpf(entity.getDocument().getValue());
-
         addressProcess(entity, personFromDb);
+        logger.info("Salvando informações da pessoa física...");
+        personRepo.saveAndFlush(personFromDb);
 
-        if (personFromDb.getId() != null)
-            personService.update(personFromDb.getId(), personFromDb);
-        else
-            personService.persist(personFromDb);
+        documentsProcess(entity, personFromDb);
 
         Patient newPatient = new Patient();
         newPatient.setPerson(personFromDb);
@@ -306,7 +387,8 @@ public class PatientService implements GenericService {
 
         handlePatientType(newPatient);
         handleHealthPlah(entity, newPatient);
-        dao.save(newPatient);
+        logger.info("Salvando informações do paciente...");
+        dao.saveAndFlush(newPatient);
 
         entity.setId(newPatient.getId());
         return entity;
@@ -319,15 +401,15 @@ public class PatientService implements GenericService {
      * @return
      */
     private Person getValidPerson(PatientInfoDTO entity) {
-        Person personFromDb;
-        if (entity.getDocument() == null || (entity.getDocument() != null
-                && (entity.getDocument().getValue() == null || entity.getDocument().getType() != DocumentType.CPF))) {
+        Person personFromDb = new Person();
+        if (entity.getDocument() != null && entity.getDocument().getValue() != null && entity.getDocument().getType() != DocumentType.CPF) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Tipo do documento inválido, informe um documento válido.");
         }
 
         try {
-            patientCheckIfExistsByCpf(entity.getDocument().getValue(), entity.getId());
+            if (entity.getDocument() != null && !StringUtils.isNullOrEmpty(entity.getDocument().getValue()))
+                patientCheckIfExistsByCpf(entity.getDocument().getValue(), entity.getId());
         } catch (HttpException e) {
             if (e.getStatus() == HttpStatus.NOT_FOUND) {
                 logger.info("Nenhum cadastro de paciente encontrado :: CPF da busca -> {}", entity.getDocument().getValue());
@@ -339,13 +421,16 @@ public class PatientService implements GenericService {
         }
 
         try {
-            logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
-            personFromDb = personService.findByCpf(entity.getDocument().getValue());
+            if (entity.getDocument() != null && !StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
+                logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
+                personFromDb = personRepo.findByCpf(entity.getDocument().getValue())
+                        .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Nenhum anexado à este documento"));
+            }
         } catch (HttpException e) {
             logger.info(
                         "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
                         entity.getDocument().getType(), entity.getDocument().getValue());
-            personFromDb = new Person();
+
         }
         return personFromDb;
     }
@@ -418,6 +503,8 @@ public class PatientService implements GenericService {
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                         "Já existe um outro paciente utilizando este CPF, você não pode utilizar neste cadastro.");
             }
+        } else {
+            entityFromDb.setCpf(null);
         }
     }
 

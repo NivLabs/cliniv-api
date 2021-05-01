@@ -208,7 +208,7 @@ public class ScheduleService implements GenericService {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "O cadastro do paciente está sem CPF informado, favor completar o cadastro antes de realizar um agendamento");
         }
-        DocumentDTO document = new DocumentDTO(DocumentType.CPF, source.getCpf());
+        DocumentDTO document = new DocumentDTO(null, DocumentType.CPF, source.getCpf(), null, null, null, null);
         target.setDocument(document);
     }
 
@@ -223,7 +223,7 @@ public class ScheduleService implements GenericService {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "O cadastro do paciente está sem CPF informado, favor completar o cadastro antes de realizar um agendamento");
         }
-        DocumentDTO document = new DocumentDTO(DocumentType.CPF, source.getCpf());
+        DocumentDTO document = new DocumentDTO(null, DocumentType.CPF, source.getCpf(), null, null, null, null);
         target.setDocument(document);
     }
 }

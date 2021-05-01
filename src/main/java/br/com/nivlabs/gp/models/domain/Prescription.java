@@ -1,11 +1,19 @@
 package br.com.nivlabs.gp.models.domain;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import br.com.nivlabs.gp.models.BaseObjectWithId;
@@ -20,20 +28,32 @@ public class Prescription extends BaseObjectWithId {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_VISITA")
     private Attendance attendance;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_RESPONSAVEL")
     private Responsible responsible;
 
-    public Prescription(Long id, Attendance attendance, Responsible responsible) {
-        super();
-        this.id = id;
-        this.attendance = attendance;
-        this.responsible = responsible;
-    }
+    @Column(name = "DATA_INICIO")
+    private LocalDateTime datetimeInit;
+
+    @Column(name = "DATA_FIM")
+    private LocalDateTime datetimeEnd;
+
+    @Column(name = "PRESCRICAO_ESPECIAL")
+    private boolean special;
+
+    @Column(name = "INSERE_EVENTO")
+    private boolean insertToMedicalRecords;
+
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_RESPONSAVEL_CANCEL")
+    private Responsible responsibleForCancel;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "prescription")
+    private List<PrescriptionItem> items = new ArrayList<>();
 
     public Prescription() {
         super();
@@ -63,46 +83,83 @@ public class Prescription extends BaseObjectWithId {
         this.responsible = responsible;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((attendance == null) ? 0 : attendance.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((responsible == null) ? 0 : responsible.hashCode());
-        return result;
+    public List<PrescriptionItem> getItems() {
+        return items;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Prescription other = (Prescription) obj;
-        if (attendance == null) {
-            if (other.attendance != null)
-                return false;
-        } else if (!attendance.equals(other.attendance))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (responsible == null) {
-            if (other.responsible != null)
-                return false;
-        } else if (!responsible.equals(other.responsible))
-            return false;
-        return true;
+    public void setItems(List<PrescriptionItem> items) {
+        this.items = items;
+    }
+
+    public LocalDateTime getDatetimeInit() {
+        return datetimeInit;
+    }
+
+    public void setDatetimeInit(LocalDateTime datetimeInit) {
+        this.datetimeInit = datetimeInit;
+    }
+
+    public LocalDateTime getDatetimeEnd() {
+        return datetimeEnd;
+    }
+
+    public void setDatetimeEnd(LocalDateTime datetimeEnd) {
+        this.datetimeEnd = datetimeEnd;
+    }
+
+    public boolean isSpecial() {
+        return special;
+    }
+
+    public void setSpecial(boolean special) {
+        this.special = special;
+    }
+
+    public boolean isInsertToMedicalRecords() {
+        return insertToMedicalRecords;
+    }
+
+    public void setInsertToMedicalRecords(boolean insertToMedicalRecords) {
+        this.insertToMedicalRecords = insertToMedicalRecords;
+    }
+
+    /**
+     * @return the responsibleForCancel
+     */
+    public Responsible getResponsibleForCancel() {
+        return responsibleForCancel;
+    }
+
+    /**
+     * @param responsibleForCancel the responsibleForCancel to set
+     */
+    public void setResponsibleForCancel(Responsible responsibleForCancel) {
+        this.responsibleForCancel = responsibleForCancel;
     }
 
     @Override
     public String toString() {
-        return "Prescription [id=" + id + ", attendance=" + attendance + ", responsible=" + responsible + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Prescription [id=");
+        builder.append(id);
+        builder.append(", attendance=");
+        builder.append(attendance);
+        builder.append(", responsible=");
+        builder.append(responsible);
+        builder.append(", datetimeInit=");
+        builder.append(datetimeInit);
+        builder.append(", datetimeEnd=");
+        builder.append(datetimeEnd);
+        builder.append(", special=");
+        builder.append(special);
+        builder.append(", insertToMedicalRecords=");
+        builder.append(insertToMedicalRecords);
+        builder.append(", responsibleForCancel=");
+        builder.append(responsibleForCancel);
+        builder.append(", items=");
+        builder.append(items);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

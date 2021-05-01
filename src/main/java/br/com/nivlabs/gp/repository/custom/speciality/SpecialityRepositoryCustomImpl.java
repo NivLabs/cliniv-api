@@ -45,10 +45,9 @@ public class SpecialityRepositoryCustomImpl extends GenericCustomRepository<Spec
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Speciality> root) {
-        if (!(customFilters instanceof SpecialityFilter)) {
+        if (!(customFilters instanceof SpecialityFilter filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de especialidade");
         }
-        SpecialityFilter filters = (SpecialityFilter) customFilters;
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {

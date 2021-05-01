@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -22,6 +21,7 @@ import br.com.nivlabs.gp.controller.filters.DynamicFormFilters;
 import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.DynamicForm;
+import br.com.nivlabs.gp.models.domain.DynamicFormAnswered;
 import br.com.nivlabs.gp.models.domain.DynamicFormQuestion;
 import br.com.nivlabs.gp.models.domain.DynamicFormQuestion_;
 import br.com.nivlabs.gp.models.domain.DynamicForm_;
@@ -36,6 +36,7 @@ import br.com.nivlabs.gp.models.dto.QuestionDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
+import br.com.nivlabs.gp.repository.DynamicFormAnsweredRepository;
 import br.com.nivlabs.gp.repository.DynamicFormQuestionRepository;
 import br.com.nivlabs.gp.repository.DynamicFormRepository;
 import br.com.nivlabs.gp.util.StringUtils;
@@ -53,6 +54,7 @@ public class DynamicFormService implements GenericService {
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
     private static final String REQUESTER_NAME = "READER_NAME";
     private static final String VISIT_ID = "VISIT_ID";
+    private static final String USER_ID = "ID_USUARIO";
     private static final String FALSE = "false";
     private static final String TRUE = "true";
     private static final String REPORT_PATH = "reports/dynamicForm.jrxml";
@@ -83,6 +85,9 @@ public class DynamicFormService implements GenericService {
     @Autowired
     private ResponsibleService responsibleService;
 
+    @Autowired
+    private DynamicFormAnsweredRepository formRepo;
+
     /**
      * Realiza a exclusão física do formulário dinâmico
      * 
@@ -111,8 +116,10 @@ public class DynamicFormService implements GenericService {
 
         logger.info("Validando respostas...");
         request.getListOfResponse().forEach(this::validateQuestions);
+
         try {
-            logger.info("Preparando documento de anamnese...");
+            createAnsweredForm(user.getId(), attendanceId, request);
+            logger.info("Preparando formulário dinâmico...");
 
             DigitalDocumentDTO document = reportService
                     .createDocumentFromReport(attendanceId, request.getDocumentTitle(),
@@ -125,6 +132,31 @@ public class DynamicFormService implements GenericService {
         }
 
         return request;
+    }
+
+    /**
+     * Insere os itens para o formulário dinâmico da aplicação
+     * 
+     * @param responsibleId
+     * @param attendanceId
+     * @param request
+     */
+    private void createAnsweredForm(Long responsibleId, Long attendanceId, NewDynamicFormAnsweredDTO request) {
+        logger.info("Iniciando processo de inserção de respostas do formulário dinâmico :: {}", request.getListOfResponse());
+        logger.info("Removendo respostas anteriores...");
+        formRepo.deleteByResponsibleId(responsibleId);
+        logger.info("Base limpa. Iniciando processo de inserção de novas respostas...");
+        request.getListOfResponse().forEach(response -> {
+            DynamicFormAnswered responseConverted = new DynamicFormAnswered();
+            responseConverted.setId(response.getDynamicFormQuestion().getId());
+            responseConverted.setResponsibleId(responsibleId);
+            responseConverted.setQuestion(response.getDynamicFormQuestion().getQuestion());
+            responseConverted.setAnswer(response.getResponse()
+                    .equals("true") ? "Sim" : response.getResponse().equals("false") ? "Não" : response.getResponse());
+            responseConverted.setAttendanceId(attendanceId);
+            logger.info("Inserindo pergunta respondida:: {}", responseConverted);
+            formRepo.saveAndFlush(responseConverted);
+        });
     }
 
     /**
@@ -191,33 +223,15 @@ public class DynamicFormService implements GenericService {
         logger.info("Separando parâmetros e valores do relatório...");
         ReportParam params = new ReportParam();
         params.getParams().put(VISIT_ID, attendanceId);
+        params.getParams().put(USER_ID, requestOwner.getId());
         params.getParams().put("DOC_TITLE", request.getDocumentTitle());
         params.getParams().put(REQUESTER_NAME, requestOwner.getFullName());
         params.getParams().put(HOSPITAL_LOGO, logoBase64);
         params.getParams().put(TODAY, new Date());
-        params.getParams().put("TEXT", formatText(request.getListOfResponse()));
 
         logger.info("Parâmetros configurados e prontos para a criação do documento");
 
         return params;
-    }
-
-    private String formatText(Set<QuestionDTO> listOfResponse) {
-        StringBuilder sb = new StringBuilder();
-        listOfResponse.forEach(question -> sb.append(question.getDynamicFormQuestion().getQuestion().toUpperCase())
-                .append("\n")
-                .append(handleQuestion(question.getResponse()))
-                .append("\n__________________________________________________________________________________________________\n"));
-        return sb.toString();
-    }
-
-    private String handleQuestion(String response) {
-        if (response.equals(TRUE)) {
-            return "Sim";
-        } else if (response.equals(FALSE)) {
-            return "Não";
-        }
-        return response;
     }
 
     /**

@@ -13,9 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +26,7 @@ import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.FileDTO;
 import br.com.nivlabs.gp.models.dto.ReportLayoutDTO;
-import br.com.nivlabs.gp.models.dto.ReportParameterDTO;
+import br.com.nivlabs.gp.models.dto.ReportGenerationRequestDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.service.ReportService;
 import io.swagger.annotations.Api;
@@ -68,20 +70,18 @@ public class ReportController {
     @PostMapping()
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<ReportLayoutDTO> persist(@Validated @RequestBody(required = true) FileDTO file,
-                                                   @NotNull @PathVariable("reportName") String reportName,
-                                                   @NotNull @PathVariable("description") String description,
                                                    HttpServletResponse response) {
-        ReportLayoutDTO createdReportLayout = service.newReporLayout(reportName, description, file);
+        ReportLayoutDTO createdReportLayout = service.newReporLayout(null, file);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdReportLayout.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReportLayout);
     }
 
-    @ApiOperation(nickname = "report-layout-post", value = "Gera um relatório a partir de um layout")
+    @ApiOperation(nickname = "report-layout-post-id", value = "Gera um relatório a partir de um layout")
     @PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
-    public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportParameterDTO reportParam,
+    public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportGenerationRequestDTO reportParam,
                                                              @NotNull @PathVariable("id") Long id,
                                                              HttpServletResponse response) {
         DigitalDocumentDTO digitalDocumentDTO = service.createDocumentFromReportLayout(id, reportParam);
@@ -89,6 +89,23 @@ public class ReportController {
         publisher.publishEvent(new CreatedResourceEvent(this, response, digitalDocumentDTO.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(digitalDocumentDTO);
+    }
+
+    @ApiOperation(nickname = "report-layout-delete", value = "Deleta um layout de relatório baseado no identificador")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
+        service.deleteLayoutById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(nickname = "report-layout-put", value = "Atualiza um layout de relatório")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
+    public ResponseEntity<ReportLayoutDTO> update(@PathVariable("id") Long id,
+                                                  @Validated @RequestBody(required = true) FileDTO file,
+                                                  HttpServletResponse response) {
+        return ResponseEntity.ok().body(service.update(id, file));
     }
 
 }
