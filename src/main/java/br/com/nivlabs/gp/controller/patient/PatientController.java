@@ -75,12 +75,8 @@ public class PatientController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> update(@PathVariable("id") Long id,
-                                                 @Validated @RequestBody(required = true) PatientInfoDTO patient,
-                                                 HttpServletResponse response) {
-        PatientInfoDTO createdResponsible = service.update(id, patient);
-
-        return ResponseEntity.ok().body(createdResponsible);
-
+                                                 @Validated @RequestBody(required = true) PatientInfoDTO patient) {
+        return ResponseEntity.ok().body(service.update(id, patient));
     }
 
     @ApiOperation(nickname = "patient-get-id", value = "Busca um paciente baseado no identificador")

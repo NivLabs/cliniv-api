@@ -30,6 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserApplication user = userRepository.findByUserName(username)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                         "Usuário não encontrado! Username: " + username + ", tipo " + UserApplication.class.getName()));
-        return new UserOfSystem(user.getUserName(), user.getPassword(), user.getPerson(), user.isActive(), user.getRoles());
+        boolean isExpired = !user.isActive();
+        return new UserOfSystem(user.getUserName(), user.getPassword(), user.getPerson(), isExpired, user.getRoles());
     }
 }

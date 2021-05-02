@@ -9,7 +9,7 @@ import javax.persistence.Converter;
  * @author viniciosarodrigues
  *
  */
-@Converter(autoApply = true)
+@Converter
 public class BooleanConverter implements AttributeConverter<Boolean, Character> {
 
     @Override
