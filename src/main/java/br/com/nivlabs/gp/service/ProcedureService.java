@@ -37,6 +37,10 @@ public class ProcedureService implements GenericService {
         return dao.resumedList(filters, pageRequest);
     }
 
+    public ProcedureInfoDTO findDTOById(Long id) {
+        return findById(id).getDTO();
+    }
+
     public Procedure findById(Long id) {
         return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Procedimento com código %s não encontrado!", id)));

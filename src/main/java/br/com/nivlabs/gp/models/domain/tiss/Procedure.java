@@ -9,7 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.beans.BeanUtils;
+
 import br.com.nivlabs.gp.models.BaseObjectWithId;
+import br.com.nivlabs.gp.models.dto.ProcedureInfoDTO;
 
 @Entity
 @Table(name = "PROCEDIMENTO")
@@ -119,6 +122,12 @@ public class Procedure extends BaseObjectWithId {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ProcedureInfoDTO getDTO() {
+        ProcedureInfoDTO dto = new ProcedureInfoDTO();
+        BeanUtils.copyProperties(this, dto);
+        return dto;
     }
 
     @Override

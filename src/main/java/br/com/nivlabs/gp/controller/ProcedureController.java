@@ -56,6 +56,12 @@ public class ProcedureController {
         return ResponseEntity.ok(service.getResumedPage(filters, pageSettings));
     }
 
+    @ApiOperation(nickname = "procedure-get-id", value = "Busca um procedimento à partir do identificador")
+    @GetMapping("{id}")
+    public ResponseEntity<ProcedureInfoDTO> getById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findDTOById(id));
+    }
+
     @ApiOperation(nickname = "procedure-post", value = "Cria um novo procedimento no sistema")
     @PostMapping
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
