@@ -287,7 +287,7 @@ ORDER BY FORM.ID ASC;]]>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/YYYY hh:mm").format($F{DH_ENTRADA})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{DH_ENTRADA}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="110" y="108" width="188" height="15" isRemoveLineWhenBlank="true" uuid="f5960242-4fc2-4888-9310-0b5466acc809"/>
