@@ -18,6 +18,7 @@
 	<packaging>jar</packaging>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>16</java.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 		<io.jwt.version>0.9.1</io.jwt.version>
@@ -101,14 +102,14 @@
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-functions</artifactId>
-			<version>6.13.0</version>
+			<version>6.17.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
-			<version>6.13.0</version>
+			<version>6.17.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/net.sf.barcode4j/barcode4j -->
 		<dependency>
