@@ -6,9 +6,16 @@ import java.util.List;
 
 import br.com.nivlabs.gp.models.exception.ErrorItem;
 
+/**
+ * Erro padrão Spring
+ *
+ * @author viniciosarodrigues
+ * @since 29-08-2021
+ *
+ */
 public class StandardErrorSpring implements Serializable {
 
-    private static final long serialVersionUID = -2166865923471144622L;
+    private static final long serialVersionUID = 7605476013709721447L;
 
     private Long timestamp;
     private Integer status;
