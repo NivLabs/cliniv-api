@@ -37,7 +37,7 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
     private String observations;
 
     @ApiModelProperty("Procedimento do evento (se houver)")
-    private ProcedureDTO procedure;
+    private ProcedureInfoDTO procedure;
 
     @ApiModelProperty("Responsável por gerar o evento")
     @NotNull(message = "Obrigado informar um responsável")
@@ -47,68 +47,139 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
     @ApiModelProperty("Sala ou leito em que o evento ocorreu")
     private AccommodationDTO accommodation;
 
+    /**
+     * @return the attendanceId
+     */
     public Long getAttendanceId() {
         return attendanceId;
     }
 
+    /**
+     * @param attendanceId the attendanceId to set
+     */
     public void setAttendanceId(Long attendanceId) {
         this.attendanceId = attendanceId;
     }
 
+    /**
+     * @return the eventDateTime
+     */
     public LocalDateTime getEventDateTime() {
         return eventDateTime;
     }
 
+    /**
+     * @param eventDateTime the eventDateTime to set
+     */
     public void setEventDateTime(LocalDateTime eventDateTime) {
         this.eventDateTime = eventDateTime;
     }
 
+    /**
+     * @return the documents
+     */
     public List<DigitalDocumentDTO> getDocuments() {
         return documents;
     }
 
+    /**
+     * @param documents the documents to set
+     */
     public void setDocuments(List<DigitalDocumentDTO> documents) {
         this.documents = documents;
     }
 
+    /**
+     * @return the eventType
+     */
     public EventType getEventType() {
         return eventType;
     }
 
+    /**
+     * @param eventType the eventType to set
+     */
     public void setEventType(EventType eventType) {
         this.eventType = eventType;
     }
 
+    /**
+     * @return the observations
+     */
     public String getObservations() {
         return observations;
     }
 
+    /**
+     * @param observations the observations to set
+     */
     public void setObservations(String observations) {
         this.observations = observations;
     }
 
-    public ProcedureDTO getProcedure() {
+    /**
+     * @return the procedure
+     */
+    public ProcedureInfoDTO getProcedure() {
         return procedure;
     }
 
-    public void setProcedure(ProcedureDTO procedure) {
+    /**
+     * @param procedure the procedure to set
+     */
+    public void setProcedure(ProcedureInfoDTO procedure) {
         this.procedure = procedure;
     }
 
+    /**
+     * @return the responsible
+     */
     public ResponsibleInfoDTO getResponsible() {
         return responsible;
     }
 
+    /**
+     * @param responsible the responsible to set
+     */
     public void setResponsible(ResponsibleInfoDTO responsible) {
         this.responsible = responsible;
     }
 
+    /**
+     * @return the accommodation
+     */
     public AccommodationDTO getAccommodation() {
         return accommodation;
     }
 
+    /**
+     * @param accommodation the accommodation to set
+     */
     public void setAccommodation(AccommodationDTO accommodation) {
         this.accommodation = accommodation;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("NewAttendanceEventDTO [attendanceId=");
+        builder.append(attendanceId);
+        builder.append(", eventDateTime=");
+        builder.append(eventDateTime);
+        builder.append(", documents=");
+        builder.append(documents);
+        builder.append(", eventType=");
+        builder.append(eventType);
+        builder.append(", observations=");
+        builder.append(observations);
+        builder.append(", procedure=");
+        builder.append(procedure);
+        builder.append(", responsible=");
+        builder.append(responsible);
+        builder.append(", accommodation=");
+        builder.append(accommodation);
+        builder.append("]");
+        return builder.toString();
     }
 
     @Override
@@ -124,65 +195,6 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
         result = prime * result + ((procedure == null) ? 0 : procedure.hashCode());
         result = prime * result + ((responsible == null) ? 0 : responsible.hashCode());
         return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        NewAttendanceEventDTO other = (NewAttendanceEventDTO) obj;
-        if (accommodation == null) {
-            if (other.accommodation != null)
-                return false;
-        } else if (!accommodation.equals(other.accommodation))
-            return false;
-        if (attendanceId == null) {
-            if (other.attendanceId != null)
-                return false;
-        } else if (!attendanceId.equals(other.attendanceId))
-            return false;
-        if (documents == null) {
-            if (other.documents != null)
-                return false;
-        } else if (!documents.equals(other.documents))
-            return false;
-        if (eventDateTime == null) {
-            if (other.eventDateTime != null)
-                return false;
-        } else if (!eventDateTime.equals(other.eventDateTime))
-            return false;
-        if (eventType == null) {
-            if (other.eventType != null)
-                return false;
-        } else if (!eventType.equals(other.eventType))
-            return false;
-        if (observations == null) {
-            if (other.observations != null)
-                return false;
-        } else if (!observations.equals(other.observations))
-            return false;
-        if (procedure == null) {
-            if (other.procedure != null)
-                return false;
-        } else if (!procedure.equals(other.procedure))
-            return false;
-        if (responsible == null) {
-            if (other.responsible != null)
-                return false;
-        } else if (!responsible.equals(other.responsible))
-            return false;
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "NewAttendanceEventDTO [attendanceId=" + attendanceId + ", eventDateTime=" + eventDateTime
-                + ", documents=" + documents + ", eventType=" + eventType + ", observations=" + observations
-                + ", procedure=" + procedure + ", responsible=" + responsible + ", accommodation=" + accommodation + "]";
     }
 
 }
