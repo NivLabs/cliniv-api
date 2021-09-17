@@ -52,7 +52,7 @@ import net.sf.jasperreports.engine.JasperPrint;
  *
  */
 @Service
-public class ReportService implements GenericService {
+public class ReportService implements BaseService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 

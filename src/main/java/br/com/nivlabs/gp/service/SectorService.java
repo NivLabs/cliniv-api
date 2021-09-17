@@ -29,7 +29,7 @@ import br.com.nivlabs.gp.repository.SectorRepository;
  * @since 13 Dez, 2019
  */
 @Service
-public class SectorService implements GenericService {
+public class SectorService implements BaseService {
 
     @Autowired
     private SectorRepository dao;

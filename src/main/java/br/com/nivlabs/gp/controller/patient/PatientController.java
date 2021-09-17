@@ -26,7 +26,7 @@ import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.service.PatientService;
+import br.com.nivlabs.gp.service.patient.PatientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 

@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.alergy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,20 +8,31 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.AllergyFilters;
-import br.com.nivlabs.gp.models.domain.Allergy;
 import br.com.nivlabs.gp.models.dto.AllergyDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;
-import br.com.nivlabs.gp.repository.AllergyRepository;
-import br.com.nivlabs.gp.util.StringUtils;
+import br.com.nivlabs.gp.service.BaseService;
+import br.com.nivlabs.gp.service.alergy.business.CreateAllergyBusinessHandler;
+import br.com.nivlabs.gp.service.alergy.business.SearchAlergyBusinessHandler;
+import br.com.nivlabs.gp.service.patient.PatientService;
 
+/**
+ * Camada de serviços para Alergias
+ * 
+ *
+ * @author viniciosarodrigues
+ * @since 16-09-2021
+ *
+ */
 @Service
-public class AllergyService implements GenericService {
-
-    @Autowired
-    private AllergyRepository principalRepository;
+public class AllergyService implements BaseService {
 
     @Autowired
     private PatientService patientService;
+
+    @Autowired
+    CreateAllergyBusinessHandler createAllergyBusinessHandler;
+    @Autowired
+    SearchAlergyBusinessHandler searchAlergyBusinessHandler;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -49,17 +60,11 @@ public class AllergyService implements GenericService {
      * @param allergyDescription
      */
     public void createIfNotExists(String allergyDescription) {
-        if (!StringUtils.isNullOrEmpty(allergyDescription)
-                && !principalRepository.findByDescriptionIgnoreCase(allergyDescription).isPresent()) {
-            logger.info("Alergia a '{}' não existe na base de alergias, persistindo nova alergia.", allergyDescription);
-            principalRepository.save(new Allergy(allergyDescription));
-        } else {
-            logger.warn("A alergia informada está sem descrição, ignorando processo...");
-        }
+        createAllergyBusinessHandler.createIfNotExists(allergyDescription);
     }
 
     public Page<AllergyDTO> getPage(AllergyFilters filters, Pageable pageSettings) {
-        return principalRepository.resumedList(filters, pageSettings);
+        return searchAlergyBusinessHandler.getPage(filters, pageSettings);
     }
 
 }

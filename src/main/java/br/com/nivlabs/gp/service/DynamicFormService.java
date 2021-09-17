@@ -48,7 +48,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  *
  */
 @Service
-public class DynamicFormService implements GenericService {
+public class DynamicFormService implements BaseService {
 
     private static final String TODAY = "TODAY";
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";

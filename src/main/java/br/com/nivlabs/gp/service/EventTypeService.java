@@ -21,7 +21,7 @@ import br.com.nivlabs.gp.repository.EventTypeRepository;
  * @since 8 de set de 2019
  */
 @Service
-public class EventTypeService implements GenericService {
+public class EventTypeService implements BaseService {
 
     @Autowired
     private EventTypeRepository dao;

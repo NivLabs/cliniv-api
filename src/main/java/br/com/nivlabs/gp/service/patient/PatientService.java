@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.patient;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,6 +42,8 @@ import br.com.nivlabs.gp.repository.PatientAllergyRepository;
 import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.repository.PersonDocumentRepository;
 import br.com.nivlabs.gp.repository.PersonRepository;
+import br.com.nivlabs.gp.service.AttendanceService;
+import br.com.nivlabs.gp.service.BaseService;
 import br.com.nivlabs.gp.util.DocumentValidator;
 import br.com.nivlabs.gp.util.StringUtils;
 
@@ -54,7 +56,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @since 15 de set de 2019
  */
 @Service
-public class PatientService implements GenericService {
+public class PatientService implements BaseService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

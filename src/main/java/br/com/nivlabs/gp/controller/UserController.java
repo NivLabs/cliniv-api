@@ -21,7 +21,7 @@ import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.models.dto.UserDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.service.UserService;
-import br.com.nivlabs.gp.service.security.AuthService;
+import br.com.nivlabs.gp.service.security.SecurityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -41,7 +41,7 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private AuthService authService;
+    private SecurityService authService;
 
     @ApiOperation(nickname = "user-get", value = "Busca uma página de usuários baseada em filtros")
     @GetMapping

@@ -21,7 +21,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @since 19 de out de 2019
  */
 @Service
-public class PersonService implements GenericService {
+public class PersonService implements BaseService {
 
     @Autowired
     private PersonRepository dao;

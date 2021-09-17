@@ -20,7 +20,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  *
  */
 @Service
-public class ParameterService implements GenericService {
+public class ParameterService implements BaseService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

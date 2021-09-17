@@ -42,6 +42,7 @@ import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
+import br.com.nivlabs.gp.service.patient.PatientService;
 
 /**
  * Classe AttendanceService.java
@@ -50,7 +51,7 @@ import br.com.nivlabs.gp.repository.AttendanceRepository;
  * @since 8 de set de 2019
  */
 @Service
-public class AttendanceService implements GenericService {
+public class AttendanceService implements BaseService {
 
     @Autowired
     private Logger logger;
