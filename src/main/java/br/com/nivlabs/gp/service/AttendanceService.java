@@ -113,7 +113,7 @@ public class AttendanceService implements BaseService {
         medicalRecord.setId(objectFromDb.getId());
         medicalRecord.setPatientId(objectFromDb.getPatient().getId());
         medicalRecord.setDocument(new DocumentDTO(null, DocumentType.CPF, person.getCpf(), null, null, null, null));
-        medicalRecord.setSusNumber(objectFromDb.getPatient().getSusNumber());
+        medicalRecord.setSusNumber(objectFromDb.getPatient().getCnsNumber());
         medicalRecord.setEntryDateTime(objectFromDb.getEntryDateTime());
         medicalRecord.setExitDateTime(objectFromDb.getExitDateTime());
         medicalRecord.setAttendanceLevel(objectFromDb.getLevel());

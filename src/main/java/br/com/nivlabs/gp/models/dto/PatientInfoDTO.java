@@ -22,14 +22,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Classe NewPatientDTO.java
  * 
- * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
- * @since 3 de out de 2019
- */
-/**
+ * Informações detalhadas do paciente
+ *
  * @author viniciosarodrigues
+ * @since 18-09-2021
  *
  */
 @ApiModel(description = "Informações detalhadas do paciente")
@@ -58,7 +55,8 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @NotNull(message = "O documento deve ser informado")
     private DocumentDTO document;
 
-    private List<DocumentDTO> documents;
+    @ApiModelProperty("Lista de documentos do paciente")
+    private List<DocumentDTO> documents = new ArrayList<>();
 
     @ApiModelProperty("Gênero (sexo) do paciente")
     @NotNull(message = "O gênero deve ser informado")
@@ -81,6 +79,9 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Número de telefone/celular secundário do paciente")
     private String secondaryNumber;
 
+    @ApiModelProperty("E-mail do paciente")
+    private String email;
+
     @ApiModelProperty("Endereço do paciente")
     private AddressDTO address;
 
@@ -89,7 +90,7 @@ public class PatientInfoDTO extends DataTransferObjectBase {
 
     @ApiModelProperty("Número do SUS do paciente")
     @Size(max = 15, message = "O código do deve conter no máximo 15 dígitos.")
-    private String susNumber;
+    private String cnsNumber;
 
     @ApiModelProperty("Tipo do paciente (Identificado ou não identificado)")
     private PatientType type;
@@ -121,262 +122,427 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @ApiModelProperty("Nacionalidade do paciente")
     private String nationality;
 
-    private String dispatcher;
-
-    @DateTimeFormat(iso = ISO.DATE)
-    private LocalDate expeditionDate;
-
-    @DateTimeFormat(iso = ISO.DATE)
-    private LocalDate validate;
-
-    private String uf;
-
-    public PatientInfoDTO() {
-        super();
-    }
-
-    public Long getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(Long personId) {
-        this.personId = personId;
-    }
-
+    /**
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * @return the personId
+     */
+    public Long getPersonId() {
+        return personId;
+    }
+
+    /**
+     * @param personId the personId to set
+     */
+    public void setPersonId(Long personId) {
+        this.personId = personId;
+    }
+
+    /**
+     * @return the fullName
+     */
     public String getFullName() {
         return fullName;
     }
 
+    /**
+     * @param fullName the fullName to set
+     */
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
+    /**
+     * @return the socialName
+     */
     public String getSocialName() {
         return socialName;
     }
 
+    /**
+     * @param socialName the socialName to set
+     */
     public void setSocialName(String socialName) {
         this.socialName = socialName;
     }
 
+    /**
+     * @return the bornDate
+     */
     public LocalDate getBornDate() {
         return bornDate;
     }
 
+    /**
+     * @param bornDate the bornDate to set
+     */
     public void setBornDate(LocalDate bornDate) {
         this.bornDate = bornDate;
     }
 
+    /**
+     * @return the document
+     */
     public DocumentDTO getDocument() {
         return document;
     }
 
+    /**
+     * @param document the document to set
+     */
     public void setDocument(DocumentDTO document) {
         this.document = document;
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public GenderIdentity getGenderIdentity() {
-        return genderIdentity;
-    }
-
-    public void setGenderIdentity(GenderIdentity genderIdentity) {
-        this.genderIdentity = genderIdentity;
-    }
-
-    public String getFatherName() {
-        return fatherName;
-    }
-
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
-    }
-
-    public String getMotherName() {
-        return motherName;
-    }
-
-    public void setMotherName(String motherName) {
-        this.motherName = motherName;
-    }
-
-    public String getPrincipalNumber() {
-        return principalNumber;
-    }
-
-    public void setPrincipalNumber(String principalNumber) {
-        this.principalNumber = principalNumber;
-    }
-
-    public String getSecondaryNumber() {
-        return secondaryNumber;
-    }
-
-    public void setSecondaryNumber(String secondaryNumber) {
-        this.secondaryNumber = secondaryNumber;
-    }
-
-    public AddressDTO getAddress() {
-        return address;
-    }
-
-    public void setAddress(AddressDTO address) {
-        this.address = address;
-    }
-
-    public String getProfilePhoto() {
-        return profilePhoto;
-    }
-
-    public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto;
-    }
-
-    public String getSusNumber() {
-        return susNumber;
-    }
-
-    public void setSusNumber(String susNumber) {
-        this.susNumber = susNumber;
-    }
-
-    public PatientType getType() {
-        return type;
-    }
-
-    public void setType(PatientType type) {
-        this.type = type;
-    }
-
-    public String getAnnotations() {
-        return annotations;
-    }
-
-    public void setAnnotations(String annotations) {
-        this.annotations = annotations;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public List<String> getAllergies() {
-        return allergies;
-    }
-
-    public void setAllergies(List<String> allergies) {
-        this.allergies = allergies;
-    }
-
-    public HealthPlanDTO getHealthPlan() {
-        return healthPlan;
-    }
-
-    public void setHealthPlan(HealthPlanDTO healthPlan) {
-        this.healthPlan = healthPlan;
-    }
-
-    public List<AttendanceDTO> getAttendanceHistory() {
-        return attendanceHistory;
-    }
-
-    public void setAttendanceHistory(List<AttendanceDTO> attendanceHistory) {
-        this.attendanceHistory = attendanceHistory;
-    }
-
-    public EthnicGroup getEthnicGroup() {
-        return ethnicGroup;
-    }
-
-    public void setEthnicGroup(EthnicGroup ethnicGroup) {
-        this.ethnicGroup = ethnicGroup;
-    }
-
-    public BloodType getBloodType() {
-        return bloodType;
-    }
-
-    public void setBloodType(BloodType bloodType) {
-        this.bloodType = bloodType;
-    }
-
-    public String getNationality() {
-        return nationality;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
-    public String getDispatcher() {
-        return dispatcher;
-    }
-
-    public void setDispatcher(String dispatcher) {
-        this.dispatcher = dispatcher;
-    }
-
-    public LocalDate getExpeditionDate() {
-        return expeditionDate;
-    }
-
-    public void setExpeditionDate(LocalDate expeditionDate) {
-        this.expeditionDate = expeditionDate;
-    }
-
-    public LocalDate getValidate() {
-        return validate;
-    }
-
-    public void setValidate(LocalDate validate) {
-        this.validate = validate;
-    }
-
-    public String getUf() {
-        return uf;
-    }
-
-    public void setUf(String uf) {
-        this.uf = uf;
-    }
-
+    /**
+     * @return the documents
+     */
     public List<DocumentDTO> getDocuments() {
         return documents;
     }
 
+    /**
+     * @param documents the documents to set
+     */
     public void setDocuments(List<DocumentDTO> documents) {
         this.documents = documents;
     }
 
+    /**
+     * @return the gender
+     */
+    public Gender getGender() {
+        return gender;
+    }
+
+    /**
+     * @param gender the gender to set
+     */
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    /**
+     * @return the genderIdentity
+     */
+    public GenderIdentity getGenderIdentity() {
+        return genderIdentity;
+    }
+
+    /**
+     * @param genderIdentity the genderIdentity to set
+     */
+    public void setGenderIdentity(GenderIdentity genderIdentity) {
+        this.genderIdentity = genderIdentity;
+    }
+
+    /**
+     * @return the fatherName
+     */
+    public String getFatherName() {
+        return fatherName;
+    }
+
+    /**
+     * @param fatherName the fatherName to set
+     */
+    public void setFatherName(String fatherName) {
+        this.fatherName = fatherName;
+    }
+
+    /**
+     * @return the motherName
+     */
+    public String getMotherName() {
+        return motherName;
+    }
+
+    /**
+     * @param motherName the motherName to set
+     */
+    public void setMotherName(String motherName) {
+        this.motherName = motherName;
+    }
+
+    /**
+     * @return the principalNumber
+     */
+    public String getPrincipalNumber() {
+        return principalNumber;
+    }
+
+    /**
+     * @param principalNumber the principalNumber to set
+     */
+    public void setPrincipalNumber(String principalNumber) {
+        this.principalNumber = principalNumber;
+    }
+
+    /**
+     * @return the secondaryNumber
+     */
+    public String getSecondaryNumber() {
+        return secondaryNumber;
+    }
+
+    /**
+     * @param secondaryNumber the secondaryNumber to set
+     */
+    public void setSecondaryNumber(String secondaryNumber) {
+        this.secondaryNumber = secondaryNumber;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the address
+     */
+    public AddressDTO getAddress() {
+        return address;
+    }
+
+    /**
+     * @param address the address to set
+     */
+    public void setAddress(AddressDTO address) {
+        this.address = address;
+    }
+
+    /**
+     * @return the profilePhoto
+     */
+    public String getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    /**
+     * @param profilePhoto the profilePhoto to set
+     */
+    public void setProfilePhoto(String profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    /**
+     * @return the cnsNumber
+     */
+    public String getCnsNumber() {
+        return cnsNumber;
+    }
+
+    /**
+     * @param cnsNumber the cnsNumber to set
+     */
+    public void setCnsNumber(String cnsNumber) {
+        this.cnsNumber = cnsNumber;
+    }
+
+    /**
+     * @return the type
+     */
+    public PatientType getType() {
+        return type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    public void setType(PatientType type) {
+        this.type = type;
+    }
+
+    /**
+     * @return the annotations
+     */
+    public String getAnnotations() {
+        return annotations;
+    }
+
+    /**
+     * @param annotations the annotations to set
+     */
+    public void setAnnotations(String annotations) {
+        this.annotations = annotations;
+    }
+
+    /**
+     * @return the createdAt
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * @param createdAt the createdAt to set
+     */
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * @return the allergies
+     */
+    public List<String> getAllergies() {
+        return allergies;
+    }
+
+    /**
+     * @param allergies the allergies to set
+     */
+    public void setAllergies(List<String> allergies) {
+        this.allergies = allergies;
+    }
+
+    /**
+     * @return the attendanceHistory
+     */
+    public List<AttendanceDTO> getAttendanceHistory() {
+        return attendanceHistory;
+    }
+
+    /**
+     * @param attendanceHistory the attendanceHistory to set
+     */
+    public void setAttendanceHistory(List<AttendanceDTO> attendanceHistory) {
+        this.attendanceHistory = attendanceHistory;
+    }
+
+    /**
+     * @return the healthPlan
+     */
+    public HealthPlanDTO getHealthPlan() {
+        return healthPlan;
+    }
+
+    /**
+     * @param healthPlan the healthPlan to set
+     */
+    public void setHealthPlan(HealthPlanDTO healthPlan) {
+        this.healthPlan = healthPlan;
+    }
+
+    /**
+     * @return the ethnicGroup
+     */
+    public EthnicGroup getEthnicGroup() {
+        return ethnicGroup;
+    }
+
+    /**
+     * @param ethnicGroup the ethnicGroup to set
+     */
+    public void setEthnicGroup(EthnicGroup ethnicGroup) {
+        this.ethnicGroup = ethnicGroup;
+    }
+
+    /**
+     * @return the bloodType
+     */
+    public BloodType getBloodType() {
+        return bloodType;
+    }
+
+    /**
+     * @param bloodType the bloodType to set
+     */
+    public void setBloodType(BloodType bloodType) {
+        this.bloodType = bloodType;
+    }
+
+    /**
+     * @return the nationality
+     */
+    public String getNationality() {
+        return nationality;
+    }
+
+    /**
+     * @param nationality the nationality to set
+     */
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
     @Override
     public String toString() {
-        return "PatientInfoDTO [id=" + id + ", personId=" + personId + ", fullName=" + fullName + ", socialName=" + socialName
-                + ", bornDate=" + bornDate + ", document=" + document + ", documents=" + documents + ", gender=" + gender
-                + ", genderIdentity=" + genderIdentity + ", fatherName=" + fatherName + ", motherName=" + motherName + ", principalNumber="
-                + principalNumber + ", secondaryNumber=" + secondaryNumber + ", address=" + address + ", profilePhoto=" + profilePhoto
-                + ", susNumber=" + susNumber + ", type=" + type + ", annotations=" + annotations + ", createdAt=" + createdAt
-                + ", allergies=" + allergies + ", attendanceHistory=" + attendanceHistory + ", healthPlan=" + healthPlan + ", ethnicGroup="
-                + ethnicGroup + ", bloodType=" + bloodType + ", nationality=" + nationality + ", dispatcher=" + dispatcher
-                + ", expeditionDate=" + expeditionDate + ", validate=" + validate + ", uf=" + uf + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("PatientInfoDTO [id=");
+        builder.append(id);
+        builder.append(", personId=");
+        builder.append(personId);
+        builder.append(", fullName=");
+        builder.append(fullName);
+        builder.append(", socialName=");
+        builder.append(socialName);
+        builder.append(", bornDate=");
+        builder.append(bornDate);
+        builder.append(", document=");
+        builder.append(document);
+        builder.append(", documents=");
+        builder.append(documents);
+        builder.append(", gender=");
+        builder.append(gender);
+        builder.append(", genderIdentity=");
+        builder.append(genderIdentity);
+        builder.append(", fatherName=");
+        builder.append(fatherName);
+        builder.append(", motherName=");
+        builder.append(motherName);
+        builder.append(", principalNumber=");
+        builder.append(principalNumber);
+        builder.append(", secondaryNumber=");
+        builder.append(secondaryNumber);
+        builder.append(", email=");
+        builder.append(email);
+        builder.append(", address=");
+        builder.append(address);
+        builder.append(", profilePhoto=");
+        builder.append(profilePhoto);
+        builder.append(", cnsNumber=");
+        builder.append(cnsNumber);
+        builder.append(", type=");
+        builder.append(type);
+        builder.append(", annotations=");
+        builder.append(annotations);
+        builder.append(", createdAt=");
+        builder.append(createdAt);
+        builder.append(", allergies=");
+        builder.append(allergies);
+        builder.append(", attendanceHistory=");
+        builder.append(attendanceHistory);
+        builder.append(", healthPlan=");
+        builder.append(healthPlan);
+        builder.append(", ethnicGroup=");
+        builder.append(ethnicGroup);
+        builder.append(", bloodType=");
+        builder.append(bloodType);
+        builder.append(", nationality=");
+        builder.append(nationality);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

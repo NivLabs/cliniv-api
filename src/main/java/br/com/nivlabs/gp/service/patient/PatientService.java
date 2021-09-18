@@ -1,51 +1,22 @@
 package br.com.nivlabs.gp.service.patient;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.PatientFilters;
-import br.com.nivlabs.gp.enums.DocumentType;
-import br.com.nivlabs.gp.enums.PatientType;
-import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt_;
-import br.com.nivlabs.gp.models.domain.HealthPlan;
-import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.PatientAllergy;
-import br.com.nivlabs.gp.models.domain.Patient_;
-import br.com.nivlabs.gp.models.domain.Person;
-import br.com.nivlabs.gp.models.domain.PersonAddress;
-import br.com.nivlabs.gp.models.domain.PersonDocument;
-import br.com.nivlabs.gp.models.domain.PersonDocumentPK;
-import br.com.nivlabs.gp.models.domain.Person_;
-import br.com.nivlabs.gp.models.dto.AddressDTO;
-import br.com.nivlabs.gp.models.dto.DocumentDTO;
-import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.repository.HealthPlanRepository;
 import br.com.nivlabs.gp.repository.PatientAllergyRepository;
-import br.com.nivlabs.gp.repository.PatientRepository;
-import br.com.nivlabs.gp.repository.PersonDocumentRepository;
-import br.com.nivlabs.gp.repository.PersonRepository;
-import br.com.nivlabs.gp.service.AttendanceService;
 import br.com.nivlabs.gp.service.BaseService;
-import br.com.nivlabs.gp.util.DocumentValidator;
-import br.com.nivlabs.gp.util.StringUtils;
+import br.com.nivlabs.gp.service.patient.business.CreatePatientBusinessHandler;
+import br.com.nivlabs.gp.service.patient.business.SearchPatientBusinessHandler;
+import br.com.nivlabs.gp.service.patient.business.UpdatePatientBusinessHandler;
 
 /**
  * 
@@ -60,204 +31,58 @@ public class PatientService implements BaseService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @PersistenceContext
-    private EntityManager em;
-
-    @Autowired
-    private PatientRepository dao;
     @Autowired
     private PatientAllergyRepository patientAllergyDao;
+    
     @Autowired
-    private HealthPlanRepository healthPlanDao;
+    SearchPatientBusinessHandler patientSearchBusinessHandler;
     @Autowired
-    private AttendanceService attendanceService;
-
+    CreatePatientBusinessHandler createPatientBusinessHandler;
     @Autowired
-    private PersonRepository personRepo;
-    @Autowired
-    private PersonDocumentRepository docRepo;
+    UpdatePatientBusinessHandler updatePatientBusinessHandler;
 
     /**
-     * Busca uma página de pacientes
+     * Busca uma página de informações resumidas de pacientes
      * 
-     * @param pageRequest
-     * @return
+     * @param filters Filtros de busca
+     * @param pageRequest Configurações da paginação
+     * @return Página com informações resumidas de pacientes
      */
-    public Page<PatientDTO> getListOfPatientInfo(PatientFilters filters, Pageable pageRequest) {
-        return dao.resumedList(filters, pageRequest);
+    public Page<PatientDTO> getPage(PatientFilters filters, Pageable pageRequest) {
+        return patientSearchBusinessHandler.getPage(filters, pageRequest);
     }
 
+    /**
+     * Busca informações detalhadas do paciente
+     * 
+     * @param id Identificador único do paciente
+     * @return Informações detalhadas do paciente
+     * 
+     */
     public PatientInfoDTO findByPatientId(Long id) {
-        Patient patient = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Paciente com o identificador %s não encontrado", id)));
-        Person person = patient.getPerson();
-
-        PatientInfoDTO patientInfo = new PatientInfoDTO();
-        BeanUtils.copyProperties(person, patientInfo, Person_.ID);
-        patientInfo.setDocument(new DocumentDTO(null, DocumentType.CPF, person.getCpf(), null, null, null, null));
-        patientInfo.setDocuments(convertDocuments(person.getDocuments()));
-
-        if (person.getAddress() != null) {
-            AddressDTO address = new AddressDTO();
-            BeanUtils.copyProperties(person.getAddress(), address);
-            patientInfo.setAddress(address);
-        }
-        if (patient.getHealthPlan() != null) {
-            HealthPlanDTO healthPlan = new HealthPlanDTO();
-            BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
-            healthPlan.setPatientPlanNumber(patient.getHealthPlanCode());
-            healthPlan.setOperatorCode(patient.getHealthPlan().getHealthOperator().getAnsCode());
-            healthPlan.setOperatorName(patient.getHealthPlan().getHealthOperator().getFantasyName());
-            patientInfo.setHealthPlan(healthPlan);
-        }
-        BeanUtils.copyProperties(patient, patientInfo, Patient_.ALLERGIES);
-        patient.getAllergies().forEach(allergy -> patientInfo.getAllergies().add(allergy.getDescription()));
-        setPatientHistory(patientInfo);
-
-        return patientInfo;
-
+        return patientSearchBusinessHandler.getById(id);
     }
 
     /**
-     * Adiciona o histórico do paciente
+     * Busca informações do paciente
      * 
-     * @param patientInfo Informações do paciente
-     */
-    private void setPatientHistory(PatientInfoDTO patientInfo) {
-        try {
-            if (patientInfo.getId() != null) {
-                logger.info("Buscando histórico de atendimentos do paciente...");
-                patientInfo.getAttendanceHistory().addAll(attendanceService.getAttandenceByPatientId(patientInfo.getId()));
-            }
-        } catch (HttpException e) {
-            logger.info("Nenhum atendimento para o paciente...");
-        }
-    }
-
-    /**
-     * Busca informações do cadatro de pessoa e insere no objeto de paciente
+     * OBS: Se o paciente não for encontrado, uma busca por informações de pessoa física é realizada e retornada
      * 
-     * @param cpf
-     * @return
-     */
-    private PatientInfoDTO findPersonByCpf(String cpf) {
-        if (StringUtils.isNullOrEmpty(cpf)) {
-            throw new HttpException(HttpStatus.NOT_FOUND,
-                    "O CPF informado é nulo, informe um CPF para que a consulta possa ser realizada");
-        }
-        Person personFromDb = personRepo.findByCpf(cpf)
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Paciente não encontrado no CPF " + cpf));
-
-        PatientInfoDTO patientInfo = new PatientInfoDTO();
-        BeanUtils.copyProperties(personFromDb, patientInfo, Person_.ID);
-        patientInfo.setDocument(new DocumentDTO(null, DocumentType.CPF, personFromDb.getCpf(), null, null, null, null));
-        patientInfo.setDocuments(convertDocuments(personFromDb.getDocuments()));
-
-        if (personFromDb.getAddress() != null) {
-            AddressDTO address = new AddressDTO();
-            BeanUtils.copyProperties(personFromDb.getAddress(), address);
-            patientInfo.setAddress(address);
-        }
-        setPatientHistory(patientInfo);
-
-        return patientInfo;
-    }
-
-    /**
-     * Converte a lista de documentos de uma pessoa
-     * 
-     * @param documents
-     * @return
-     */
-    private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
-        List<DocumentDTO> convertedDocuments = new ArrayList<>();
-
-        documents.forEach(doc -> {
-            DocumentDTO convertedDoc = new DocumentDTO();
-            BeanUtils.copyProperties(doc, convertedDoc);
-            convertedDoc.setPersonId(doc.getId().getPersonId());
-            convertedDoc.setType(doc.getId().getType());
-            convertedDoc.setValue(doc.getId().getValue());
-            convertedDocuments.add(convertedDoc);
-        });
-
-        return convertedDocuments;
-    }
-
-    /**
-     * Busca paciente pelo CPF
-     * 
-     * @param cpf
-     * @return
+     * @param cpf CPF do paciente
+     * @return Informações detalhadas do paciente ou da pessoa física
      */
     public PatientInfoDTO findByCpf(String cpf) {
-        try {
-            Patient patient = dao.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                    String.format("Paciente com CPF %s não encontrado", cpf)));
-            Person personFromDb = patient.getPerson();
-
-            PatientInfoDTO patientInfo = new PatientInfoDTO();
-            BeanUtils.copyProperties(personFromDb, patientInfo, Patient_.ID);
-            patientInfo.setDocument(new DocumentDTO(DocumentType.CPF, personFromDb.getCpf()));
-            patientInfo.setDocuments(convertDocuments(personFromDb.getDocuments()));
-
-            if (personFromDb.getAddress() != null) {
-                AddressDTO address = new AddressDTO();
-                BeanUtils.copyProperties(personFromDb.getAddress(), address);
-                patientInfo.setAddress(address);
-            }
-            if (patient.getHealthPlan() != null) {
-                HealthPlanDTO healthPlan = new HealthPlanDTO();
-                BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
-                healthPlan.setPatientPlanNumber(patient.getHealthPlanCode());
-                healthPlan.setOperatorCode(patient.getHealthPlan().getHealthOperator().getAnsCode());
-                healthPlan.setOperatorName(patient.getHealthPlan().getHealthOperator().getFantasyName());
-                patientInfo.setHealthPlan(healthPlan);
-            }
-
-            BeanUtils.copyProperties(patient, patientInfo);
-            setPatientHistory(patientInfo);
-
-            return patientInfo;
-        } catch (HttpException e) {
-            return findPersonByCpf(cpf);
-        }
+        return patientSearchBusinessHandler.getByCpf(cpf);
     }
 
     /**
-     * Busca um paciente baseado no código de cadastro do SUS
+     * Busca informações do paciente baseado no Código da Carteira Nacional de Saúde
      * 
-     * @param susNumber
-     * @return
+     * @param CNS Código da Carteira Nacional de Saúde
+     * @return Informações detalhadas do paciente
      */
-    public PatientInfoDTO findBySusNumber(String susNumber) {
-        Patient patient = dao.findBySusNumber(susNumber).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Paciente com cartão SUS de número %s não encontrado", susNumber)));
-        Person personFromDb = patient.getPerson();
-
-        PatientInfoDTO patientInfo = new PatientInfoDTO();
-        BeanUtils.copyProperties(personFromDb, patientInfo, Patient_.ID);
-        patientInfo.setDocument(new DocumentDTO(null, DocumentType.CPF, personFromDb.getCpf(), null, null, null, null));
-        patientInfo.setDocuments(convertDocuments(personFromDb.getDocuments()));
-
-        if (personFromDb.getAddress() != null) {
-            AddressDTO address = new AddressDTO();
-            BeanUtils.copyProperties(personFromDb.getAddress(), address);
-            patientInfo.setAddress(address);
-        }
-
-        if (patient.getHealthPlan() != null) {
-            HealthPlanDTO healthPlan = new HealthPlanDTO();
-            BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
-            healthPlan.setPatientPlanNumber(patient.getHealthPlanCode());
-            healthPlan.setOperatorCode(patient.getHealthPlan().getHealthOperator().getAnsCode());
-            healthPlan.setOperatorName(patient.getHealthPlan().getHealthOperator().getFantasyName());
-            patientInfo.setHealthPlan(healthPlan);
-        }
-        BeanUtils.copyProperties(patient, patientInfo);
-        setPatientHistory(patientInfo);
-
-        return patientInfo;
+    public PatientInfoDTO findByCnsNumber(String cnsCode) {
+        return patientSearchBusinessHandler.getByCnsNumber(cnsCode);
     }
 
     /**
@@ -268,275 +93,18 @@ public class PatientService implements BaseService {
      * @return
      */
     public PatientInfoDTO update(Long id, PatientInfoDTO entity) {
-        if (entity.getDocument() != null
-                && (entity.getDocument().getValue() != null && !DocumentValidator.isValidCPF(entity.getDocument().getValue())
-                        && entity.getDocument().getType() != DocumentType.CPF)) {
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Tipo do documento inválido, informe um documento válido.");
-        }
-
-        Patient patient = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Paciente com o identificador %s não encontrado", id)));
-        logger.info("Atualizando informações do paciente :: {} | {}", entity.getId(),
-                    entity.getFullName() == null ? "Nome não informado" : entity.getFullName());
-        checkSusCode(entity, patient);
-        try {
-            if (entity.getDocument() != null && entity.getDocument().getValue() != null)
-                patientCheckIfExistsByCpf(entity.getDocument().getValue(), patient.getId());
-        } catch (HttpException e) {
-            if (e.getStatus() == HttpStatus.NOT_FOUND) {
-                logger.info("O CPF {} está disponível para uso...", entity.getDocument().getValue());
-            } else {
-                throw e;
-            }
-        }
-        Person entityFromDb = personRepo.findById(patient.getPerson().getId())
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Cadastro de pessoa não localizado!"));
-
-        checkDocument(entity, patient, entityFromDb);
-
-        BeanUtils.copyProperties(entity, entityFromDb, Patient_.ID, Patient_.ALLERGIES, BaseObjectWithCreatedAt_.CREATED_AT);
-        addressProcess(entity, entityFromDb);
-        logger.info("Salvando informações da pessoa física...");
-        personRepo.saveAndFlush(entityFromDb);
-
-        documentsProcess(entity, entityFromDb);
-
-        BeanUtils.copyProperties(entity, patient, Patient_.ID, Patient_.ALLERGIES, BaseObjectWithCreatedAt_.CREATED_AT);
-        handlePatientType(patient);
-        handleHealthPlah(entity, patient);
-        logger.info("Salvando informações do paciente...");
-        dao.saveAndFlush(patient);
-
-        logger.info("Cadastro do paciente :: {} | {} :: atualizado com sucesso!", entity.getId(), entity.getFullName());
-
-        return entity;
+        entity.setId(id);
+        return updatePatientBusinessHandler.update(entity);
     }
 
     /**
-     * Processa documentos antes da persistência
+     * Cadastra um novo paciente na aplicação
      * 
-     * @param entity
-     * @param entityFromDb
+     * @param request Objeto de transferência com informações detalhadas do paciente
+     * @return Informações do paciente pós insert com códigos de criação
      */
-    private void documentsProcess(PatientInfoDTO entity, Person entityFromDb) {
-        logger.info("Iniciando processo de checagem de documentos...");
-        if (entityFromDb != null) {
-            logger.info("Removendo documentos anteriores...");
-            docRepo.deleteByPerson(new Person(entityFromDb.getId()));
-            docRepo.flush();
-        }
-        if (entity.getDocuments() != null && entity.getDocuments().size() > 0) {
-            logger.info("Adicionando novos documentos...");
-            entity.getDocuments().forEach(document -> {
-                PersonDocument convertedDoc = new PersonDocument();
-                BeanUtils.copyProperties(document, convertedDoc);
-                convertedDoc.setPerson(new Person(entityFromDb.getId()));
-                convertedDoc.setId(new PersonDocumentPK(entityFromDb.getId(), document.getType(), document.getValue()));
-                docRepo.saveAndFlush(convertedDoc);
-                logger.info("Documento adicionado :: {}", document);
-            });
-        }
-        logger.info("Processamento de documentos finalizado com sucesso!");
-    }
-
-    /**
-     * Trata o cadastro de plano de saúde do paciente
-     * 
-     * @param entity
-     * @param patient
-     */
-    private void handleHealthPlah(PatientInfoDTO entity, Patient patient) {
-        if (entity.getHealthPlan() != null
-                && !StringUtils.isNullOrEmpty(entity.getHealthPlan().getPatientPlanNumber())) {
-            logger.info("Iniciando processo de validação de Plano de Saúde do paciente...");
-            if (entity.getHealthPlan().getPlanCode() == null) {
-                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O plano de saúde deve ser informado!");
-            }
-
-            HealthPlan planFromDb = healthPlanDao.findByPlanCode(entity.getHealthPlan().getPlanCode()).orElseThrow(
-                                                                                                                   () -> new HttpException(
-                                                                                                                           HttpStatus.UNPROCESSABLE_ENTITY,
-                                                                                                                           "Plano de saúde não cadastrado"));
-            patient.setHealthPlanCode(entity.getHealthPlan().getPatientPlanNumber());
-            patient.setHealthPlan(planFromDb);
-            logger.info("Plano de saúde validado com sucesso :: Identificador :: {}", planFromDb.getId());
-        }
-    }
-
-    /**
-     * Cria um novo paciente
-     */
-    @Transactional
-    public PatientInfoDTO persist(PatientInfoDTO entity) {
-        entity.setId(null);
-
-        Person personFromDb = getValidPerson(entity);
-
-        logger.info("Copiando as propriedades da requisição para o objeto de negócio...");
-        BeanUtils.copyProperties(entity, personFromDb, Person_.ID);
-        personFromDb.setCpf(entity.getDocument().getValue());
-        addressProcess(entity, personFromDb);
-        logger.info("Salvando informações da pessoa física...");
-        personRepo.saveAndFlush(personFromDb);
-
-        documentsProcess(entity, personFromDb);
-
-        Patient newPatient = new Patient();
-        newPatient.setPerson(personFromDb);
-        newPatient.setSusNumber(entity.getSusNumber());
-        newPatient.setCreatedAt(LocalDateTime.now());
-
-        handlePatientType(newPatient);
-        handleHealthPlah(entity, newPatient);
-        logger.info("Salvando informações do paciente...");
-        dao.saveAndFlush(newPatient);
-
-        entity.setId(newPatient.getId());
-        return entity;
-    }
-
-    /**
-     * Valida o cadastro informações da pessoa e retorna um objeto válido
-     * 
-     * @param entity
-     * @return
-     */
-    private Person getValidPerson(PatientInfoDTO entity) {
-        Person personFromDb = new Person();
-        if (entity.getDocument() != null && entity.getDocument().getValue() != null && entity.getDocument().getType() != DocumentType.CPF) {
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Tipo do documento inválido, informe um documento válido.");
-        }
-
-        try {
-            if (entity.getDocument() != null && !StringUtils.isNullOrEmpty(entity.getDocument().getValue()))
-                patientCheckIfExistsByCpf(entity.getDocument().getValue(), entity.getId());
-        } catch (HttpException e) {
-            if (e.getStatus() == HttpStatus.NOT_FOUND) {
-                logger.info("Nenhum cadastro de paciente encontrado :: CPF da busca -> {}", entity.getDocument().getValue());
-                logger.info("Continuando cadastro de paciente...");
-            } else {
-                logger.error("Problema não esperado na verificação de existência de paciente :: ", e);
-                throw e;
-            }
-        }
-
-        try {
-            if (entity.getDocument() != null && !StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
-                logger.info("Verificando se já existe um cadastro anexado ao documento informado...");
-                personFromDb = personRepo.findByCpf(entity.getDocument().getValue())
-                        .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Nenhum anexado à este documento"));
-            }
-        } catch (HttpException e) {
-            logger.info(
-                        "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
-                        entity.getDocument().getType(), entity.getDocument().getValue());
-
-        }
-        return personFromDb;
-    }
-
-    /**
-     * Process o endereço
-     * 
-     * @param entity
-     * @param personFromDb
-     */
-    private void addressProcess(PatientInfoDTO entity, Person personFromDb) {
-        logger.info("Verificando endereço");
-        if (entity.getAddress() != null) {
-            AddressDTO address = entity.getAddress();
-            PersonAddress personAddress = new PersonAddress();
-            if (personFromDb.getAddress() != null)
-                personAddress = personFromDb.getAddress();
-            BeanUtils.copyProperties(address, personAddress);
-            personAddress.setPerson(personFromDb);
-            personFromDb.setAddress(personAddress);
-        }
-    }
-
-    /**
-     * Trata tipo de paciente -> Identificado ou não identificado
-     * 
-     * @param newPatient
-     */
-    private void handlePatientType(Patient newPatient) {
-        logger.info("Checando tipo de paciente...");
-        if (StringUtils.isNullOrEmpty(newPatient.getSusNumber())
-                && StringUtils.isNullOrEmpty(newPatient.getPerson().getMotherName())
-                && StringUtils.isNullOrEmpty(newPatient.getPerson().getCpf())) {
-            newPatient.setType(PatientType.NOT_IDENTIFIED);
-        } else {
-            newPatient.setType(PatientType.IDENTIFIED);
-        }
-        logger.info("Tipo de paciente :: {}", newPatient.getType());
-    }
-
-    /**
-     * Checa se o paciente existe baseado no cpf
-     * 
-     * @param entity
-     */
-    private void patientCheckIfExistsByCpf(String cpf, Long id) {
-        logger.info("Verificando se já há cadastro de paciente na base de dados :: CPF da busca -> {}", cpf);
-        PatientInfoDTO patient = findByCpf(cpf);
-        if (patient != null && patient.getId() != null && !patient.getId().equals(id)) {
-            logger.warn("Paciente com o CPF {} já cadastrado.", cpf);
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    String.format("Paciente com o CPF informado já está cadastrado, não é possível realizar um outro cadastro com o mesmo CPF(%s).",
-                                  cpf));
-        }
-    }
-
-    /**
-     * Valida documento para atualização
-     * 
-     * @param entity
-     * @param patient
-     * @param entityFromDb
-     */
-    private void checkDocument(PatientInfoDTO entity, Patient patient, Person entityFromDb) {
-        if (entity.getDocument() != null && entity.getDocument().getType().equals(DocumentType.CPF)
-                && !StringUtils.isNullOrEmpty(entity.getDocument().getValue())) {
-            entityFromDb.setCpf(entity.getDocument().getValue());
-            Patient patientByCpf = dao.findByCpf(entity.getDocument().getValue()).orElse(null);
-            if (patientByCpf != null && !patient.equals(patientByCpf)) {
-                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                        "Já existe um outro paciente utilizando este CPF, você não pode utilizar neste cadastro.");
-            }
-        } else {
-            entityFromDb.setCpf(null);
-        }
-    }
-
-    /**
-     * Valida Código SUS do paciente
-     * 
-     * @param entity
-     * @param patient
-     */
-    private void checkSusCode(PatientInfoDTO entity, Patient patient) {
-        if (entity.getSusNumber() != null && !entity.getSusNumber().equals(patient.getSusNumber())) {
-            Patient patientBySusNumber = dao.findBySusNumber(entity.getSusNumber()).orElse(null);
-            if (patientBySusNumber != null && !patient.equals(patientBySusNumber)) {
-                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                        "Já existe um outro paciente utilizando este código SUS, você não pode utilizar neste cadastro.");
-            }
-        }
-    }
-
-    /**
-     * Busca por chave composta
-     * 
-     * @param name
-     * @param motherName
-     * @return
-     */
-    public List<Patient> findByComposition(String name, String motherName) {
-        name = "%".concat(name).concat("%");
-        motherName = "%".concat(motherName).concat("%");
-        return dao.findByComposition(name, motherName);
+    public PatientInfoDTO persist(PatientInfoDTO request) {
+        return createPatientBusinessHandler.persist(request);
     }
 
     /**
