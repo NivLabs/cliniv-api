@@ -26,7 +26,7 @@ import br.com.nivlabs.gp.repository.ProcedureRepository;
  *
  */
 @Service
-public class ProcedureService implements GenericService {
+public class ProcedureService implements BaseService {
 
     @Autowired
     private ProcedureRepository dao;

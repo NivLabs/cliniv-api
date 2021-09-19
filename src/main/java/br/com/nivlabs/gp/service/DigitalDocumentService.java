@@ -20,7 +20,7 @@ import br.com.nivlabs.gp.repository.DigitalDocumentRepository;
  * @since 19 de out de 2019
  */
 @Service
-public class DigitalDocumentService implements GenericService {
+public class DigitalDocumentService implements BaseService {
 
     @Autowired
     private DigitalDocumentRepository dao;

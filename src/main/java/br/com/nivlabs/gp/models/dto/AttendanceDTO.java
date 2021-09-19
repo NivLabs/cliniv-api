@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import br.com.nivlabs.gp.enums.AttendanceLevel;
 import br.com.nivlabs.gp.enums.EntryType;
@@ -50,8 +51,8 @@ public class AttendanceDTO extends DataTransferObjectBase {
     @ApiModelProperty("Setor atual em que o paciente se encontra")
     private String sectorDescription;
 
-    @ApiModelProperty("Código SUS")
-    private String susNumber;
+    @ApiModelProperty("Código CNS")
+    private String cnsNumber;
 
     @ApiModelProperty("Nível de risco do paciente do atendimento")
     private AttendanceLevel level;
@@ -69,12 +70,12 @@ public class AttendanceDTO extends DataTransferObjectBase {
      * @param patientType
      * @param patientId
      * @param sectorDescription
-     * @param susNumber
+     * @param cnsNumber
      * @param sectorDescripton
      * @param level
      */
     public AttendanceDTO(Long id, String fullName, String socialName, LocalDateTime entryDatetime, String entryCause,
-            EntryType type, Long patientId, String sectorDescription, String susNumber, AttendanceLevel level) {
+            EntryType type, Long patientId, String sectorDescription, String cnsNumber, AttendanceLevel level) {
         super();
         this.id = id;
         this.fullName = fullName;
@@ -84,7 +85,7 @@ public class AttendanceDTO extends DataTransferObjectBase {
         this.type = type;
         this.patientId = patientId;
         this.sectorDescription = sectorDescription;
-        this.susNumber = susNumber;
+        this.cnsNumber = cnsNumber;
         this.level = level;
     }
 
@@ -172,12 +173,12 @@ public class AttendanceDTO extends DataTransferObjectBase {
         this.sectorDescription = sectorDescription;
     }
 
-    public String getSusNumber() {
-        return susNumber;
+    public String getCnsNumber() {
+        return cnsNumber;
     }
 
-    public void setSusNumber(String susNumber) {
-        this.susNumber = susNumber;
+    public void setCnsNumber(String cnsNumber) {
+        this.cnsNumber = cnsNumber;
     }
 
     public AttendanceLevel getLevel() {
@@ -189,22 +190,40 @@ public class AttendanceDTO extends DataTransferObjectBase {
     }
 
     @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("AttendanceDTO [id=");
+        builder.append(id);
+        builder.append(", fullName=");
+        builder.append(fullName);
+        builder.append(", socialName=");
+        builder.append(socialName);
+        builder.append(", entryDatetime=");
+        builder.append(entryDatetime);
+        builder.append(", entryCause=");
+        builder.append(entryCause);
+        builder.append(", isFinished=");
+        builder.append(isFinished);
+        builder.append(", type=");
+        builder.append(type);
+        builder.append(", patientType=");
+        builder.append(patientType);
+        builder.append(", patientId=");
+        builder.append(patientId);
+        builder.append(", sectorDescription=");
+        builder.append(sectorDescription);
+        builder.append(", cnsNumber=");
+        builder.append(cnsNumber);
+        builder.append(", level=");
+        builder.append(level);
+        builder.append("]");
+        return builder.toString();
+    }
+
+    @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((entryCause == null) ? 0 : entryCause.hashCode());
-        result = prime * result + ((entryDatetime == null) ? 0 : entryDatetime.hashCode());
-        result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((isFinished == null) ? 0 : isFinished.hashCode());
-        result = prime * result + ((level == null) ? 0 : level.hashCode());
-        result = prime * result + ((patientId == null) ? 0 : patientId.hashCode());
-        result = prime * result + ((patientType == null) ? 0 : patientType.hashCode());
-        result = prime * result + ((sectorDescription == null) ? 0 : sectorDescription.hashCode());
-        result = prime * result + ((socialName == null) ? 0 : socialName.hashCode());
-        result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
+        return Objects.hash(cnsNumber, entryCause, entryDatetime, fullName, id, isFinished, level, patientId, patientType,
+                            sectorDescription, socialName, type);
     }
 
     @Override
@@ -216,66 +235,12 @@ public class AttendanceDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         AttendanceDTO other = (AttendanceDTO) obj;
-        if (entryCause == null) {
-            if (other.entryCause != null)
-                return false;
-        } else if (!entryCause.equals(other.entryCause))
-            return false;
-        if (entryDatetime == null) {
-            if (other.entryDatetime != null)
-                return false;
-        } else if (!entryDatetime.equals(other.entryDatetime))
-            return false;
-        if (fullName == null) {
-            if (other.fullName != null)
-                return false;
-        } else if (!fullName.equals(other.fullName))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (isFinished == null) {
-            if (other.isFinished != null)
-                return false;
-        } else if (!isFinished.equals(other.isFinished))
-            return false;
-        if (level != other.level)
-            return false;
-        if (patientId == null) {
-            if (other.patientId != null)
-                return false;
-        } else if (!patientId.equals(other.patientId))
-            return false;
-        if (patientType != other.patientType)
-            return false;
-        if (sectorDescription == null) {
-            if (other.sectorDescription != null)
-                return false;
-        } else if (!sectorDescription.equals(other.sectorDescription))
-            return false;
-        if (socialName == null) {
-            if (other.socialName != null)
-                return false;
-        } else if (!socialName.equals(other.socialName))
-            return false;
-        if (susNumber == null) {
-            if (other.susNumber != null)
-                return false;
-        } else if (!susNumber.equals(other.susNumber))
-            return false;
-        if (type != other.type)
-            return false;
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "AttendanceDTO [id=" + id + ", fullName=" + fullName + ", socialName=" + socialName + ", entryDatetime=" + entryDatetime
-                + ", entryCause=" + entryCause + ", isFinished=" + isFinished + ", type=" + type + ", patientType=" + patientType
-                + ", patientId=" + patientId + ", sectorDescription=" + sectorDescription + ", susNumber=" + susNumber
-                + ", level=" + level + "]";
+        return Objects.equals(cnsNumber, other.cnsNumber) && Objects.equals(entryCause, other.entryCause)
+                && Objects.equals(entryDatetime, other.entryDatetime) && Objects.equals(fullName, other.fullName)
+                && Objects.equals(id, other.id) && Objects.equals(isFinished, other.isFinished) && level == other.level
+                && Objects.equals(patientId, other.patientId) && patientType == other.patientType
+                && Objects.equals(sectorDescription, other.sectorDescription) && Objects.equals(socialName, other.socialName)
+                && type == other.type;
     }
 
 }

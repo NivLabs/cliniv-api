@@ -37,7 +37,7 @@ import br.com.nivlabs.gp.repository.HealthPlanRepository;
  * @since 04 de agosto de 2020
  */
 @Service
-public class HealthOperatorService implements GenericService {
+public class HealthOperatorService implements BaseService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

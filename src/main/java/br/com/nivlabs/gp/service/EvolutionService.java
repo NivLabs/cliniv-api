@@ -36,7 +36,7 @@ import br.com.nivlabs.gp.repository.EvolutionRepository;
  *
  */
 @Service
-public class EvolutionService implements GenericService {
+public class EvolutionService implements BaseService {
 
     private static final String EVOLUTION_REPORT_NAME = "Relatório de Evolução Clínica";
 

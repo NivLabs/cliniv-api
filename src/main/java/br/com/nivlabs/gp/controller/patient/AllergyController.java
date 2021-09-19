@@ -6,7 +6,6 @@ import java.net.URISyntaxException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,10 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.controller.filters.AllergyFilters;
 import br.com.nivlabs.gp.models.dto.AllergyDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;
-import br.com.nivlabs.gp.service.AllergyService;
+import br.com.nivlabs.gp.service.alergy.AllergyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -40,12 +40,10 @@ import io.swagger.annotations.ApiOperation;
 @Api("Endpoint - Alergias")
 @RestController
 @RequestMapping(value = "/allergy")
-public class AllergyController {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+public class AllergyController extends BaseController<AllergyService> {
 
     @Autowired
-    private AllergyService service;
+    private Logger logger;
 
     @ApiOperation(nickname = "allergy-get", value = "Busca uma página de alergias")
     @GetMapping

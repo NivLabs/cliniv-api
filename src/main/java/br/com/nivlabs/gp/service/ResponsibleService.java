@@ -106,6 +106,9 @@ public class ResponsibleService {
         Person person = responsibleOrigin.getPerson();
 
         ResponsibleInfoDTO responsibleConverted = new ResponsibleInfoDTO();
+        responsibleConverted.setEmail(person.getEmail());
+        responsibleConverted.setPrincipalNumber(person.getPrincipalNumber());
+        responsibleConverted.setSecondaryNumber(person.getSecondaryNumber());
         BeanUtils.copyProperties(responsibleOrigin.getPerson(), responsibleConverted, Person_.ID);
         BeanUtils.copyProperties(responsibleOrigin, responsibleConverted);
         responsibleConverted.setDocument(new DocumentDTO(null, DocumentType.CPF, person.getCpf(), null, null, null, null));

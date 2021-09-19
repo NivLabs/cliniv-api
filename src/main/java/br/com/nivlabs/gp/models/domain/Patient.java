@@ -2,6 +2,7 @@ package br.com.nivlabs.gp.models.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -39,7 +40,7 @@ public class Patient extends BaseObjectWithCreatedAt {
     private Long id;
 
     @Column(name = "CODIGO_SUS")
-    private String susNumber;
+    private String cnsNumber;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(name = "ID_PESSOA")
@@ -79,12 +80,12 @@ public class Patient extends BaseObjectWithCreatedAt {
         this.id = id;
     }
 
-    public String getSusNumber() {
-        return susNumber;
+    public String getCnsNumber() {
+        return cnsNumber;
     }
 
-    public void setSusNumber(String susNumber) {
-        this.susNumber = susNumber;
+    public void setCnsNumber(String cnsNumber) {
+        this.cnsNumber = cnsNumber;
     }
 
     public Person getPerson() {
@@ -137,23 +138,30 @@ public class Patient extends BaseObjectWithCreatedAt {
 
     @Override
     public String toString() {
-        return "Patient [id=" + id + ", susNumber=" + susNumber + ", person=" + person + ", healthPlan=" + healthPlan + ", healthPlanCode="
-                + healthPlanCode + ", type=" + type + ", annotations=" + annotations + ", allergies=" + allergies + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Patient [id=");
+        builder.append(id);
+        builder.append(", cnsNumber=");
+        builder.append(cnsNumber);
+        builder.append(", person=");
+        builder.append(person);
+        builder.append(", healthPlan=");
+        builder.append(healthPlan);
+        builder.append(", healthPlanCode=");
+        builder.append(healthPlanCode);
+        builder.append(", type=");
+        builder.append(type);
+        builder.append(", annotations=");
+        builder.append(annotations);
+        builder.append(", allergies=");
+        builder.append(allergies);
+        builder.append("]");
+        return builder.toString();
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((allergies == null) ? 0 : allergies.hashCode());
-        result = prime * result + ((annotations == null) ? 0 : annotations.hashCode());
-        result = prime * result + ((healthPlan == null) ? 0 : healthPlan.hashCode());
-        result = prime * result + ((healthPlanCode == null) ? 0 : healthPlanCode.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((person == null) ? 0 : person.hashCode());
-        result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
+        return Objects.hash(allergies, annotations, cnsNumber, healthPlan, healthPlanCode, id, person, type);
     }
 
     @Override
@@ -165,44 +173,10 @@ public class Patient extends BaseObjectWithCreatedAt {
         if (getClass() != obj.getClass())
             return false;
         Patient other = (Patient) obj;
-        if (allergies == null) {
-            if (other.allergies != null)
-                return false;
-        } else if (!allergies.equals(other.allergies))
-            return false;
-        if (annotations == null) {
-            if (other.annotations != null)
-                return false;
-        } else if (!annotations.equals(other.annotations))
-            return false;
-        if (healthPlan == null) {
-            if (other.healthPlan != null)
-                return false;
-        } else if (!healthPlan.equals(other.healthPlan))
-            return false;
-        if (healthPlanCode == null) {
-            if (other.healthPlanCode != null)
-                return false;
-        } else if (!healthPlanCode.equals(other.healthPlanCode))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (person == null) {
-            if (other.person != null)
-                return false;
-        } else if (!person.equals(other.person))
-            return false;
-        if (susNumber == null) {
-            if (other.susNumber != null)
-                return false;
-        } else if (!susNumber.equals(other.susNumber))
-            return false;
-        if (type != other.type)
-            return false;
-        return true;
+        return Objects.equals(allergies, other.allergies) && Objects.equals(annotations, other.annotations)
+                && Objects.equals(cnsNumber, other.cnsNumber) && Objects.equals(healthPlan, other.healthPlan)
+                && Objects.equals(healthPlanCode, other.healthPlanCode) && Objects.equals(id, other.id)
+                && Objects.equals(person, other.person) && type == other.type;
     }
 
 }

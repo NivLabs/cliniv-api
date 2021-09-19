@@ -39,7 +39,7 @@ import br.com.nivlabs.gp.repository.PrescriptionRepository;
  *
  */
 @Service
-public class PrescriptionService implements GenericService {
+public class PrescriptionService implements BaseService {
 
     private static final String TODAY = "TODAY";
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";

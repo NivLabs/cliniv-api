@@ -22,7 +22,7 @@ import br.com.nivlabs.gp.repository.HealthPlanRepository;
  * @since 25/09/2020
  */
 @Service
-public class HealthPlanService implements GenericService {
+public class HealthPlanService implements BaseService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

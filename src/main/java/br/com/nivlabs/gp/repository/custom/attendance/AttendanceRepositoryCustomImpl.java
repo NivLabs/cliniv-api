@@ -58,7 +58,7 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
                                           root.get(Attendance_.entryType),
                                           root.get(Attendance_.patient).get(Patient_.id),
                                           root.get(Attendance_.currentAccommodation).get(Accommodation_.sector).get(Sector_.description),
-                                          root.get(Attendance_.patient).get(Patient_.susNumber),
+                                          root.get(Attendance_.patient).get(Patient_.cnsNumber),
                                           root.get(Attendance_.level)));
         return getPage(filters, pageSettings, builder, criteria, root);
     }

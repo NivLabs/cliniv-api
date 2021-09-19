@@ -2,6 +2,7 @@ package br.com.nivlabs.gp.models.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -51,10 +52,29 @@ public class UserApplication extends BaseObjectWithCreatedAt {
     @Column(name = "ATIVO")
     private boolean active;
 
+    @Column(name = "PRIMEIRO_LOGIN")
+    private boolean firstSignin;
+
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USUARIO_PERMISSAO", joinColumns = {@JoinColumn(name = "ID_USUARIO")}, inverseJoinColumns = {@JoinColumn(name = "ID_PERMISSAO")})
     private List<Role> roles = new ArrayList<>();
+
+    public UserApplication() {
+        super();
+    }
+
+    public UserApplication(Long id, Person person, String userName, String password, boolean active, boolean firstSignin,
+            List<Role> roles) {
+        super();
+        this.id = id;
+        this.person = person;
+        this.userName = userName;
+        this.password = password;
+        this.active = active;
+        this.firstSignin = firstSignin;
+        this.roles = roles;
+    }
 
     /**
      * @param userId
@@ -63,85 +83,128 @@ public class UserApplication extends BaseObjectWithCreatedAt {
         this.id = userId;
     }
 
-    public UserApplication() {
-        super();
-    }
-
-    public UserApplication(Long id, Person person, String userName, String password, boolean active, List<Role> roles) {
-        super();
-        this.id = id;
-        this.person = person;
-        this.userName = userName;
-        this.password = password;
-        this.active = active;
-        this.roles = roles;
-    }
-
+    /**
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * @return the person
+     */
     public Person getPerson() {
         return person;
     }
 
+    /**
+     * @param person the person to set
+     */
     public void setPerson(Person person) {
         this.person = person;
     }
 
+    /**
+     * @return the userName
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * @param userName the userName to set
+     */
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    /**
+     * @return the password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * @param password the password to set
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * @return the active
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * @param active the active to set
+     */
     public void setActive(boolean active) {
         this.active = active;
     }
 
+    /**
+     * @return the firstSignin
+     */
+    public boolean isFirstSignin() {
+        return firstSignin;
+    }
+
+    /**
+     * @param firstSignin the firstSignin to set
+     */
+    public void setFirstSignin(boolean firstSignin) {
+        this.firstSignin = firstSignin;
+    }
+
+    /**
+     * @return the roles
+     */
     public List<Role> getRoles() {
         return roles;
     }
 
+    /**
+     * @param roles the roles to set
+     */
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
     @Override
     public String toString() {
-        return "UserApplication [id=" + id + ", person=" + person + ", userName=" + userName + ", password=" + password + ", active="
-                + active + ", roles=" + roles + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("UserApplication [id=");
+        builder.append(id);
+        builder.append(", person=");
+        builder.append(person);
+        builder.append(", userName=");
+        builder.append(userName);
+        builder.append(", password=");
+        builder.append(password);
+        builder.append(", active=");
+        builder.append(active);
+        builder.append(", firstSignin=");
+        builder.append(firstSignin);
+        builder.append(", roles=");
+        builder.append(roles);
+        builder.append("]");
+        return builder.toString();
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (active ? 1231 : 1237);
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((password == null) ? 0 : password.hashCode());
-        result = prime * result + ((person == null) ? 0 : person.hashCode());
-        result = prime * result + ((roles == null) ? 0 : roles.hashCode());
-        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-        return result;
+        return Objects.hash(active, firstSignin, id, password, person, roles, userName);
     }
 
     @Override
@@ -153,34 +216,9 @@ public class UserApplication extends BaseObjectWithCreatedAt {
         if (getClass() != obj.getClass())
             return false;
         UserApplication other = (UserApplication) obj;
-        if (active != other.active)
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (password == null) {
-            if (other.password != null)
-                return false;
-        } else if (!password.equals(other.password))
-            return false;
-        if (person == null) {
-            if (other.person != null)
-                return false;
-        } else if (!person.equals(other.person))
-            return false;
-        if (roles == null) {
-            if (other.roles != null)
-                return false;
-        } else if (!roles.equals(other.roles))
-            return false;
-        if (userName == null) {
-            if (other.userName != null)
-                return false;
-        } else if (!userName.equals(other.userName))
-            return false;
-        return true;
+        return active == other.active && firstSignin == other.firstSignin && Objects.equals(id, other.id)
+                && Objects.equals(password, other.password) && Objects.equals(person, other.person) && Objects.equals(roles, other.roles)
+                && Objects.equals(userName, other.userName);
     }
 
 }

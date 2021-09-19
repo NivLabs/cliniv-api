@@ -1,22 +1,23 @@
-package br.com.nivlabs.gp.service.security;
+package br.com.nivlabs.gp.util;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import br.com.nivlabs.gp.config.security.UserOfSystem;
 
 /**
- * Classe UserOfSystemService.java
  * 
- * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
- * @since 15 de set de 2019
+ * Utilitário de contexto de segurança
+ *
+ * @author viniciosarodrigues
+ * @since 16-09-2021
+ *
  */
-public class UserOfSystemService {
+public class SecurityContextUtil {
 
-    private UserOfSystemService() {
+    private SecurityContextUtil() {
     }
 
-    public static UserOfSystem authenticated() {
+    public static UserOfSystem getAuthenticatedUser() {
         try {
             return (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         } catch (Exception e) {
