@@ -42,6 +42,7 @@ import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
+import br.com.nivlabs.gp.service.patient.PatientService;
 
 /**
  * Classe AttendanceService.java
@@ -50,7 +51,7 @@ import br.com.nivlabs.gp.repository.AttendanceRepository;
  * @since 8 de set de 2019
  */
 @Service
-public class AttendanceService implements GenericService {
+public class AttendanceService implements BaseService {
 
     @Autowired
     private Logger logger;
@@ -112,7 +113,7 @@ public class AttendanceService implements GenericService {
         medicalRecord.setId(objectFromDb.getId());
         medicalRecord.setPatientId(objectFromDb.getPatient().getId());
         medicalRecord.setDocument(new DocumentDTO(null, DocumentType.CPF, person.getCpf(), null, null, null, null));
-        medicalRecord.setSusNumber(objectFromDb.getPatient().getSusNumber());
+        medicalRecord.setCnsNumber(objectFromDb.getPatient().getCnsNumber());
         medicalRecord.setEntryDateTime(objectFromDb.getEntryDateTime());
         medicalRecord.setExitDateTime(objectFromDb.getExitDateTime());
         medicalRecord.setAttendanceLevel(objectFromDb.getLevel());

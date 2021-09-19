@@ -38,7 +38,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @since 17 Sept, 2019
  */
 @Service
-public class AttendanceEventService implements GenericService {
+public class AttendanceEventService implements BaseService {
 
     private static final String SUCCESS_CONVERTION_MESSAGE = "Conversão concluída com sucesso!";
 

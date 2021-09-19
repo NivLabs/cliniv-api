@@ -44,7 +44,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  * @since 30 de nov de 2019
  */
 @Service
-public class InstituteService implements GenericService {
+public class InstituteService implements BaseService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

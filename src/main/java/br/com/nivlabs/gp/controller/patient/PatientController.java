@@ -26,7 +26,7 @@ import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
-import br.com.nivlabs.gp.service.PatientService;
+import br.com.nivlabs.gp.service.patient.PatientService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -55,7 +55,7 @@ public class PatientController {
     public ResponseEntity<Page<PatientDTO>> findPage(PatientFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
                                                filters.getOrderBy());
-        return ResponseEntity.ok(service.getListOfPatientInfo(filters, pageSettings));
+        return ResponseEntity.ok(service.getPage(filters, pageSettings));
     }
 
     @ApiOperation(nickname = "patient-post", value = "Insere um novo paciente na aplicação")
@@ -95,7 +95,7 @@ public class PatientController {
             case CPF:
                 return ResponseEntity.ok(service.findByCpf(document));
             case SUS:
-                return ResponseEntity.ok(service.findBySusNumber(document));
+                return ResponseEntity.ok(service.findByCnsNumber(document));
             default:
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo de documento desconhecido, esperados: [CPF | SUS]");
         }

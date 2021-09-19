@@ -22,7 +22,7 @@ import br.com.nivlabs.gp.repository.PersonAddressRepository;
  * @since 19 de out de 2019
  */
 @Service
-public class PersonAddressService implements GenericService {
+public class PersonAddressService implements BaseService {
 
     @Autowired
     private PersonAddressRepository dao;

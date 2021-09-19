@@ -7,6 +7,5 @@ package br.com.nivlabs.gp.service;
  *
  *
  */
-public interface GenericService {
-
+public interface BaseService {
 }

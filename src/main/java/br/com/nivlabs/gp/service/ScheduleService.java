@@ -27,6 +27,7 @@ import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.ScheduleDTO;
 import br.com.nivlabs.gp.models.dto.ScheduleInfoDTO;
 import br.com.nivlabs.gp.repository.ScheduleRepository;
+import br.com.nivlabs.gp.service.patient.PatientService;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
@@ -36,7 +37,7 @@ import br.com.nivlabs.gp.util.StringUtils;
  *
  */
 @Service
-public class ScheduleService implements GenericService {
+public class ScheduleService implements BaseService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 

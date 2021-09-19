@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 15 de set de 2019
  */
 @ApiModel(description = "Requisição de Senha perdida")
-public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
+public class ChangePasswordByForgotPasswordRequestDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8663867905476131957L;
 
@@ -38,7 +38,7 @@ public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
     @NotNull(message = "Informe a nova senha!")
     private String newPassword;
 
-    public ForgotPasswordRequestDTO() {
+    public ChangePasswordByForgotPasswordRequestDTO() {
         super();
     }
 
@@ -93,7 +93,7 @@ public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ForgotPasswordRequestDTO other = (ForgotPasswordRequestDTO) obj;
+        ChangePasswordByForgotPasswordRequestDTO other = (ChangePasswordByForgotPasswordRequestDTO) obj;
         if (bornDate == null) {
             if (other.bornDate != null)
                 return false;
@@ -119,7 +119,7 @@ public class ForgotPasswordRequestDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "ForgotPasswordRequestDTO [username=" + username + ", motherName=" + motherName + ", bornDate=" + bornDate + ", newPassword="
+        return "ChangePasswordByForgotPasswordRequestDTO [username=" + username + ", motherName=" + motherName + ", bornDate=" + bornDate + ", newPassword="
                 + newPassword + "]";
     }
 
