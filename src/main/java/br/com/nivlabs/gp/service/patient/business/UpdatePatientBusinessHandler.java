@@ -49,7 +49,7 @@ public class UpdatePatientBusinessHandler extends CreateOrUpdatePatientBusinessH
         logger.info("Atualizando informações do paciente :: {} | {}", request.getId(),
                     request.getFullName() == null ? "Nome não informado" : request.getFullName());
 
-        checkSusCode(request, patientEntity);
+        checkCnsCode(request, patientEntity);
 
         try {
             if (request.getDocument() != null && request.getDocument().getValue() != null)

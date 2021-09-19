@@ -49,10 +49,10 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * @param entity
      * @param patient
      */
-    protected void checkSusCode(PatientInfoDTO entity, Patient patient) {
+    protected void checkCnsCode(PatientInfoDTO entity, Patient patient) {
         if (entity.getCnsNumber() != null && !entity.getCnsNumber().equals(patient.getCnsNumber())) {
-            Patient patientBySusNumber = patientRepo.findByCnsNumber(entity.getCnsNumber()).orElse(null);
-            if (patientBySusNumber != null && !patient.equals(patientBySusNumber)) {
+            Patient patientByCnsNumber = patientRepo.findByCnsNumber(entity.getCnsNumber()).orElse(null);
+            if (patientByCnsNumber != null && !patient.equals(patientByCnsNumber)) {
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                         "Já existe um outro paciente utilizando este código SUS, você não pode utilizar neste cadastro.");
             }

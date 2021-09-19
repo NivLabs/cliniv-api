@@ -146,6 +146,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
         patientInfo.setMotherName(person.getMotherName());
         patientInfo.setPrincipalNumber(person.getPrincipalNumber());
         patientInfo.setSecondaryNumber(person.getSecondaryNumber());
+        patientInfo.setEmail(person.getEmail());
 
         if (person.getAddress() != null) {
             AddressDTO address = new AddressDTO();

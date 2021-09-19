@@ -19,8 +19,8 @@ public class PatientDTO extends PersonDTO {
 
     private static final long serialVersionUID = -1070682704153329772L;
 
-    @ApiModelProperty("Número do SUS")
-    private String susNumber;
+    @ApiModelProperty("CNS")
+    private String cnsNumber;
 
     @ApiModelProperty("Tipo do paciente (Identificado ou não identificado)")
     private PatientType type;
@@ -38,11 +38,11 @@ public class PatientDTO extends PersonDTO {
      * @param bornDate
      * @param principalNumber
      * @param gender
-     * @param susNumber
+     * @param cnsNumber
      * @param type
      */
     public PatientDTO(Long id, String fullName, String socialName, String cpf, LocalDate bornDate, String principalNumber,
-            Gender gender, String susNumber, PatientType type) {
+            Gender gender, String cnsNumber, PatientType type) {
         super.setId(id);
         super.setFullName(fullName);
         super.setSocialName(socialName);
@@ -50,57 +50,47 @@ public class PatientDTO extends PersonDTO {
         super.setBornDate(bornDate);
         super.setPrincipalNumber(principalNumber);
         super.setGender(gender);
-        this.susNumber = susNumber;
+        this.cnsNumber = cnsNumber;
         this.type = type;
     }
 
-    public String getSusNumber() {
-        return susNumber;
+    /**
+     * @return the cnsNumber
+     */
+    public String getCnsNumber() {
+        return cnsNumber;
     }
 
-    public void setSusNumber(String susNumber) {
-        this.susNumber = susNumber;
+    /**
+     * @param cnsNumber the cnsNumber to set
+     */
+    public void setCnsNumber(String cnsNumber) {
+        this.cnsNumber = cnsNumber;
     }
 
+    /**
+     * @return the type
+     */
     public PatientType getType() {
         return type;
     }
 
+    /**
+     * @param type the type to set
+     */
     public void setType(PatientType type) {
         this.type = type;
     }
 
     @Override
     public String toString() {
-        return "PatientDTO [susNumber=" + susNumber + ", type=" + type + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((susNumber == null) ? 0 : susNumber.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (!super.equals(obj))
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        PatientDTO other = (PatientDTO) obj;
-        if (susNumber == null) {
-            if (other.susNumber != null)
-                return false;
-        } else if (!susNumber.equals(other.susNumber))
-            return false;
-        if (type != other.type)
-            return false;
-        return true;
+        StringBuilder builder = new StringBuilder();
+        builder.append("PatientDTO [cnsNumber=");
+        builder.append(cnsNumber);
+        builder.append(", type=");
+        builder.append(type);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

@@ -65,8 +65,8 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
     @ApiModelProperty("Número de Telfone/Celular do paciente")
     private String principalNumber;
 
-    @ApiModelProperty("Número do SUS")
-    private String susNumber;
+    @ApiModelProperty("CNS")
+    private String cnsNumber;
 
     @ApiModelProperty("Data de nascimento")
     @DateTimeFormat(iso = ISO.DATE)
@@ -93,58 +93,114 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
     @ApiModelProperty("Nível de Risco de atendimento")
     private AttendanceLevel attendanceLevel;
 
+    /**
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * @return the entryDateTime
+     */
     public LocalDateTime getEntryDateTime() {
         return entryDateTime;
     }
 
+    /**
+     * @param entryDateTime the entryDateTime to set
+     */
     public void setEntryDateTime(LocalDateTime entryDateTime) {
         this.entryDateTime = entryDateTime;
     }
 
+    /**
+     * @return the reasonForEntry
+     */
+    public String getReasonForEntry() {
+        return reasonForEntry;
+    }
+
+    /**
+     * @param reasonForEntry the reasonForEntry to set
+     */
+    public void setReasonForEntry(String reasonForEntry) {
+        this.reasonForEntry = reasonForEntry;
+    }
+
+    /**
+     * @return the exitDateTime
+     */
     public LocalDateTime getExitDateTime() {
         return exitDateTime;
     }
 
+    /**
+     * @param exitDateTime the exitDateTime to set
+     */
     public void setExitDateTime(LocalDateTime exitDateTime) {
         this.exitDateTime = exitDateTime;
     }
 
+    /**
+     * @return the patientId
+     */
     public Long getPatientId() {
         return patientId;
     }
 
+    /**
+     * @param patientId the patientId to set
+     */
     public void setPatientId(Long patientId) {
         this.patientId = patientId;
     }
 
+    /**
+     * @return the document
+     */
     public DocumentDTO getDocument() {
         return document;
     }
 
+    /**
+     * @param document the document to set
+     */
     public void setDocument(DocumentDTO document) {
         this.document = document;
     }
 
+    /**
+     * @return the anamnesisDigitalDocuentId
+     */
     public Long getAnamnesisDigitalDocuentId() {
         return anamnesisDigitalDocuentId;
     }
 
+    /**
+     * @param anamnesisDigitalDocuentId the anamnesisDigitalDocuentId to set
+     */
     public void setAnamnesisDigitalDocuentId(Long anamnesisDigitalDocuentId) {
         this.anamnesisDigitalDocuentId = anamnesisDigitalDocuentId;
     }
 
+    /**
+     * @return the fullName
+     */
     public String getFullName() {
         return fullName;
     }
 
+    /**
+     * @param fullName the fullName to set
+     */
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
@@ -163,100 +219,158 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         this.bloodType = bloodType;
     }
 
+    /**
+     * @return the socialName
+     */
     public String getSocialName() {
         return socialName;
     }
 
+    /**
+     * @param socialName the socialName to set
+     */
     public void setSocialName(String socialName) {
         this.socialName = socialName;
     }
 
+    /**
+     * @return the principalNumber
+     */
     public String getPrincipalNumber() {
         return principalNumber;
     }
 
+    /**
+     * @param principalNumber the principalNumber to set
+     */
     public void setPrincipalNumber(String principalNumber) {
         this.principalNumber = principalNumber;
     }
 
-    public String getSusNumber() {
-        return susNumber;
+    /**
+     * @return the cnsNumber
+     */
+    public String getCnsNumber() {
+        return cnsNumber;
     }
 
-    public void setSusNumber(String susNumber) {
-        this.susNumber = susNumber;
+    /**
+     * @param cnsNumber the cnsNumber to set
+     */
+    public void setCnsNumber(String cnsNumber) {
+        this.cnsNumber = cnsNumber;
     }
 
+    /**
+     * @return the bornDate
+     */
     public LocalDate getBornDate() {
         return bornDate;
     }
 
+    /**
+     * @param bornDate the bornDate to set
+     */
     public void setBornDate(LocalDate bornDate) {
         this.bornDate = bornDate;
     }
 
+    /**
+     * @return the lastAccommodation
+     */
     public AccommodationDTO getLastAccommodation() {
         return lastAccommodation;
     }
 
+    /**
+     * @param lastAccommodation the lastAccommodation to set
+     */
     public void setLastAccommodation(AccommodationDTO lastAccommodation) {
         this.lastAccommodation = lastAccommodation;
     }
 
+    /**
+     * @return the gender
+     */
     public Gender getGender() {
         return gender;
     }
 
+    /**
+     * @param gender the gender to set
+     */
     public void setGender(Gender gender) {
         this.gender = gender;
     }
 
+    /**
+     * @return the events
+     */
     public List<AttendanceEventDTO> getEvents() {
         return events;
     }
 
+    /**
+     * @param events the events to set
+     */
     public void setEvents(List<AttendanceEventDTO> events) {
         this.events = events;
     }
 
+    /**
+     * @return the medicines
+     */
     public List<MedicineInfoDTO> getMedicines() {
         return medicines;
     }
 
+    /**
+     * @param medicines the medicines to set
+     */
     public void setMedicines(List<MedicineInfoDTO> medicines) {
         this.medicines = medicines;
     }
 
+    /**
+     * @return the evolutions
+     */
     public List<EvolutionInfoDTO> getEvolutions() {
         return evolutions;
     }
 
+    /**
+     * @param evolutions the evolutions to set
+     */
     public void setEvolutions(List<EvolutionInfoDTO> evolutions) {
         this.evolutions = evolutions;
     }
 
+    /**
+     * @return the allergies
+     */
     public List<String> getAllergies() {
         return allergies;
     }
 
+    /**
+     * @param allergies the allergies to set
+     */
     public void setAllergies(List<String> allergies) {
         this.allergies = allergies;
     }
 
+    /**
+     * @return the attendanceLevel
+     */
     public AttendanceLevel getAttendanceLevel() {
         return attendanceLevel;
     }
 
+    /**
+     * @param attendanceLevel the attendanceLevel to set
+     */
     public void setAttendanceLevel(AttendanceLevel attendanceLevel) {
         this.attendanceLevel = attendanceLevel;
-    }
-
-    public String getReasonForEntry() {
-        return reasonForEntry;
-    }
-
-    public void setReasonForEntry(String reasonForEntry) {
-        this.reasonForEntry = reasonForEntry;
     }
 
     @Override
@@ -284,8 +398,8 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         builder.append(socialName);
         builder.append(", principalNumber=");
         builder.append(principalNumber);
-        builder.append(", susNumber=");
-        builder.append(susNumber);
+        builder.append(", cnsNumber=");
+        builder.append(cnsNumber);
         builder.append(", bornDate=");
         builder.append(bornDate);
         builder.append(", lastAccommodation=");
