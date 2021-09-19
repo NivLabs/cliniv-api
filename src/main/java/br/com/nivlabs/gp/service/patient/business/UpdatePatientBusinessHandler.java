@@ -31,7 +31,7 @@ public class UpdatePatientBusinessHandler extends CreateOrUpdatePatientBusinessH
      * 
      * @param id Identificador único do paciente
      * @param request Objeto de transferência com informações do paciente
-     * @return
+     * @return Informações atualizadas do paciente
      */
     @Transactional
     public PatientInfoDTO update(PatientInfoDTO request) {
