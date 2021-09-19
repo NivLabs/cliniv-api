@@ -24,8 +24,8 @@ import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
 import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.repository.PersonRepository;
-import br.com.nivlabs.gp.service.AttendanceService;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
+import br.com.nivlabs.gp.service.attendance.AttendanceService;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**

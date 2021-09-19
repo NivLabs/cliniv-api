@@ -28,6 +28,7 @@ import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.AccommodationRepository;
 import br.com.nivlabs.gp.repository.EvolutionRepository;
+import br.com.nivlabs.gp.service.attendance.AttendanceService;
 
 /**
  * Camada de serviço para manipulação de evoluções clínicas
