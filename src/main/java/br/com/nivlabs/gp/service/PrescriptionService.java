@@ -31,6 +31,7 @@ import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.PrescriptionRepository;
+import br.com.nivlabs.gp.service.attendance.AttendanceService;
 
 /**
  * Camada de serviço para manipulação de prescrição médica do paciente

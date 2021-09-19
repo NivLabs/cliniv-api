@@ -22,13 +22,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.controller.filters.AttendanceFilters;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
-import br.com.nivlabs.gp.service.AttendanceService;
+import br.com.nivlabs.gp.service.attendance.AttendanceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -43,10 +44,7 @@ import io.swagger.annotations.ApiOperation;
 @Api("Endpoint - Atendimento")
 @RestController
 @RequestMapping(value = "/attendance")
-public class AttendanceController {
-
-    @Autowired
-    private AttendanceService service;
+public class AttendanceController extends BaseController<AttendanceService> {
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -73,7 +71,7 @@ public class AttendanceController {
     public ResponseEntity<MedicalRecordDTO> persist(@Validated @RequestBody(required = true) NewAttandenceDTO newAttendance,
                                                     HttpServletResponse response) {
 
-        MedicalRecordDTO createdAttendance = service.persistNewAttendance(newAttendance);
+        MedicalRecordDTO createdAttendance = service.createNewAttendance(newAttendance);
 
         publisher.publishEvent(new CreatedResourceEvent(this, response, createdAttendance.getId()));
 

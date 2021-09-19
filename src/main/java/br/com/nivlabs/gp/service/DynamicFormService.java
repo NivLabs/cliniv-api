@@ -39,6 +39,7 @@ import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.DynamicFormAnsweredRepository;
 import br.com.nivlabs.gp.repository.DynamicFormQuestionRepository;
 import br.com.nivlabs.gp.repository.DynamicFormRepository;
+import br.com.nivlabs.gp.service.attendance.AttendanceService;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
