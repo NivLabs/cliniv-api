@@ -1,24 +1,19 @@
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.attendance.business;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
-import br.com.nivlabs.gp.models.domain.AttendanceEvent_;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
@@ -28,24 +23,32 @@ import br.com.nivlabs.gp.models.dto.ProcedureDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
+import br.com.nivlabs.gp.service.BaseBusinessHandler;
+import br.com.nivlabs.gp.service.DigitalDocumentService;
+import br.com.nivlabs.gp.service.ProcedureService;
+import br.com.nivlabs.gp.service.ResponsibleService;
+import br.com.nivlabs.gp.service.UserService;
+import br.com.nivlabs.gp.util.SecurityContextUtil;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
- * Classe VisitEventService.java
  * 
- * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
+ * Camada de negócio relacionada à processo de criação de evento de atendimento
+ * 
+ * @author viniciosarodrigues
+ * @since 19-09-2021
  *
- * @since 17 Sept, 2019
  */
-@Service
-public class AttendanceEventService implements BaseService {
+@Component
+public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler {
 
     private static final String SUCCESS_CONVERTION_MESSAGE = "Conversão concluída com sucesso!";
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private Logger logger;
 
     @Autowired
-    private AttendanceEventRepository dao;
+    private AttendanceEventRepository attendanceEventRepo;
     @Autowired
     private DigitalDocumentService docService;
     @Autowired
@@ -55,27 +58,13 @@ public class AttendanceEventService implements BaseService {
     @Autowired
     private ProcedureService procedureService;
 
-    public Page<AttendanceEvent> searchEntityPage(Pageable pageRequest) {
-        return dao.findAll(pageRequest);
-    }
-
-    public AttendanceEvent findById(Long id) {
-        return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Evento de Visita com o ID: [%s] não encontrado", id)));
-    }
-
-    public AttendanceEvent update(Long id, AttendanceEvent entity) {
-        AttendanceEvent auxEntity = findById(id);
-        BeanUtils.copyProperties(entity, auxEntity, AttendanceEvent_.ID);
-        return dao.save(auxEntity);
-    }
-
-    public void persistNewAttendanceEvent(NewAttendanceEventDTO request, UserOfSystem userFromSession) {
+    public void create(NewAttendanceEventDTO request) {
         if (request.getEventDateTime() == null) {
             request.setEventDateTime(LocalDateTime.now());
         }
+
         if (request.getResponsible() == null || request.getResponsible().getId() == null) {
-            UserInfoDTO userInfo = userService.findByUserName(userFromSession.getUsername());
+            UserInfoDTO userInfo = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
             request.setResponsible(getResponsibleFromUser(userInfo));
         }
 
@@ -101,7 +90,7 @@ public class AttendanceEventService implements BaseService {
         }
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
 
-        Long newEventId = dao.save(newAttendanceEvent).getId();
+        Long newEventId = attendanceEventRepo.save(newAttendanceEvent).getId();
         insertDocuments(newEventId, request.getDocuments());
 
     }
@@ -125,14 +114,12 @@ public class AttendanceEventService implements BaseService {
         return responsible;
     }
 
-    private Procedure convertProcedure(ProcedureDTO procedure) {
-        logger.info("Convertendo informações de procedimento");
-
-        Procedure procedureReturn = null;
-        if (procedure != null && procedure.getId() != null) {
-            procedureReturn = procedureService.findById(procedure.getId());
-        }
-        return procedureReturn;
+    private Responsible convertResponsible(ResponsibleInfoDTO responsible) {
+        logger.info("Convertendo informações do responsável :: Identificador processado -> {}", responsible.getId());
+        Responsible responsibleReturn = new Responsible();
+        BeanUtils.copyProperties(responsible, responsibleReturn);
+        logger.info(SUCCESS_CONVERTION_MESSAGE);
+        return responsibleReturn;
     }
 
     private Accommodation convertAccommodation(AccommodationDTO accommodation) {
@@ -141,14 +128,6 @@ public class AttendanceEventService implements BaseService {
         BeanUtils.copyProperties(accommodation, accommodationReturn);
         logger.info(SUCCESS_CONVERTION_MESSAGE);
         return accommodationReturn;
-    }
-
-    private Responsible convertResponsible(ResponsibleInfoDTO responsible) {
-        logger.info("Convertendo informações do responsável :: Identificador processado -> {}", responsible.getId());
-        Responsible responsibleReturn = new Responsible();
-        BeanUtils.copyProperties(responsible, responsibleReturn);
-        logger.info(SUCCESS_CONVERTION_MESSAGE);
-        return responsibleReturn;
     }
 
     private void insertDocuments(Long attendanceEventId, List<DigitalDocumentDTO> documents) {
@@ -163,4 +142,13 @@ public class AttendanceEventService implements BaseService {
         logger.info("Processamento de documentos finalizado com sucesso!");
     }
 
+    private Procedure convertProcedure(ProcedureDTO procedure) {
+        logger.info("Convertendo informações de procedimento");
+
+        Procedure procedureReturn = null;
+        if (procedure != null && procedure.getId() != null) {
+            procedureReturn = procedureService.findById(procedure.getId());
+        }
+        return procedureReturn;
+    }
 }

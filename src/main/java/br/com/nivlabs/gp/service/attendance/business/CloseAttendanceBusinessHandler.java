@@ -12,14 +12,8 @@ import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
-import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
-import br.com.nivlabs.gp.service.AttendanceEventService;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
-import br.com.nivlabs.gp.service.ResponsibleService;
-import br.com.nivlabs.gp.service.UserService;
-import br.com.nivlabs.gp.util.SecurityContextUtil;
 
 /**
  * 
@@ -37,11 +31,7 @@ public class CloseAttendanceBusinessHandler implements BaseBusinessHandler {
     @Autowired
     private AttendanceRepository attendanceRepo;
     @Autowired
-    private ResponsibleService responsibleService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private AttendanceEventService attendanceEventService;
+    private CreateAttendanceEventBusinessHandler createAttendanceEventBusinessHandler;
 
     /**
      * Realiza alta de paciente com atendimento ativo
@@ -76,30 +66,11 @@ public class CloseAttendanceBusinessHandler implements BaseBusinessHandler {
         event.setEventDateTime(LocalDateTime.now());
         event.setEventType(request.getEventType());
         event.setAccommodation(new AccommodationDTO(attendanceEntity.getCurrentAccommodation().getId()));
-        event.setResponsible(getResponsibleFromUserSession());
         event.setObservations(request.getObservations());
 
-        attendanceEventService.persistNewAttendanceEvent(event, null);
+        createAttendanceEventBusinessHandler.create(event);
         logger.info("Evento de Atendimento para alta de paciente criado com sucesso!");
 
         return event;
-    }
-
-    /**
-     * Busca o usuário logado na sessão
-     *
-     * @return
-     */
-    private ResponsibleInfoDTO getResponsibleFromUserSession() {
-        logger.info("Buscando usuário da sessão...");
-        String userName = SecurityContextUtil.getAuthenticatedUser().getUsername();
-        UserInfoDTO logedUser = userService.findByUserName(userName);
-
-        logger.info("Iniciando busca de responsável pelo usuário da requisição...");
-        ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(logedUser.getDocument().getValue());
-        if (responsibleInformations.getId() == null)
-            throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
-        logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
-        return responsibleInformations;
     }
 }

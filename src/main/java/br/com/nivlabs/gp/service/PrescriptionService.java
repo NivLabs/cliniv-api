@@ -55,9 +55,6 @@ public class PrescriptionService implements BaseService {
     private InstituteService instituteServive;
 
     @Autowired
-    private AttendanceEventService eventService;
-
-    @Autowired
     private AttendanceService attendanceService;
 
     @Autowired
@@ -197,7 +194,7 @@ public class PrescriptionService implements BaseService {
         event.setAccommodation(medicalRecord.getLastAccommodation());
         logger.info("Evento processado, inserindo evento na base de dados...");
 
-        eventService.persistNewAttendanceEvent(event, null);
+        attendanceService.createNewAttendanceEvent(event);
         logger.info("Evento inserido com sucesso!");
     }
 

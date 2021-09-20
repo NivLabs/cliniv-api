@@ -78,9 +78,6 @@ public class DynamicFormService implements BaseService {
     private InstituteService instituteServive;
 
     @Autowired
-    private AttendanceEventService eventService;
-
-    @Autowired
     private UserService userSerive;
 
     @Autowired
@@ -182,7 +179,7 @@ public class DynamicFormService implements BaseService {
         logger.info("Evento processado, inserindo evento na base de dados...");
 
         try {
-            eventService.persistNewAttendanceEvent(event, null);
+            attendanceService.createNewAttendanceEvent(event);
             logger.info("Evento inserido com sucesso!");
         } catch (Exception e) {
             logger.error("Faha ao tentar inserir evento de anamnese na base de dados!", e);

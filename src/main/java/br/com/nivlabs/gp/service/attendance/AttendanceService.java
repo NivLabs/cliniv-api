@@ -12,8 +12,10 @@ import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
+import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.service.BaseService;
 import br.com.nivlabs.gp.service.attendance.business.CloseAttendanceBusinessHandler;
+import br.com.nivlabs.gp.service.attendance.business.CreateAttendanceEventBusinessHandler;
 import br.com.nivlabs.gp.service.attendance.business.CreateNewAttendanceBusinessHandler;
 import br.com.nivlabs.gp.service.attendance.business.SearchAttendanceBusinessHandler;
 import br.com.nivlabs.gp.service.attendance.business.SearchMedicalRecordBusinessHandler;
@@ -37,6 +39,8 @@ public class AttendanceService implements BaseService {
     CreateNewAttendanceBusinessHandler createNewAttendanceBusinessHandler;
     @Autowired
     CloseAttendanceBusinessHandler closeAttendanceBusinessHandler;
+    @Autowired
+    CreateAttendanceEventBusinessHandler createAttendanceEventBusinessHandler;
 
     /**
      * 
@@ -101,4 +105,12 @@ public class AttendanceService implements BaseService {
         closeAttendanceBusinessHandler.closeAttendance(id, request);
     }
 
+    /**
+     * Realiza a criação de um evento de atendimento
+     * 
+     * @param request Objeto de requisição de criação de novo evento
+     */
+    public void createNewAttendanceEvent(NewAttendanceEventDTO request) {
+        createAttendanceEventBusinessHandler.create(request);
+    }
 }

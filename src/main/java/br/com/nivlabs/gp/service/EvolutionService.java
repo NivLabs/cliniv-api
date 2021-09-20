@@ -54,9 +54,6 @@ public class EvolutionService implements BaseService {
     private EvolutionRepository repository;
 
     @Autowired
-    private AttendanceEventService attendanceEventService;
-
-    @Autowired
     private AttendanceService attendanceService;
 
     @Autowired
@@ -146,7 +143,7 @@ public class EvolutionService implements BaseService {
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento de evolução");
         }
 
-        attendanceEventService.persistNewAttendanceEvent(event, null);
+        attendanceService.createNewAttendanceEvent(event);
         logger.info("Evento de Atendimento para Evolução clínica criado com sucesso!");
 
     }
