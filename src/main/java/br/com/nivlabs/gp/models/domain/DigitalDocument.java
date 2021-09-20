@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.models.domain;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,11 +17,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.beans.BeanUtils;
-
 import br.com.nivlabs.gp.enums.DigitalDocumentType;
 import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt;
-import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 
 /**
  * Classe que representa os documentos digitais do prontuário
@@ -109,22 +107,8 @@ public class DigitalDocument extends BaseObjectWithCreatedAt {
     }
 
     @Override
-    public String toString() {
-        return "DigitalDocument [id=" + id + ", attendanceEvent=" + attendanceEvent + ", type=" + type + ", base64=" + base64 + ", name="
-                + name + ", createdAt=" + createdAt + "]";
-    }
-
-    @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((attendanceEvent == null) ? 0 : attendanceEvent.hashCode());
-        result = prime * result + ((base64 == null) ? 0 : base64.hashCode());
-        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
+        return Objects.hash(attendanceEvent, base64, createdAt, id, name, type);
     }
 
     @Override
@@ -136,41 +120,27 @@ public class DigitalDocument extends BaseObjectWithCreatedAt {
         if (getClass() != obj.getClass())
             return false;
         DigitalDocument other = (DigitalDocument) obj;
-        if (attendanceEvent == null) {
-            if (other.attendanceEvent != null)
-                return false;
-        } else if (!attendanceEvent.equals(other.attendanceEvent))
-            return false;
-        if (base64 == null) {
-            if (other.base64 != null)
-                return false;
-        } else if (!base64.equals(other.base64))
-            return false;
-        if (createdAt == null) {
-            if (other.createdAt != null)
-                return false;
-        } else if (!createdAt.equals(other.createdAt))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (type != other.type)
-            return false;
-        return true;
+        return Objects.equals(attendanceEvent, other.attendanceEvent) && Objects.equals(base64, other.base64)
+                && Objects.equals(createdAt, other.createdAt) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
+                && type == other.type;
     }
 
-    public DigitalDocumentDTO getDtoFromDomain() {
-        DigitalDocumentDTO dto = new DigitalDocumentDTO();
-        BeanUtils.copyProperties(this, dto);
-        dto.setAttendanceEventId(attendanceEvent.getId());
-        return dto;
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("DigitalDocument [id=");
+        builder.append(id);
+        builder.append(", attendanceEvent=");
+        builder.append(attendanceEvent);
+        builder.append(", type=");
+        builder.append(type);
+        builder.append(", base64=");
+        builder.append(base64);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", createdAt=");
+        builder.append(createdAt);
+        builder.append("]");
+        return builder.toString();
     }
-
 }

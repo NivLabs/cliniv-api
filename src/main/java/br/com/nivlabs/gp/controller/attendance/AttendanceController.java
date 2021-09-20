@@ -29,6 +29,7 @@ import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.CloseAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
+import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.service.attendance.AttendanceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -131,4 +132,17 @@ public class AttendanceController extends BaseController<AttendanceService> {
     public ResponseEntity<MedicalRecordDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findMedicalRecordByAttendanceId(id));
     }
+
+    @ApiOperation(nickname = "attendance-event-post", value = "Insere um novo evento de atendimento")
+    @PostMapping("/event")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    public ResponseEntity<Void> persist(
+                                        @Validated @RequestBody(required = true) NewAttendanceEventDTO newAttendanceEvent,
+                                        HttpServletResponse response) {
+        service.createNewAttendanceEvent(newAttendanceEvent);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+
+    }
+
 }
