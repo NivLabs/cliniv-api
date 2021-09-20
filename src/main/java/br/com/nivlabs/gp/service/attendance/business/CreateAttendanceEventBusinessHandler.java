@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -15,6 +14,7 @@ import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
 import br.com.nivlabs.gp.models.domain.Responsible;
+import br.com.nivlabs.gp.models.domain.Sector;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
@@ -24,10 +24,10 @@ import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
-import br.com.nivlabs.gp.service.DigitalDocumentService;
 import br.com.nivlabs.gp.service.ProcedureService;
 import br.com.nivlabs.gp.service.ResponsibleService;
 import br.com.nivlabs.gp.service.UserService;
+import br.com.nivlabs.gp.service.digitaldocument.DigitalDocumentService;
 import br.com.nivlabs.gp.util.SecurityContextUtil;
 import br.com.nivlabs.gp.util.StringUtils;
 
@@ -41,8 +41,6 @@ import br.com.nivlabs.gp.util.StringUtils;
  */
 @Component
 public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler {
-
-    private static final String SUCCESS_CONVERTION_MESSAGE = "Conversão concluída com sucesso!";
 
     @Autowired
     private Logger logger;
@@ -58,6 +56,11 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
     @Autowired
     private ProcedureService procedureService;
 
+    /**
+     * Cria um novo evento de atendimento
+     * 
+     * @param request Objeto de requisição de criação de novo evento de atendimento
+     */
     public void create(NewAttendanceEventDTO request) {
         if (request.getEventDateTime() == null) {
             request.setEventDateTime(LocalDateTime.now());
@@ -79,7 +82,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
         newAttendanceEvent.setEventDateTime(LocalDateTime.now());
         newAttendanceEvent.setEventType(request.getEventType());
         newAttendanceEvent.setObservations(request.getObservations());
-        newAttendanceEvent.setResponsible(convertResponsible(request.getResponsible()));
+        newAttendanceEvent.setResponsible(new Responsible(request.getResponsible().getId()));
         newAttendanceEvent.setAccommodation(convertAccommodation(request.getAccommodation()));
         newAttendanceEvent.setTitle(request.getEventType().getDescription());
         if (request.getProcedure() != null && !StringUtils.isNullOrEmpty(request.getProcedure().getDescription())) {
@@ -98,8 +101,8 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
     /**
      * Busca o responsável pela criação de evento de atendimento
      * 
-     * @param requestOwner
-     * @return
+     * @param requestOwner Usuário da solicitação
+     * @return Responsável logado
      */
     private ResponsibleInfoDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
         logger.info("Iniciando busca de responsável pelo usuário da requisição...");
@@ -108,40 +111,49 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
             throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
-        logger.info("Realizando processamento do profissional para a criação de evento de atendimento");
-        ResponsibleInfoDTO responsible = new ResponsibleInfoDTO();
-        BeanUtils.copyProperties(responsibleInformations, responsible);
-        return responsible;
+        return responsibleInformations;
     }
 
-    private Responsible convertResponsible(ResponsibleInfoDTO responsible) {
-        logger.info("Convertendo informações do responsável :: Identificador processado -> {}", responsible.getId());
-        Responsible responsibleReturn = new Responsible();
-        BeanUtils.copyProperties(responsible, responsibleReturn);
-        logger.info(SUCCESS_CONVERTION_MESSAGE);
-        return responsibleReturn;
-    }
-
+    /**
+     * Converte uma acomodação DTO para Entity
+     * 
+     * @param accommodation Acomodação do novo evento (DTO)
+     * @return Acomodação do novo evento (Entity)
+     */
     private Accommodation convertAccommodation(AccommodationDTO accommodation) {
         logger.info("Convertendo informações de Sala ou Leito :: Identificador processado -> {}", accommodation.getId());
         Accommodation accommodationReturn = new Accommodation();
-        BeanUtils.copyProperties(accommodation, accommodationReturn);
-        logger.info(SUCCESS_CONVERTION_MESSAGE);
+        accommodationReturn.setId(accommodation.getId());
+        accommodationReturn.setDescription(accommodation.getDescription());
+        accommodationReturn.setSector(new Sector(accommodation.getSectorId()));
+        accommodationReturn.setType(accommodation.getType());
         return accommodationReturn;
     }
 
+    /**
+     * Insere documentos na base
+     * 
+     * @param attendanceEventId Identificador único do evento de atendimento
+     * @param documents Lista de documentos á serem inseridos na base
+     */
     private void insertDocuments(Long attendanceEventId, List<DigitalDocumentDTO> documents) {
         logger.info("Inserindo documentos digitais...");
         documents.forEach(doc -> {
             logger.info("Documento sendo processado :: Código do evento -> {} | Nome -> {}", attendanceEventId, doc.getName());
             doc.setAttendanceEventId(attendanceEventId);
             doc.setCreatedAt(LocalDateTime.now());
-            docService.persist(doc);
+            docService.createDocument(doc);
             logger.info("Documentos criados com sucesso!");
         });
         logger.info("Processamento de documentos finalizado com sucesso!");
     }
 
+    /**
+     * Converte o procedimento DTO para Entity
+     * 
+     * @param procedure Procedimento (DTO)
+     * @return Procedimento (Entity)
+     */
     private Procedure convertProcedure(ProcedureDTO procedure) {
         logger.info("Convertendo informações de procedimento");
 
