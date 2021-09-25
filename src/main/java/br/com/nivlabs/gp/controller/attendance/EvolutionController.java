@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,13 +39,6 @@ public class EvolutionController {
                 .getPrincipal();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(service.persist(request, userFromSession.getUsername()));
-    }
-
-    @ApiOperation(nickname = "evolution-get-id", value = "Busca uma evolução do paciente baseada no identificador")
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-    public ResponseEntity<EvolutionInfoDTO> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findById(id));
     }
 
 }

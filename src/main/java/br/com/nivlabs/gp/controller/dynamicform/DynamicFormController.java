@@ -6,8 +6,6 @@ package br.com.nivlabs.gp.controller.dynamicform;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,10 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.controller.filters.DynamicFormFilters;
-import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.DynamicFormDTO;
-import br.com.nivlabs.gp.service.DynamicFormService;
+import br.com.nivlabs.gp.service.dynamicform.DynamicFormService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -41,12 +39,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Endpoint - Formulários Dinâmicos")
 @RestController
 @RequestMapping("/dynamic-form")
-public class DynamicFormController {
-
-    @Autowired
-    private DynamicFormService service;
-    @Autowired
-    private ApplicationEventPublisher publisher;
+public class DynamicFormController extends BaseController<DynamicFormService> {
 
     /**
      * Busca informações detalhadas de um formulário dinâmico
@@ -58,7 +51,7 @@ public class DynamicFormController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'FORMULARIO_ESCRITA', 'FORMULARIO_LEITURA', 'ADMIN')")
     public ResponseEntity<DynamicFormDTO> findFormById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findFormById(id));
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @ApiOperation(nickname = "dynamic-form-page", value = "Busca uma anamnese baseada no identificador")
@@ -74,7 +67,7 @@ public class DynamicFormController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
-        service.deleteFormById(id);
+        service.deleteDynamicFormById(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -84,8 +77,6 @@ public class DynamicFormController {
     public ResponseEntity<DynamicFormDTO> persist(@Validated @RequestBody(required = true) DynamicFormDTO request,
                                                   HttpServletResponse response) {
         DynamicFormDTO createdPatient = service.create(request);
-
-        publisher.publishEvent(new CreatedResourceEvent(this, response, createdPatient.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPatient);
 

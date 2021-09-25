@@ -32,6 +32,11 @@ public class ResetPasswordBusinessHandler implements BaseBusinessHandler {
     @Autowired
     BCryptPasswordEncoder bc;
 
+    /**
+     * Reseta a senha de um usuário da aplicação
+     * 
+     * @param id Identificador único do usuário que terá a senha resetada
+     */
     public void resetPassword(Long id) {
         UserOfSystem userFromContext = SecurityContextUtil.getAuthenticatedUser();
         if (userFromContext == null) {

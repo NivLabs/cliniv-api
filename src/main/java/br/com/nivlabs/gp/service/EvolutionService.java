@@ -103,16 +103,6 @@ public class EvolutionService implements BaseService {
     }
 
     /**
-     * Busca uma evolução clínica
-     * 
-     * @param id
-     * @return
-     */
-    public EvolutionInfoDTO findById(Long id) {
-        return null;
-    }
-
-    /**
      * Cria o evento de atendimento para adição de Evolução clínica
      * 
      * @param evolution
