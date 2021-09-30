@@ -79,9 +79,6 @@ public class Person extends BaseObjectWithId {
     @Column(name = "TELEFONE_SECUNDARIO")
     private String secondaryNumber;
 
-    @OneToOne(mappedBy = "person", fetch = FetchType.LAZY)
-    private UserApplication user;
-
     @Column(name = "FOTO")
     @Lob
     private String profilePhoto;
@@ -204,14 +201,6 @@ public class Person extends BaseObjectWithId {
         this.secondaryNumber = secondaryNumber;
     }
 
-    public UserApplication getUser() {
-        return user;
-    }
-
-    public void setUser(UserApplication user) {
-        this.user = user;
-    }
-
     public String getProfilePhoto() {
         return profilePhoto;
     }
@@ -276,7 +265,6 @@ public class Person extends BaseObjectWithId {
                 + ", address=" + address
                 + ", principalNumber=" + principalNumber
                 + ", secondaryNumber=" + secondaryNumber
-                + ", user=" + user
                 + ", profilePhoto=" + profilePhoto
                 + ", email=" + email
                 + ", ethnicGroup=" + ethnicGroup

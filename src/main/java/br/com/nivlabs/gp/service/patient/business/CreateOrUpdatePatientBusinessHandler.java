@@ -17,11 +17,12 @@ import br.com.nivlabs.gp.models.domain.PersonDocument;
 import br.com.nivlabs.gp.models.domain.PersonDocumentPK;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
+import br.com.nivlabs.gp.models.dto.PersonInfoDTO;
 import br.com.nivlabs.gp.repository.HealthPlanRepository;
 import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.repository.PersonDocumentRepository;
-import br.com.nivlabs.gp.repository.PersonRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
+import br.com.nivlabs.gp.service.person.PersonService;
 import br.com.nivlabs.gp.util.StringUtils;
 
 @Component
@@ -33,7 +34,7 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
     @Autowired
     PatientRepository patientRepo;
     @Autowired
-    PersonRepository personRepo;
+    PersonService personService;
     @Autowired
     HealthPlanRepository healthPlanDao;
 
@@ -184,27 +185,43 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
     }
 
     /**
+     * Realiza um parse do objeto de transferência do Paciente para Entidade Paciente
+     * 
+     * @param request Objeto de transferência de paciente
+     * @param entity Entidade relacional de paciente
+     */
+    protected void parsePropertiesToEntity(PatientInfoDTO request, Patient entity) {
+        entity.setAnnotations(request.getAnnotations());
+        entity.setCnsNumber(request.getCnsNumber());
+        entity.setType(request.getType());
+    }
+
+    /**
      * Realiza o parse de informações do objeto de transferência para o objeto de entidade relacional de pessoa física
      * 
-     * @param request Objeto de transferência com informações do paciente
-     * @param entity Objeto de entidade relacional de pessoa física
+     * @param patientInfo Objeto de transferência com informações do paciente
+     * @param personInfo Objeto de transferência com informações de pessoa física
      */
-    protected void parsePropertiesToEntity(PatientInfoDTO request, Person entity) {
-        entity.setFullName(request.getFullName());
-        entity.setSocialName(request.getSocialName());
-        entity.setCpf(request.getDocument().getValue());
-        entity.setGender(request.getGender());
-        entity.setGenderIdentity(request.getGenderIdentity());
-        entity.setFatherName(request.getFatherName());
-        entity.setMotherName(request.getMotherName());
-        entity.setBornDate(request.getBornDate());
-        entity.setPrincipalNumber(request.getPrincipalNumber());
-        entity.setSecondaryNumber(request.getSecondaryNumber());
-        entity.setProfilePhoto(request.getProfilePhoto());
-        entity.setEmail(request.getEmail());
-        entity.setEthnicGroup(request.getEthnicGroup());
-        entity.setBloodType(request.getBloodType());
-        entity.setNationality(request.getNationality());
+    protected void parsePropertiesToPersonInfo(PatientInfoDTO patientInfo, PersonInfoDTO personInfo) {
+        logger.info("Iniciando processo de conversão de paciente para pessoa");
+        personInfo.setId(patientInfo.getPersonId());
+        personInfo.setFullName(patientInfo.getFullName());
+        personInfo.setSocialName(patientInfo.getSocialName());
+        personInfo.setDocument(patientInfo.getDocument());
+        personInfo.setGender(patientInfo.getGender());
+        personInfo.setGenderIdentity(patientInfo.getGenderIdentity());
+        personInfo.setFatherName(patientInfo.getFatherName());
+        personInfo.setMotherName(patientInfo.getMotherName());
+        personInfo.setBornDate(patientInfo.getBornDate());
+        personInfo.setPrincipalNumber(patientInfo.getPrincipalNumber());
+        personInfo.setSecondaryNumber(patientInfo.getSecondaryNumber());
+        personInfo.setProfilePhoto(patientInfo.getProfilePhoto());
+        personInfo.setEmail(patientInfo.getEmail());
+        personInfo.setEthnicGroup(patientInfo.getEthnicGroup());
+        personInfo.setBloodType(patientInfo.getBloodType());
+        personInfo.setNationality(patientInfo.getNationality());
+        personInfo.setAddress(patientInfo.getAddress());
+        personInfo.setDocuments(patientInfo.getDocuments());
     }
 
 }

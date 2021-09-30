@@ -20,8 +20,8 @@ import br.com.nivlabs.gp.controller.filters.UserFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.models.dto.UserDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
-import br.com.nivlabs.gp.service.UserService;
 import br.com.nivlabs.gp.service.security.SecurityService;
+import br.com.nivlabs.gp.service.userservice.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -35,10 +35,7 @@ import io.swagger.annotations.ApiOperation;
 @Api("Endpoint - Usuário")
 @RestController
 @RequestMapping(value = "/user")
-public class UserController {
-
-    @Autowired
-    private UserService userService;
+public class UserController extends BaseController<UserService> {
 
     @Autowired
     private SecurityService authService;
@@ -49,28 +46,28 @@ public class UserController {
     public ResponseEntity<Page<UserDTO>> findPage(UserFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
                                                filters.getOrderBy());
-        return ResponseEntity.ok(userService.searchEntityPage(filters, pageSettings));
+        return ResponseEntity.ok(service.searchEntityPage(filters, pageSettings));
     }
 
     @ApiOperation(nickname = "user-get-id", value = "Busca um usuário baseado no ID")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UserInfoDTO> findById(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(userService.findUserDtoById(id));
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @ApiOperation(nickname = "user-put", value = "Atualiza dados do usuário selecionado")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UserInfoDTO> update(@PathVariable(name = "id") Long id, @Validated @RequestBody UserInfoDTO entity) {
-        return ResponseEntity.ok(userService.userUpdate(id, entity));
+        return ResponseEntity.ok(service.userUpdate(id, entity));
     }
 
     @ApiOperation(nickname = "user-post", value = "Cria o cadastro de usuário")
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UserInfoDTO> create(@Validated @RequestBody UserInfoDTO entity) {
-        return ResponseEntity.ok(userService.create(entity));
+        return ResponseEntity.ok(service.create(entity));
     }
 
     @ApiOperation(nickname = "user-get-by-document", value = "Busca um usuário pelo documento")
@@ -78,7 +75,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<UserInfoDTO> findByDocument(@PathVariable("documentType") DocumentType documentType,
                                                       @PathVariable("document") String document) {
-        return ResponseEntity.ok(userService.findByCpf(document));
+        return ResponseEntity.ok(service.findByCpf(document));
     }
 
     @ApiOperation(nickname = "user-reset-password", value = "Reseta a senha do usuário")

@@ -25,9 +25,9 @@ import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
 import br.com.nivlabs.gp.service.ProcedureService;
-import br.com.nivlabs.gp.service.ResponsibleService;
-import br.com.nivlabs.gp.service.UserService;
 import br.com.nivlabs.gp.service.digitaldocument.DigitalDocumentService;
+import br.com.nivlabs.gp.service.responsible.ResponsibleService;
+import br.com.nivlabs.gp.service.userservice.UserService;
 import br.com.nivlabs.gp.util.SecurityContextUtil;
 import br.com.nivlabs.gp.util.StringUtils;
 

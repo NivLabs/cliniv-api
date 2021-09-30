@@ -27,9 +27,9 @@ import br.com.nivlabs.gp.repository.DynamicFormAnsweredRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
 import br.com.nivlabs.gp.service.InstituteService;
 import br.com.nivlabs.gp.service.ReportService;
-import br.com.nivlabs.gp.service.ResponsibleService;
-import br.com.nivlabs.gp.service.UserService;
 import br.com.nivlabs.gp.service.attendance.AttendanceService;
+import br.com.nivlabs.gp.service.responsible.ResponsibleService;
+import br.com.nivlabs.gp.service.userservice.UserService;
 import br.com.nivlabs.gp.util.SecurityContextUtil;
 import br.com.nivlabs.gp.util.StringUtils;
 
