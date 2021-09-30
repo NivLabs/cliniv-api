@@ -28,6 +28,7 @@ import br.com.nivlabs.gp.models.dto.ScheduleDTO;
 import br.com.nivlabs.gp.models.dto.ScheduleInfoDTO;
 import br.com.nivlabs.gp.repository.ScheduleRepository;
 import br.com.nivlabs.gp.service.patient.PatientService;
+import br.com.nivlabs.gp.service.responsible.ResponsibleService;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**

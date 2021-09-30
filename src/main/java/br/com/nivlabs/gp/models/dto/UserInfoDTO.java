@@ -3,6 +3,7 @@ package br.com.nivlabs.gp.models.dto;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -29,29 +30,81 @@ public class UserInfoDTO extends PersonInfoDTO {
     @ApiModelProperty("Data de criação do usuário")
     private LocalDateTime createdAt;
 
+    @ApiModelProperty("Situação cadastral (Ativo | Inativo)")
+    private boolean active;
+
+    @ApiModelProperty("Flag de primeiro login")
+    private boolean firstSignin;
+
     @ApiModelProperty("Papéis do usuário")
     private List<RoleDTO> roles = new ArrayList<>();
 
+    /**
+     * @return the userName
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * @param userName the userName to set
+     */
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    /**
+     * @return the createdAt
+     */
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
+    /**
+     * @param createdAt the createdAt to set
+     */
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
+    /**
+     * @return the active
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * @param active the active to set
+     */
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    /**
+     * @return the firstSignin
+     */
+    public boolean isFirstSignin() {
+        return firstSignin;
+    }
+
+    /**
+     * @param firstSignin the firstSignin to set
+     */
+    public void setFirstSignin(boolean firstSignin) {
+        this.firstSignin = firstSignin;
+    }
+
+    /**
+     * @return the roles
+     */
     public List<RoleDTO> getRoles() {
         return roles;
     }
 
+    /**
+     * @param roles the roles to set
+     */
     public void setRoles(List<RoleDTO> roles) {
         this.roles = roles;
     }
@@ -60,9 +113,7 @@ public class UserInfoDTO extends PersonInfoDTO {
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-        result = prime * result + ((roles == null) ? 0 : roles.hashCode());
-        result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+        result = prime * result + Objects.hash(active, createdAt, firstSignin, roles, userName);
         return result;
     }
 
@@ -75,27 +126,25 @@ public class UserInfoDTO extends PersonInfoDTO {
         if (getClass() != obj.getClass())
             return false;
         UserInfoDTO other = (UserInfoDTO) obj;
-        if (createdAt == null) {
-            if (other.createdAt != null)
-                return false;
-        } else if (!createdAt.equals(other.createdAt))
-            return false;
-        if (roles == null) {
-            if (other.roles != null)
-                return false;
-        } else if (!roles.equals(other.roles))
-            return false;
-        if (userName == null) {
-            if (other.userName != null)
-                return false;
-        } else if (!userName.equals(other.userName))
-            return false;
-        return true;
+        return active == other.active && Objects.equals(createdAt, other.createdAt) && firstSignin == other.firstSignin
+                && Objects.equals(roles, other.roles) && Objects.equals(userName, other.userName);
     }
 
     @Override
     public String toString() {
-        return "UserInfoDTO [userName=" + userName + ", createdAt=" + createdAt + ", roles=" + roles + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("UserInfoDTO [userName=");
+        builder.append(userName);
+        builder.append(", createdAt=");
+        builder.append(createdAt);
+        builder.append(", active=");
+        builder.append(active);
+        builder.append(", firstSignin=");
+        builder.append(firstSignin);
+        builder.append(", roles=");
+        builder.append(roles);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

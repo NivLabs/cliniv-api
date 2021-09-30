@@ -49,6 +49,7 @@ public class AuthController extends BaseController<SecurityService> {
     /**
      * Altera a senha de acesso.
      * 
+     * OBS: NÃO IMPLEMENTAR PRÉ-AUTORIZAÇÃO (@PreAuthorize)
      * 
      * @param newPasswordDTO
      * @param response

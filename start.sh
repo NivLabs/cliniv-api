@@ -31,4 +31,4 @@ echo 'USUARIO: ' ${USER}
 ## ex: export DB_CONFIG=jdbc:mysql://[USUARIO]:[SENHA]@[SERVIDOR]:[PORTA]/[BASE]?createDatabaseIfNotExist=TRUE
 export DB_CONFIG='jdbc:mariadb://'${HOST}':'${PORT}'/'${BASE}'?user='${USER}'&password='${PASS}
 
-jdk-16/bin/java -jar api/gestao-de-prontuario.jar
+jdk-17/bin/java -jar api/gestao-de-prontuario.jar

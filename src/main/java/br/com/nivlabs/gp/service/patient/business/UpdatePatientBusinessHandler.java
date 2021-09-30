@@ -2,17 +2,14 @@ package br.com.nivlabs.gp.service.patient.business;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.BaseObjectWithCreatedAt_;
 import br.com.nivlabs.gp.models.domain.Patient;
-import br.com.nivlabs.gp.models.domain.Patient_;
-import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
+import br.com.nivlabs.gp.models.dto.PersonInfoDTO;
 import br.com.nivlabs.gp.util.DocumentValidator;
 
 /**
@@ -61,20 +58,12 @@ public class UpdatePatientBusinessHandler extends CreateOrUpdatePatientBusinessH
                 throw e;
             }
         }
-        Person personEntity = personRepo.findById(patientEntity.getPerson().getId())
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Cadastro de pessoa não localizado!"));
 
-        checkDocument(request, patientEntity, personEntity);
+        PersonInfoDTO personInfoToUpdate = new PersonInfoDTO();
+        parsePropertiesToPersonInfo(request, personInfoToUpdate);
+        personService.update(personInfoToUpdate);
 
-        parsePropertiesToEntity(request, personEntity);
-
-        addressProcess(request, personEntity);
-        logger.info("Salvando informações da pessoa física...");
-        personRepo.saveAndFlush(personEntity);
-
-        documentsProcess(request, personEntity);
-
-        BeanUtils.copyProperties(request, patientEntity, Patient_.ID, Patient_.ALLERGIES, BaseObjectWithCreatedAt_.CREATED_AT);
+        parsePropertiesToEntity(request, patientEntity);
         handlePatientType(patientEntity);
         handleHealthPlah(request, patientEntity);
         logger.info("Salvando informações do paciente...");

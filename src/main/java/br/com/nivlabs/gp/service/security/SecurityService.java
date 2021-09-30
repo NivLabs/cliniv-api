@@ -50,7 +50,7 @@ public class SecurityService implements BaseService {
     /**
      * Reseta a senha de determinado usuário
      * 
-     * @param id
+     * @param id Identificador único do usuário
      */
     public void resetPassword(Long id) {
         resetPasswordBusinessHandler.resetPassword(id);

@@ -1,9 +1,5 @@
 package br.com.nivlabs.gp.controller;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.ResponsibleFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
-import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.gp.service.ResponsibleService;
+import br.com.nivlabs.gp.service.responsible.ResponsibleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -39,13 +34,7 @@ import io.swagger.annotations.ApiOperation;
 @Api("Endpoint - Responsáveis")
 @RestController
 @RequestMapping(value = "/responsible")
-public class ResponsibleController {
-
-    @Autowired
-    private ResponsibleService service;
-
-    @Autowired
-    private ApplicationEventPublisher publisher;
+public class ResponsibleController extends BaseController<ResponsibleService> {
 
     @ApiOperation(nickname = "responsible-get", value = "Busca uma página de responsáveis")
     @GetMapping
@@ -59,11 +48,8 @@ public class ResponsibleController {
     @ApiOperation(nickname = "responsible-post", value = "Insere um novo responsável na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('PROFISSIONAL_ESCRITA', 'ADMIN')")
-    public ResponseEntity<ResponsibleInfoDTO> persist(@Validated @RequestBody(required = true) ResponsibleInfoDTO responsible,
-                                                      HttpServletResponse response) {
-        ResponsibleInfoDTO createdResponsible = service.persistDTO(responsible);
-
-        publisher.publishEvent(new CreatedResourceEvent(this, response, createdResponsible.getId()));
+    public ResponseEntity<ResponsibleInfoDTO> persist(@Validated @RequestBody(required = true) ResponsibleInfoDTO responsible) {
+        ResponsibleInfoDTO createdResponsible = service.create(responsible);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdResponsible);
 
@@ -73,8 +59,7 @@ public class ResponsibleController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('PROFISSIONAL_ESCRITA', 'ADMIN')")
     public ResponseEntity<ResponsibleInfoDTO> update(@PathVariable("id") Long id,
-                                                     @Validated @RequestBody(required = true) ResponsibleInfoDTO responsible,
-                                                     HttpServletResponse response) {
+                                                     @Validated @RequestBody(required = true) ResponsibleInfoDTO responsible) {
         ResponsibleInfoDTO createdResponsible = service.update(id, responsible);
 
         return ResponseEntity.ok().body(createdResponsible);

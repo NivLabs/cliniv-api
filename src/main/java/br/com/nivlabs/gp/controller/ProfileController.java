@@ -1,7 +1,5 @@
 package br.com.nivlabs.gp.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -12,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.config.security.UserOfSystem;
-import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
-import br.com.nivlabs.gp.service.UserService;
+import br.com.nivlabs.gp.service.userservice.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -29,42 +26,20 @@ import io.swagger.annotations.ApiOperation;
 @Api("Endpoint - Perfil")
 @RestController
 @RequestMapping(value = "/profile")
-public class ProfileController {
-
-    @Autowired
-    private UserService userService;
+public class ProfileController extends BaseController<UserService> {
 
     @ApiOperation(nickname = "profile-get", value = "Busca dados do perfil do usuário logado")
     @GetMapping
     public ResponseEntity<UserInfoDTO> getMe() {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
-        return ResponseEntity.ok(userService.findByUserName(userFromSession.getUsername()));
+        return ResponseEntity.ok(service.findByUserName(userFromSession.getUsername()));
     }
 
     @ApiOperation(nickname = "profile-put", value = "Atualiza dados do perfil do usuário logado")
     @PutMapping
     public ResponseEntity<UserInfoDTO> updateMe(@Validated @RequestBody UserInfoDTO entity) {
-        UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-
-        validUserToUpdate(entity, userFromSession);
-
-        UserInfoDTO userUpdated = userService.updateProfile(entity);
-        return ResponseEntity.ok(userUpdated);
-    }
-
-    /**
-     * 
-     * Verifica se o usuário que está sendo alterado é o mesmo da sessão
-     * 
-     * @param entity
-     * @param userFromSession
-     */
-    private void validUserToUpdate(UserInfoDTO entity, UserOfSystem userFromSession) {
-        if (!userFromSession.getUsername().equals(entity.getUserName()))
-            throw new HttpException(HttpStatus.METHOD_NOT_ALLOWED,
-                    "Operação não permitida, você só pode editar o seu próprio perfil");
+        return ResponseEntity.ok(service.updateProfile(entity));
     }
 
 }

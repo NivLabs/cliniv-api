@@ -1,16 +1,14 @@
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.evolution.business;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
@@ -28,21 +26,26 @@ import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.AccommodationRepository;
 import br.com.nivlabs.gp.repository.EvolutionRepository;
+import br.com.nivlabs.gp.service.BaseBusinessHandler;
+import br.com.nivlabs.gp.service.InstituteService;
+import br.com.nivlabs.gp.service.ReportService;
 import br.com.nivlabs.gp.service.attendance.AttendanceService;
+import br.com.nivlabs.gp.service.responsible.ResponsibleService;
+import br.com.nivlabs.gp.service.userservice.UserService;
+import br.com.nivlabs.gp.util.SecurityContextUtil;
 
 /**
- * Camada de serviço para manipulação de evoluções clínicas
  * 
+ * Componente de negócio para criação de evoluções clínicas do paciente
+ *
  * @author viniciosarodrigues
+ * @since 26-09-2021
  *
  */
-@Service
-public class EvolutionService implements BaseService {
+@Component
+public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
 
     private static final String EVOLUTION_REPORT_NAME = "Relatório de Evolução Clínica";
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private static final String TODAY = "TODAY";
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
     private static final String READER_NAME = "READER_NAME";
@@ -51,32 +54,32 @@ public class EvolutionService implements BaseService {
     private static final String REPORT_SOURCE = "reports/Evolucao.jrxml";
 
     @Autowired
-    private EvolutionRepository repository;
+    private Logger logger;
 
+    // Serviços
     @Autowired
     private AttendanceService attendanceService;
-
-    @Autowired
-    private AccommodationRepository accommodationRepository;
-
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private ReportService reportService;
+    @Autowired
+    private InstituteService instituteService;
     @Autowired
     private ResponsibleService responsibleService;
 
+    // Repositórios
     @Autowired
-    private ReportService reportService;
-
+    private AccommodationRepository accommodationRepo;
     @Autowired
-    private InstituteService instituteServive;
+    private EvolutionRepository evolutionRepo;
 
     /**
      * Insere uma nova evolução clínica do paciente
      * 
      * @param request
      */
-    public EvolutionInfoDTO persist(EvolutionInfoDTO request, String userFromSession) {
+    public EvolutionInfoDTO create(EvolutionInfoDTO request) {
         logger.info("Iniciando a adição de uma evolução clínica ao sistema...\nBuscando pelo atendimento informado na requisição :: {}",
                     request.getAttendanceId());
         MedicalRecordDTO medicalRecord = attendanceService.findMedicalRecordByAttendanceId(request.getAttendanceId());
@@ -91,25 +94,15 @@ public class EvolutionService implements BaseService {
         evolution.setDatetime(currentTime);
 
         request.setDatetime(evolution.getDatetime());
-        createAttendanceEvent(request, medicalRecord, userFromSession);
+        createAttendanceEvent(request, medicalRecord, SecurityContextUtil.getAuthenticatedUser().getUsername());
 
         logger.info("Inserindo evolução clínica na base de dados...");
-        repository.save(evolution);
+        evolutionRepo.save(evolution);
 
         request.setId(evolution.getId());
         logger.info("Evolução clínica adicionada com sucesso :: Identificador :: {}", request.getId());
 
         return request;
-    }
-
-    /**
-     * Busca uma evolução clínica
-     * 
-     * @param id
-     * @return
-     */
-    public EvolutionInfoDTO findById(Long id) {
-        return null;
     }
 
     /**
@@ -157,7 +150,7 @@ public class EvolutionService implements BaseService {
      */
     private ReportParam getEvolutionReportParams(EvolutionInfoDTO request, UserInfoDTO requestOwner) {
         logger.info("Buscando informações da instituição :: Logo em base 64 + Nome da instituição...");
-        InstituteDTO instituteDTO = instituteServive.getSettings();
+        InstituteDTO instituteDTO = instituteService.getSettings();
         String logoBase64 = instituteDTO.getCustomerInfo().getLogoBase64();
 
         logger.info("Separando parâmetros e valores do relatório...");
@@ -187,7 +180,7 @@ public class EvolutionService implements BaseService {
         if (request.getAccommodationId() != null) {
             logger.info("A acomodação foi informada via requisição :: Identificador informado :: {} :: Iniciando uma busca pelo mesmo...",
                         request.getAccommodationId());
-            Accommodation accommodation = accommodationRepository.findById(request.getAccommodationId())
+            Accommodation accommodation = accommodationRepo.findById(request.getAccommodationId())
                     .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                             String.format("Acomodação com código %s não encontrada", request.getAccommodationId())));
             logger.info("A acomodação informada na requisição foi encontrada e adicionada ao evento :: {}", accommodation.getDescription());
@@ -218,10 +211,7 @@ public class EvolutionService implements BaseService {
             throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
-        logger.info("Realizando processamento do profissional para a requisição de evolução clínica");
-        ResponsibleInfoDTO responsible = new ResponsibleInfoDTO();
-        BeanUtils.copyProperties(responsibleInformations, responsible);
-        return responsible;
+        return responsibleInformations;
     }
 
 }
