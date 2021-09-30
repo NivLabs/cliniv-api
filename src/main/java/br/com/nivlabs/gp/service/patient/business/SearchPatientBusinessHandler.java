@@ -129,7 +129,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
      * @return Objeto de transferência
      */
     private PatientInfoDTO convertPatientEntity(Patient patient) {
-        logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Pacient -> PatientInfoDTO");
+        logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Patient -> PatientInfoDTO");
         Person person = patient.getPerson();
 
         PatientInfoDTO patientInfo = new PatientInfoDTO();
@@ -150,7 +150,13 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
 
         if (person.getAddress() != null) {
             AddressDTO address = new AddressDTO();
-            BeanUtils.copyProperties(person.getAddress(), address);
+            address.setAddressNumber(person.getAddress().getAddressNumber());
+            address.setCity(person.getAddress().getCity());
+            address.setComplement(person.getAddress().getComplement());
+            address.setNeighborhood(person.getAddress().getNeighborhood());
+            address.setPostalCode(person.getAddress().getPostalCode());
+            address.setState(person.getAddress().getState());
+            address.setStreet(person.getAddress().getStreet());
             patientInfo.setAddress(address);
         }
 

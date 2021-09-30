@@ -1,7 +1,4 @@
-/**
- * 
- */
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.dynamicform.business;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -9,25 +6,15 @@ import java.util.Arrays;
 import java.util.Date;
 
 import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.gp.controller.filters.DynamicFormFilters;
 import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.DynamicForm;
 import br.com.nivlabs.gp.models.domain.DynamicFormAnswered;
-import br.com.nivlabs.gp.models.domain.DynamicFormQuestion;
-import br.com.nivlabs.gp.models.domain.DynamicFormQuestion_;
-import br.com.nivlabs.gp.models.domain.DynamicForm_;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.gp.models.dto.DynamicFormDTO;
-import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
@@ -37,19 +24,25 @@ import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.DynamicFormAnsweredRepository;
-import br.com.nivlabs.gp.repository.DynamicFormQuestionRepository;
-import br.com.nivlabs.gp.repository.DynamicFormRepository;
+import br.com.nivlabs.gp.service.BaseBusinessHandler;
+import br.com.nivlabs.gp.service.InstituteService;
+import br.com.nivlabs.gp.service.ReportService;
 import br.com.nivlabs.gp.service.attendance.AttendanceService;
+import br.com.nivlabs.gp.service.responsible.ResponsibleService;
+import br.com.nivlabs.gp.service.userservice.UserService;
+import br.com.nivlabs.gp.util.SecurityContextUtil;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
- * Camada de serviço de formulários dinâmicos da aplicação
  * 
+ * Componente específico para respostas de formulários dinâmicos
+ *
  * @author viniciosarodrigues
+ * @since 24-09-2021
  *
  */
-@Service
-public class DynamicFormService implements BaseService {
+@Component
+public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
     private static final String TODAY = "TODAY";
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
@@ -62,11 +55,6 @@ public class DynamicFormService implements BaseService {
 
     @Autowired
     private Logger logger;
-
-    @Autowired
-    private DynamicFormRepository dynamicFormDao;
-    @Autowired
-    private DynamicFormQuestionRepository dynamicFormQuestionDao;
 
     @Autowired
     private ReportService reportService;
@@ -87,30 +75,16 @@ public class DynamicFormService implements BaseService {
     private DynamicFormAnsweredRepository formRepo;
 
     /**
-     * Realiza a exclusão física do formulário dinâmico
-     * 
-     * @param id Identificador único do formulário dinâmico
-     */
-    public void deleteFormById(Long id) {
-        logger.info("Iniciando exclusão de formulário dinâmico :: {}", id);
-        DynamicForm entity = dynamicFormDao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Formulários dinâmico com o identificador %s não encontrado.", id)));
-        logger.info("Formulário encontrado :: {} | {} ", entity.getId(), entity.getTitle());
-        dynamicFormDao.delete(entity);
-        logger.info("Formulário excluído com sucesso!");
-    }
-
-    /**
      * Cria um novo questionário respondido de anamnese
      * 
      * @param request
      * @return
      */
-    public NewDynamicFormAnsweredDTO newDynamicFormAnswered(Long attendanceId, NewDynamicFormAnsweredDTO request, String requestOwner) {
+    public NewDynamicFormAnsweredDTO answer(Long attendanceId, NewDynamicFormAnsweredDTO request) {
         logger.info("Iniciando o preenchimento de um novo formulário dinâmico...");
         MedicalRecordDTO medicalRecord = attendanceService.findMedicalRecordByAttendanceId(attendanceId);
         logger.info("Verificando o usuário da solicitação");
-        UserInfoDTO user = userSerive.findByUserName(requestOwner);
+        UserInfoDTO user = userSerive.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
 
         logger.info("Validando respostas...");
         request.getListOfResponse().forEach(this::validateQuestions);
@@ -149,8 +123,13 @@ public class DynamicFormService implements BaseService {
             responseConverted.setId(response.getDynamicFormQuestion().getId());
             responseConverted.setResponsibleId(responsibleId);
             responseConverted.setQuestion(response.getDynamicFormQuestion().getQuestion());
-            responseConverted.setAnswer(response.getResponse()
-                    .equals("true") ? "Sim" : response.getResponse().equals("false") ? "Não" : response.getResponse());
+            if (response.getResponse().equals(TRUE)) {
+                responseConverted.setAnswer("Sim");
+            } else if (response.getResponse().equals(FALSE)) {
+                responseConverted.setAnswer("Não");
+            } else {
+                responseConverted.setAnswer(response.getResponse());
+            }
             responseConverted.setAttendanceId(attendanceId);
             logger.info("Inserindo pergunta respondida:: {}", responseConverted);
             formRepo.saveAndFlush(responseConverted);
@@ -199,10 +178,7 @@ public class DynamicFormService implements BaseService {
             throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
-        logger.info("Realizando processamento do profissional para a requisição de anamnese");
-        ResponsibleInfoDTO responsible = new ResponsibleInfoDTO();
-        BeanUtils.copyProperties(responsibleInformations, responsible);
-        return responsible;
+        return responsibleInformations;
     }
 
     /**
@@ -271,151 +247,12 @@ public class DynamicFormService implements BaseService {
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                             "O valor da resposta só pode ser true ou false");
                 break;
-            case STRING:
-            case TEXTAREA:
+            case STRING, TEXTAREA:
                 break;
             default:
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                         "Este metatipo é inválido para uma questão. Metatipos válidos -> number, bool ou string");
         }
-    }
-
-    /**
-     * Busca um formulário de anamnese pelo identificador do mesmo
-     * 
-     * @param id Identificador único do formulário de Anamnese
-     * @return Formulário de Anamnese com título e perguntas
-     */
-    public DynamicFormDTO findFormById(Long id) {
-        logger.info("Iniciando processo de busca de formulário dinâmico pelo identificador :: {}", id);
-
-        DynamicForm objFromDb = dynamicFormDao.findById(id)
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                        String.format("Formulário com o identificador %s não encontrado", id)));
-        logger.info("Formulário encontrado :: {} | {} :: Iniciando processo de conversão...", objFromDb.getId(), objFromDb.getTitle());
-
-        DynamicFormDTO response = new DynamicFormDTO();
-
-        BeanUtils.copyProperties(objFromDb, response, DynamicForm_.QUESTIONS);
-        logger.info("Convertendo as questões do formulário :: Total de questões: {}", objFromDb.getQuestions().size());
-        objFromDb.getQuestions().forEach(question -> {
-            DynamicFormQuestionDTO convertedQuestion = new DynamicFormQuestionDTO();
-            BeanUtils.copyProperties(question, convertedQuestion);
-            logger.info("Adicionando questão :: {}", convertedQuestion);
-            response.getQuestions().add(convertedQuestion);
-        });
-        logger.info("Conversão finalizada, devolvendo resposta...");
-        return response;
-    }
-
-    /**
-     * Busca uma página de formulárioes de anamnese
-     * 
-     * @param pageSettings Configurações de paginação
-     * @return Página de formulários de anamnese
-     */
-    public Page<DynamicFormDTO> findPageOfDymicaForm(DynamicFormFilters filters, Pageable pageSettings) {
-        logger.info("Iniciando busca de formulários dinâmicos..");
-        return dynamicFormDao.resumedList(filters, pageSettings);
-    }
-
-    /**
-     * Cria um formulário dinâmico na aplicação
-     * 
-     * @param request Informações para criação de formulário dinâmico
-     * @return Formulário dinâmico criado
-     */
-    public DynamicFormDTO create(DynamicFormDTO request) {
-        logger.info("Inicianco processo de criação de formulário dinâmico :: {}", request.getTitle());
-        DynamicForm entity = new DynamicForm();
-        entity.setTitle(request.getTitle());
-        entity = dynamicFormDao.saveAndFlush(entity);
-        request.setId(entity.getId());
-        logger.info("Formulário criado com sucesso :: {} | {}", request.getId(), request.getTitle());
-        return request;
-    }
-
-    /**
-     * Atualiza informações do formulário dinâmico
-     * 
-     * @param id Identificador único do formulário
-     * @param request Informações a serem atualizadas
-     * @return Formulário atualizado
-     */
-    public DynamicFormDTO update(Long id, DynamicFormDTO request) {
-        logger.info("Inicianco processo de atualização de formulário dinâmico :: {} | {} ", request.getId(), request.getTitle());
-        DynamicForm entity = dynamicFormDao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Formulário dinâmico com o identificador %s não encontrado.", id)));
-        BeanUtils.copyProperties(request, entity, DynamicForm_.ID, DynamicForm_.QUESTIONS);
-        entity = dynamicFormDao.saveAndFlush(entity);
-        BeanUtils.copyProperties(entity, request);
-        logger.info("Formulário atualizado com sucesso :: {} | {}", request.getId(), request.getTitle());
-        return request;
-    }
-
-    /**
-     * Deleta uma questão do formulário dinâmico
-     * 
-     * @param id Identificador único da questão do formulário dinâmico
-     */
-    public void deleteQuestionById(Long id) {
-        logger.info("Iniciando processo de remoção de questão do formulário dinâmico :: {}", id);
-        DynamicFormQuestion entity = dynamicFormQuestionDao.findById(id)
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                        String.format("Questão com o identificador %s não encontrado.", id)));
-        logger.info("Questão encontrada :: Formulário -> {} :: Questão -> {}", entity.getForm().getTitle(), entity.getQuestion());
-        dynamicFormQuestionDao.delete(entity);
-        logger.info("Remoção realizada com sucesso!");
-    }
-
-    /**
-     * Cria uma questão para o formulário dinâmico
-     * 
-     * @param idForm Identificador único do formulário dinâmico que terá uma questão adicionada
-     * @param request Questão que será criada no formulário
-     * @return Questão criada
-     */
-    public DynamicFormQuestionDTO createQuestion(Long idForm, DynamicFormQuestionDTO request) {
-        logger.info("Iniciando processo de criação de questão do formulário dinâmico :: {} | {}", request.getQuestion(),
-                    request.getMetaType());
-        DynamicForm form = dynamicFormDao.findById(idForm).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String
-                .format("Formulários dinâmico com o identificador %s não encontrado, não será possível criar uma pergunta para o mesmo.",
-                        idForm)));
-        logger.info("Formulário localizado :: {} | {}", idForm, form.getTitle());
-
-        logger.info("Criando entidade para criação da questão...");
-        DynamicFormQuestion question = new DynamicFormQuestion();
-        question.setForm(new DynamicForm(idForm, null, null));
-        question.setMetaType(request.getMetaType());
-        question.setQuestion(request.getQuestion());
-        dynamicFormQuestionDao.saveAndFlush(question);
-
-        request.setId(question.getId());
-
-        logger.info("Questão adicionada ao formulário :: FormId -> {} + QuestId -> {}", idForm, request.getId());
-
-        return request;
-    }
-
-    /**
-     * Atualiza uma questão do formulário dinâmico
-     * 
-     * @param id Identificador único da questão do formulário
-     * @param request Objeto com dados modificados da questão do formulário
-     * @return Questão atualizada
-     */
-    public DynamicFormQuestionDTO updateQuestion(Long id, DynamicFormQuestionDTO request) {
-        request.setId(id);
-        logger.info("Iniciando processo de atualização de questão de formulário :: {} | {} | {}", request.getId(), request.getQuestion(),
-                    request.getMetaType());
-        DynamicFormQuestion entity = dynamicFormQuestionDao.findById(id)
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                        String.format("Questão com o identificador %s não encontrado.", id)));
-        logger.info("Formulário à ser alterado :: {} | {} | {}", entity.getId(), entity.getQuestion(), entity.getMetaType());
-        BeanUtils.copyProperties(request, entity, DynamicFormQuestion_.ID);
-        dynamicFormQuestionDao.saveAndFlush(entity);
-        logger.info("Formulário alterado com sucesso!");
-        return request;
     }
 
 }

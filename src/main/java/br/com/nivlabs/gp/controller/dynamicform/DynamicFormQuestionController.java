@@ -4,10 +4,6 @@
  */
 package br.com.nivlabs.gp.controller.dynamicform;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nivlabs.gp.event.CreatedResourceEvent;
+import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
-import br.com.nivlabs.gp.service.DynamicFormService;
+import br.com.nivlabs.gp.service.dynamicform.DynamicFormService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -35,12 +31,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(value = "Endpoint - Questões dos Formulários Dinâmicos")
 @RestController
 @RequestMapping("/dynamic-form")
-public class DynamicFormQuestionController {
-
-    @Autowired
-    private DynamicFormService service;
-    @Autowired
-    private ApplicationEventPublisher publisher;
+public class DynamicFormQuestionController extends BaseController<DynamicFormService> {
 
     @ApiOperation(nickname = "question-delete-id", value = "Deleta um formulário dinâmico pelo identificador")
     @DeleteMapping("/question/{id}")
@@ -54,11 +45,8 @@ public class DynamicFormQuestionController {
     @PostMapping("/{idForm}/question")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<DynamicFormQuestionDTO> create(@Validated @RequestBody(required = true) DynamicFormQuestionDTO request,
-                                                         @PathVariable("idForm") Long idForm,
-                                                         HttpServletResponse response) {
+                                                         @PathVariable("idForm") Long idForm) {
         DynamicFormQuestionDTO createdPatient = service.createQuestion(idForm, request);
-
-        publisher.publishEvent(new CreatedResourceEvent(this, response, createdPatient.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPatient);
 

@@ -98,7 +98,7 @@ public class PatientService implements BaseService {
      * @return Informações do paciente pós insert com códigos de criação
      */
     public PatientInfoDTO persist(PatientInfoDTO request) {
-        return createPatientBusinessHandler.persist(request);
+        return createPatientBusinessHandler.create(request);
     }
 
     /**

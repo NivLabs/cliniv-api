@@ -34,11 +34,4 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
     @Query("from Person where firstName like :name and motherName like :motherName")
     public List<Person> findByComposition(String name, String motherName);
 
-    /**
-     * @param userApplication
-     * @return
-     */
-    @Query("from Person where user.id = :id")
-    public Person findByUser(Long id);
-
 }

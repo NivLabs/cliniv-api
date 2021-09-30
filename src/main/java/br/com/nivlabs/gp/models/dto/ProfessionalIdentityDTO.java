@@ -17,6 +17,16 @@ public class ProfessionalIdentityDTO extends DataTransferObjectBase {
 
     private String registerValue;
 
+    public ProfessionalIdentityDTO() {
+        super();
+    }
+
+    public ProfessionalIdentityDTO(String registerType, String registerValue) {
+        super();
+        this.registerType = registerType;
+        this.registerValue = registerValue;
+    }
+
     public String getRegisterType() {
         return registerType;
     }
@@ -34,39 +44,14 @@ public class ProfessionalIdentityDTO extends DataTransferObjectBase {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((registerType == null) ? 0 : registerType.hashCode());
-        result = prime * result + ((registerValue == null) ? 0 : registerValue.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ProfessionalIdentityDTO other = (ProfessionalIdentityDTO) obj;
-        if (registerType == null) {
-            if (other.registerType != null)
-                return false;
-        } else if (!registerType.equals(other.registerType))
-            return false;
-        if (registerValue == null) {
-            if (other.registerValue != null)
-                return false;
-        } else if (!registerValue.equals(other.registerValue))
-            return false;
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "ProfessionalIdentityDTO [registerType=" + registerType + ", registerValue=" + registerValue + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("ProfessionalIdentityDTO [registerType=");
+        builder.append(registerType);
+        builder.append(", registerValue=");
+        builder.append(registerValue);
+        builder.append("]");
+        return builder.toString();
     }
 
 }
