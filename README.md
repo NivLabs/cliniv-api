@@ -62,7 +62,7 @@ Atualmente encontra-se na versão 1.1.0
 
 Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles:
 
-- Java 16 **(Obrigatório)**
+- Java 17 **(Obrigatório)**
 - MariaDB Server 10.5+ **(Obrigatório se não for rodar via docker)**
 - Eclipse ou STS **(Obrigatório)**
 - Docker **(Obrigatório se for rodar via script)
