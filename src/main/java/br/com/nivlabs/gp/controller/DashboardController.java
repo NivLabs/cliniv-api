@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.models.dto.DashboardCardsInformationDTO;
-import br.com.nivlabs.gp.service.DashboardService;
+import br.com.nivlabs.gp.service.dashboard.DashboardService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
