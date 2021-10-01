@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.controller.patient;
+package br.com.nivlabs.gp.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.controller.filters.AllergyFilters;
 import br.com.nivlabs.gp.models.dto.AllergyDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;

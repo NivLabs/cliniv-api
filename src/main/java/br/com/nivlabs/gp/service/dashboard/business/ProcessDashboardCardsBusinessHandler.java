@@ -1,20 +1,29 @@
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.dashboard.business;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.gp.models.dto.DashboardInfoDTO;
+import br.com.nivlabs.gp.models.dto.DashboardCardsInformationDTO;
 import br.com.nivlabs.gp.repository.DashboardRepository;
+import br.com.nivlabs.gp.service.BaseBusinessHandler;
 
-@Service
-public class DashboardService {
+/**
+ * 
+ * Componente base para manipulação dos cards do dashboard da aplicação
+ *
+ * @author viniciosarodrigues
+ * @since 30-09-2021
+ *
+ */
+@Component
+public class ProcessDashboardCardsBusinessHandler implements BaseBusinessHandler {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    protected Logger logger;
 
     private static final String AMERICA_SAO_PAULO = "America/Sao_Paulo";
     @Autowired
@@ -23,15 +32,16 @@ public class DashboardService {
     /**
      * Busca informações detalhadas dos cards superiores
      * 
-     * @return Informações do Dashboard
+     * @return Informações dos cards do Dashboard
      */
-    public DashboardInfoDTO getInfo() {
+    public DashboardCardsInformationDTO getCards() {
         var newPatients = repo.getNewPatientsCount(ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)));
         var medicalCareProvided = repo.getMedicalCareProvidedCount(ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)));
         var canceled = repo.getCanceledScheduleCount(ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)));
         var confirmed = repo.getConfirmedScheduleCount(ZonedDateTime.now(ZoneId.of(AMERICA_SAO_PAULO)));
-        var response = new DashboardInfoDTO(newPatients, medicalCareProvided, canceled, confirmed);
-        logger.info("Dashboard :: {}", response);
+        var response = new DashboardCardsInformationDTO(newPatients, medicalCareProvided, canceled, confirmed);
+        logger.info("Cards :: {}", response);
         return response;
     }
+
 }
