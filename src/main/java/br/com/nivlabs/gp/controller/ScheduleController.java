@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.controller.patient;
+package br.com.nivlabs.gp.controller;
 
 import java.util.List;
 
