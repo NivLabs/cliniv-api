@@ -1,39 +1,43 @@
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.parameter.business;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Parameter;
 import br.com.nivlabs.gp.models.dto.NewParameterValueDTO;
 import br.com.nivlabs.gp.repository.ParameterRepository;
+import br.com.nivlabs.gp.service.BaseBusinessHandler;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
- * Trata manipulação de parâmetros da aplicação
  * 
+ * Componente específico para alteração de valor de parâmetro da aplicação
+ *
  * @author viniciosarodrigues
+ * @since 30-09-2021
  *
  */
-@Service
-public class ParameterService implements BaseService {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+@Component
+public class UpdateParameterBusinessHandler implements BaseBusinessHandler {
 
     @Autowired
-    private ParameterRepository repository;
+    protected Logger logger;
+
+    @Autowired
+    protected ParameterRepository repository;
 
     /**
-     * Altera o valor do parâmetro
+     * Atualiza valor de um determinado parâmetro
      * 
-     * @param id
-     * @param newValue
+     * @param id Identificador único do parâmetro
+     * @param newValue Requisição de mudança de valor de parâmetro
      */
-    public void changeValueParameter(Long id, NewParameterValueDTO newValue) {
+
+    public void updateValue(Long id, NewParameterValueDTO newValue) {
         if (newValue == null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O novo valor não pode ser nulo");
         }
@@ -53,8 +57,8 @@ public class ParameterService implements BaseService {
     /**
      * Checa os tipos de parâmetros e o novo valor
      * 
-     * @param param
-     * @param newValue
+     * @param param Parâmetro
+     * @param newValue Novo valor do parâmetro
      */
     private void checkParameterValue(Parameter param, String newValue) {
         logger.info("Checando valor para parâmetro do tipo {}", param.getMetaType());
@@ -70,12 +74,12 @@ public class ParameterService implements BaseService {
                             "O valor do parâmetro só pode ser true ou false");
                 break;
             case GROUP:
-                if (StringUtils.isNullOrEmpty(newValue) || checkGroupParameter(newValue))
+                if (StringUtils.isNullOrEmpty(newValue) || checkGroupParameter(param.getGroupValues(), newValue))
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                             "O valor do parâmetro deve existir no grupo de valores possíveis");
                 break;
-            case STRING:
-            case PASSWORD:
+            case STRING, PASSWORD:
+                logger.info("Parâmetro de valor textual... Não há validação para o mesmo.");
                 break;
             default:
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
@@ -87,15 +91,14 @@ public class ParameterService implements BaseService {
     /**
      * Checa o valor do parâmetro de grupo
      * 
-     * @param param
-     * @param newValue
-     * @return
+     * @param groupValues Valores do grupo
+     * @param value Valor enviado para validação no grupo
+     * @return Válido ou não
      */
-    private boolean checkGroupParameter(String newValue) {
-        for (String value : newValue.split(";"))
-            if (value.equals(newValue))
+    private boolean checkGroupParameter(String groupValues, String parameterValue) {
+        for (String value : groupValues.split(";"))
+            if (value.equals(parameterValue))
                 return true;
         return false;
     }
-
 }
