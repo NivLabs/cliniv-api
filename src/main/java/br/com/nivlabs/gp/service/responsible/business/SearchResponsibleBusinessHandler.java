@@ -3,6 +3,8 @@ package br.com.nivlabs.gp.service.responsible.business;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,7 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
      * @param id Identificador único do responsável / profissional
      * @return Responsável / Profissional encontrado
      */
+    @Transactional
     public ResponsibleInfoDTO byId(Long id) {
         Responsible responsibleFromDb = responsibleRepo.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format(RESPONSIBLE_NOT_FOUND, id)));
@@ -80,6 +83,7 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
      * @param cpf CPF do profissional
      * @return Informações do profissional
      */
+    @Transactional
     public ResponsibleInfoDTO byCPF(String cpf) {
         logger.info("Iniciando busca de profissional por CPF :: {}", cpf);
         try {
@@ -112,6 +116,7 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
      * @param responsible Entidade do modelo relacional
      * @return Objeto de transferência
      */
+    @Transactional
     private ResponsibleInfoDTO convertEntityToDTO(Responsible responsible) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Responsible -> ResponsibleInfoDTO");
         Person person = responsible.getPerson();
@@ -153,6 +158,7 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
      * @param specializations Especializações da entidade relacional
      * @return Especializações de objetod e transferência
      */
+    @Transactional
     private List<SpecialityDTO> convertSpecializations(List<Speciality> specializations) {
         List<SpecialityDTO> listOfSpecializations = new ArrayList<>();
         logger.info("Verificando especializações...");
@@ -168,6 +174,7 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
      * @param personAddress Endereço em entidade relacional
      * @return Endereço em objeto de transferência
      */
+    @Transactional
     private AddressDTO convertAddress(PersonAddress personAddress) {
         AddressDTO address = null;
         if (personAddress != null) {
@@ -189,6 +196,7 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
      * @param documents Lista de documentos à serem convertidos
      * @return Lista de documentos convertidos
      */
+    @Transactional
     private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
         List<DocumentDTO> convertedDocuments = new ArrayList<>();
 
