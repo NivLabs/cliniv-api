@@ -27,7 +27,7 @@ import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.repository.custom.GenericCustomRepository;
-import br.com.nivlabs.gp.service.SectorService;
+import br.com.nivlabs.gp.service.sector.SectorService;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**
