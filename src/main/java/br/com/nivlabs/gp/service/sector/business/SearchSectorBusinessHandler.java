@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.sector.business;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,6 +53,7 @@ public class SearchSectorBusinessHandler implements BaseBusinessHandler {
      * @param id Identificador único do setor
      * @return Informações do setor
      */
+    @Transactional
     public SectorInfoDTO byId(Long id) {
         Sector sectorEntity = sectorRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Setor com o identificador %s não encontrado", id)));
@@ -64,6 +67,7 @@ public class SearchSectorBusinessHandler implements BaseBusinessHandler {
      * @param sectorEntity Entidade relacional de setor
      * @return DTO de setor
      */
+    @Transactional
     private SectorInfoDTO convertEntityToDTO(Sector sectorEntity) {
         logger.info("Convertendo entidade relacional de Setor para DTO");
         SectorInfoDTO sectorInfo = new SectorInfoDTO();

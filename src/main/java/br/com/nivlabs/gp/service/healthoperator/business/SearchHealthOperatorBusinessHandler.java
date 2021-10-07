@@ -3,6 +3,8 @@ package br.com.nivlabs.gp.service.healthoperator.business;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -57,6 +59,7 @@ public class SearchHealthOperatorBusinessHandler implements BaseBusinessHandler 
      * @param id Identificador único da operadora de saúde
      * @return Informações detalhadas da operadora de saúde
      */
+    @Transactional
     public HealthOperatorInfoDTO byId(Long id) {
         logger.info("Iniciando busca de operadora por identificador único interno :: {}", id);
         HealthOperator healthOperatorEntity = healthOperatorRepository.findById(id)

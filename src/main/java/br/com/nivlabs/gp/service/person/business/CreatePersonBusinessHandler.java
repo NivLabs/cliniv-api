@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.person.business;
 
+import javax.transaction.Transactional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,7 @@ public class CreatePersonBusinessHandler extends CreateOrUpdatePersonBusinessHan
      * @param request
      * @return
      */
+    @Transactional
     public PersonInfoDTO create(PersonInfoDTO request) {
         if (request.getDocument() != null
                 && personRepo.findByCpf(request.getDocument().getValue()).isPresent()) {

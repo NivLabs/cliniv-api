@@ -3,6 +3,8 @@ package br.com.nivlabs.gp.service.patient.business;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +69,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
      * @param id Identificador único do paciente
      * @return Informações detalhadas do paciente
      */
+    @Transactional
     public PatientInfoDTO getById(Long id) {
         logger.info("Iniciando busca de paciente por ID :: {}", id);
         Patient patient = patientRepo.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
@@ -128,6 +131,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
      * @param patient Entidade do modelo relacional
      * @return Objeto de transferência
      */
+    @Transactional
     private PatientInfoDTO convertPatientEntity(Patient patient) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Patient -> PatientInfoDTO");
         Person person = patient.getPerson();
@@ -192,6 +196,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
      * @param documents Lista de documentos à serem convertidos
      * @return Lista de documentos convertidos
      */
+    @Transactional
     private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
         List<DocumentDTO> convertedDocuments = new ArrayList<>();
 
@@ -212,6 +217,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
      * 
      * @param patientInfo Informações detalhadas do paciente
      */
+    @Transactional
     private void handletPatientHistory(PatientInfoDTO patientInfo) {
         try {
             if (patientInfo.getId() != null) {

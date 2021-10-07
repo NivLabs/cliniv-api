@@ -3,8 +3,9 @@ package br.com.nivlabs.gp.service.userservice.business;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,6 +64,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
      * @param username nome do usuário
      * @return Informações detalhadas do usuário
      */
+    @Transactional
     public UserInfoDTO byUserName(String username) {
         UserApplication userEntity = userRepo.findByUserName(username)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "O usuário '" + username + "' não foi encontrado"));
@@ -76,6 +78,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
      * @param id Identificador único do usuário
      * @return Informações detalhadas do usuário
      */
+    @Transactional
     public UserInfoDTO byId(Long id) {
         UserApplication userEntity = userRepo.findById(id)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Usuário com id '" + id + "' não encontrado"));
@@ -89,6 +92,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
      * @param cpf CPF do usuário
      * @return Informações detalhadas do usuário
      */
+    @Transactional
     public UserInfoDTO byCPF(String cpf) {
         try {
             UserApplication user = userRepo.findByCpf(cpf).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
@@ -117,6 +121,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
      * @param userEntity Entidade do modelo relacional
      * @return Objeto de transferência
      */
+    @Transactional
     private UserInfoDTO convertEntityToDTO(UserApplication userEntity) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Patient -> PatientInfoDTO");
         Person person = userEntity.getPerson();
@@ -181,12 +186,12 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
      * @param documents Lista de documentos à serem convertidos
      * @return Lista de documentos convertidos
      */
+    @Transactional
     private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
         List<DocumentDTO> convertedDocuments = new ArrayList<>();
 
         documents.forEach(doc -> {
             DocumentDTO convertedDoc = new DocumentDTO();
-            BeanUtils.copyProperties(doc, convertedDoc);
             convertedDoc.setPersonId(doc.getId().getPersonId());
             convertedDoc.setType(doc.getId().getType());
             convertedDoc.setValue(doc.getId().getValue());

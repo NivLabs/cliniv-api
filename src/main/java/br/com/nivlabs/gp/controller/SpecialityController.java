@@ -24,7 +24,7 @@ import br.com.nivlabs.gp.controller.filters.SpecialityFilter;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.SpecialityDTO;
 import br.com.nivlabs.gp.models.dto.SpecialityInfoDTO;
-import br.com.nivlabs.gp.service.SpecialityService;
+import br.com.nivlabs.gp.service.speciality.SpecialityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
