@@ -181,9 +181,25 @@ public class HealthPlan extends BaseObjectWithId {
 
     @Override
     public String toString() {
-        return "HealthPlan [id=" + id + ", planCode=" + planCode + ", commercialName=" + commercialName + ", segmentation=" + segmentation
-                + ", contractType=" + contractType + ", abrangency=" + abrangency + ", type=" + type + ", healthOperator=" + healthOperator
-                + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("HealthPlan [id=");
+        builder.append(id);
+        builder.append(", planCode=");
+        builder.append(planCode);
+        builder.append(", commercialName=");
+        builder.append(commercialName);
+        builder.append(", segmentation=");
+        builder.append(segmentation);
+        builder.append(", contractType=");
+        builder.append(contractType);
+        builder.append(", abrangency=");
+        builder.append(abrangency);
+        builder.append(", type=");
+        builder.append(type);
+        builder.append(", healthOperator=");
+        builder.append(healthOperator);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

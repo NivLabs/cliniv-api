@@ -48,7 +48,7 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
      * Realiza a criação de um novo atendimento à partir do DTO
      *
      * @param NewAttandenceDTO Novo atendimento
-     * @return MedicalRecordDTO
+     * @return MedicalRecordDTO Registro de atendimento (Prontuário do atendimento)
      */
     public MedicalRecordDTO create(NewAttandenceDTO request) {
         logger.info("Iniciando processo de criação de um novo atendimento para o paciente :: ID: {}", request.getPatientId());
@@ -100,21 +100,21 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
     /**
      * Cria evento de entrada
      *
-     * @param convertedAtendance
-     * @param request
+     * @param attendanceEntity Atendimento
+     * @param newAttendanceRequest Requisição de novo atendimento
      */
-    private void createEntryEvent(Attendance convertedAtendance, NewAttandenceDTO request) {
+    private void createEntryEvent(Attendance attendanceEntity, NewAttandenceDTO newAttendanceRequest) {
         AttendanceEvent entryEvent = new AttendanceEvent();
-        entryEvent.setEventDateTime(convertedAtendance.getEntryDateTime());
-        entryEvent.setTitle(convertedAtendance.getReasonForEntry());
-        entryEvent.setAttendance(new Attendance(convertedAtendance.getId()));
-        entryEvent.setAccommodation(convertedAtendance.getCurrentAccommodation());
+        entryEvent.setEventDateTime(attendanceEntity.getEntryDateTime());
+        entryEvent.setTitle(attendanceEntity.getReasonForEntry());
+        entryEvent.setAttendance(new Attendance(attendanceEntity.getId()));
+        entryEvent.setAccommodation(attendanceEntity.getCurrentAccommodation());
 
-        if (request.getResponsibleId() != null)
+        if (newAttendanceRequest.getResponsibleId() != null)
             // Verificar Responsável
-            entryEvent.setResponsible(new Responsible(request.getResponsibleId()));
+            entryEvent.setResponsible(new Responsible(newAttendanceRequest.getResponsibleId()));
 
-        entryEvent.setEventType(request.getEventType());
+        entryEvent.setEventType(newAttendanceRequest.getEventType());
 
         attendanceEventRepo.save(entryEvent);
     }

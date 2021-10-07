@@ -26,7 +26,7 @@ import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
 import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
-import br.com.nivlabs.gp.service.SectorService;
+import br.com.nivlabs.gp.service.sector.SectorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -40,10 +40,7 @@ import io.swagger.annotations.ApiOperation;
 @Api("Endpoint - Setor")
 @RestController
 @RequestMapping(value = "/sector")
-public class SectorController {
-
-    @Autowired
-    private SectorService service;
+public class SectorController extends BaseController<SectorService> {
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -54,7 +51,7 @@ public class SectorController {
     public ResponseEntity<Page<SectorDTO>> getPageSectors(SectorFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
                                                Direction.valueOf(filters.getDirection()), filters.getOrderBy());
-        return ResponseEntity.ok(service.getPageWithFilter(filters, pageSettings));
+        return ResponseEntity.ok(service.getPage(filters, pageSettings));
     }
 
     @ApiOperation(nickname = "sector-post", value = "Insere um novo setor na aplicação")
@@ -83,7 +80,7 @@ public class SectorController {
     @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<AccommodationDTO> updateRoomOrBed(@PathVariable("id") Long id,
                                                             @Validated @RequestBody(required = true) AccommodationDTO request) {
-        return ResponseEntity.ok().body(service.updateRoomOrBedDTO(id, request));
+        return ResponseEntity.ok().body(service.updateAccomodation(id, request));
     }
 
     @ApiOperation(nickname = "room-or-bet-post", value = "Cria uma sala (ambulatório) ou leito na aplicação")

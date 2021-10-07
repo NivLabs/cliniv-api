@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.patient.business;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,7 @@ public class UpdatePatientAllergiesBusinessHandler implements BaseBusinessHandle
      * @param patientId Identificador único do paciente
      * @param request Requisição com informações das alergias do paciente
      */
+    @Transactional
     public void update(Long patientId, PatientAllergiesDTO request) {
         logger.info("Iniciando atualização de alergidas para o paciente :: {}", patientId);
         logger.info("Limpando alergias anteriores...");

@@ -59,7 +59,13 @@ public class SectorFilters extends CustomFilters {
 
     @Override
     public String toString() {
-        return "SectorFilters [id=" + id + ", description=" + description + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("SectorFilters [id=");
+        builder.append(id);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

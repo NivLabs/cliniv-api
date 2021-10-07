@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.digitaldocument.business;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -30,6 +32,7 @@ public class SearchDigitalDocumentBusinessHandler implements BaseBusinessHandler
      * @param id Identificador único do documento
      * @return Documento digital
      */
+    @Transactional
     public DigitalDocumentDTO byId(Long id) {
         DigitalDocument entity = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 "Documento digital com id %s não encontrado"));
@@ -42,6 +45,7 @@ public class SearchDigitalDocumentBusinessHandler implements BaseBusinessHandler
      * @param entity Endidade relacional
      * @return Objeto de transferência
      */
+    @Transactional
     private DigitalDocumentDTO convertDocument(DigitalDocument entity) {
         DigitalDocumentDTO response = new DigitalDocumentDTO();
         response.setId(entity.getId());

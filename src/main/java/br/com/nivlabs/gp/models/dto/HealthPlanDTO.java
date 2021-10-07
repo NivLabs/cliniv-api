@@ -131,9 +131,29 @@ public class HealthPlanDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "HealthPlanDTO [id=" + id + ", operatorCode=" + operatorCode + ", operatorName=" + operatorName + ", planCode=" + planCode
-                + ", commercialName=" + commercialName + ", segmentation=" + segmentation + ", contractType=" + contractType
-                + ", abrangency=" + abrangency + ", type=" + type + ", patientPlanNumber=" + patientPlanNumber + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("HealthPlanDTO [id=");
+        builder.append(id);
+        builder.append(", operatorCode=");
+        builder.append(operatorCode);
+        builder.append(", operatorName=");
+        builder.append(operatorName);
+        builder.append(", planCode=");
+        builder.append(planCode);
+        builder.append(", commercialName=");
+        builder.append(commercialName);
+        builder.append(", segmentation=");
+        builder.append(segmentation);
+        builder.append(", contractType=");
+        builder.append(contractType);
+        builder.append(", abrangency=");
+        builder.append(abrangency);
+        builder.append(", type=");
+        builder.append(type);
+        builder.append(", patientPlanNumber=");
+        builder.append(patientPlanNumber);
+        builder.append("]");
+        return builder.toString();
     }
 
     @Override

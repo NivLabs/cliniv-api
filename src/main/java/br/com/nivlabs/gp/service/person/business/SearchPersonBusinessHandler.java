@@ -3,6 +3,8 @@ package br.com.nivlabs.gp.service.person.business;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,7 @@ public class SearchPersonBusinessHandler implements BaseBusinessHandler {
      * @param id Identificador único de pessoa física
      * @return Informações detalhadas do cadastro de pessoa física encontrado
      */
+    @Transactional
     public PersonInfoDTO byId(Long id) {
         logger.info("Iniciando consulta de pessoa por ID :: {}", id);
         Person person = personRepo.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
@@ -57,6 +60,7 @@ public class SearchPersonBusinessHandler implements BaseBusinessHandler {
      * @param cpf CPF de pessoa física
      * @return Informações detalhadas do cadastro de pessoa física encontrado
      */
+    @Transactional
     public PersonInfoDTO byCPF(String cpf) {
         if (StringUtils.isNullOrEmpty(cpf)) {
             throw new HttpException(HttpStatus.NOT_FOUND,
@@ -68,6 +72,7 @@ public class SearchPersonBusinessHandler implements BaseBusinessHandler {
         return response;
     }
 
+    @Transactional
     private PersonInfoDTO convertEntityToDTO(Person person) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Person -> PersonInfoDTO");
 
@@ -113,6 +118,7 @@ public class SearchPersonBusinessHandler implements BaseBusinessHandler {
      * @param documents Lista de documentos à serem convertidos
      * @return Lista de documentos convertidos
      */
+    @Transactional
     private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
         List<DocumentDTO> convertedDocuments = new ArrayList<>();
 

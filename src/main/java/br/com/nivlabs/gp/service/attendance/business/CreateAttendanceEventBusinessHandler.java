@@ -3,6 +3,8 @@ package br.com.nivlabs.gp.service.attendance.business;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -120,6 +122,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
      * @param accommodation Acomodação do novo evento (DTO)
      * @return Acomodação do novo evento (Entity)
      */
+    @Transactional
     private Accommodation convertAccommodation(AccommodationDTO accommodation) {
         logger.info("Convertendo informações de Sala ou Leito :: Identificador processado -> {}", accommodation.getId());
         Accommodation accommodationReturn = new Accommodation();
