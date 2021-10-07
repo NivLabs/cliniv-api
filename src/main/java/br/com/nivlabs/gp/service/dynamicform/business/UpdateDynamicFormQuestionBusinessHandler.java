@@ -1,14 +1,12 @@
 package br.com.nivlabs.gp.service.dynamicform.business;
 
 import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.DynamicFormQuestion;
-import br.com.nivlabs.gp.models.domain.DynamicFormQuestion_;
 import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 import br.com.nivlabs.gp.repository.DynamicFormQuestionRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
@@ -44,8 +42,6 @@ public class UpdateDynamicFormQuestionBusinessHandler implements BaseBusinessHan
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                         String.format("Questão com o identificador %s não encontrado.", request.getId())));
         logger.info("Formulário à ser alterado :: {} | {} | {}", entity.getId(), entity.getQuestion(), entity.getMetaType());
-        BeanUtils.copyProperties(request, entity, DynamicFormQuestion_.ID);
-
         entity.setMetaType(request.getMetaType());
         entity.setQuestion(request.getQuestion());
 

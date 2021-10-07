@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.healthplan.business;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,7 @@ public class SearchHealthPlanBusinessHandler implements BaseBusinessHandler {
      * @param id Identificador único do plano de saúde
      * @return Informações do plano de saúde
      */
+    @Transactional
     public HealthPlanDTO byId(Long id) {
         logger.info("Iniciando busca de plano de saúde por id :: {}", id);
         if (id == null) {
@@ -53,6 +56,7 @@ public class SearchHealthPlanBusinessHandler implements BaseBusinessHandler {
      * @param ansCode Código do plano na ANS
      * @return Informações do plano de saúde
      */
+    @Transactional
     public HealthPlanDTO byANSCode(Long ansCode) {
         if (ansCode == null) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "Informe o código da ANS do plano para a pesquisa");
@@ -70,6 +74,7 @@ public class SearchHealthPlanBusinessHandler implements BaseBusinessHandler {
      * @param healthPlanEntity Objeto de domínio
      * @return DTO de resposta
      */
+    @Transactional
     private HealthPlanDTO convertEntityToDTO(HealthPlan healthPlanEntity) {
 
         HealthPlanDTO healthPlanInfo = new HealthPlanDTO();

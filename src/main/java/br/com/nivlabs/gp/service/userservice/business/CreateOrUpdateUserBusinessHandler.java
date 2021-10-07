@@ -45,6 +45,7 @@ public abstract class CreateOrUpdateUserBusinessHandler implements BaseBusinessH
      * @param userInfo Objeto de transferência com informações da pessoa física
      * @param personEntity Objeto de entidade relacional de pessoa física
      */
+    @Transactional
     protected void parsePropertiesToPerson(UserInfoDTO userInfo, PersonInfoDTO personInfo) {
         personInfo.setFullName(userInfo.getFullName());
         personInfo.setSocialName(userInfo.getSocialName());
@@ -84,6 +85,7 @@ public abstract class CreateOrUpdateUserBusinessHandler implements BaseBusinessH
      * @param roleDTO Papel de acesso do usuário em Entidade Relacional
      * @return Papel de acesso do usuário convertido em DTO
      */
+    @Transactional
     private Role convertRole(RoleDTO roleDTO) {
         return new Role(roleDTO.getId(), roleDTO.getName(), roleDTO.getDescription());
     }

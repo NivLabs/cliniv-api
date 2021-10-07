@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.service.responsible;
+package br.com.nivlabs.gp.service.responsible.business;
 
 import javax.transaction.Transactional;
 

@@ -11,7 +11,6 @@ import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.dto.PersonInfoDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.gp.service.responsible.CreateOrUpdateResponsibleBusinessHandler;
 import br.com.nivlabs.gp.util.StringUtils;
 
 /**

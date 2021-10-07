@@ -51,6 +51,7 @@ public class UpdateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
      * @param personFromDb
      * @return
      */
+    @Transactional
     private UserApplication persistUser(UserInfoDTO entity, UserApplication userEntity) {
         if (entity.getId() == null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,

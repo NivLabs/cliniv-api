@@ -2,6 +2,8 @@ package br.com.nivlabs.gp.service.userservice.business;
 
 import java.time.LocalDateTime;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,6 +38,7 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
      * @param userInfo Informações do novo usuário
      * @return Informações do usuário criado
      */
+    @Transactional
     public UserInfoDTO create(UserInfoDTO userInfo) {
         userInfo.setId(null);
 
@@ -60,6 +63,7 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
      * @param userInfo Informações do usuário à ser criado
      * @return Informações de pessoa física cadastrada (se houver)
      */
+    @Transactional
     private PersonInfoDTO getValidPerson(UserInfoDTO userInfo) {
         PersonInfoDTO personInfo;
         if (userInfo.getDocument() == null
@@ -85,6 +89,7 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
      * 
      * @param userInfo Informações do usuário
      */
+    @Transactional
     private void userCheckIfExists(UserInfoDTO userInfo) {
         try {
             logger.info("Verificando se já há cadastro de usuário na base de dados :: CPF da busca -> {}",
@@ -115,6 +120,7 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
      * @param personFromDb informações da pessoa física
      * @return Usuário criado na aplicação
      */
+    @Transactional
     private UserApplication persistUser(UserInfoDTO entity, PersonInfoDTO personFromDb) {
         UserApplication user = new UserApplication();
         user.setId(entity.getId());

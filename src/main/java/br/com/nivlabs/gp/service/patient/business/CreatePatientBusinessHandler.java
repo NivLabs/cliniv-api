@@ -66,6 +66,7 @@ public class CreatePatientBusinessHandler extends CreateOrUpdatePatientBusinessH
      * @param request Objeto de transferência com informações do paciente
      * @return Entidade existente ou nova se não existir
      */
+    @Transactional
     private PersonInfoDTO getValidPerson(PatientInfoDTO request) {
         PersonInfoDTO validPerson = new PersonInfoDTO();
         if (request.getDocument() != null && request.getDocument().getValue() != null

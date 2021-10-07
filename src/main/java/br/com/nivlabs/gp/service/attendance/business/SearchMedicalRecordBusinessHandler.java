@@ -3,6 +3,8 @@ package br.com.nivlabs.gp.service.attendance.business;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +53,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param id Identificador único do atendimento
      * @return MedicalRecord Informações do prontuário de atendimento
      */
+    @Transactional
     public MedicalRecordDTO findByAttendanceId(Long id) {
         logger.info("Verificando se o atendimento informado existe. Atendimento :: {}", id);
         Attendance attendance = attendanceDao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
@@ -91,6 +94,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param patientId Identificador único do paciente
      * @return Prontuário de atendimento ativo do paciente
      */
+    @Transactional
     public MedicalRecordDTO getActiveMedicalRecord(Long patientId) {
         PatientInfoDTO patient = patientService.findByPatientId(patientId);
         Attendance attendance = attendanceDao.findByPatientAndExitDateTimeIsNull(new Patient(patient.getId()))
@@ -129,6 +133,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param entity Objeto de entidade relacional referente ao atendimento
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
      */
+    @Transactional
     private void processEvents(Attendance entity, MedicalRecordDTO medicalRecord) {
         entity.getEvents().forEach(event -> {
             processEvent(medicalRecord, event);
@@ -141,6 +146,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
      * @param entity Objeto de entidade relacional referente ao evento do atendimento
      */
+    @Transactional
     private void processEvent(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
         medicalRecord.getEvents().add(entity.getDTO());
         if (entity.getEventType() == EventType.EVOLUTION) {
@@ -156,6 +162,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
      * @param entity Objeto de entidade relacional referente ao evento do atendimento
      */
+    @Transactional
     private void processEvolution(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
         EvolutionInfoDTO evolution = new EvolutionInfoDTO();
         evolution.setId(entity.getId());
@@ -174,6 +181,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
      * @param entity Objeto de entidade relacional referente ao evento do atendimento
      */
+    @Transactional
     private void processMedications(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
         MedicineInfoDTO medicine = new MedicineInfoDTO();
         medicine.setId(entity.getId());
@@ -191,6 +199,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param listOfEntities Lista de acomotações do existentes no atendimento
      * @return Última acomodação
      */
+    @Transactional
     private AccommodationDTO getLastAccommodationByPatientId(List<AttendanceEventDTO> listOfEntities) {
         return listOfEntities.get(listOfEntities.size() - 1).getAccommodation();
     }

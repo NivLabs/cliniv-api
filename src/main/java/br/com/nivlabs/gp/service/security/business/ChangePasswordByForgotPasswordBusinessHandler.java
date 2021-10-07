@@ -24,6 +24,11 @@ public class ChangePasswordByForgotPasswordBusinessHandler implements BaseBusine
     @Autowired
     BCryptPasswordEncoder bc;
 
+    /**
+     * Cria uma nova senha para o processo de esquecimento de senha
+     * 
+     * @param request Requisição de nova senha por esquecimento
+     */
     public void createNewPassword(ChangePasswordByForgotPasswordRequestDTO request) {
         logger.info("Iniciando processo de criação de nova senha");
         UserApplication usuario = userRepo

@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.person.business;
 
+import javax.transaction.Transactional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,7 @@ public class UpdatePersonBusinessHandler extends CreateOrUpdatePersonBusinessHan
      * @param request Requisição com dados cadastrais novos para atualização
      * @return Dados cadastrais atualizados
      */
+    @Transactional
     public PersonInfoDTO update(PersonInfoDTO request) {
 
         if (request.getId() == null) {

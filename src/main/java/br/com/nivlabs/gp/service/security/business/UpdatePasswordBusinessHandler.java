@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.security.business;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -34,6 +36,7 @@ public class UpdatePasswordBusinessHandler implements BaseBusinessHandler {
      * @param request
      * @param userFromContext
      */
+    @Transactional
     public void updatePasswordFromContextLogedUser(NewPasswordRequestDTO request) {
         var userFromContext = SecurityContextUtil.getAuthenticatedUser();
         if (userFromContext == null) {
