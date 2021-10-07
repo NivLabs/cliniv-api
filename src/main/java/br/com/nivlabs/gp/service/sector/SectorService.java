@@ -1,6 +1,4 @@
-package br.com.nivlabs.gp.service;
-
-import java.time.LocalDateTime;
+package br.com.nivlabs.gp.service.sector;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +12,23 @@ import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Accommodation_;
 import br.com.nivlabs.gp.models.domain.Sector;
-import br.com.nivlabs.gp.models.domain.Sector_;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
 import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
 import br.com.nivlabs.gp.repository.AccommodationRepository;
 import br.com.nivlabs.gp.repository.SectorRepository;
+import br.com.nivlabs.gp.service.BaseService;
+import br.com.nivlabs.gp.service.sector.business.CreateSectorBusinessHandler;
+import br.com.nivlabs.gp.service.sector.business.SearchSectorBusinessHandler;
+import br.com.nivlabs.gp.service.sector.business.UpdateSectorBusinessHandler;
 
 /**
- * Classe SectorService.java
  * 
- * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
+ * Camada de serviço para processos com setores e acomodações
  *
- * @since 13 Dez, 2019
+ * @author viniciosarodrigues
+ * @since 06-10-2021
+ *
  */
 @Service
 public class SectorService implements BaseService {
@@ -37,44 +39,52 @@ public class SectorService implements BaseService {
     @Autowired
     private AccommodationRepository roomOrBedRepository;
 
+    @Autowired
+    private SearchSectorBusinessHandler searchSectorBusinessHandler;
+    @Autowired
+    private CreateSectorBusinessHandler createSectorBusinessHandler;
+    @Autowired
+    private UpdateSectorBusinessHandler updateSectorBusinessHandler;
+
     /**
      * Realiza a busca pagina de setores
      * 
-     * @param filters
-     * @param pageRequest
-     * @return
+     * @param filters Filtros de pesquisa
+     * @param pageRequest Configurações de paginação
+     * @return Página de setores
      */
-    public Page<SectorDTO> getPageWithFilter(SectorFilters filters, Pageable pageRequest) {
-        return dao.resumedList(filters, pageRequest);
+    public Page<SectorDTO> getPage(SectorFilters filters, Pageable pageRequest) {
+        return searchSectorBusinessHandler.getPage(filters, pageRequest);
     }
 
     /**
-     * Busca setor por id
+     * Busca informações do setor por identificador único do setor
+     * 
+     * @param id Identificador único do setor
+     * @return Informações do setor
      */
     public SectorInfoDTO findInfoById(Long id) {
-        Sector sector = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Setor com o identificador %s não encontrado", id)));
-        SectorInfoDTO sectorInfoDTO = new SectorInfoDTO();
-        BeanUtils.copyProperties(sector, sectorInfoDTO, Sector_.LIST_OF_ROOMS_OR_BEDS);
-        sector.getListOfRoomsOrBeds().forEach(item -> sectorInfoDTO.getListOfRoomsOrBeds()
-                .add(new AccommodationDTO(item.getId(), sector.getId(), item.getDescription(), item.getType())));
-        return sectorInfoDTO;
+        return searchSectorBusinessHandler.byId(id);
     }
 
     /**
-     * Atualiza informações do setor
+     * Atualiza informações de um setor
      * 
-     * @param id
-     * @param sectorInfoDTO
-     * @return
+     * @param sectorInfo Novas informações do setor
+     * @return Informações do setor atualizadas
      */
-    public SectorInfoDTO update(Long id, SectorInfoDTO sectorInfoDTO) {
-        Sector sector = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Setor com o identificador %s não encontrado", id)));
-        BeanUtils.copyProperties(sectorInfoDTO, sector, Sector_.ID, Sector_.CREATED_AT, Sector_.LIST_OF_ROOMS_OR_BEDS);
-        sector = dao.save(sector);
-        BeanUtils.copyProperties(sector, sectorInfoDTO);
-        return sectorInfoDTO;
+    public SectorInfoDTO update(Long id, SectorInfoDTO sectorInfo) {
+        return updateSectorBusinessHandler.update(sectorInfo);
+    }
+
+    /**
+     * Cria um cadastro de um setor com as informações passadas no DTO
+     * 
+     * @param sectorInfo Informações do setor à ser criado
+     * @return Informações do setor criado
+     */
+    public SectorInfoDTO persist(SectorInfoDTO sectorInfo) {
+        return createSectorBusinessHandler.create(sectorInfo);
     }
 
     /**
@@ -84,7 +94,7 @@ public class SectorService implements BaseService {
      * @param request
      * @return
      */
-    public AccommodationDTO updateRoomOrBedDTO(Long id, AccommodationDTO request) {
+    public AccommodationDTO updateAccomodation(Long id, AccommodationDTO request) {
         Accommodation entity = roomOrBedRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Sala ou leito com o identificador %s não encontrado", id)));
         BeanUtils.copyProperties(request, entity, Accommodation_.ID);
@@ -104,27 +114,6 @@ public class SectorService implements BaseService {
                                                                                          "Sala ou leito com o identificado %s não encontrado, não é possível deletar um registro inexistente.",
                                                                                          id)));
         roomOrBedRepository.delete(entity);
-    }
-
-    public void delete(SectorInfoDTO entity) {
-        deleteById(entity.getId());
-    }
-
-    public void deleteById(Long id) {
-        Sector auxEntity = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Setor com o identificado %s não encontrado", id)));
-        dao.delete(auxEntity);
-    }
-
-    public SectorInfoDTO persist(SectorInfoDTO sectorDTO) {
-        Sector sector = new Sector();
-        sector.setDescription(sectorDTO.getDescription());
-        sector.setCreatedAt(LocalDateTime.now());
-        sector = dao.save(sector);
-
-        sectorDTO.setId(sector.getId());
-
-        return sectorDTO;
     }
 
     public AccommodationDTO persist(AccommodationDTO request) {

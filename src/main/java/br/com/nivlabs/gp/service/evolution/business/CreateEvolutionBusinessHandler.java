@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -79,6 +81,7 @@ public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
      * 
      * @param request
      */
+    @Transactional
     public EvolutionInfoDTO create(EvolutionInfoDTO request) {
         logger.info("Iniciando a adição de uma evolução clínica ao sistema...\nBuscando pelo atendimento informado na requisição :: {}",
                     request.getAttendanceId());
@@ -110,6 +113,7 @@ public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
      * 
      * @param evolution
      */
+    @Transactional
     private void createAttendanceEvent(EvolutionInfoDTO request, MedicalRecordDTO medicalRecord, String userFromSession) {
         logger.info("Iniciando processo de criação de evento do atendimento para Evolução clínica");
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();

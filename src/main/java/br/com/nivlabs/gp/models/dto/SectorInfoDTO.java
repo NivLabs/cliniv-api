@@ -11,11 +11,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Classe SectorDTO.java
  * 
- * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
- * 
- * @since 13 de dez de 2019
+ * Informações do setor e acomodações
+ *
+ * @author viniciosarodrigues
+ * @since 06-10-2021
+ *
  */
 @ApiModel(description = "Informações do Setor")
 public class SectorInfoDTO extends DataTransferObjectBase {

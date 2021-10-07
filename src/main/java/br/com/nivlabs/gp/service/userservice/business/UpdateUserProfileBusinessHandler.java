@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.userservice.business;
 
+import javax.transaction.Transactional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +29,7 @@ public class UpdateUserProfileBusinessHandler extends UpdateUserBusinessHandler 
      * @return
      */
     @Override
+    @Transactional
     public UserInfoDTO update(UserInfoDTO entity) {
         validUserToUpdate(entity);
         super.update(entity);
@@ -40,6 +43,7 @@ public class UpdateUserProfileBusinessHandler extends UpdateUserBusinessHandler 
      * @param entity
      * @param userFromSession
      */
+    @Transactional
     private void validUserToUpdate(UserInfoDTO entity) {
         UserApplication userEntity = userRepo.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername())
                 .orElseThrow(() -> new HttpException(HttpStatus.FORBIDDEN,

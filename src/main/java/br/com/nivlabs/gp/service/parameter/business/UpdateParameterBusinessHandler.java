@@ -36,7 +36,6 @@ public class UpdateParameterBusinessHandler implements BaseBusinessHandler {
      * @param id Identificador único do parâmetro
      * @param newValue Requisição de mudança de valor de parâmetro
      */
-
     public void updateValue(Long id, NewParameterValueDTO newValue) {
         if (newValue == null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O novo valor não pode ser nulo");

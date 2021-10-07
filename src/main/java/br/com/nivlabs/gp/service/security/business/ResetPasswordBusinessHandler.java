@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.security.business;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,7 @@ public class ResetPasswordBusinessHandler implements BaseBusinessHandler {
      * 
      * @param id Identificador único do usuário que terá a senha resetada
      */
+    @Transactional
     public void resetPassword(Long id) {
         UserOfSystem userFromContext = SecurityContextUtil.getAuthenticatedUser();
         if (userFromContext == null) {

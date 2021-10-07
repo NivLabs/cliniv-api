@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -80,6 +82,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
      * @param request
      * @return
      */
+    @Transactional
     public NewDynamicFormAnsweredDTO answer(Long attendanceId, NewDynamicFormAnsweredDTO request) {
         logger.info("Iniciando o preenchimento de um novo formulário dinâmico...");
         MedicalRecordDTO medicalRecord = attendanceService.findMedicalRecordByAttendanceId(attendanceId);
@@ -113,6 +116,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
      * @param attendanceId
      * @param request
      */
+    @Transactional
     private void createAnsweredForm(Long responsibleId, Long attendanceId, NewDynamicFormAnsweredDTO request) {
         logger.info("Iniciando processo de inserção de respostas do formulário dinâmico :: {}", request.getListOfResponse());
         logger.info("Removendo respostas anteriores...");
@@ -143,6 +147,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
      * @param document
      * @param requestOwner
      */
+    @Transactional
     private void createAnamneseDocumentEvent(Long attendanceId, NewDynamicFormAnsweredDTO request, MedicalRecordDTO medicalRecord,
                                              DigitalDocumentDTO document,
                                              UserInfoDTO requestOwner) {

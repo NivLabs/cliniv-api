@@ -1,6 +1,8 @@
-package br.com.nivlabs.gp.service.responsible;
+package br.com.nivlabs.gp.service.responsible.business;
 
 import java.util.ArrayList;
+
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,6 @@ import br.com.nivlabs.gp.repository.ResponsibleRepository;
 import br.com.nivlabs.gp.repository.SpecialityRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
 import br.com.nivlabs.gp.service.person.PersonService;
-import br.com.nivlabs.gp.service.responsible.business.SearchResponsibleBusinessHandler;
 
 /**
  * 
@@ -80,6 +81,7 @@ public abstract class CreateOrUpdateResponsibleBusinessHandler implements BaseBu
      * @param responsibleInfo Objeto de transferência com informações do paciente
      * @param personInfo Objeto de transferência com informações de pessoa física
      */
+    @Transactional
     protected void parsePropertiesToPersonInfo(ResponsibleInfoDTO responsibleInfo, PersonInfoDTO personInfo) {
         personInfo.setFullName(responsibleInfo.getFullName());
         personInfo.setSocialName(responsibleInfo.getSocialName());

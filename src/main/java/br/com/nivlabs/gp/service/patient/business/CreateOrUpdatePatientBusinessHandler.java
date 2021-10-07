@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.patient.business;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,7 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * @param entity
      * @param patient
      */
+    @Transactional
     protected void checkCnsCode(PatientInfoDTO entity, Patient patient) {
         if (entity.getCnsNumber() != null && !entity.getCnsNumber().equals(patient.getCnsNumber())) {
             Patient patientByCnsNumber = patientRepo.findByCnsNumber(entity.getCnsNumber()).orElse(null);
@@ -66,6 +69,7 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * @param cpf CPF do paciente / pessoa física
      * @param id Identificador do paciente
      */
+    @Transactional
     protected void patientCheckIfExistsByCpf(String cpf, Long id) {
         logger.info("Verificando se já há cadastro de paciente na base de dados :: CPF da busca -> {}", cpf);
         PatientInfoDTO patient = searchPatientBusiness.getByCpf(cpf);
@@ -84,6 +88,7 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * @param patientEntity Objeto de entidade relacional de paciente
      * @param personEntity Objeto de entidade relacional de pessoa física
      */
+    @Transactional
     protected void checkDocument(PatientInfoDTO request, Patient patientEntity, Person personEntity) {
         if (request.getDocument() != null && request.getDocument().getType().equals(DocumentType.CPF)
                 && !StringUtils.isNullOrEmpty(request.getDocument().getValue())) {
@@ -104,6 +109,7 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * @param request Objeto de transferência com informações do paciente
      * @param entity Objeto de entidade relacional de pessoa física
      */
+    @Transactional
     protected void addressProcess(PatientInfoDTO request, Person entity) {
         logger.info("Verificando endereço");
         if (request.getAddress() != null) {
@@ -123,6 +129,7 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * @param request Objeto de transferência com informações do paciente
      * @param entity Objeto de entidade relacional de pessoa física
      */
+    @Transactional
     protected void documentsProcess(PatientInfoDTO request, Person entity) {
         logger.info("Iniciando processo de checagem de documentos...");
         if (entity != null) {
@@ -150,6 +157,7 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * @param request Objeto de transferência com informações do paciente
      * @param entity Objeto de entidade relacional de paciente
      */
+    @Transactional
     protected void handleHealthPlah(PatientInfoDTO request, Patient entity) {
         if (request.getHealthPlan() != null
                 && !StringUtils.isNullOrEmpty(request.getHealthPlan().getPatientPlanNumber())) {
@@ -172,6 +180,7 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * 
      * @param newPatientEntity
      */
+    @Transactional
     protected void handlePatientType(Patient newPatientEntity) {
         logger.info("Checando tipo de paciente...");
         if (StringUtils.isNullOrEmpty(newPatientEntity.getCnsNumber())
@@ -202,6 +211,7 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * @param patientInfo Objeto de transferência com informações do paciente
      * @param personInfo Objeto de transferência com informações de pessoa física
      */
+    @Transactional
     protected void parsePropertiesToPersonInfo(PatientInfoDTO patientInfo, PersonInfoDTO personInfo) {
         logger.info("Iniciando processo de conversão de paciente para pessoa");
         personInfo.setId(patientInfo.getPersonId());

@@ -11,6 +11,7 @@ import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.service.BaseService;
 import br.com.nivlabs.gp.service.responsible.business.CreateResponsibleBusinessHandler;
 import br.com.nivlabs.gp.service.responsible.business.SearchResponsibleBusinessHandler;
+import br.com.nivlabs.gp.service.responsible.business.UpdateResponsibleBusinessHandler;
 
 /**
  * 
