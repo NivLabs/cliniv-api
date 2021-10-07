@@ -16,7 +16,6 @@ import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
 import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
 import br.com.nivlabs.gp.repository.AccommodationRepository;
-import br.com.nivlabs.gp.repository.SectorRepository;
 import br.com.nivlabs.gp.service.BaseService;
 import br.com.nivlabs.gp.service.sector.business.CreateSectorBusinessHandler;
 import br.com.nivlabs.gp.service.sector.business.SearchSectorBusinessHandler;
@@ -32,9 +31,6 @@ import br.com.nivlabs.gp.service.sector.business.UpdateSectorBusinessHandler;
  */
 @Service
 public class SectorService implements BaseService {
-
-    @Autowired
-    private SectorRepository dao;
 
     @Autowired
     private AccommodationRepository roomOrBedRepository;

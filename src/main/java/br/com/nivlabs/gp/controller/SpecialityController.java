@@ -51,7 +51,7 @@ public class SpecialityController {
     public ResponseEntity<Page<SpecialityDTO>> findList(SpecialityFilter filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
                                                filters.getOrderBy());
-        return ResponseEntity.ok(specService.searchEntityPage(filters, pageSettings));
+        return ResponseEntity.ok(specService.getPage(filters, pageSettings));
     }
 
     @ApiOperation(nickname = "speciality-get-id", value = "Busca informações detalhadas de uma especialidade")
