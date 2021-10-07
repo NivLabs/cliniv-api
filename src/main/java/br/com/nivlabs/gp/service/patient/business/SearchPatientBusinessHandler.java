@@ -84,6 +84,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
      * @param CNS Código da Carteira Nacional de Saúde
      * @return Informações detalhadas do paciente
      */
+    @Transactional
     public PatientInfoDTO getByCnsNumber(String cnsCode) {
         logger.info("Iniciando busca de paciente por CNS :: {}", cnsCode);
         Patient patient = patientRepo.findByCnsNumber(cnsCode).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
@@ -99,6 +100,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
      * @param cpf CPF do paciente
      * @return Informações detalhadas do paciente ou da pessoa física
      */
+    @Transactional
     public PatientInfoDTO getByCpf(String cpf) {
         logger.info("Iniciando busca de paciente por CPF :: {}", cpf);
         try {

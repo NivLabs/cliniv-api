@@ -81,6 +81,7 @@ public class SearchHealthOperatorBusinessHandler implements BaseBusinessHandler 
      * @param healthPlanEntity Objeto que representa uma entidade relacional de plano de saúde
      * @return Objeto que representa o DTO de plano de saúde
      */
+    @Transactional
     private HealthPlanDTO convertEntityToDTO(HealthPlan healthPlanEntity) {
         HealthPlanDTO healthPlanInfo = new HealthPlanDTO();
         healthPlanInfo.setId(healthPlanEntity.getId());
@@ -101,6 +102,7 @@ public class SearchHealthOperatorBusinessHandler implements BaseBusinessHandler 
      * @param healthOperatorEntity Objeto que representa uma entidade relacional de operadora de saúde
      * @return Objeto que representa o DTO de operadora de sáude
      */
+    @Transactional
     private HealthOperatorInfoDTO convertEntityToDTO(HealthOperator healthOperatorEntity) {
         HealthOperatorInfoDTO healthOperatorInfo = new HealthOperatorInfoDTO();
         healthOperatorInfo.setId(healthOperatorEntity.getId());
