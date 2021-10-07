@@ -1,4 +1,6 @@
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.speciality;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ public class SpecialityService {
         return dao.resumedList(filter, pageSettings);
     }
 
+    @Transactional
     public SpecialityInfoDTO findById(Long id) {
         Speciality specFromDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Especialidade com identificador %s não encontrada", id)));
@@ -52,6 +55,7 @@ public class SpecialityService {
         return convertedSpec;
     }
 
+    @Transactional
     public SpecialityInfoDTO update(Long id, SpecialityInfoDTO dto) {
         Speciality specToDb = dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Especialidade com identificador %s não encontrada", id)));
@@ -71,6 +75,7 @@ public class SpecialityService {
         dao.deleteById(id);
     }
 
+    @Transactional
     public SpecialityInfoDTO persist(SpecialityInfoDTO dto) {
         dto.setId(null);
         Speciality specToDb = new Speciality();
