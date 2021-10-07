@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.dynamicform.business;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,6 +51,7 @@ public class SearchDynamicFormBusinessHandler implements BaseBusinessHandler {
      * @param id Identificador único do formulário de Anamnese
      * @return Formulário dinâmico com título e perguntas
      */
+    @Transactional
     public DynamicFormDTO byId(Long id) {
         logger.info("Iniciando processo de busca de formulário dinâmico pelo identificador :: {}", id);
 
