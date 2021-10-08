@@ -80,7 +80,7 @@ public class SectorController extends BaseController<SectorService> {
     @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<AccommodationDTO> updateRoomOrBed(@PathVariable("id") Long id,
                                                             @Validated @RequestBody(required = true) AccommodationDTO request) {
-        return ResponseEntity.ok().body(service.updateAccomodation(id, request));
+        return ResponseEntity.ok().body(service.updateAccommodation(id, request));
     }
 
     @ApiOperation(nickname = "room-or-bet-post", value = "Cria uma sala (ambulatório) ou leito na aplicação")
@@ -99,7 +99,7 @@ public class SectorController extends BaseController<SectorService> {
     @DeleteMapping("/room-or-bed/{id}")
     @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> deleteRoomOrBed(@PathVariable("id") Long id) {
-        service.deleteRoomOrBed(id);
+        service.deletetAccomodationById(id);
         return ResponseEntity.noContent().build();
     }
 

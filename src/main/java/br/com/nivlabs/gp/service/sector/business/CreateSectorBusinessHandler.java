@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.sector.business;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.models.domain.Sector;
@@ -22,6 +24,7 @@ public class CreateSectorBusinessHandler extends CreateOrUpdateSectorBusinessHan
      * @param sectorInfo Informações do setor à ser criado
      * @return Informações do setor criado
      */
+    @Transactional
     public SectorInfoDTO create(SectorInfoDTO sectorInfo) {
         logger.info("Iniciando processo de criação de cadastro de um novo setor de atendimento....");
         Sector sector = new Sector();

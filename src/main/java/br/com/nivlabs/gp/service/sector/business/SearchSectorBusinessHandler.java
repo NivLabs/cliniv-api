@@ -55,6 +55,9 @@ public class SearchSectorBusinessHandler implements BaseBusinessHandler {
      */
     @Transactional
     public SectorInfoDTO byId(Long id) {
+        if (id == null) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Informe o identificador único do setor para a consulta.");
+        }
         Sector sectorEntity = sectorRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Setor com o identificador %s não encontrado", id)));
 
