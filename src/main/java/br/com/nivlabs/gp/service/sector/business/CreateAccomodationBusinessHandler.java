@@ -57,7 +57,7 @@ public class CreateAccomodationBusinessHandler implements BaseBusinessHandler {
         accommodationEntity.setDescription(accommodationInfo.getDescription());
         accommodationEntity.setType(accommodationInfo.getType());
 
-        accommodationRepository.save(accommodationEntity);
+        accommodationEntity = accommodationRepository.save(accommodationEntity);
 
         accommodationEntity.setId(accommodationEntity.getId());
 
