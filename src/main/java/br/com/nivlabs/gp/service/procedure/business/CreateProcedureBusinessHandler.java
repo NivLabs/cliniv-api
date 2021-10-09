@@ -35,6 +35,7 @@ public class CreateProcedureBusinessHandler extends CreateOrUpdateProcedureBusin
         parseProcedureInfoToEntity(procedureInfo, procedureEntity);
 
         procedureRepository.saveAndFlush(procedureEntity);
+
         procedureInfo.setId(procedureEntity.getId());
         logger.info("Criação do novo procedimento realizada com sucesso :: {} | {}", procedureInfo.getId(), procedureInfo.getDescription());
         return procedureInfo;

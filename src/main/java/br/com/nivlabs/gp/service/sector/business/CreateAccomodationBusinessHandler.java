@@ -59,7 +59,7 @@ public class CreateAccomodationBusinessHandler implements BaseBusinessHandler {
 
         accommodationRepository.save(accommodationEntity);
 
-        accommodationEntity.setId(accommodationEntity.getId());
+        accommodationInfo.setId(accommodationEntity.getId());
 
         logger.info("Criação de acomodação realizada com sucesso!");
 
