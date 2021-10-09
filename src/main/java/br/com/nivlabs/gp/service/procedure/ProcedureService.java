@@ -50,7 +50,7 @@ public class ProcedureService implements BaseService {
      * @param id Identificador único do procedimento
      * @return Procedimento encontrado
      */
-    public ProcedureInfoDTO findDTOById(Long id) {
+    public ProcedureInfoDTO findById(Long id) {
         return searchProcedureBusinessHandler.byId(id);
     }
 
