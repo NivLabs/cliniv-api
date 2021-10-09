@@ -1,78 +1,87 @@
-/**
- * 
- */
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.procedure;
 
-import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.ProcedureFilters;
-import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.tiss.Procedure;
-import br.com.nivlabs.gp.models.domain.tiss.Procedure_;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
 import br.com.nivlabs.gp.models.dto.ProcedureInfoDTO;
-import br.com.nivlabs.gp.repository.ProcedureRepository;
+import br.com.nivlabs.gp.service.BaseService;
+import br.com.nivlabs.gp.service.procedure.business.CreateProcedureBusinessHandler;
+import br.com.nivlabs.gp.service.procedure.business.DeleteProcedureBusinessHandler;
+import br.com.nivlabs.gp.service.procedure.business.SearchProcedureBusinessHandler;
+import br.com.nivlabs.gp.service.procedure.business.UpdateProcedureBusinessHandler;
 
 /**
  * Camada de serviço para procedimentos e eventos clínicos/hospitalares
- * 
+ *
  * @author viniciosarodrigues
+ * @since 08-10-2021
  *
  */
 @Service
 public class ProcedureService implements BaseService {
 
     @Autowired
-    private ProcedureRepository dao;
+    private SearchProcedureBusinessHandler searchProcedureBusinessHandler;
     @Autowired
-    private Logger logger;
+    private CreateProcedureBusinessHandler createProcedureBusinessHandler;
+    @Autowired
+    private UpdateProcedureBusinessHandler updateProcedureBusinessHandler;
+    @Autowired
+    private DeleteProcedureBusinessHandler deleteProcedureBusinessHandler;
 
+    /**
+     * Realiza uma busca paginada de procedimentos
+     * 
+     * @param filters Filtros de busca de procedimentos
+     * @param pageRequest Configurações de paginação
+     * @return Página de procedimentos
+     */
     public Page<ProcedureDTO> getResumedPage(ProcedureFilters filters, Pageable pageRequest) {
-        return dao.resumedList(filters, pageRequest);
+        return searchProcedureBusinessHandler.getPage(filters, pageRequest);
     }
 
+    /**
+     * Realiza uma busca de procedimento por identificador único do mesmo
+     * 
+     * @param id Identificador único do procedimento
+     * @return Procedimento encontrado
+     */
     public ProcedureInfoDTO findDTOById(Long id) {
-        return findById(id).getDTO();
+        return searchProcedureBusinessHandler.byId(id);
     }
 
-    public Procedure findById(Long id) {
-        return dao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Procedimento com código %s não encontrado!", id)));
+    /**
+     * Cria um procedimento na aplicação
+     * 
+     * @param procedureInfo Informações do procedimento
+     * @return Procedimento criado
+     */
+    public ProcedureInfoDTO create(ProcedureInfoDTO request) {
+        return createProcedureBusinessHandler.create(request);
     }
 
-    public ProcedureInfoDTO update(Long id, ProcedureInfoDTO request) {
-        logger.info("Iniciando processo de atualização de procedimento :: {}", id);
-        Procedure procedureOrEvent = findById(id);
-        logger.info("Procedimento encontrado :: {}", procedureOrEvent.getDescription());
-        BeanUtils.copyProperties(request, procedureOrEvent, Procedure_.ID);
-        procedureOrEvent = dao.saveAndFlush(procedureOrEvent);
-        logger.info("Atualização concluída com sucesso!");
-
-        return request;
+    /**
+     * Atualiza informações cadastrais de um procedimento
+     * 
+     * @param id Identificador único do procedimento
+     * @param procedureInfo Procedimento atualizado
+     * @return Procedimento atualizado
+     */
+    public ProcedureInfoDTO update(Long id, ProcedureInfoDTO procedureInfo) {
+        return updateProcedureBusinessHandler.update(procedureInfo);
     }
 
+    /**
+     * Exclui um procedimento da aplicação
+     * 
+     * @param id Identificador único do procedimento
+     */
     public void deleteById(Long id) {
-        logger.info("Iniciando processo de exclusão de procedimento por identificador :: {}", id);
-        Procedure procedureOrEvent = findById(id);
-        logger.info("Procedimento que será excluído :: {}", procedureOrEvent.getDescription());
-        dao.delete(procedureOrEvent);
-        logger.info("Procedimento excluído com sucesso!");
-    }
-
-    public ProcedureInfoDTO persist(ProcedureInfoDTO request) {
-        logger.info("Iniciando a criação de um novo procedimento :: {}", request.getDescription());
-        Procedure entity = new Procedure();
-        BeanUtils.copyProperties(request, entity, Procedure_.ID);
-        dao.saveAndFlush(entity);
-        request.setId(entity.getId());
-        logger.info("Criação do novo procedimento realizada com sucesso :: {} | {}", request.getId(), request.getDescription());
-        return request;
+        deleteProcedureBusinessHandler.byId(id);
     }
 
 }
