@@ -50,7 +50,7 @@ public class ProcedureController extends BaseController<ProcedureService> {
     @ApiOperation(nickname = "procedure-get-id", value = "Busca um procedimento à partir do identificador")
     @GetMapping("{id}")
     public ResponseEntity<ProcedureInfoDTO> getById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(service.findDTOById(id));
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @ApiOperation(nickname = "procedure-post", value = "Cria um novo procedimento no sistema")
