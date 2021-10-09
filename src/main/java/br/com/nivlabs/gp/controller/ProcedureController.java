@@ -2,8 +2,6 @@ package br.com.nivlabs.gp.controller;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.ProcedureFilters;
-import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
 import br.com.nivlabs.gp.models.dto.ProcedureInfoDTO;
-import br.com.nivlabs.gp.service.ProcedureService;
+import br.com.nivlabs.gp.service.procedure.ProcedureService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
@@ -40,13 +37,7 @@ import io.swagger.annotations.ApiOperation;
 @Api("Endpoint - Procedimento ou Evento")
 @RestController
 @RequestMapping(value = "/procedure")
-public class ProcedureController {
-
-    @Autowired
-    private ProcedureService service;
-
-    @Autowired
-    private ApplicationEventPublisher publisher;
+public class ProcedureController extends BaseController<ProcedureService> {
 
     @ApiOperation(nickname = "procedure-get", value = "Busca uma página de procedimentos")
     @GetMapping
@@ -67,8 +58,7 @@ public class ProcedureController {
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<ProcedureInfoDTO> persist(@Validated @RequestBody(required = true) ProcedureInfoDTO request,
                                                     HttpServletResponse response) {
-        ProcedureInfoDTO createdProcedure = service.persist(request);
-        publisher.publishEvent(new CreatedResourceEvent(this, response, createdProcedure.getId()));
+        ProcedureInfoDTO createdProcedure = service.create(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProcedure);
     }

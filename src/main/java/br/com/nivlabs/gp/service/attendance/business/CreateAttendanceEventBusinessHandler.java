@@ -25,8 +25,8 @@ import br.com.nivlabs.gp.models.dto.ProcedureDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
+import br.com.nivlabs.gp.repository.ProcedureRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
-import br.com.nivlabs.gp.service.ProcedureService;
 import br.com.nivlabs.gp.service.digitaldocument.DigitalDocumentService;
 import br.com.nivlabs.gp.service.responsible.ResponsibleService;
 import br.com.nivlabs.gp.service.userservice.UserService;
@@ -56,7 +56,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
     @Autowired
     private ResponsibleService responsibleService;
     @Autowired
-    private ProcedureService procedureService;
+    private ProcedureRepository procedureRepository;
 
     /**
      * Cria um novo evento de atendimento
@@ -162,7 +162,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
 
         Procedure procedureReturn = null;
         if (procedure != null && procedure.getId() != null) {
-            procedureReturn = procedureService.findById(procedure.getId());
+            procedureReturn = procedureRepository.findById(procedure.getId()).orElse(null);
         }
         return procedureReturn;
     }

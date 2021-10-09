@@ -2,6 +2,7 @@ package br.com.nivlabs.gp.models.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
@@ -79,13 +80,7 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((responsibles == null) ? 0 : responsibles.hashCode());
-        return result;
+        return Objects.hash(description, id, name, responsibles);
     }
 
     @Override
@@ -97,31 +92,23 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         SpecialityInfoDTO other = (SpecialityInfoDTO) obj;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (responsibles == null) {
-            if (other.responsibles != null)
-                return false;
-        } else if (!responsibles.equals(other.responsibles))
-            return false;
-        return true;
+        return Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
+                && Objects.equals(responsibles, other.responsibles);
     }
 
     @Override
     public String toString() {
-        return "SpecialityInfoDTO [id=" + id + ", name=" + name + ", description=" + description + ", responsibles=" + responsibles + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("SpecialityInfoDTO [id=");
+        builder.append(id);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(", responsibles=");
+        builder.append(responsibles);
+        builder.append("]");
+        return builder.toString();
     }
+
 }

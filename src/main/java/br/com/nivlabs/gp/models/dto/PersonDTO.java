@@ -27,8 +27,6 @@ public abstract class PersonDTO extends DataTransferObjectBase {
 
     private String socialName;
 
-    private String rg;
-
     private String cpf;
 
     @DateTimeFormat(iso = ISO.DATE)
@@ -60,14 +58,6 @@ public abstract class PersonDTO extends DataTransferObjectBase {
 
     public void setSocialName(String socialName) {
         this.socialName = socialName;
-    }
-
-    public String getRg() {
-        return rg;
-    }
-
-    public void setRg(String rg) {
-        this.rg = rg;
     }
 
     public String getCpf() {
@@ -112,7 +102,6 @@ public abstract class PersonDTO extends DataTransferObjectBase {
         result = prime * result + ((gender == null) ? 0 : gender.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((principalNumber == null) ? 0 : principalNumber.hashCode());
-        result = prime * result + ((rg == null) ? 0 : rg.hashCode());
         result = prime * result + ((socialName == null) ? 0 : socialName.hashCode());
         return result;
     }
@@ -153,11 +142,6 @@ public abstract class PersonDTO extends DataTransferObjectBase {
                 return false;
         } else if (!principalNumber.equals(other.principalNumber))
             return false;
-        if (rg == null) {
-            if (other.rg != null)
-                return false;
-        } else if (!rg.equals(other.rg))
-            return false;
         if (socialName == null) {
             if (other.socialName != null)
                 return false;
@@ -168,8 +152,23 @@ public abstract class PersonDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "PersonDTO [id=" + id + ", fullName=" + fullName + ", socialName=" + socialName + ", rg=" + rg + ", cpf="
-                + cpf + ", bornDate=" + bornDate + ", principalNumber=" + principalNumber + ", gender=" + gender + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("PersonDTO [id=");
+        builder.append(id);
+        builder.append(", fullName=");
+        builder.append(fullName);
+        builder.append(", socialName=");
+        builder.append(socialName);
+        builder.append(", cpf=");
+        builder.append(cpf);
+        builder.append(", bornDate=");
+        builder.append(bornDate);
+        builder.append(", principalNumber=");
+        builder.append(principalNumber);
+        builder.append(", gender=");
+        builder.append(gender);
+        builder.append("]");
+        return builder.toString();
     }
 
 }
