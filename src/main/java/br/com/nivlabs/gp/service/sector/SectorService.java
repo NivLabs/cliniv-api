@@ -1,25 +1,20 @@
 package br.com.nivlabs.gp.service.sector;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.SectorFilters;
-import br.com.nivlabs.gp.exception.HttpException;
-import br.com.nivlabs.gp.models.domain.Accommodation;
-import br.com.nivlabs.gp.models.domain.Accommodation_;
-import br.com.nivlabs.gp.models.domain.Sector;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
 import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
-import br.com.nivlabs.gp.repository.AccommodationRepository;
-import br.com.nivlabs.gp.repository.SectorRepository;
 import br.com.nivlabs.gp.service.BaseService;
+import br.com.nivlabs.gp.service.sector.business.CreateAccomodationBusinessHandler;
 import br.com.nivlabs.gp.service.sector.business.CreateSectorBusinessHandler;
+import br.com.nivlabs.gp.service.sector.business.DeleteAccomodationBusinessHandler;
 import br.com.nivlabs.gp.service.sector.business.SearchSectorBusinessHandler;
+import br.com.nivlabs.gp.service.sector.business.UpdateAccomodationBusinessHandler;
 import br.com.nivlabs.gp.service.sector.business.UpdateSectorBusinessHandler;
 
 /**
@@ -34,17 +29,18 @@ import br.com.nivlabs.gp.service.sector.business.UpdateSectorBusinessHandler;
 public class SectorService implements BaseService {
 
     @Autowired
-    private SectorRepository dao;
-
-    @Autowired
-    private AccommodationRepository roomOrBedRepository;
-
-    @Autowired
     private SearchSectorBusinessHandler searchSectorBusinessHandler;
     @Autowired
     private CreateSectorBusinessHandler createSectorBusinessHandler;
     @Autowired
     private UpdateSectorBusinessHandler updateSectorBusinessHandler;
+
+    @Autowired
+    private CreateAccomodationBusinessHandler createAccomodationBusinessHandler;
+    @Autowired
+    private UpdateAccomodationBusinessHandler updateAccomodationBusinessHandler;
+    @Autowired
+    private DeleteAccomodationBusinessHandler deleteAccomodationBusinessHandler;
 
     /**
      * Realiza a busca pagina de setores
@@ -73,7 +69,8 @@ public class SectorService implements BaseService {
      * @param sectorInfo Novas informações do setor
      * @return Informações do setor atualizadas
      */
-    public SectorInfoDTO update(Long id, SectorInfoDTO sectorInfo) {
+    public SectorInfoDTO update(long id, SectorInfoDTO sectorInfo) {
+        sectorInfo.setId(id);
         return updateSectorBusinessHandler.update(sectorInfo);
     }
 
@@ -88,44 +85,34 @@ public class SectorService implements BaseService {
     }
 
     /**
-     * Realiza a atualização de uma Sala ou Leito
+     * Realiza a atualização cadastral de uma acomodação
      * 
-     * @param id
-     * @param request
-     * @return
+     * @param id Identificador único da acomodação
+     * @param request Novas informações da acomodação em questão à ser atualizada
+     * @return Informações atualizadas da acomodação em questão
      */
-    public AccommodationDTO updateAccomodation(Long id, AccommodationDTO request) {
-        Accommodation entity = roomOrBedRepository.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                String.format("Sala ou leito com o identificador %s não encontrado", id)));
-        BeanUtils.copyProperties(request, entity, Accommodation_.ID);
-        entity = roomOrBedRepository.save(entity);
-        BeanUtils.copyProperties(entity, request);
-        return request;
+    public AccommodationDTO updateAccommodation(Long id, AccommodationDTO request) {
+        request.setId(id);
+        return updateAccomodationBusinessHandler.update(request);
     }
 
     /**
-     * Deleta uma sala ou leito
+     * Deleta acomodação por identificador único da acomodação
      * 
-     * @param id
+     * @param id Identificador único da acomodação
      */
-    public void deleteRoomOrBed(Long id) {
-        Accommodation entity = roomOrBedRepository.findById(id)
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
-                                                                                         "Sala ou leito com o identificado %s não encontrado, não é possível deletar um registro inexistente.",
-                                                                                         id)));
-        roomOrBedRepository.delete(entity);
+    public void deletetAccomodationById(Long id) {
+        deleteAccomodationBusinessHandler.byId(id);
     }
 
+    /**
+     * Realiza o cadastro de uma nova acomodação ao setor
+     * 
+     * @param request Informações da acomodação
+     * @return Acomodação criada
+     */
     public AccommodationDTO persist(AccommodationDTO request) {
-        Accommodation roomOrBad = new Accommodation();
-        roomOrBad.setSector(new Sector(request.getSectorId()));
-        roomOrBad.setDescription(request.getDescription());
-        roomOrBad.setType(request.getType());
-        roomOrBad = roomOrBedRepository.save(roomOrBad);
-
-        request.setId(roomOrBad.getId());
-
-        return request;
+        return createAccomodationBusinessHandler.create(request);
     }
 
 }
