@@ -30,8 +30,8 @@ import br.com.nivlabs.gp.repository.AccommodationRepository;
 import br.com.nivlabs.gp.repository.EvolutionRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
 import br.com.nivlabs.gp.service.InstituteService;
-import br.com.nivlabs.gp.service.ReportService;
 import br.com.nivlabs.gp.service.attendance.AttendanceService;
+import br.com.nivlabs.gp.service.report.ReportService;
 import br.com.nivlabs.gp.service.responsible.ResponsibleService;
 import br.com.nivlabs.gp.service.userservice.UserService;
 import br.com.nivlabs.gp.util.SecurityContextUtil;
@@ -131,7 +131,7 @@ public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
 
         try {
             document = reportService
-                    .createDocumentFromReport(request.getAttendanceId(), EVOLUTION_REPORT_NAME,
+                    .genareteDocumentFromJxmlStream(request.getAttendanceId(), EVOLUTION_REPORT_NAME,
                                               getEvolutionReportParams(request, userInfo),
                                               new ClassPathResource(REPORT_SOURCE).getInputStream());
             event.getDocuments().add(document);

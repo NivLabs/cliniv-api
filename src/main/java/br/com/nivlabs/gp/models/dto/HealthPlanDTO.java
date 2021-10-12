@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.models.dto;
 
+import java.util.Objects;
+
 import javax.validation.constraints.NotNull;
 
 import br.com.nivlabs.gp.enums.Abragency;
@@ -158,19 +160,8 @@ public class HealthPlanDTO extends DataTransferObjectBase {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((abrangency == null) ? 0 : abrangency.hashCode());
-        result = prime * result + ((commercialName == null) ? 0 : commercialName.hashCode());
-        result = prime * result + ((contractType == null) ? 0 : contractType.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((operatorCode == null) ? 0 : operatorCode.hashCode());
-        result = prime * result + ((operatorName == null) ? 0 : operatorName.hashCode());
-        result = prime * result + ((patientPlanNumber == null) ? 0 : patientPlanNumber.hashCode());
-        result = prime * result + ((planCode == null) ? 0 : planCode.hashCode());
-        result = prime * result + ((segmentation == null) ? 0 : segmentation.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
+        return Objects.hash(abrangency, commercialName, contractType, id, operatorCode, operatorName, patientPlanNumber, planCode,
+                            segmentation, type);
     }
 
     @Override
@@ -182,48 +173,10 @@ public class HealthPlanDTO extends DataTransferObjectBase {
         if (getClass() != obj.getClass())
             return false;
         HealthPlanDTO other = (HealthPlanDTO) obj;
-        if (abrangency != other.abrangency)
-            return false;
-        if (commercialName == null) {
-            if (other.commercialName != null)
-                return false;
-        } else if (!commercialName.equals(other.commercialName))
-            return false;
-        if (contractType != other.contractType)
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (operatorCode == null) {
-            if (other.operatorCode != null)
-                return false;
-        } else if (!operatorCode.equals(other.operatorCode))
-            return false;
-        if (operatorName == null) {
-            if (other.operatorName != null)
-                return false;
-        } else if (!operatorName.equals(other.operatorName))
-            return false;
-        if (patientPlanNumber == null) {
-            if (other.patientPlanNumber != null)
-                return false;
-        } else if (!patientPlanNumber.equals(other.patientPlanNumber))
-            return false;
-        if (planCode == null) {
-            if (other.planCode != null)
-                return false;
-        } else if (!planCode.equals(other.planCode))
-            return false;
-        if (segmentation != other.segmentation)
-            return false;
-        if (type == null) {
-            if (other.type != null)
-                return false;
-        } else if (!type.equals(other.type))
-            return false;
-        return true;
+        return abrangency == other.abrangency && Objects.equals(commercialName, other.commercialName) && contractType == other.contractType
+                && Objects.equals(id, other.id) && Objects.equals(operatorCode, other.operatorCode)
+                && Objects.equals(operatorName, other.operatorName) && Objects.equals(patientPlanNumber, other.patientPlanNumber)
+                && Objects.equals(planCode, other.planCode) && segmentation == other.segmentation && Objects.equals(type, other.type);
     }
 
 }
