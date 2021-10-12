@@ -1,6 +1,10 @@
 package br.com.nivlabs.gp.models.dto;
 
+import java.time.LocalDateTime;
 import java.util.Set;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,64 +30,117 @@ public class ReportGenerationRequestDTO extends DataTransferObjectBase {
     @ApiModelProperty("Descrição do layout")
     private String description;
 
+    @ApiModelProperty("Data da criação do layout")
+    @DateTimeFormat(iso = ISO.DATE)
+    private LocalDateTime createdAt;
+
     @ApiModelProperty("Base64 do layout")
     private String base64;
 
     @ApiModelProperty("Lista de parâmetros do layout")
     private Set<ReportLayoutParameterDTO> params;
 
+    /**
+     * @return the id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id the id to set
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * @return the name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name the name to set
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * @param description the description to set
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * @return the createdAt
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * @param createdAt the createdAt to set
+     */
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     * @return the base64
+     */
     public String getBase64() {
         return base64;
     }
 
+    /**
+     * @param base64 the base64 to set
+     */
     public void setBase64(String base64) {
         this.base64 = base64;
     }
 
+    /**
+     * @return the params
+     */
     public Set<ReportLayoutParameterDTO> getParams() {
         return params;
     }
 
+    /**
+     * @param params the params to set
+     */
     public void setParams(Set<ReportLayoutParameterDTO> params) {
-        this.params = params;
-    }
-
-    public ReportGenerationRequestDTO() {
-        super();
-    }
-
-    public ReportGenerationRequestDTO(Set<ReportLayoutParameterDTO> params) {
-        super();
         this.params = params;
     }
 
     @Override
     public String toString() {
-        return "ReportGenerationRequestDTO [params=" + params + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("ReportGenerationRequestDTO [id=");
+        builder.append(id);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(", createdAt=");
+        builder.append(createdAt);
+        builder.append(", base64=");
+        builder.append(base64);
+        builder.append(", params=");
+        builder.append(params);
+        builder.append("]");
+        return builder.toString();
     }
 
 }
