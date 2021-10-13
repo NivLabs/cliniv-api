@@ -28,8 +28,8 @@ import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.DynamicFormAnsweredRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
 import br.com.nivlabs.gp.service.InstituteService;
-import br.com.nivlabs.gp.service.ReportService;
 import br.com.nivlabs.gp.service.attendance.AttendanceService;
+import br.com.nivlabs.gp.service.report.ReportService;
 import br.com.nivlabs.gp.service.responsible.ResponsibleService;
 import br.com.nivlabs.gp.service.userservice.UserService;
 import br.com.nivlabs.gp.util.SecurityContextUtil;
@@ -97,7 +97,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
             logger.info("Preparando formulário dinâmico...");
 
             DigitalDocumentDTO document = reportService
-                    .createDocumentFromReport(attendanceId, request.getDocumentTitle(),
+                    .genareteDocumentFromJxmlStream(attendanceId, request.getDocumentTitle(),
                                               getAnamnesisReportParams(attendanceId, request, user),
                                               new ClassPathResource(REPORT_PATH).getInputStream());
             createAnamneseDocumentEvent(attendanceId, request, medicalRecord, document, user);

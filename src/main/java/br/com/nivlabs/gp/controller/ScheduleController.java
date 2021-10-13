@@ -2,10 +2,6 @@ package br.com.nivlabs.gp.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -22,22 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.controller.filters.ScheduleFilters;
-import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.ScheduleDTO;
 import br.com.nivlabs.gp.models.dto.ScheduleInfoDTO;
-import br.com.nivlabs.gp.service.ScheduleService;
+import br.com.nivlabs.gp.service.schedule.ScheduleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @Api("Endpoint - Agendamento")
 @RestController
 @RequestMapping(value = "/schedule")
-public class ScheduleController {
-
-    @Autowired
-    private ScheduleService principalService;
-    @Autowired
-    private ApplicationEventPublisher publisher;
+public class ScheduleController extends BaseController<ScheduleService> {
 
     @ApiOperation(nickname = "schedule-get", value = "Busca informações de agendamentos baseados num filtro")
     @GetMapping
@@ -45,27 +35,21 @@ public class ScheduleController {
     public ResponseEntity<List<ScheduleDTO>> getSchedulesByFilters(ScheduleFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
                                                Direction.valueOf(filters.getDirection()), filters.getOrderBy());
-        return ResponseEntity.ok(principalService.findByFilters(filters, pageSettings));
+        return ResponseEntity.ok(service.findByFilters(filters, pageSettings));
     }
 
     @ApiOperation(nickname = "schedule-get-id", value = "Busca um agendamento")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('AGENDA_ESCRITA', 'AGENDA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<ScheduleInfoDTO> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.ok().body(principalService.findById(id));
-
+        return ResponseEntity.ok().body(service.findById(id));
     }
 
     @ApiOperation(nickname = "schedule-post", value = "Insere um novo agendamento na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('AGENDA_ESCRITA', 'ADMIN')")
-    public ResponseEntity<ScheduleInfoDTO> create(@Validated @RequestBody(required = true) ScheduleInfoDTO schedule,
-                                                  HttpServletResponse response) {
-        ScheduleInfoDTO created = principalService.create(schedule);
-
-        publisher.publishEvent(new CreatedResourceEvent(this, response, created.getId()));
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<ScheduleInfoDTO> create(@Validated @RequestBody(required = true) ScheduleInfoDTO schedule) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(schedule));
     }
 
     @ApiOperation(nickname = "schedule-put", value = "Atualiza agendamento existente na aplicação")
@@ -73,7 +57,7 @@ public class ScheduleController {
     @PreAuthorize("hasAnyRole('AGENDA_ESCRITA', 'ADMIN')")
     public ResponseEntity<ScheduleInfoDTO> update(@PathVariable("id") Long id,
                                                   @Validated @RequestBody(required = true) ScheduleInfoDTO schedule) {
-        return ResponseEntity.ok().body(principalService.update(id, schedule));
+        return ResponseEntity.ok().body(service.update(id, schedule));
     }
 
 }

@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.attendance.prescription.business;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -8,11 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.exception.HttpException;
@@ -31,18 +30,24 @@ import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.report.ReportParam;
 import br.com.nivlabs.gp.repository.PrescriptionRepository;
+import br.com.nivlabs.gp.service.BaseBusinessHandler;
+import br.com.nivlabs.gp.service.InstituteService;
 import br.com.nivlabs.gp.service.attendance.AttendanceService;
+import br.com.nivlabs.gp.service.report.ReportService;
 import br.com.nivlabs.gp.service.responsible.ResponsibleService;
 import br.com.nivlabs.gp.service.userservice.UserService;
+import br.com.nivlabs.gp.util.SecurityContextUtil;
 
 /**
- * Camada de serviço para manipulação de prescrição médica do paciente
  * 
+ * Componente específico para criação de prescriação
+ *
  * @author viniciosarodrigues
+ * @since 10-10-2021
  *
  */
-@Service
-public class PrescriptionService implements BaseService {
+@Component
+public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
 
     private static final String TODAY = "TODAY";
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
@@ -51,25 +56,20 @@ public class PrescriptionService implements BaseService {
     private static final String REPORT_SOURCE = "reports/Prescricao.jrxml";
 
     @Autowired
-    private Logger logger;
+    protected Logger logger;
+    @Autowired
+    protected PrescriptionRepository dao;
 
     @Autowired
-    private InstituteService instituteServive;
-
+    protected UserService userService;
     @Autowired
-    private AttendanceService attendanceService;
-
+    protected ReportService reportService;
     @Autowired
-    private UserService userSerive;
-
+    protected AttendanceService attendanceService;
     @Autowired
-    private ReportService reportService;
-
+    protected InstituteService instituteServive;
     @Autowired
-    private ResponsibleService responsibleService;
-
-    @Autowired
-    private PrescriptionRepository dao;
+    protected ResponsibleService responsibleService;
 
     /**
      * Cria uma nova prescrição médica do paciente
@@ -77,52 +77,28 @@ public class PrescriptionService implements BaseService {
      * @param request
      * @return
      */
-    public PrescriptionInfoDTO createPrescription(PrescriptionInfoDTO request, String username) {
+    public void createPrescription(PrescriptionInfoDTO request) {
         logger.info("Iniciando a criação de uma nova prescrição médica para o atendimento {}", request.getAttendanceId());
         MedicalRecordDTO medicalRecord = attendanceService.findMedicalRecordByAttendanceId(request.getAttendanceId());
 
         logger.info("Verificando o usuário da solicitação");
-        UserInfoDTO user = userSerive.findByUserName(username);
+        UserInfoDTO user = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
         ResponsibleInfoDTO responsible = getResponsibleFromUser(user);
 
         Prescription insetedPrescription = insertPrescription(request, responsible, medicalRecord);
 
         logger.info("Iniciando criação do documento digital da prescrição");
         try {
-            DigitalDocumentDTO document = reportService.createDocumentFromReport(request.getAttendanceId(), "Prescrição Médica",
-                                                                                 getReportParam(insetedPrescription.getId(), user),
-                                                                                 new ClassPathResource(REPORT_SOURCE).getInputStream());
+            DigitalDocumentDTO document = reportService.genareteDocumentFromJxmlStream(request.getAttendanceId(), "Prescrição Médica",
+                                                                                       getReportParam(insetedPrescription.getId(), user),
+                                                                                       new ClassPathResource(REPORT_SOURCE)
+                                                                                               .getInputStream());
             createDocumentEvent(request, document, responsible, medicalRecord);
         } catch (IOException e) {
             logger.error("Falha ao gerar documento de evolução", e);
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento de evolução");
         }
 
-        return null;
-    }
-
-    /**
-     * Insere uma prescrição médica na base de dados para controle da aplicação
-     * 
-     * @param request Requisição de nova prescrição médica
-     * @param responsible Responsável pela solicitação
-     * @param medicalRecord Atendimento em questão
-     */
-    private Prescription insertPrescription(PrescriptionInfoDTO request, ResponsibleInfoDTO responsible, MedicalRecordDTO medicalRecord) {
-        logger.info("Iniciando processo inserção de prescrição à base de dados... Processando informações...");
-        Prescription newPrescription = new Prescription();
-        newPrescription.setAttendance(new Attendance(medicalRecord.getId()));
-        newPrescription.setResponsible(new Responsible(responsible.getId()));
-        newPrescription.setDatetimeInit(request.getDatetimeInit());
-        newPrescription.setDatetimeEnd(request.getDatetimeEnd());
-        logger.info("Cabeçalho da prescrição :: {}", newPrescription);
-
-        newPrescription.setItems(convertItems(request.getItems(), newPrescription));
-
-        logger.info("Inserindo prescrição à base de dados...");
-        dao.saveAndFlush(newPrescription);
-        logger.info("Precrição criada com sucesso!");
-        return newPrescription;
     }
 
     /**
@@ -156,6 +132,30 @@ public class PrescriptionService implements BaseService {
         });
         logger.info("Conversão concluída, total de itens convertidos :: {}", convertedItems.size());
         return convertedItems;
+    }
+
+    /**
+     * Insere uma prescrição médica na base de dados para controle da aplicação
+     * 
+     * @param request Requisição de nova prescrição médica
+     * @param responsible Responsável pela solicitação
+     * @param medicalRecord Atendimento em questão
+     */
+    private Prescription insertPrescription(PrescriptionInfoDTO request, ResponsibleInfoDTO responsible, MedicalRecordDTO medicalRecord) {
+        logger.info("Iniciando processo inserção de prescrição à base de dados... Processando informações...");
+        Prescription newPrescription = new Prescription();
+        newPrescription.setAttendance(new Attendance(medicalRecord.getId()));
+        newPrescription.setResponsible(new Responsible(responsible.getId()));
+        newPrescription.setDatetimeInit(request.getDatetimeInit());
+        newPrescription.setDatetimeEnd(request.getDatetimeEnd());
+        logger.info("Cabeçalho da prescrição :: {}", newPrescription);
+
+        newPrescription.setItems(convertItems(request.getItems(), newPrescription));
+
+        logger.info("Inserindo prescrição à base de dados...");
+        dao.saveAndFlush(newPrescription);
+        logger.info("Precrição criada com sucesso!");
+        return newPrescription;
     }
 
     private ReportParam getReportParam(Long prescriptionId, UserInfoDTO user) {
@@ -213,9 +213,7 @@ public class PrescriptionService implements BaseService {
             throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
-        logger.info("Realizando processamento do profissional para a requisição de prescrição");
-        ResponsibleInfoDTO responsible = new ResponsibleInfoDTO();
-        BeanUtils.copyProperties(responsibleInformations, responsible);
-        return responsible;
+        return responsibleInformations;
     }
+
 }
