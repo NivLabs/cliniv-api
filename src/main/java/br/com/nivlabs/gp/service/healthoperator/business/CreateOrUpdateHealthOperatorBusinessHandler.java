@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.healthoperator.business;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,8 @@ import br.com.nivlabs.gp.models.domain.HealthOperator;
 import br.com.nivlabs.gp.models.dto.HealthOperatorInfoDTO;
 import br.com.nivlabs.gp.repository.HealthOperatorRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
+import br.com.nivlabs.gp.util.DocumentValidator;
+import br.com.nivlabs.gp.util.StringUtils;
 
 /**
  * Componente abstrato para uso em Atualização e Criação de operadora de planos de saúde
@@ -33,6 +37,7 @@ public abstract class CreateOrUpdateHealthOperatorBusinessHandler implements Bas
      * @param healthOperatorInfo DTO que representa informações da operadora de saúde
      * @return Entidade relacional que representa a operadora de saúde
      */
+    @Transactional
     protected HealthOperator convertRequestToEntity(HealthOperatorInfoDTO healthOperatorInfo) {
         logger.info("Iniciando conversão de DTO para entidade");
         HealthOperator healthOperator = new HealthOperator();
@@ -41,7 +46,11 @@ public abstract class CreateOrUpdateHealthOperatorBusinessHandler implements Bas
         if (healthOperatorInfo.getDocument() == null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Informe o CNPJ da operadora!");
         }
-        healthOperator.setCnpj(healthOperatorInfo.getDocument().getValue());
+        healthOperator.setCnpj(StringUtils.getDigits(healthOperatorInfo.getDocument().getValue()));
+        if (!DocumentValidator.isValidCNPJ(healthOperator.getCnpj())) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                    "CNPJ inválido para o cadastro de operadora de saúde, verifique e tente novamente.");
+        }
         healthOperator.setCompanyName(healthOperatorInfo.getCompanyName());
         healthOperator.setFantasyName(healthOperatorInfo.getFantasyName());
         healthOperator.setModality(healthOperatorInfo.getModality());

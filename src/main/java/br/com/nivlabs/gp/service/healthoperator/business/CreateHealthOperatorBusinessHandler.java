@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.service.healthoperator.business;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.models.domain.HealthOperator;
@@ -16,6 +18,13 @@ import br.com.nivlabs.gp.models.dto.HealthOperatorInfoDTO;
 @Component
 public class CreateHealthOperatorBusinessHandler extends CreateOrUpdateHealthOperatorBusinessHandler {
 
+    /**
+     * Cria um novo cadastro de operadora de saúde
+     * 
+     * @param request Objeto de requisição (DTO) de Operadora de saúde
+     * @return Objeto cadastrado na aplicação
+     */
+    @Transactional
     public HealthOperatorInfoDTO create(HealthOperatorInfoDTO healthOperatorInfo) {
         logger.info("Iniciando processo de criação de cadastro de Operadora/Convênio de Saúde..");
         healthOperatorInfo.setId(null);
