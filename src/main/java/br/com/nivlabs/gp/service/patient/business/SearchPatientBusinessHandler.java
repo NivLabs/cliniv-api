@@ -177,12 +177,18 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
         handletPatientHistory(patientInfo);
 
         if (patient.getHealthPlan() != null) {
-            HealthPlanDTO healthPlan = new HealthPlanDTO();
-            BeanUtils.copyProperties(patient.getHealthPlan(), healthPlan);
-            healthPlan.setPatientPlanNumber(patient.getHealthPlanCode());
-            healthPlan.setOperatorCode(patient.getHealthPlan().getHealthOperator().getAnsCode());
-            healthPlan.setOperatorName(patient.getHealthPlan().getHealthOperator().getFantasyName());
-            patientInfo.setHealthPlan(healthPlan);
+            var healthPlanEntity = patient.getHealthPlan();
+            HealthPlanDTO healthPlanInfo = new HealthPlanDTO();
+            healthPlanInfo.setId(healthPlanEntity.getId());
+            healthPlanInfo.setPlanCode(healthPlanEntity.getPlanCode());
+            healthPlanInfo.setCommercialName(healthPlanEntity.getCommercialName());
+            healthPlanInfo.setAbrangency(healthPlanEntity.getAbrangency());
+            healthPlanInfo.setContractType(healthPlanEntity.getContractType());
+            healthPlanInfo.setOperatorCode(healthPlanEntity.getHealthOperator().getAnsCode());
+            healthPlanInfo.setOperatorName(healthPlanEntity.getHealthOperator().getCompanyName());
+            healthPlanInfo.setSegmentation(healthPlanEntity.getSegmentation());
+            patientInfo.setHealthPlan(healthPlanInfo);
+            logger.info("Plano de saúde do paciente :: {}", healthPlanInfo);
         }
 
         patientInfo.setEthnicGroup(person.getEthnicGroup());

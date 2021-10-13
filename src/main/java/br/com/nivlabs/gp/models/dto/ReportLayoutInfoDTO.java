@@ -1,7 +1,8 @@
 package br.com.nivlabs.gp.models.dto;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -10,16 +11,16 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Classe ReportGenerationRequestDTO.java
+ * Classe ReportLayoutDTO.java
  * 
  * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
  * 
- * @since 04 de fevereiro de 2021
+ * @since 24 de janeiro de 2021
  */
-@ApiModel("Requisição de geração de relatório")
-public class ReportGenerationRequestDTO extends DataTransferObjectBase {
+@ApiModel(description = "Layout de Relatório")
+public class ReportLayoutInfoDTO extends DataTransferObjectBase {
 
-    private static final long serialVersionUID = 4069593034981336944L;
+    private static final long serialVersionUID = 4393173881706823820L;
 
     @ApiModelProperty("Identificador único do layout")
     private Long id;
@@ -30,15 +31,15 @@ public class ReportGenerationRequestDTO extends DataTransferObjectBase {
     @ApiModelProperty("Descrição do layout")
     private String description;
 
+    @ApiModelProperty("Base64 do layout")
+    private String base64;
+
     @ApiModelProperty("Data da criação do layout")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime createdAt;
 
-    @ApiModelProperty("Base64 do layout")
-    private String base64;
-
     @ApiModelProperty("Lista de parâmetros do layout")
-    private Set<ReportLayoutParameterDTO> params;
+    private List<ReportLayoutParameterDTO> params;
 
     /**
      * @return the id
@@ -83,20 +84,6 @@ public class ReportGenerationRequestDTO extends DataTransferObjectBase {
     }
 
     /**
-     * @return the createdAt
-     */
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    /**
-     * @param createdAt the createdAt to set
-     */
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /**
      * @return the base64
      */
     public String getBase64() {
@@ -111,36 +98,69 @@ public class ReportGenerationRequestDTO extends DataTransferObjectBase {
     }
 
     /**
+     * @return the createdAt
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * @param createdAt the createdAt to set
+     */
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
      * @return the params
      */
-    public Set<ReportLayoutParameterDTO> getParams() {
+    public List<ReportLayoutParameterDTO> getParams() {
         return params;
     }
 
     /**
      * @param params the params to set
      */
-    public void setParams(Set<ReportLayoutParameterDTO> params) {
+    public void setParams(List<ReportLayoutParameterDTO> params) {
         this.params = params;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("ReportGenerationRequestDTO [id=");
+        builder.append("ReportLayoutInfoDTO [id=");
         builder.append(id);
         builder.append(", name=");
         builder.append(name);
         builder.append(", description=");
         builder.append(description);
-        builder.append(", createdAt=");
-        builder.append(createdAt);
         builder.append(", base64=");
         builder.append(base64);
+        builder.append(", createdAt=");
+        builder.append(createdAt);
         builder.append(", params=");
         builder.append(params);
         builder.append("]");
         return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(base64, createdAt, description, id, name, params);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ReportLayoutInfoDTO other = (ReportLayoutInfoDTO) obj;
+        return Objects.equals(base64, other.base64) && Objects.equals(createdAt, other.createdAt)
+                && Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
+                && Objects.equals(params, other.params);
     }
 
 }

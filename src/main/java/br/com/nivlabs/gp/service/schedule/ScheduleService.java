@@ -1,6 +1,5 @@
-package br.com.nivlabs.gp.service;
+package br.com.nivlabs.gp.service.schedule;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,23 +12,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.controller.filters.ScheduleFilters;
-import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Patient;
-import br.com.nivlabs.gp.models.domain.Patient_;
-import br.com.nivlabs.gp.models.domain.Person;
-import br.com.nivlabs.gp.models.domain.Person_;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.domain.Schedule;
-import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.ScheduleDTO;
 import br.com.nivlabs.gp.models.dto.ScheduleInfoDTO;
 import br.com.nivlabs.gp.repository.ScheduleRepository;
+import br.com.nivlabs.gp.service.BaseService;
 import br.com.nivlabs.gp.service.patient.PatientService;
 import br.com.nivlabs.gp.service.responsible.ResponsibleService;
-import br.com.nivlabs.gp.util.StringUtils;
 
 /**
  * Classe ScheduleService.java
@@ -49,6 +43,9 @@ public class ScheduleService implements BaseService {
     @Autowired
     private PatientService patientService;
 
+    @Autowired
+    private SearchScheduleBusinessHandler searchScheduleBusinessHandler;
+
     /**
      * Realiza uma busca filtrada de agendamentos baseado na data
      * 
@@ -56,12 +53,17 @@ public class ScheduleService implements BaseService {
      * @return Lista filtrada de Agendamentos
      */
     public List<ScheduleDTO> findByFilters(ScheduleFilters filters, Pageable pageRequest) {
-        logger.info("Iniciando a busca filtrada por informações da agenda");
-        if (filters.getSelectedDate() == null) {
-            filters.setSelectedDate(LocalDate.now());
-        }
-        filters.setSize(100);
-        return principalRepo.resumedList(filters, pageRequest).getContent();
+        return searchScheduleBusinessHandler.getPage(filters, pageRequest).getContent();
+    }
+
+    /**
+     * Busca agendamento por identificador único
+     * 
+     * @param id Identificador único do agendamento
+     * @return Informações detalhadas do agendamento
+     */
+    public ScheduleInfoDTO findById(Long id) {
+        return searchScheduleBusinessHandler.byId(id);
     }
 
     /**
@@ -164,68 +166,5 @@ public class ScheduleService implements BaseService {
         patient = patientService.findByPatientId(patient.getId());
         logger.info("Paciente encontrado :: Cod: {} | Nome: {}", patient.getId(), patient.getFullName());
         request.setPatient(patient);
-    }
-
-    /**
-     * Busca agendamento por identificador único
-     * 
-     * @param id Identificador único do agendamento
-     * @return Informações detalhadas do agendamento
-     */
-    public ScheduleInfoDTO findById(Long id) {
-        Schedule objFromDb = principalRepo.findById(id)
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Agendamento não encontrado!"));
-
-        logger.info("Paciente {} encontrado com sucesso!", objFromDb.getPatient().getPerson().getFullName());
-        ScheduleInfoDTO response = new ScheduleInfoDTO();
-
-        logger.info("Iniciando conversão de entidade Agendamento para resposta...");
-        BeanUtils.copyProperties(objFromDb, response);
-
-        logger.info("Iniciando conversão de entidade Paciente para resposta...");
-        response.setPatient(new PatientInfoDTO());
-        BeanUtils.copyProperties(objFromDb.getPatient().getPerson(), response.getPatient(), Person_.ID);
-        BeanUtils.copyProperties(objFromDb.getPatient(), response.getPatient(), Patient_.ALLERGIES, Patient_.HEALTH_PLAN,
-                                 Patient_.HEALTH_PLAN_CODE);
-        handleDocument(objFromDb.getPatient().getPerson(), response.getPatient());
-
-        logger.info("Iniciando conversão de entidade Responsável para resposta...");
-        response.setProfessional(new ResponsibleInfoDTO());
-        BeanUtils.copyProperties(objFromDb.getProfessional().getPerson(), response.getProfessional(), Person_.ID);
-        BeanUtils.copyProperties(objFromDb.getProfessional(), response.getProfessional());
-        handleDocument(objFromDb.getProfessional().getPerson(), response.getProfessional());
-
-        logger.info("Conversões realizadas com sucesso, enviando resposta de volta para o client");
-        return response;
-    }
-
-    /**
-     * Trata informações de documento no paciente
-     * 
-     * @param source
-     * @param target
-     */
-    private void handleDocument(Person source, PatientInfoDTO target) {
-        if (StringUtils.isNullOrEmpty(source.getCpf())) {
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "O cadastro do paciente está sem CPF informado, favor completar o cadastro antes de realizar um agendamento");
-        }
-        DocumentDTO document = new DocumentDTO(null, DocumentType.CPF, source.getCpf(), null, null, null, null);
-        target.setDocument(document);
-    }
-
-    /**
-     * Trata informações de documento no responsável (Profissional)
-     * 
-     * @param source
-     * @param target
-     */
-    private void handleDocument(Person source, ResponsibleInfoDTO target) {
-        if (StringUtils.isNullOrEmpty(source.getCpf())) {
-            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "O cadastro do paciente está sem CPF informado, favor completar o cadastro antes de realizar um agendamento");
-        }
-        DocumentDTO document = new DocumentDTO(null, DocumentType.CPF, source.getCpf(), null, null, null, null);
-        target.setDocument(document);
     }
 }
