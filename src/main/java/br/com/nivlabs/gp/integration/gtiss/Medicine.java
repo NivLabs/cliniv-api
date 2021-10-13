@@ -1,32 +1,32 @@
-package br.com.nivlabs.gp.client.gtiss;
+package br.com.nivlabs.gp.integration.gtiss;
 
-import br.com.nivlabs.gp.client.RestClientObject;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import br.com.nivlabs.gp.integration.RestClientObject;
 
 /**
- * Objeto de Materiais da ANS
+ * Objeto de Medicamentos da ANS
  * 
  * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
  * 
  *
  */
 
-public class Material extends RestClientObject {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Medicine extends RestClientObject {
 
-    private static final long serialVersionUID = 1885369994400553200L;
-
+    private static final long serialVersionUID = -2269808406417071745L;
     private String id;
     private String code;
     private String description;
-    private String model;
     private String anvisaRegistration;
-    private String riskClass;
-    private String technicalDescription;
-    private String manufacturer;
+    private String presentation;
+    private String laboratory;
     private String expirationStartDate;
     private String expirationDate;
     private String implantationEndDate;
 
-    public Material() {
+    public Medicine() {
         super();
     }
 
@@ -54,14 +54,6 @@ public class Material extends RestClientObject {
         this.description = description;
     }
 
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
     public String getAnvisaRegistration() {
         return anvisaRegistration;
     }
@@ -70,28 +62,20 @@ public class Material extends RestClientObject {
         this.anvisaRegistration = anvisaRegistration;
     }
 
-    public String getRiskClass() {
-        return riskClass;
+    public String getPresentation() {
+        return presentation;
     }
 
-    public void setRiskClass(String riskClass) {
-        this.riskClass = riskClass;
+    public void setPresentation(String presentation) {
+        this.presentation = presentation;
     }
 
-    public String getTechnicalDescription() {
-        return technicalDescription;
+    public String getLaboratory() {
+        return laboratory;
     }
 
-    public void setTechnicalDescription(String technicalDescription) {
-        this.technicalDescription = technicalDescription;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
+    public void setLaboratory(String laboratory) {
+        this.laboratory = laboratory;
     }
 
     public String getExpirationStartDate() {
@@ -129,10 +113,8 @@ public class Material extends RestClientObject {
         result = prime * result + ((expirationStartDate == null) ? 0 : expirationStartDate.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((implantationEndDate == null) ? 0 : implantationEndDate.hashCode());
-        result = prime * result + ((manufacturer == null) ? 0 : manufacturer.hashCode());
-        result = prime * result + ((model == null) ? 0 : model.hashCode());
-        result = prime * result + ((riskClass == null) ? 0 : riskClass.hashCode());
-        result = prime * result + ((technicalDescription == null) ? 0 : technicalDescription.hashCode());
+        result = prime * result + ((laboratory == null) ? 0 : laboratory.hashCode());
+        result = prime * result + ((presentation == null) ? 0 : presentation.hashCode());
         return result;
     }
 
@@ -144,7 +126,7 @@ public class Material extends RestClientObject {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Material other = (Material) obj;
+        Medicine other = (Medicine) obj;
         if (anvisaRegistration == null) {
             if (other.anvisaRegistration != null)
                 return false;
@@ -180,35 +162,24 @@ public class Material extends RestClientObject {
                 return false;
         } else if (!implantationEndDate.equals(other.implantationEndDate))
             return false;
-        if (manufacturer == null) {
-            if (other.manufacturer != null)
+        if (laboratory == null) {
+            if (other.laboratory != null)
                 return false;
-        } else if (!manufacturer.equals(other.manufacturer))
+        } else if (!laboratory.equals(other.laboratory))
             return false;
-        if (model == null) {
-            if (other.model != null)
+        if (presentation == null) {
+            if (other.presentation != null)
                 return false;
-        } else if (!model.equals(other.model))
-            return false;
-        if (riskClass == null) {
-            if (other.riskClass != null)
-                return false;
-        } else if (!riskClass.equals(other.riskClass))
-            return false;
-        if (technicalDescription == null) {
-            if (other.technicalDescription != null)
-                return false;
-        } else if (!technicalDescription.equals(other.technicalDescription))
+        } else if (!presentation.equals(other.presentation))
             return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "Material [id=" + id + ", code=" + code + ", description=" + description + ", model=" + model + ", anvisaRegistration="
-                + anvisaRegistration + ", riskClass=" + riskClass + ", technicalDescription=" + technicalDescription + ", manufacturer="
-                + manufacturer + ", expirationStartDate=" + expirationStartDate + ", expirationDate=" + expirationDate
-                + ", implantationEndDate=" + implantationEndDate + "]";
+        return "Medicine [id=" + id + ", code=" + code + ", description=" + description + ", anvisaRegistration=" + anvisaRegistration
+                + ", presentation=" + presentation + ", laboratory=" + laboratory + ", expirationStartDate=" + expirationStartDate
+                + ", expirationDate=" + expirationDate + ", implantationEndDate=" + implantationEndDate + "]";
     }
 
 }

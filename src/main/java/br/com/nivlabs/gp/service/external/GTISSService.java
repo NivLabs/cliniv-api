@@ -8,11 +8,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.nivlabs.gp.client.gtiss.Fee;
-import br.com.nivlabs.gp.client.gtiss.GTISSClient;
-import br.com.nivlabs.gp.client.gtiss.Material;
-import br.com.nivlabs.gp.client.gtiss.MedicalProcedure;
-import br.com.nivlabs.gp.client.gtiss.Medicine;
+import br.com.nivlabs.gp.integration.gtiss.Fee;
+import br.com.nivlabs.gp.integration.gtiss.GTISSClient;
+import br.com.nivlabs.gp.integration.gtiss.Material;
+import br.com.nivlabs.gp.integration.gtiss.MedicalProcedure;
+import br.com.nivlabs.gp.integration.gtiss.Medicine;
 import br.com.nivlabs.gp.models.dto.FeeDTO;
 import br.com.nivlabs.gp.models.dto.MaterialDTO;
 import br.com.nivlabs.gp.models.dto.MedicalProcedureDTO;
