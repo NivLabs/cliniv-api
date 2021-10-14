@@ -1,18 +1,18 @@
-package br.com.nivlabs.gp.client.gtiss;
+package br.com.nivlabs.gp.integration.gtiss;
 
-import br.com.nivlabs.gp.client.RestClientObject;
+import br.com.nivlabs.gp.integration.RestClientObject;
 
 /**
- * Objeto de Procedimentos da ANS
+ * Objeto de Taxas da ANS
  * 
  * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
  * 
  *
  */
 
-public class MedicalProcedure extends RestClientObject {
+public class Fee extends RestClientObject {
 
-    private static final long serialVersionUID = -5462892795035021367L;
+    private static final long serialVersionUID = 139714345053962715L;
 
     private String id;
     private String code;
@@ -22,7 +22,7 @@ public class MedicalProcedure extends RestClientObject {
     private String expirationDate;
     private String implantationEndDate;
 
-    public MedicalProcedure() {
+    public Fee() {
         super();
     }
 
@@ -104,7 +104,7 @@ public class MedicalProcedure extends RestClientObject {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        MedicalProcedure other = (MedicalProcedure) obj;
+        Fee other = (Fee) obj;
         if (code == null) {
             if (other.code != null)
                 return false;
@@ -145,9 +145,8 @@ public class MedicalProcedure extends RestClientObject {
 
     @Override
     public String toString() {
-        return "MedicalProcedure [id=" + id + ", code=" + code + ", description=" + description + ", detail=" + detail
-                + ", expirationStartDate=" + expirationStartDate + ", expirationDate=" + expirationDate + ", implantationEndDate="
-                + implantationEndDate + "]";
+        return "Fee [id=" + id + ", code=" + code + ", description=" + description + ", detail=" + detail + ", expirationStartDate="
+                + expirationStartDate + ", expirationDate=" + expirationDate + ", implantationEndDate=" + implantationEndDate + "]";
     }
 
 }

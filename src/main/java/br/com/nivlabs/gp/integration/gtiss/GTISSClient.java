@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.client.gtiss;
+package br.com.nivlabs.gp.integration.gtiss;
 
 import java.net.URI;
 
@@ -13,9 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.nivlabs.gp.client.RestClient;
-import br.com.nivlabs.gp.client.RestResponsePage;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.integration.RestClient;
+import br.com.nivlabs.gp.integration.RestResponsePage;
 
 /**
  * Rest Client para a GTISS API
