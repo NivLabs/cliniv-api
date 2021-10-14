@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.client.cep.viacep;
+package br.com.nivlabs.gp.integration.cep.viacep;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import br.com.nivlabs.gp.client.RestClient;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.integration.RestClient;
 
 /**
  * Rest Client para a ViaCep API

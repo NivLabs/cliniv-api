@@ -2,8 +2,8 @@ package br.com.nivlabs.gp.service.external;
 
 import org.springframework.stereotype.Service;
 
-import br.com.nivlabs.gp.client.cep.viacep.ViaCepAddress;
-import br.com.nivlabs.gp.client.cep.viacep.ViaCepClient;
+import br.com.nivlabs.gp.integration.cep.viacep.ViaCepAddress;
+import br.com.nivlabs.gp.integration.cep.viacep.ViaCepClient;
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 
 @Service

@@ -1,6 +1,6 @@
-package br.com.nivlabs.gp.client.cep.viacep;
+package br.com.nivlabs.gp.integration.cep.viacep;
 
-import br.com.nivlabs.gp.client.RestClientObject;
+import br.com.nivlabs.gp.integration.RestClientObject;
 
 /**
  * Objeto de endereço da Via Cep

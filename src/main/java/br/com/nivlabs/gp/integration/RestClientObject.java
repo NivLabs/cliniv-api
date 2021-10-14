@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.client;
+package br.com.nivlabs.gp.integration;
 
 import java.io.Serializable;
 
