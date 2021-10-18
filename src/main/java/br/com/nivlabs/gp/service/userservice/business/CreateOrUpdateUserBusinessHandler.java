@@ -45,7 +45,6 @@ public abstract class CreateOrUpdateUserBusinessHandler implements BaseBusinessH
      * @param userInfo Objeto de transferência com informações da pessoa física
      * @param personEntity Objeto de entidade relacional de pessoa física
      */
-    @Transactional
     protected void parsePropertiesToPerson(UserInfoDTO userInfo, PersonInfoDTO personInfo) {
         personInfo.setFullName(userInfo.getFullName());
         personInfo.setSocialName(userInfo.getSocialName());
