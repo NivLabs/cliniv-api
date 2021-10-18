@@ -43,7 +43,7 @@ public class CreatePersonBusinessHandler extends CreateOrUpdatePersonBusinessHan
 
         documentsProcess(request, entity);
 
-        logger.info("Atualização realizada com sucesso!");
+        logger.info("Cadastros realizada com sucesso!");
 
         return request;
 

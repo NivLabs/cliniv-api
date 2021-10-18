@@ -26,7 +26,6 @@ public class UpdatePersonBusinessHandler extends CreateOrUpdatePersonBusinessHan
      * @param request Requisição com dados cadastrais novos para atualização
      * @return Dados cadastrais atualizados
      */
-    @Transactional
     public PersonInfoDTO update(PersonInfoDTO request) {
 
         if (request.getId() == null) {
@@ -42,7 +41,7 @@ public class UpdatePersonBusinessHandler extends CreateOrUpdatePersonBusinessHan
         parsePropertiesToEntity(request, fetchedPerson, OperationType.UPDATE);
         addressProcess(request, fetchedPerson);
         logger.info("Salvando novas informações na tabela de pessoa física");
-        personRepo.saveAndFlush(fetchedPerson);
+        personRepo.save(fetchedPerson);
 
         documentsProcess(request, fetchedPerson);
 
