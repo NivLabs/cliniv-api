@@ -211,7 +211,6 @@ public abstract class CreateOrUpdatePatientBusinessHandler implements BaseBusine
      * @param patientInfo Objeto de transferência com informações do paciente
      * @param personInfo Objeto de transferência com informações de pessoa física
      */
-    @Transactional
     protected void parsePropertiesToPersonInfo(PatientInfoDTO patientInfo, PersonInfoDTO personInfo) {
         logger.info("Iniciando processo de conversão de paciente para pessoa");
         personInfo.setId(patientInfo.getPersonId());
