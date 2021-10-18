@@ -3,6 +3,7 @@ package br.com.nivlabs.gp.service.userservice.business;
 import java.time.LocalDateTime;
 
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -88,7 +89,6 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
 	 * 
 	 * @param userInfo Informações do usuário
 	 */
-	@Transactional
 	private void userCheckIfExists(UserInfoDTO userInfo) {
 		try {
 			logger.info("Verificando se já há cadastro de usuário na base de dados :: CPF da busca -> {}",
@@ -120,6 +120,7 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
 	 * @param personFromDb informações da pessoa física
 	 * @return Usuário criado na aplicação
 	 */
+	@Transactional(value = TxType.REQUIRES_NEW)
 	private UserApplication persistUser(UserInfoDTO entity, PersonInfoDTO personFromDb) {
 		UserApplication user = new UserApplication();
 		user.setId(entity.getId());
@@ -127,8 +128,8 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
 		user.setPerson(new Person(personFromDb.getId()));
 		user.setPassword(bc.encode(entity.getDocument().getValue()));
 		user.setCreatedAt(LocalDateTime.now());
-		user.setActive(true);
-		user.setFirstSignin(true);
+		user.setActive(entity.isActive());
+		user.setFirstSignin(entity.isFirstSignin());
 		convertRoles(entity, user);
 		userRepo.save(user);
 		return user;

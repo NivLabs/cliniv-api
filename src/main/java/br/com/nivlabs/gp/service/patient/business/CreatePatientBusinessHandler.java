@@ -32,7 +32,6 @@ public class CreatePatientBusinessHandler extends CreateOrUpdatePatientBusinessH
      * @param request Objeto de transferência com informações detalhadas do paciente
      * @return Informações do paciente pós insert com códigos de criação
      */
-    @Transactional
     public PatientInfoDTO create(PatientInfoDTO request) {
         logger.info("Iniciando processo de cadastro de paciente...");
         PersonInfoDTO personInfo = getValidPerson(request);
