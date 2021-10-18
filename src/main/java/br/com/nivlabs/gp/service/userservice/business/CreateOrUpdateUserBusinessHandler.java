@@ -2,8 +2,6 @@ package br.com.nivlabs.gp.service.userservice.business;
 
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -71,7 +69,6 @@ public abstract class CreateOrUpdateUserBusinessHandler implements BaseBusinessH
      * @param userInfo Informações do usuário
      * @param userEntity Entidade relacional de usuário
      */
-    @Transactional
     protected void convertRoles(UserInfoDTO userInfo, UserApplication userEntity) {
         if (userInfo.getRoles() != null && !userInfo.getRoles().isEmpty()) {
             userEntity.setRoles(userInfo.getRoles().stream().map(this::convertRole).collect(Collectors.toList()));
@@ -84,7 +81,6 @@ public abstract class CreateOrUpdateUserBusinessHandler implements BaseBusinessH
      * @param roleDTO Papel de acesso do usuário em Entidade Relacional
      * @return Papel de acesso do usuário convertido em DTO
      */
-    @Transactional
     private Role convertRole(RoleDTO roleDTO) {
         return new Role(roleDTO.getId(), roleDTO.getName(), roleDTO.getDescription());
     }
