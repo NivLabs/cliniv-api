@@ -2,9 +2,6 @@ package br.com.nivlabs.gp.service.userservice.business;
 
 import java.time.LocalDateTime;
 
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -120,7 +117,6 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
      * @param personFromDb informações da pessoa física
      * @return Usuário criado na aplicação
      */
-    @Transactional(value = TxType.REQUIRES_NEW)
     private UserApplication persistUser(UserInfoDTO entity, PersonInfoDTO personFromDb) {
         UserApplication user = new UserApplication();
         user.setId(entity.getId());
