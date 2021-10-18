@@ -1,7 +1,5 @@
 package br.com.nivlabs.gp.service.userservice.business;
 
-import javax.transaction.Transactional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +24,6 @@ public class UpdateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
      * @param userInfo Informações atualizadas do usuário
      * @return Usuário com dados atualizados
      */
-    @Transactional
     public UserInfoDTO update(UserInfoDTO userInfo) {
         logger.info("Iniciando processo de atualizado dos dados do usuário");
         UserApplication userEntity = userRepo.findById(userInfo.getId())
@@ -47,22 +44,20 @@ public class UpdateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
     /**
      * Insere um usuário na base de dados
      * 
-     * @param entity
-     * @param personFromDb
-     * @return
+     * @param userInfo Informações do usuário
+     * @param userEntity Entidade usuário
+     * @return Usuário da aplicação
      */
-    @Transactional
-    private UserApplication persistUser(UserInfoDTO entity, UserApplication userEntity) {
-        if (entity.getId() == null) {
+    private void persistUser(UserInfoDTO userInfo, UserApplication userEntity) {
+        if (userInfo.getId() == null) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "Informe o identificador do usuário para que seja possível atualizar as informações do mesmo.");
         }
-        userEntity.setUserName(entity.getUserName());
-        userEntity.setActive(entity.isActive());
-        userEntity.setFirstSignin(entity.isFirstSignin());
-        convertRoles(entity, userEntity);
-        userRepo.save(userEntity);
-        return userEntity;
+        userEntity.setUserName(userInfo.getUserName());
+        userEntity.setActive(userInfo.isActive());
+        userEntity.setFirstSignin(userInfo.isFirstSignin());
+        convertRoles(userInfo, userEntity);
+        userRepo.saveAndFlush(userEntity);
     }
 
 }
