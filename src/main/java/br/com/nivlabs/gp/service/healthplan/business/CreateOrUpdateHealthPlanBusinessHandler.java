@@ -41,13 +41,13 @@ public abstract class CreateOrUpdateHealthPlanBusinessHandler implements BaseBus
         healthPlanEntity.setId(healthPlanInfo.getId());
         healthPlanEntity.setPlanCode(healthPlanInfo.getPlanCode());
 
-        healthPlanInfo.setId(healthPlanEntity.getId());
-        healthPlanEntity.setPlanCode(healthPlanEntity.getPlanCode());
-        healthPlanEntity.setCommercialName(healthPlanEntity.getCommercialName());
-        healthPlanEntity.setSegmentation(healthPlanEntity.getSegmentation());
-        healthPlanEntity.setContractType(healthPlanEntity.getContractType());
-        healthPlanEntity.setAbrangency(healthPlanEntity.getAbrangency());
-        healthPlanEntity.setType(healthPlanEntity.getType());
+        healthPlanEntity.setId(healthPlanInfo.getId());
+        healthPlanEntity.setPlanCode(healthPlanInfo.getPlanCode());
+        healthPlanEntity.setCommercialName(healthPlanInfo.getCommercialName());
+        healthPlanEntity.setSegmentation(healthPlanInfo.getSegmentation());
+        healthPlanEntity.setContractType(healthPlanInfo.getContractType());
+        healthPlanEntity.setAbrangency(healthPlanInfo.getAbrangency());
+        healthPlanEntity.setType(healthPlanInfo.getType());
 
         logger.info("Entidade convertida :: {}", healthPlanEntity);
 
