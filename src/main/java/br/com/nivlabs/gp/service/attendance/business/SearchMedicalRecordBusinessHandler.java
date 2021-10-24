@@ -157,6 +157,8 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
                                                                                          "Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
                                                                                          patient.getFullName())));
+        checkParameters(attendance);
+
         MedicalRecordDTO medicalRecord = new MedicalRecordDTO();
         medicalRecord.setId(attendance.getId());
         medicalRecord.setEntryDateTime(attendance.getEntryDateTime());
