@@ -129,12 +129,12 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
         }
         if (!ApplicationMain.SETTINGS.getBooleanValue(ParameterAliasType.ENABLE_SERVICE_SHARING)) {
             logger.info("O parâmetro de compartilhamento de atendimentos está inativo, iniciando checagem do profissional...");
-            logger.info("Iniciando busca de profdissional pelo usuário da requisição...");
+            logger.info("Iniciando busca de profissional pelo usuário da requisição...");
             UserInfoDTO userInfo = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
             ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(userInfo.getDocument().getValue());
             if (responsibleInformations.getId() == null)
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
-                        "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
+                        "Você não tem um profissional vinculado ao seu usuário.");
             logger.info("Profissional encontrado :: {} | {}", responsibleInformations.getId(), responsibleInformations.getFullName());
             if (attendance.getProfessional() != null && responsibleInformations.getId().equals(attendance.getProfessional().getId())) {
                 logger.info("Verificando se o profissional é o responsável pelo atendimento ativo atual...");
