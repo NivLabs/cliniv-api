@@ -1,5 +1,7 @@
 package br.com.nivlabs.gp.models.domain;
 
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import br.com.nivlabs.gp.enums.MetaType;
+import br.com.nivlabs.gp.enums.ParameterAliasType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
 
 @Entity
@@ -18,6 +21,10 @@ public class Parameter extends BaseObjectWithId {
 
     @Id
     private Long id;
+
+    @Column(name = "ALIAS")
+    @Enumerated(EnumType.STRING)
+    private ParameterAliasType alias;
 
     @Column(name = "NOME")
     private String name;
@@ -39,9 +46,10 @@ public class Parameter extends BaseObjectWithId {
         super();
     }
 
-    public Parameter(Long id, String name, String group, MetaType metaType, String value, String groupValues) {
+    public Parameter(Long id, ParameterAliasType alias, String name, String group, MetaType metaType, String value, String groupValues) {
         super();
         this.id = id;
+        this.alias = alias;
         this.name = name;
         this.group = group;
         this.metaType = metaType;
@@ -59,6 +67,14 @@ public class Parameter extends BaseObjectWithId {
 
     public String getName() {
         return name;
+    }
+
+    public ParameterAliasType getAlias() {
+        return alias;
+    }
+
+    public void setAlias(ParameterAliasType alias) {
+        this.alias = alias;
     }
 
     public void setName(String name) {
@@ -98,16 +114,29 @@ public class Parameter extends BaseObjectWithId {
     }
 
     @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Parameter [id=");
+        builder.append(id);
+        builder.append(", alias=");
+        builder.append(alias);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", group=");
+        builder.append(group);
+        builder.append(", metaType=");
+        builder.append(metaType);
+        builder.append(", value=");
+        builder.append(value);
+        builder.append(", groupValues=");
+        builder.append(groupValues);
+        builder.append("]");
+        return builder.toString();
+    }
+
+    @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((group == null) ? 0 : group.hashCode());
-        result = prime * result + ((groupValues == null) ? 0 : groupValues.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((metaType == null) ? 0 : metaType.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((value == null) ? 0 : value.hashCode());
-        return result;
+        return Objects.hash(alias, group, groupValues, id, metaType, name, value);
     }
 
     @Override
@@ -119,40 +148,9 @@ public class Parameter extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         Parameter other = (Parameter) obj;
-        if (group == null) {
-            if (other.group != null)
-                return false;
-        } else if (!group.equals(other.group))
-            return false;
-        if (groupValues == null) {
-            if (other.groupValues != null)
-                return false;
-        } else if (!groupValues.equals(other.groupValues))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (metaType != other.metaType)
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (value == null) {
-            if (other.value != null)
-                return false;
-        } else if (!value.equals(other.value))
-            return false;
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Parameter [id=" + id + ", name=" + name + ", group=" + group + ", metaType=" + metaType + ", value=" + value
-                + ", groupValues=" + groupValues + "]";
+        return Objects.equals(alias, other.alias) && Objects.equals(group, other.group) && Objects.equals(groupValues, other.groupValues)
+                && Objects.equals(id, other.id) && metaType == other.metaType && Objects.equals(name, other.name)
+                && Objects.equals(value, other.value);
     }
 
 }

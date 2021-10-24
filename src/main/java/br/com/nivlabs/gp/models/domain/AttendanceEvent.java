@@ -3,6 +3,7 @@ package br.com.nivlabs.gp.models.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,15 +20,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.models.BaseObjectWithId;
 import br.com.nivlabs.gp.models.domain.tiss.Procedure;
-import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
-import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 
 /**
  * Classe VisitEvent.java
@@ -169,26 +167,35 @@ public class AttendanceEvent extends BaseObjectWithId {
 
     @Override
     public String toString() {
-        return "AttendanceEvent [id=" + id + ", eventType=" + eventType + ", responsible=" + responsible + ", attendance=" + attendance
-                + ", procedure=" + procedure + ", documents=" + documents + ", accommodation=" + accommodation + ", title=" + title
-                + ", observations=" + observations + ", eventDateTime=" + eventDateTime + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("AttendanceEvent [id=");
+        builder.append(id);
+        builder.append(", eventType=");
+        builder.append(eventType);
+        builder.append(", responsible=");
+        builder.append(responsible);
+        builder.append(", attendance=");
+        builder.append(attendance);
+        builder.append(", procedure=");
+        builder.append(procedure);
+        builder.append(", documents=");
+        builder.append(documents);
+        builder.append(", accommodation=");
+        builder.append(accommodation);
+        builder.append(", title=");
+        builder.append(title);
+        builder.append(", observations=");
+        builder.append(observations);
+        builder.append(", eventDateTime=");
+        builder.append(eventDateTime);
+        builder.append("]");
+        return builder.toString();
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((accommodation == null) ? 0 : accommodation.hashCode());
-        result = prime * result + ((attendance == null) ? 0 : attendance.hashCode());
-        result = prime * result + ((documents == null) ? 0 : documents.hashCode());
-        result = prime * result + ((eventDateTime == null) ? 0 : eventDateTime.hashCode());
-        result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((observations == null) ? 0 : observations.hashCode());
-        result = prime * result + ((procedure == null) ? 0 : procedure.hashCode());
-        result = prime * result + ((responsible == null) ? 0 : responsible.hashCode());
-        result = prime * result + ((title == null) ? 0 : title.hashCode());
-        return result;
+        return Objects.hash(accommodation, attendance, documents, eventDateTime, eventType, id, observations, procedure, responsible,
+                            title);
     }
 
     @Override
@@ -200,57 +207,11 @@ public class AttendanceEvent extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         AttendanceEvent other = (AttendanceEvent) obj;
-        if (accommodation == null) {
-            if (other.accommodation != null)
-                return false;
-        } else if (!accommodation.equals(other.accommodation))
-            return false;
-        if (attendance == null) {
-            if (other.attendance != null)
-                return false;
-        } else if (!attendance.equals(other.attendance))
-            return false;
-        if (documents == null) {
-            if (other.documents != null)
-                return false;
-        } else if (!documents.equals(other.documents))
-            return false;
-        if (eventDateTime == null) {
-            if (other.eventDateTime != null)
-                return false;
-        } else if (!eventDateTime.equals(other.eventDateTime))
-            return false;
-        if (eventType == null) {
-            if (other.eventType != null)
-                return false;
-        } else if (!eventType.equals(other.eventType))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (observations == null) {
-            if (other.observations != null)
-                return false;
-        } else if (!observations.equals(other.observations))
-            return false;
-        if (procedure == null) {
-            if (other.procedure != null)
-                return false;
-        } else if (!procedure.equals(other.procedure))
-            return false;
-        if (responsible == null) {
-            if (other.responsible != null)
-                return false;
-        } else if (!responsible.equals(other.responsible))
-            return false;
-        if (title == null) {
-            if (other.title != null)
-                return false;
-        } else if (!title.equals(other.title))
-            return false;
-        return true;
+        return Objects.equals(accommodation, other.accommodation) && Objects.equals(attendance, other.attendance)
+                && Objects.equals(documents, other.documents) && Objects.equals(eventDateTime, other.eventDateTime)
+                && eventType == other.eventType && Objects.equals(id, other.id) && Objects.equals(observations, other.observations)
+                && Objects.equals(procedure, other.procedure) && Objects.equals(responsible, other.responsible)
+                && Objects.equals(title, other.title);
     }
 
     @PrePersist
@@ -262,22 +223,6 @@ public class AttendanceEvent extends BaseObjectWithId {
     public AttendanceEvent(Long id) {
         super();
         this.id = id;
-    }
-
-    public AttendanceEventDTO getDTO() {
-        return new AttendanceEventDTO(this.getId(),
-                this.getEventDateTime(), this.getTitle(), convertDocuments(this.getDocuments()),
-                this.getAccommodation().getDTO());
-    }
-
-    private List<DigitalDocumentDTO> convertDocuments(List<DigitalDocument> documents) {
-        List<DigitalDocumentDTO> returnList = new ArrayList<>();
-        documents.forEach(doc -> {
-            DigitalDocumentDTO docToList = new DigitalDocumentDTO();
-            BeanUtils.copyProperties(doc, docToList, DigitalDocument_.BASE64);
-            returnList.add(docToList);
-        });
-        return returnList;
     }
 
 }

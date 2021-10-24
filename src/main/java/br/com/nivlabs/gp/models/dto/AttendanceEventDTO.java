@@ -38,18 +38,22 @@ public class AttendanceEventDTO extends DataTransferObjectBase {
     @ApiModelProperty("Acomodação onde o evento foi ou será realizado")
     private AccommodationDTO accommodation;
 
+    @ApiModelProperty("Profissional que adicionou o evento")
+    private ResponsibleDTO professional;
+
     public AttendanceEventDTO() {
         super();
     }
 
     public AttendanceEventDTO(Long id, LocalDateTime datetime, String description, List<DigitalDocumentDTO> documents,
-            AccommodationDTO accommodation) {
+            AccommodationDTO accommodation, ResponsibleDTO professional) {
         super();
         this.id = id;
         this.datetime = datetime;
         this.description = description;
         this.documents = documents;
         this.accommodation = accommodation;
+        this.professional = professional;
     }
 
     public Long getId() {
@@ -92,59 +96,31 @@ public class AttendanceEventDTO extends DataTransferObjectBase {
         this.accommodation = accommodation;
     }
 
+    public ResponsibleDTO getProfessional() {
+        return professional;
+    }
+
+    public void setProfessional(ResponsibleDTO professional) {
+        this.professional = professional;
+    }
+
     @Override
     public String toString() {
-        return "AttendanceEventDTO [id=" + id + ", datetime=" + datetime + ", description=" + description + ", documents=" + documents
-                + ", accommodation=" + accommodation + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((accommodation == null) ? 0 : accommodation.hashCode());
-        result = prime * result + ((datetime == null) ? 0 : datetime.hashCode());
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((documents == null) ? 0 : documents.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        AttendanceEventDTO other = (AttendanceEventDTO) obj;
-        if (accommodation == null) {
-            if (other.accommodation != null)
-                return false;
-        } else if (!accommodation.equals(other.accommodation))
-            return false;
-        if (datetime == null) {
-            if (other.datetime != null)
-                return false;
-        } else if (!datetime.equals(other.datetime))
-            return false;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (documents == null) {
-            if (other.documents != null)
-                return false;
-        } else if (!documents.equals(other.documents))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+        StringBuilder builder = new StringBuilder();
+        builder.append("AttendanceEventDTO [id=");
+        builder.append(id);
+        builder.append(", datetime=");
+        builder.append(datetime);
+        builder.append(", description=");
+        builder.append(description);
+        builder.append(", documents=");
+        builder.append(documents);
+        builder.append(", accommodation=");
+        builder.append(accommodation);
+        builder.append(", professional=");
+        builder.append(professional);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

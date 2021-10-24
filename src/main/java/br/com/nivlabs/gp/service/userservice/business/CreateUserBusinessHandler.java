@@ -51,6 +51,8 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
         UserApplication createdUser = persistUser(userInfo, personInfo);
         userInfo.setId(createdUser.getId());
         userInfo.setCreatedAt(createdUser.getCreatedAt());
+        userInfo.setActive(createdUser.isActive());
+        userInfo.setActive(createdUser.isFirstSignin());
 
         return userInfo;
     }
