@@ -3,6 +3,7 @@ package br.com.nivlabs.gp.models.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -54,6 +55,10 @@ public class Attendance extends BaseObjectWithId {
     @JoinColumn(name = "ACOMODACAO_ATUAL")
     private Accommodation currentAccommodation;
 
+    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "PROFISSIONAL_ATUAL")
+    private Responsible professional;
+
     @Column(name = "TIPO_ENTRADA")
     @Enumerated(EnumType.STRING)
     private EntryType entryType;
@@ -85,6 +90,14 @@ public class Attendance extends BaseObjectWithId {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Responsible getProfessional() {
+        return professional;
+    }
+
+    public void setProfessional(Responsible professional) {
+        this.professional = professional;
     }
 
     public Patient getPatient() {
@@ -160,20 +173,38 @@ public class Attendance extends BaseObjectWithId {
     }
 
     @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Attendance [id=");
+        builder.append(id);
+        builder.append(", patient=");
+        builder.append(patient);
+        builder.append(", entryDateTime=");
+        builder.append(entryDateTime);
+        builder.append(", exitDateTime=");
+        builder.append(exitDateTime);
+        builder.append(", currentAccommodation=");
+        builder.append(currentAccommodation);
+        builder.append(", professional=");
+        builder.append(professional);
+        builder.append(", entryType=");
+        builder.append(entryType);
+        builder.append(", events=");
+        builder.append(events);
+        builder.append(", evolutions=");
+        builder.append(evolutions);
+        builder.append(", reasonForEntry=");
+        builder.append(reasonForEntry);
+        builder.append(", level=");
+        builder.append(level);
+        builder.append("]");
+        return builder.toString();
+    }
+
+    @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((currentAccommodation == null) ? 0 : currentAccommodation.hashCode());
-        result = prime * result + ((entryDateTime == null) ? 0 : entryDateTime.hashCode());
-        result = prime * result + ((entryType == null) ? 0 : entryType.hashCode());
-        result = prime * result + ((events == null) ? 0 : events.hashCode());
-        result = prime * result + ((evolutions == null) ? 0 : evolutions.hashCode());
-        result = prime * result + ((exitDateTime == null) ? 0 : exitDateTime.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((level == null) ? 0 : level.hashCode());
-        result = prime * result + ((patient == null) ? 0 : patient.hashCode());
-        result = prime * result + ((reasonForEntry == null) ? 0 : reasonForEntry.hashCode());
-        return result;
+        return Objects.hash(currentAccommodation, entryDateTime, entryType, events, evolutions, exitDateTime, id, level, patient,
+                            professional, reasonForEntry);
     }
 
     @Override
@@ -185,58 +216,11 @@ public class Attendance extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         Attendance other = (Attendance) obj;
-        if (currentAccommodation == null) {
-            if (other.currentAccommodation != null)
-                return false;
-        } else if (!currentAccommodation.equals(other.currentAccommodation))
-            return false;
-        if (entryDateTime == null) {
-            if (other.entryDateTime != null)
-                return false;
-        } else if (!entryDateTime.equals(other.entryDateTime))
-            return false;
-        if (entryType != other.entryType)
-            return false;
-        if (events == null) {
-            if (other.events != null)
-                return false;
-        } else if (!events.equals(other.events))
-            return false;
-        if (evolutions == null) {
-            if (other.evolutions != null)
-                return false;
-        } else if (!evolutions.equals(other.evolutions))
-            return false;
-        if (exitDateTime == null) {
-            if (other.exitDateTime != null)
-                return false;
-        } else if (!exitDateTime.equals(other.exitDateTime))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (level != other.level)
-            return false;
-        if (patient == null) {
-            if (other.patient != null)
-                return false;
-        } else if (!patient.equals(other.patient))
-            return false;
-        if (reasonForEntry == null) {
-            if (other.reasonForEntry != null)
-                return false;
-        } else if (!reasonForEntry.equals(other.reasonForEntry))
-            return false;
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Attendance [id=" + id + ", patient=" + patient + ", entryDateTime=" + entryDateTime + ", exitDateTime=" + exitDateTime
-                + ", currentAccommodation=" + currentAccommodation + ", entryType=" + entryType + ", events=" + events + ", evolutions="
-                + evolutions + ", reasonForEntry=" + reasonForEntry + ", level=" + level + "]";
+        return Objects.equals(currentAccommodation, other.currentAccommodation) && Objects.equals(entryDateTime, other.entryDateTime)
+                && entryType == other.entryType && Objects.equals(events, other.events) && Objects.equals(evolutions, other.evolutions)
+                && Objects.equals(exitDateTime, other.exitDateTime) && Objects.equals(id, other.id) && level == other.level
+                && Objects.equals(patient, other.patient) && Objects.equals(professional, other.professional)
+                && Objects.equals(reasonForEntry, other.reasonForEntry);
     }
 
     @PrePersist

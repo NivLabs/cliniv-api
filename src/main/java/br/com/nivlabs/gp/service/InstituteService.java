@@ -82,9 +82,10 @@ public class InstituteService implements BaseService {
 
         if (!parameters.isEmpty()) {
             for (Parameter parameter : parameters)
-                response.getParameters().add(new ParameterDTO(parameter.getId(), parameter.getName(), parameter.getGroup(),
-                        parameter.getMetaType(), parameter.getValue(),
-                        parameter.getGroupValues() != null ? parameter.getGroupValues().split(";") : null));
+                response.getParameters()
+                        .add(new ParameterDTO(parameter.getId(), parameter.getAlias(), parameter.getName(), parameter.getGroup(),
+                                parameter.getMetaType(), parameter.getValue(),
+                                parameter.getGroupValues() != null ? parameter.getGroupValues().split(";") : null));
         }
 
         return response;

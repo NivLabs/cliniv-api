@@ -1,5 +1,6 @@
 package br.com.nivlabs.gp.service.attendance.business;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,24 +11,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import br.com.nivlabs.gp.ApplicationMain;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.EventType;
+import br.com.nivlabs.gp.enums.ParameterAliasType;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
+import br.com.nivlabs.gp.models.domain.DigitalDocument;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.PatientAllergy;
 import br.com.nivlabs.gp.models.domain.Person;
+import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.AttendanceEventDTO;
+import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.MedicineInfoDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
+import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
+import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
+import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
 import br.com.nivlabs.gp.service.patient.PatientService;
+import br.com.nivlabs.gp.service.responsible.ResponsibleService;
+import br.com.nivlabs.gp.service.userservice.UserService;
+import br.com.nivlabs.gp.util.SecurityContextUtil;
 
 /**
  * 
@@ -46,6 +59,10 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
     private AttendanceRepository attendanceDao;
     @Autowired
     private PatientService patientService;
+    @Autowired
+    private ResponsibleService responsibleService;
+    @Autowired
+    private UserService userService;
 
     /**
      * Busca Prontuário do atendimento por Identificador único do atendimento
@@ -54,11 +71,15 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @return MedicalRecord Informações do prontuário de atendimento
      */
     @Transactional
-    public MedicalRecordDTO findByAttendanceId(Long id) {
+    public MedicalRecordDTO byAttendanceId(Long id) {
         logger.info("Verificando se o atendimento informado existe. Atendimento :: {}", id);
         Attendance attendance = attendanceDao.findById(id).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Prontuário com código %s não encontrado", id)));
+
         Person person = attendance.getPatient().getPerson();
+
+        checkParameters(attendance);
+
         MedicalRecordDTO medicalRecord = new MedicalRecordDTO();
 
         medicalRecord.setId(attendance.getId());
@@ -78,7 +99,8 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
         processEvents(attendance, medicalRecord);
 
         if (!medicalRecord.getEvents().isEmpty()) {
-            medicalRecord.setLastAccommodation(getLastAccommodationByPatientId(medicalRecord.getEvents()));
+            medicalRecord.setLastAccommodation(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getAccommodation());
+            medicalRecord.setLascProfessional(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getProfessional());
         }
 
         medicalRecord.getAllergies()
@@ -86,6 +108,40 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
         medicalRecord.setAttendanceLevel(attendance.getLevel());
         return medicalRecord;
+    }
+
+    /**
+     * Checa os parâmetros e aplica algumas regras de negócios na consulta de atendimento
+     * 
+     * @param attendance Atendimento
+     * @param person Pessoa
+     */
+    @Transactional
+    private void checkParameters(Attendance attendance) {
+        if (ApplicationMain.SETTINGS.getBooleanValue(ParameterAliasType.BLOCKS_READING_THE_MEDICAL_RECORD_WITHOUT_ACTIVE_SERVICE)) {
+            logger.info("O parâmetro que bloqueia a leitura de prontuário sem atendimento ativo está habilitado, iniciando processo de verificação...");
+            attendanceDao.findByPatientAndExitDateTimeIsNull(new Patient(attendance.getPatient().getId()))
+                    .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
+                                                                                                        "Não há atendimento iniciado para o paciente de código %s e nome %s! Inicie um novo atendimento para acessar o prontuário do mesmo.",
+                                                                                                        attendance.getPatient().getId(),
+                                                                                                        attendance.getPatient().getPerson()
+                                                                                                                .getFullName())));
+        }
+        if (!ApplicationMain.SETTINGS.getBooleanValue(ParameterAliasType.ENABLE_SERVICE_SHARING)) {
+            logger.info("O parâmetro de compartilhamento de atendimentos está inativo, iniciando checagem do profissional...");
+            logger.info("Iniciando busca de profdissional pelo usuário da requisição...");
+            UserInfoDTO userInfo = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
+            ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(userInfo.getDocument().getValue());
+            if (responsibleInformations.getId() == null)
+                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                        "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
+            logger.info("Profissional encontrado :: {} | {}", responsibleInformations.getId(), responsibleInformations.getFullName());
+            if (attendance.getProfessional() != null && responsibleInformations.getId().equals(attendance.getProfessional().getId())) {
+                logger.info("Verificando se o profissional é o responsável pelo atendimento ativo atual...");
+                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Você não é o profissional responsável pelo atendimento!");
+            }
+
+        }
     }
 
     /**
@@ -119,7 +175,8 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
         processEvents(attendance, medicalRecord);
 
         if (!medicalRecord.getEvents().isEmpty()) {
-            medicalRecord.setLastAccommodation(getLastAccommodationByPatientId(medicalRecord.getEvents()));
+            medicalRecord.setLastAccommodation(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getAccommodation());
+            medicalRecord.setLascProfessional(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getProfessional());
         }
 
         medicalRecord.setAttendanceLevel(attendance.getLevel());
@@ -141,6 +198,26 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
     }
 
     /**
+     * Converte entidades relacionais de documentos para objeto de transferência
+     * 
+     * @param documents Lista de documentos (entidades)
+     * @return Lista de documentos (DTO)
+     */
+    private List<DigitalDocumentDTO> convertDocuments(List<DigitalDocument> documents) {
+        List<DigitalDocumentDTO> returnList = new ArrayList<>();
+        documents.forEach(doc -> {
+            DigitalDocumentDTO docToList = new DigitalDocumentDTO();
+            docToList.setId(doc.getId());
+            docToList.setCreatedAt(doc.getCreatedAt());
+            docToList.setAttendanceEventId(doc.getAttendanceEvent().getId());
+            docToList.setName(doc.getName());
+            docToList.setType(doc.getType());
+            returnList.add(docToList);
+        });
+        return returnList;
+    }
+
+    /**
      * Processa evento no prontuário
      * 
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
@@ -148,12 +225,50 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      */
     @Transactional
     private void processEvent(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
-        medicalRecord.getEvents().add(entity.getDTO());
+        AttendanceEventDTO attendanceEventInfo = new AttendanceEventDTO();
+        attendanceEventInfo.setId(entity.getId());
+        attendanceEventInfo.setDatetime(entity.getEventDateTime());
+        attendanceEventInfo.setDescription(entity.getTitle());
+        attendanceEventInfo.setDocuments(convertDocuments(entity.getDocuments()));
+        attendanceEventInfo.setAccommodation(convertAccomodation(entity.getAccommodation()));
+        attendanceEventInfo.setProfessional(convertProfessional(entity.getResponsible()));
+
+        medicalRecord.getEvents().add(attendanceEventInfo);
         if (entity.getEventType() == EventType.EVOLUTION) {
             processEvolution(medicalRecord, entity);
         } else if (entity.getEventType() == EventType.MEDICINE) {
             processMedications(medicalRecord, entity);
         }
+    }
+
+    /**
+     * Converte entidade relacional de profissional responsável
+     * 
+     * @param responsible Profissional responsável (entidade)
+     * @return Profissional responsável (DTO)
+     */
+    @Transactional
+    private ResponsibleDTO convertProfessional(Responsible responsible) {
+        if (responsible != null) {
+            Person professionalPerson = responsible.getPerson();
+
+            return new ResponsibleDTO(responsible.getId(), professionalPerson.getFullName(), professionalPerson.getSocialName(),
+                    professionalPerson.getCpf(), professionalPerson.getBornDate(), professionalPerson.getPrincipalNumber(),
+                    professionalPerson.getGender(), responsible.getProfessionalIdentity(), responsible.getInitialsIdentity());
+        }
+        return null;
+    }
+
+    /**
+     * Converte entidade relacional de acomodação
+     * 
+     * @param accommodation Acomodação (entidade)
+     * @return Acomodação (DTO)
+     */
+    @Transactional
+    private AccommodationDTO convertAccomodation(Accommodation accommodation) {
+        return new AccommodationDTO(accommodation.getId(), accommodation.getSector().getId(), accommodation.getDescription(),
+                accommodation.getType());
     }
 
     /**
@@ -192,16 +307,4 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
         medicalRecord.getMedicines().add(medicine);
     }
-
-    /**
-     * Pega a última acomodação do paciente baseada nos eventos do prontuário
-     *
-     * @param listOfEntities Lista de acomotações do existentes no atendimento
-     * @return Última acomodação
-     */
-    @Transactional
-    private AccommodationDTO getLastAccommodationByPatientId(List<AttendanceEventDTO> listOfEntities) {
-        return listOfEntities.get(listOfEntities.size() - 1).getAccommodation();
-    }
-
 }

@@ -72,7 +72,7 @@ public class AttendanceService implements BaseService {
      * @return MedicalRecord Informações do prontuário de atendimento
      */
     public MedicalRecordDTO findMedicalRecordByAttendanceId(Long id) {
-        return searchMedicalRecordBusinessHandler.findByAttendanceId(id);
+        return searchMedicalRecordBusinessHandler.byAttendanceId(id);
     }
 
     /**

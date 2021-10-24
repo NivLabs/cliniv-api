@@ -75,6 +75,9 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
     @ApiModelProperty("Acomodação")
     private AccommodationDTO lastAccommodation;
 
+    @ApiModelProperty("Profissional")
+    private ResponsibleDTO lascProfessional;
+
     @ApiModelProperty("Sexo")
     private Gender gender;
 
@@ -373,6 +376,14 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         this.attendanceLevel = attendanceLevel;
     }
 
+    public ResponsibleDTO getLascProfessional() {
+        return lascProfessional;
+    }
+
+    public void setLascProfessional(ResponsibleDTO lascProfessional) {
+        this.lascProfessional = lascProfessional;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -404,6 +415,8 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         builder.append(bornDate);
         builder.append(", lastAccommodation=");
         builder.append(lastAccommodation);
+        builder.append(", lascProfessional=");
+        builder.append(lascProfessional);
         builder.append(", gender=");
         builder.append(gender);
         builder.append(", events=");
