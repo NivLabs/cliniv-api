@@ -37,7 +37,7 @@ public class CorsConfigurationFilter implements Filter {
 
         if ("OPTIONS".equals(req.getMethod())) {
             resp.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");
-            resp.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept");
+            resp.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, CUSTOMER_ID");
             resp.setHeader("Access-Control-Max-Age", "3600");
             resp.setStatus(HttpServletResponse.SC_OK);
         } else {
