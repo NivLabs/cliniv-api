@@ -3,9 +3,9 @@ package br.com.nivlabs.gp.models.dto;
 import java.util.HashSet;
 import java.util.Set;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Informações da instituição")
+@Schema(description = "Informações da instituição")
 public class InstituteDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -5796305672599055540L;

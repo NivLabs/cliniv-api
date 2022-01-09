@@ -5,8 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Representa a situação atual da API
@@ -14,21 +13,21 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel(description = "API Status")
+@Schema(description = "API Status")
 public class ServerStatusDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -8293328535500084535L;
 
-    @ApiModelProperty("Data / Hora atual do servidor")
+    @Schema(description = "Data / Hora atual do servidor")
     @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime currentDate = LocalDateTime.now();
 
-    @ApiModelProperty("Nonme da aplicação")
+    @Schema(description = "Nonme da aplicação")
     private String applicationName = "API Gestão de Prontuário";
 
-    @ApiModelProperty("Veersão da aplicação")
+    @Schema(description = "Veersão da aplicação")
     private String version = "DEV";
 
-    @ApiModelProperty("Status do servidor")
+    @Schema(description = "Status do servidor")
     private String status = "Ligado";
 
     public LocalDateTime getCurrentDate() {

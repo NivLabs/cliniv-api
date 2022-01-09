@@ -1,56 +1,55 @@
 package br.com.nivlabs.gp.models.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Informações do cliente")
+@Schema(description = "Informações do cliente")
 public class CustomerInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 6019817310193995713L;
 
-    @ApiModelProperty("Identificador único do Cliente")
+    @Schema(description = "Identificador único do Cliente")
     private Long id;
 
-    @ApiModelProperty("CNPJ")
+    @Schema(description = "CNPJ")
     private String cnpj;
 
-    @ApiModelProperty("Cadastro Nacional de Estabelecimento de saúde")
+    @Schema(description = "Cadastro Nacional de Estabelecimento de saúde")
     private String cnes;
 
-    @ApiModelProperty("Nome da instituição")
+    @Schema(description = "Nome da instituição")
     private String name;
 
-    @ApiModelProperty("Telefone")
+    @Schema(description = "Telefone")
     private String phone;
 
-    @ApiModelProperty("Nome corporativo")
+    @Schema(description = "Nome corporativo")
     private String corporativeName;
 
-    @ApiModelProperty("Natureza Legal")
+    @Schema(description = "Natureza Legal")
     private String legalNature;
 
-    @ApiModelProperty("Dependência")
+    @Schema(description = "Dependência")
     private String dependency;
 
-    @ApiModelProperty("Tipo da instituição")
+    @Schema(description = "Tipo da instituição")
     private String instituteType;
 
-    @ApiModelProperty("Nome do gestor da clínica")
+    @Schema(description = "Nome do gestor da clínica")
     private String managerName;
 
-    @ApiModelProperty("Telefone/Celular de contato do gestor")
+    @Schema(description = "Telefone/Celular de contato do gestor")
     private String managerPhone;
 
-    @ApiModelProperty("E-mail de contato do gesto")
+    @Schema(description = "E-mail de contato do gesto")
     private String managerMail;
 
-    @ApiModelProperty("Licença de uso")
+    @Schema(description = "Licença de uso")
     private LicenseDTO license;
 
-    @ApiModelProperty("Endereço da instituição")
+    @Schema(description = "Endereço da instituição")
     private AddressDTO address;
 
-    @ApiModelProperty("Logotipo da instituição")
+    @Schema(description = "Logotipo da instituição")
     private String logoBase64;
 
     public CustomerInfoDTO() {

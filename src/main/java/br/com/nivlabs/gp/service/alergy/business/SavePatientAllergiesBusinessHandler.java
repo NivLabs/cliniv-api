@@ -23,7 +23,7 @@ public class SavePatientAllergiesBusinessHandler implements BaseBusinessHandler 
     Logger logger;
 
     @Autowired
-    PatientService patientService;
+    private PatientService patientService;
     @Autowired
     CreateAllergyBusinessHandler createAllergyBusinessHandler;
 

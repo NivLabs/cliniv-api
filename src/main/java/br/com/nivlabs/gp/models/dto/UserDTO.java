@@ -3,7 +3,7 @@ package br.com.nivlabs.gp.models.dto;
 import java.time.LocalDate;
 
 import br.com.nivlabs.gp.enums.Gender;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Esta classe representa as informações reduzidas do usuário, mais utilizada para listagens e paginações
@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModel;
  * @author viniciosarodrigues
  *
  */
-@ApiModel(description = "Usuário")
+@Schema(description = "Usuário")
 public class UserDTO extends PersonDTO {
 
     private static final long serialVersionUID = 2375401831562989624L;

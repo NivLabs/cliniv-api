@@ -25,8 +25,8 @@ import br.com.nivlabs.gp.controller.filters.AllergyFilters;
 import br.com.nivlabs.gp.models.dto.AllergyDTO;
 import br.com.nivlabs.gp.models.dto.PatientAllergiesDTO;
 import br.com.nivlabs.gp.service.alergy.AllergyService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 
@@ -36,7 +36,7 @@ import io.swagger.annotations.ApiOperation;
  *
  * @since 8 de set de 2019
  */
-@Api("Endpoint - Alergias")
+@Tag(name = "Alergias", description = "Endpoint - Operações com Alergias")
 @RestController
 @RequestMapping(value = "/allergy")
 public class AllergyController extends BaseController<AllergyService> {
@@ -44,7 +44,7 @@ public class AllergyController extends BaseController<AllergyService> {
     @Autowired
     private Logger logger;
 
-    @ApiOperation(nickname = "allergy-get", value = "Busca uma página de alergias")
+    @Operation(summary = "allergy-get", description = "Busca uma página de alergias")
     @GetMapping
     @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<AllergyDTO>> findPage(AllergyFilters filters) {
@@ -53,7 +53,7 @@ public class AllergyController extends BaseController<AllergyService> {
         return ResponseEntity.ok(service.getPage(filters, pageSettings));
     }
 
-    @ApiOperation(nickname = "allergies-patient-post", value = "Insere informações de alergias do paciente")
+    @Operation(summary = "allergies-patient-post", description = "Insere informações de alergias do paciente")
     @PostMapping("/patient/{id}")
     @PreAuthorize("hasAnyRole('PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> savePatientAllergies(@PathVariable("id") Long id,

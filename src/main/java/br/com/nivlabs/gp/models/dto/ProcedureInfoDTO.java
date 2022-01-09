@@ -1,26 +1,27 @@
 package br.com.nivlabs.gp.models.dto;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 
  * @author viniciosarodrigues
  *
  */
+@Schema(description = "Informações de Procedimento")
 public class ProcedureInfoDTO extends ProcedureDTO {
 
     private static final long serialVersionUID = -7663943079267996719L;
 
-    @ApiModelProperty("Requer auditoria prévia")
+    @Schema(description = "Requer auditoria prévia")
     private boolean previousAudit;
 
-    @ApiModelProperty("Requer especialidade")
+    @Schema(description = "Requer especialidade")
     private boolean specialty;
 
-    @ApiModelProperty("Idade máxima para o procedimento")
+    @Schema(description = "Idade máxima para o procedimento")
     private String maxAge;
 
-    @ApiModelProperty("Idade mínima para o procedimento")
+    @Schema(description = "Idade mínima para o procedimento")
     private String minAge;
 
     /**

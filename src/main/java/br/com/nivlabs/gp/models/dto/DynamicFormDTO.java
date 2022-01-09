@@ -5,22 +5,21 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Formulário dinâmico")
+@Schema(description = "Formulário dinâmico")
 public class DynamicFormDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6122041136613519207L;
 
-    @ApiModelProperty("Identificador único do formulário, não é obrigatório para a inserção")
+    @Schema(description = "Identificador único do formulário, não é obrigatório para a inserção")
     private Long id;
 
     @NotBlank(message = "Informar do título do formulário é obrigatório")
-    @ApiModelProperty("Descrição do título do formulário")
+    @Schema(description = "Descrição do título do formulário")
     private String title;
 
-    @ApiModelProperty("Questões do formulário dinâmico")
+    @Schema(description = "Questões do formulário dinâmico")
     private List<DynamicFormQuestionDTO> questions = new ArrayList<>();
 
     public DynamicFormDTO() {

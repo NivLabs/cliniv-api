@@ -1,27 +1,26 @@
 package br.com.nivlabs.gp.models.dto;
 
 import br.com.nivlabs.gp.enums.FileType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Arquivo")
+@Schema(description = "Arquivo")
 public class FileDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -4952673680887120451L;
 
-    @ApiModelProperty("Identificador único do arquivo")
+    @Schema(description = "Identificador único do arquivo")
     private String id;
 
-    @ApiModelProperty("Nome do arquivo")
+    @Schema(description = "Nome do arquivo")
     private String name;
 
-    @ApiModelProperty("Tipo do arquivo")
+    @Schema(description = "Tipo do arquivo")
     private FileType type;
 
-    @ApiModelProperty("Base64 do arquivo")
+    @Schema(description = "Base64 do arquivo")
     private String base64;
 
-    @ApiModelProperty("Url do arquivo")
+    @Schema(description = "Url do arquivo")
     private String url;
 
     public String getId() {

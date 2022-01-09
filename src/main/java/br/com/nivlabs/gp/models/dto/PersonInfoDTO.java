@@ -17,8 +17,7 @@ import br.com.nivlabs.gp.enums.BloodType;
 import br.com.nivlabs.gp.enums.EthnicGroup;
 import br.com.nivlabs.gp.enums.Gender;
 import br.com.nivlabs.gp.enums.GenderIdentity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe PersonInfoDTO.java
@@ -27,72 +26,72 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 9 de fev de 2020
  */
-@ApiModel(description = "Informações detalhadas da pessoa")
+@Schema(description = "Informações detalhadas da pessoa")
 public class PersonInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4735834196671409605L;
 
-    @ApiModelProperty("Identificadfor único")
+    @Schema(description = "Identificadfor único")
     private Long id;
 
-    @ApiModelProperty("Nome completo da pessoa")
+    @Schema(description = "Nome completo da pessoa")
     @NotNull(message = "O nome completo é obrigatório")
     @Size(min = 3, max = 45, message = "O nome completo é obrigatório")
     private String fullName;
 
-    @ApiModelProperty("Nome social da pessoa")
+    @Schema(description = "Nome social da pessoa")
     private String socialName;
 
-    @ApiModelProperty("Data de nascimento da pessoa")
+    @Schema(description = "Data de nascimento da pessoa")
     @NotNull(message = "A data de nascimento é obrigatória")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDate bornDate;
 
-    @ApiModelProperty("Documento da pessoa")
+    @Schema(description = "Documento da pessoa")
     @NotNull(message = "O documento deve ser informado")
     private DocumentDTO document;
 
-    @ApiModelProperty("Sexo")
+    @Schema(description = "Sexo")
     @NotNull(message = "O gênero deve ser informado")
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ApiModelProperty("Identidade de gênero")
+    @Schema(description = "Identidade de gênero")
     @Enumerated(EnumType.STRING)
     private GenderIdentity genderIdentity;
 
-    @ApiModelProperty("Nome do pai")
+    @Schema(description = "Nome do pai")
     private String fatherName;
 
-    @ApiModelProperty("Nome da mãe")
+    @Schema(description = "Nome da mãe")
     private String motherName;
 
-    @ApiModelProperty("Número de telefone|celular principal")
+    @Schema(description = "Número de telefone|celular principal")
     private String principalNumber;
 
-    @ApiModelProperty("Número de telefone|celular segundário")
+    @Schema(description = "Número de telefone|celular segundário")
     private String secondaryNumber;
 
-    @ApiModelProperty("Endereço")
+    @Schema(description = "Endereço")
     private AddressDTO address;
 
-    @ApiModelProperty("Email")
+    @Schema(description = "Email")
     private String email;
 
-    @ApiModelProperty("Foto do perfil")
+    @Schema(description = "Foto do perfil")
     private String profilePhoto;
 
     private List<DocumentDTO> documents = new ArrayList<>();
 
-    @ApiModelProperty("Grupo Étnico do paciente")
+    @Schema(description = "Grupo Étnico do paciente")
     @Enumerated(EnumType.STRING)
     private EthnicGroup ethnicGroup;
 
-    @ApiModelProperty("Tipo sanguíneo do paciente")
+    @Schema(description = "Tipo sanguíneo do paciente")
     @Enumerated(EnumType.STRING)
     private BloodType bloodType;
 
-    @ApiModelProperty("Nacionalidade do paciente")
+    @Schema(description = "Nacionalidade do paciente")
     private String nationality;
 
     /**

@@ -31,13 +31,13 @@ import br.com.nivlabs.gp.models.dto.DocumentDTO;
 import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.MedicineInfoDTO;
-import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleDTO;
 import br.com.nivlabs.gp.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
+import br.com.nivlabs.gp.repository.ParameterRepository;
+import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
-import br.com.nivlabs.gp.service.patient.PatientService;
 import br.com.nivlabs.gp.service.responsible.ResponsibleService;
 import br.com.nivlabs.gp.service.userservice.UserService;
 import br.com.nivlabs.gp.util.SecurityContextUtil;
@@ -58,7 +58,9 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
     @Autowired
     private AttendanceRepository attendanceDao;
     @Autowired
-    private PatientService patientService;
+    private ParameterRepository parameterDao;
+    @Autowired
+    private PatientRepository patientDao;
     @Autowired
     private ResponsibleService responsibleService;
     @Autowired
@@ -114,11 +116,11 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * Checa os parâmetros e aplica algumas regras de negócios na consulta de atendimento
      * 
      * @param attendance Atendimento
-     * @param person Pessoa
+     * @param person PessoaparameterDao
      */
     @Transactional
     private void checkParameters(Attendance attendance) {
-        if (ApplicationMain.SETTINGS.getBooleanValue(ParameterAliasType.BLOCKS_READING_THE_MEDICAL_RECORD_WITHOUT_ACTIVE_SERVICE)) {
+        if (parameterDao.findByAlias(ParameterAliasType.BLOCKS_READING_THE_MEDICAL_RECORD_WITHOUT_ACTIVE_SERVICE).isPresent()) {
             logger.info("O parâmetro que bloqueia a leitura de prontuário sem atendimento ativo está habilitado, iniciando processo de verificação...");
             attendanceDao.findByPatientAndExitDateTimeIsNull(new Patient(attendance.getPatient().getId()))
                     .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
@@ -152,11 +154,15 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      */
     @Transactional
     public MedicalRecordDTO getActiveMedicalRecord(Long patientId) {
-        PatientInfoDTO patient = patientService.findByPatientId(patientId);
+        Patient patient = patientDao.findById(patientId)
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Paciente não encontrado!"));
+
+        Person person = patient.getPerson();
+
         Attendance attendance = attendanceDao.findByPatientAndExitDateTimeIsNull(new Patient(patient.getId()))
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
                                                                                          "Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
-                                                                                         patient.getFullName())));
+                                                                                         person.getFullName())));
         checkParameters(attendance);
 
         MedicalRecordDTO medicalRecord = new MedicalRecordDTO();
@@ -165,14 +171,14 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
         medicalRecord.setReasonForEntry(attendance.getReasonForEntry());
         medicalRecord.setExitDateTime(attendance.getExitDateTime());
         medicalRecord.setPatientId(attendance.getPatient().getId());
-        medicalRecord.setDocument(patient.getDocument());
-        medicalRecord.setFullName(patient.getFullName());
-        medicalRecord.setBloodType(patient.getBloodType());
-        medicalRecord.setSocialName(patient.getSocialName());
-        medicalRecord.setPrincipalNumber(patient.getPrincipalNumber());
-        medicalRecord.setCnsNumber(attendance.getPatient().getCnsNumber());
-        medicalRecord.setBornDate(patient.getBornDate());
-        medicalRecord.setGender(patient.getGender());
+        medicalRecord.setDocument(new DocumentDTO(DocumentType.CPF, person.getCpf()));
+        medicalRecord.setFullName(person.getFullName());
+        medicalRecord.setBloodType(person.getBloodType());
+        medicalRecord.setSocialName(person.getSocialName());
+        medicalRecord.setPrincipalNumber(person.getPrincipalNumber());
+        medicalRecord.setCnsNumber(patient.getCnsNumber());
+        medicalRecord.setBornDate(person.getBornDate());
+        medicalRecord.setGender(person.getGender());
 
         processEvents(attendance, medicalRecord);
 

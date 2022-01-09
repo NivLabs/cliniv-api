@@ -27,8 +27,8 @@ import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.dto.PatientDTO;
 import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
 import br.com.nivlabs.gp.service.patient.PatientService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 
@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiOperation;
  *
  * @since 8 de set de 2019
  */
-@Api("Endpoint - Paciente")
+@Tag(name = "Paciente", description = "Endpoint - Operações com Paciente")
 @RestController
 @RequestMapping(value = "/patient")
 public class PatientController {
@@ -49,7 +49,7 @@ public class PatientController {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @ApiOperation(nickname = "patient-get", value = "Busca uma página de pacientes")
+    @Operation(summary = "patient-get", description = "Busca uma página de pacientes")
     @GetMapping
     @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<PatientDTO>> findPage(PatientFilters filters) {
@@ -58,7 +58,7 @@ public class PatientController {
         return ResponseEntity.ok(service.getPage(filters, pageSettings));
     }
 
-    @ApiOperation(nickname = "patient-post", value = "Insere um novo paciente na aplicação")
+    @Operation(summary = "patient-post", description = "Insere um novo paciente na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> persist(@Validated @RequestBody(required = true) PatientInfoDTO newPatient,
@@ -71,7 +71,7 @@ public class PatientController {
 
     }
 
-    @ApiOperation(nickname = "patient-put", value = "Atualiza um paciente na aplicação")
+    @Operation(summary = "patient-put", description = "Atualiza um paciente na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> update(@PathVariable("id") Long id,
@@ -79,14 +79,14 @@ public class PatientController {
         return ResponseEntity.ok().body(service.update(id, patient));
     }
 
-    @ApiOperation(nickname = "patient-get-id", value = "Busca um paciente baseado no identificador")
+    @Operation(summary = "patient-get-id", description = "Busca um paciente baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findByPatientId(id));
     }
 
-    @ApiOperation(nickname = "patient-get-by-document", value = "Busca um paciente pelo documento")
+    @Operation(summary = "patient-get-by-document", description = "Busca um paciente pelo documento")
     @GetMapping("{documentType}/{document}")
     @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> findByDocument(@PathVariable("documentType") DocumentType documentType,

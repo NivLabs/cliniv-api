@@ -26,8 +26,8 @@ import br.com.nivlabs.gp.models.dto.ReportLayoutDTO;
 import br.com.nivlabs.gp.models.dto.ReportLayoutInfoDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
 import br.com.nivlabs.gp.service.report.ReportService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Classe ReportController.java
@@ -36,12 +36,12 @@ import io.swagger.annotations.ApiOperation;
  * 
  * @since 24 de janeiro de 2021
  */
-@Api("Endpoint - Gerador de relatórios")
+@Tag(name = "Relatórios", description = "Endpoint - Gerador de relatórios")
 @RestController
 @RequestMapping(value = "/report")
 public class ReportController extends BaseController<ReportService> {
 
-    @ApiOperation(nickname = "report-layout-get-page", value = "Busca uma página de layouts de relatórios")
+    @Operation(summary = "report-layout-get-page", description = "Busca uma página de layouts de relatórios")
     @GetMapping
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<ReportLayoutDTO>> findList(CustomFilters filters) {
@@ -50,21 +50,21 @@ public class ReportController extends BaseController<ReportService> {
         return ResponseEntity.ok(service.findPageOfReportLayout(pageSettings));
     }
 
-    @ApiOperation(nickname = "report-layout-get-id", value = "Busca um layout de relatório baseado no identificador")
+    @Operation(summary = "report-layout-get-id", description = "Busca um layout de relatório baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<ReportLayoutInfoDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findReportLayoutById(id));
     }
 
-    @ApiOperation(nickname = "report-layout-post", value = "Insere um novo layout de relatório")
+    @Operation(summary = "report-layout-post", description = "Insere um novo layout de relatório")
     @PostMapping
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<ReportLayoutInfoDTO> persist(@Validated @RequestBody(required = true) FileDTO file) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.newReporLayout(file));
     }
 
-    @ApiOperation(nickname = "report-layout-post-id", value = "Gera um relatório a partir de um layout")
+    @Operation(summary = "report-layout-post-id", description = "Gera um relatório a partir de um layout")
     @PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportGenerationRequestDTO reportParam,
@@ -73,7 +73,7 @@ public class ReportController extends BaseController<ReportService> {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.generateDocumentFromReportLayout(id, reportParam));
     }
 
-    @ApiOperation(nickname = "report-layout-delete", value = "Deleta um layout de relatório baseado no identificador")
+    @Operation(summary = "report-layout-delete", description = "Deleta um layout de relatório baseado no identificador")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
@@ -81,7 +81,7 @@ public class ReportController extends BaseController<ReportService> {
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(nickname = "report-layout-put", value = "Atualiza um layout de relatório")
+    @Operation(summary = "report-layout-put", description = "Atualiza um layout de relatório")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<ReportLayoutInfoDTO> update(@PathVariable("id") Long id,

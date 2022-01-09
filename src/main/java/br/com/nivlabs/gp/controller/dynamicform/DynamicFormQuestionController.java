@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.models.dto.DynamicFormQuestionDTO;
 import br.com.nivlabs.gp.service.dynamicform.DynamicFormService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Formulários dinâmicos da aplicação
@@ -28,12 +28,12 @@ import io.swagger.annotations.ApiOperation;
  * @author viniciosarodrigues
  *
  */
-@Api(value = "Endpoint - Questões dos Formulários Dinâmicos")
+@Tag(name = "Questões Form. Dinâmicos", description = "Endpoint - Questões dos Formulários Dinâmicos")
 @RestController
 @RequestMapping("/dynamic-form")
 public class DynamicFormQuestionController extends BaseController<DynamicFormService> {
 
-    @ApiOperation(nickname = "question-delete-id", value = "Deleta um formulário dinâmico pelo identificador")
+    @Operation(summary = "question-delete-id", description = "Deleta um formulário dinâmico pelo identificador")
     @DeleteMapping("/question/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
@@ -41,7 +41,7 @@ public class DynamicFormQuestionController extends BaseController<DynamicFormSer
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(nickname = "question-post", value = "Insere um novo formulário dinâmico na aplicação")
+    @Operation(summary = "question-post", description = "Insere um novo formulário dinâmico na aplicação")
     @PostMapping("/{idForm}/question")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<DynamicFormQuestionDTO> create(@Validated @RequestBody(required = true) DynamicFormQuestionDTO request,
@@ -52,7 +52,7 @@ public class DynamicFormQuestionController extends BaseController<DynamicFormSer
 
     }
 
-    @ApiOperation(nickname = "question-put", value = "Atualiza um formulário na aplicação")
+    @Operation(summary = "question-put", description = "Atualiza um formulário na aplicação")
     @PutMapping("/question/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<DynamicFormQuestionDTO> update(@PathVariable("id") Long id,

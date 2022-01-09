@@ -6,8 +6,7 @@ import java.util.Objects;
 import br.com.nivlabs.gp.enums.AttendanceLevel;
 import br.com.nivlabs.gp.enums.EntryType;
 import br.com.nivlabs.gp.enums.PatientType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe VisitDTO.java
@@ -16,45 +15,45 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 18 de nov de 2019
  */
-@ApiModel(description = "Atendimento")
+@Schema(description = "Atendimento")
 public class AttendanceDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -7717106082371494163L;
 
-    @ApiModelProperty("Identificador único do atendimento")
+    @Schema(description = "Identificador único do atendimento")
     private Long id;
 
-    @ApiModelProperty("Nome completo")
+    @Schema(description = "Nome completo")
     private String fullName;
 
-    @ApiModelProperty("Nome Social")
+    @Schema(description = "Nome Social")
     private String socialName;
 
-    @ApiModelProperty("Data da entrada")
+    @Schema(description = "Data da entrada")
     private LocalDateTime entryDatetime;
 
-    @ApiModelProperty("Causa da Entrada")
+    @Schema(description = "Causa da Entrada")
     private String entryCause;
 
-    @ApiModelProperty("Retorna true se já estiver sido finalizada")
+    @Schema(description = "Retorna true se já estiver sido finalizada")
     private Boolean isFinished;
 
-    @ApiModelProperty("Tipo da entrada")
+    @Schema(description = "Tipo da entrada")
     private EntryType type;
 
-    @ApiModelProperty("Tipo do paciente")
+    @Schema(description = "Tipo do paciente")
     private PatientType patientType;
 
-    @ApiModelProperty("Identificador do paciente")
+    @Schema(description = "Identificador do paciente")
     private Long patientId;
 
-    @ApiModelProperty("Setor atual em que o paciente se encontra")
+    @Schema(description = "Setor atual em que o paciente se encontra")
     private String sectorDescription;
 
-    @ApiModelProperty("Código CNS")
+    @Schema(description = "Código CNS")
     private String cnsNumber;
 
-    @ApiModelProperty("Nível de risco do paciente do atendimento")
+    @Schema(description = "Nível de risco do paciente do atendimento")
     private AttendanceLevel level;
 
     /**

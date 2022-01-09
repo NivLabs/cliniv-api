@@ -21,15 +21,15 @@ import br.com.nivlabs.gp.controller.filters.ScheduleFilters;
 import br.com.nivlabs.gp.models.dto.ScheduleDTO;
 import br.com.nivlabs.gp.models.dto.ScheduleInfoDTO;
 import br.com.nivlabs.gp.service.schedule.ScheduleService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Api("Endpoint - Agendamento")
+@Tag(name = "Agenda", description = "Endpoint - Operações da Agenda")
 @RestController
 @RequestMapping(value = "/schedule")
 public class ScheduleController extends BaseController<ScheduleService> {
 
-    @ApiOperation(nickname = "schedule-get", value = "Busca informações de agendamentos baseados num filtro")
+    @Operation(summary = "schedule-get", description = "Busca informações de agendamentos baseados num filtro")
     @GetMapping
     @PreAuthorize("hasAnyRole('AGENDA_LEITURA', 'AGENDA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<List<ScheduleDTO>> getSchedulesByFilters(ScheduleFilters filters) {
@@ -38,21 +38,21 @@ public class ScheduleController extends BaseController<ScheduleService> {
         return ResponseEntity.ok(service.findByFilters(filters, pageSettings));
     }
 
-    @ApiOperation(nickname = "schedule-get-id", value = "Busca um agendamento")
+    @Operation(summary = "schedule-get-id", description = "Busca um agendamento")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('AGENDA_ESCRITA', 'AGENDA_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<ScheduleInfoDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
-    @ApiOperation(nickname = "schedule-post", value = "Insere um novo agendamento na aplicação")
+    @Operation(summary = "schedule-post", description = "Insere um novo agendamento na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('AGENDA_ESCRITA', 'ADMIN')")
     public ResponseEntity<ScheduleInfoDTO> create(@Validated @RequestBody(required = true) ScheduleInfoDTO schedule) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(schedule));
     }
 
-    @ApiOperation(nickname = "schedule-put", value = "Atualiza agendamento existente na aplicação")
+    @Operation(summary = "schedule-put", description = "Atualiza agendamento existente na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('AGENDA_ESCRITA', 'ADMIN')")
     public ResponseEntity<ScheduleInfoDTO> update(@PathVariable("id") Long id,

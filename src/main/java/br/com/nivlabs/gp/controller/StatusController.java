@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.models.dto.ServerStatusDTO;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Classe StatusController.java
@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiOperation;
  *
  * @since 05 Mai, 2020
  */
-@Api("Endpoint - Status")
+@Tag(name = "Status", description = "Endpoint - Status")
 @RestController
 @RequestMapping(value = "/status")
 public class StatusController {
@@ -26,7 +26,7 @@ public class StatusController {
     @Autowired
     BuildProperties buildProperties;
 
-    @ApiOperation(nickname = "status-get", value = "Busca o status do servidor")
+    @Operation(summary = "status-get", description = "Busca o status do servidor")
     @GetMapping
     public ResponseEntity<ServerStatusDTO> getSectorsGroupedBySuper() {
         ServerStatusDTO serverStatus = new ServerStatusDTO();

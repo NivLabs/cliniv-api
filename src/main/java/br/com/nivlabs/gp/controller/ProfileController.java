@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.service.userservice.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 
@@ -23,12 +23,12 @@ import io.swagger.annotations.ApiOperation;
  * 
  * @since 31 de out de 2019
  */
-@Api("Endpoint - Perfil")
+@Tag(name = "Perfil", description = "Endpoint - Perfil")
 @RestController
 @RequestMapping(value = "/profile")
 public class ProfileController extends BaseController<UserService> {
 
-    @ApiOperation(nickname = "profile-get", value = "Busca dados do perfil do usuário logado")
+    @Operation(summary = "profile-get", description = "Busca dados do perfil do usuário logado")
     @GetMapping
     public ResponseEntity<UserInfoDTO> getMe() {
         UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
@@ -36,7 +36,7 @@ public class ProfileController extends BaseController<UserService> {
         return ResponseEntity.ok(service.findByUserName(userFromSession.getUsername()));
     }
 
-    @ApiOperation(nickname = "profile-put", value = "Atualiza dados do perfil do usuário logado")
+    @Operation(summary = "profile-put", description = "Atualiza dados do perfil do usuário logado")
     @PutMapping
     public ResponseEntity<UserInfoDTO> updateMe(@Validated @RequestBody UserInfoDTO entity) {
         return ResponseEntity.ok(service.updateProfile(entity));

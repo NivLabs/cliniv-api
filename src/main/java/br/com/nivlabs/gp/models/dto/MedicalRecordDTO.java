@@ -14,8 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 import br.com.nivlabs.gp.enums.AttendanceLevel;
 import br.com.nivlabs.gp.enums.BloodType;
 import br.com.nivlabs.gp.enums.Gender;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe que representa um prontuário médico
@@ -24,76 +23,76 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 11 de out de 2019
  */
-@ApiModel(description = "Prontuário")
+@Schema(description = "Prontuário")
 public class MedicalRecordDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6838739544914003033L;
 
-    @ApiModelProperty("Identificador único do atendimento")
+    @Schema(description = "Identificador único do atendimento")
     private Long id;
 
-    @ApiModelProperty("Data/Hora de entrada do paciente no atendimento")
+    @Schema(description = "Data/Hora de entrada do paciente no atendimento")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime entryDateTime;
 
-    @ApiModelProperty("Motivo da entrada")
+    @Schema(description = "Motivo da entrada")
     private String reasonForEntry;
 
-    @ApiModelProperty("Data/Hora de alta do paciente")
+    @Schema(description = "Data/Hora de alta do paciente")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime exitDateTime;
 
-    @ApiModelProperty("Identificador do paciente")
+    @Schema(description = "Identificador do paciente")
     private Long patientId;
 
-    @ApiModelProperty("Documento do paciente")
+    @Schema(description = "Documento do paciente")
     private DocumentDTO document;
 
-    @ApiModelProperty("Identificador da anmnese")
+    @Schema(description = "Identificador da anmnese")
     private Long anamnesisDigitalDocuentId;
 
-    @ApiModelProperty("Nome completo do paciente")
+    @Schema(description = "Nome completo do paciente")
     private String fullName;
 
-    @ApiModelProperty("Tipo sanguíneo do paciente")
+    @Schema(description = "Tipo sanguíneo do paciente")
     @Enumerated(EnumType.STRING)
     private BloodType bloodType;
 
-    @ApiModelProperty("Nome social do pacienteV")
+    @Schema(description = "Nome social do pacienteV")
     private String socialName;
 
-    @ApiModelProperty("Número de Telfone/Celular do paciente")
+    @Schema(description = "Número de Telfone/Celular do paciente")
     private String principalNumber;
 
-    @ApiModelProperty("CNS")
+    @Schema(description = "CNS")
     private String cnsNumber;
 
-    @ApiModelProperty("Data de nascimento")
+    @Schema(description = "Data de nascimento")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDate bornDate;
 
-    @ApiModelProperty("Acomodação")
+    @Schema(description = "Acomodação")
     private AccommodationDTO lastAccommodation;
 
-    @ApiModelProperty("Profissional")
+    @Schema(description = "Profissional")
     private ResponsibleDTO lascProfessional;
 
-    @ApiModelProperty("Sexo")
+    @Schema(description = "Sexo")
     private Gender gender;
 
-    @ApiModelProperty("Eventos")
+    @Schema(description = "Eventos")
     private List<AttendanceEventDTO> events = new ArrayList<>();
 
-    @ApiModelProperty("Medicamentos")
+    @Schema(description = "Medicamentos")
     private List<MedicineInfoDTO> medicines = new ArrayList<>();
 
-    @ApiModelProperty("Evoluções")
+    @Schema(description = "Evoluções")
     private List<EvolutionInfoDTO> evolutions = new ArrayList<>();
 
-    @ApiModelProperty("Alergias")
+    @Schema(description = "Alergias")
     private List<String> allergies = new ArrayList<>();
 
-    @ApiModelProperty("Nível de Risco de atendimento")
+    @Schema(description = "Nível de Risco de atendimento")
     private AttendanceLevel attendanceLevel;
 
     /**

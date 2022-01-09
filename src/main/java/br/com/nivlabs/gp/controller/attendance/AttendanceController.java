@@ -31,8 +31,8 @@ import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
 import br.com.nivlabs.gp.models.dto.NewAttendanceEventDTO;
 import br.com.nivlabs.gp.service.attendance.AttendanceService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 
@@ -42,15 +42,15 @@ import io.swagger.annotations.ApiOperation;
  *
  * @since 8 de set de 2019
  */
-@Api("Endpoint - Atendimento")
-@RestController
+@Tag(name = "Atendimento", description = "Endpoint - Atendimento")
+@RestController()
 @RequestMapping(value = "/attendance")
 public class AttendanceController extends BaseController<AttendanceService> {
 
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @ApiOperation(nickname = "attendance-get", value = "Busca uma página de atendimentos")
+    @Operation(summary = "attendance-get", description = "Busca uma página de atendimentos")
     @GetMapping
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<AttendanceDTO>> findPage(AttendanceFilters filters) {
@@ -66,7 +66,7 @@ public class AttendanceController extends BaseController<AttendanceService> {
      * @param response
      * @return
      */
-    @ApiOperation(nickname = "attendance-post", value = "Inicia um novo atendimento na aplicação")
+    @Operation(summary = "attendance-post", description = "Inicia um novo atendimento na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<MedicalRecordDTO> persist(@Validated @RequestBody(required = true) NewAttandenceDTO newAttendance,
@@ -87,7 +87,7 @@ public class AttendanceController extends BaseController<AttendanceService> {
      * @param response
      * @return
      */
-    @ApiOperation(nickname = "attendance-put", value = "Finaliza um atendimento na aplicação")
+    @Operation(summary = "attendance-put", description = "Finaliza um atendimento na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ALTA', 'ADMIN')")
     public ResponseEntity<Void> closeAttendance(@PathVariable("id") Long id,
@@ -104,7 +104,7 @@ public class AttendanceController extends BaseController<AttendanceService> {
      * @param id
      * @return
      */
-    @ApiOperation(nickname = "attendance-get-active", value = "Busca um prontuário ativo do paciente")
+    @Operation(summary = "attendance-get-active", description = "Busca um prontuário ativo do paciente")
     @GetMapping("/actived/{id}/patient")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_LEITURA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<MedicalRecordDTO> getActiveAttendance(@PathVariable("id") Long id) {
@@ -119,21 +119,21 @@ public class AttendanceController extends BaseController<AttendanceService> {
      * @param documentValue
      * @return
      */
-    @ApiOperation(nickname = "attendance-get-with-filters", value = "Busca uma visita baseado em filtros")
+    @Operation(summary = "attendance-get-with-filters", description = "Busca uma visita baseado em filtros")
     @GetMapping("/history/{id}/patient")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_LEITURA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<List<AttendanceDTO>> getPatientAttendanceHistory(@PathVariable(name = "id", required = false) Long id) {
         return ResponseEntity.ok(service.getAttandenceByPatientId(id));
     }
 
-    @ApiOperation(nickname = "attendance-get-id", value = "Busca um prontuário do atendimento ativo baseado no identificador")
+    @Operation(summary = "attendance-get-id", description = "Busca um prontuário do atendimento ativo baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_LEITURA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<MedicalRecordDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findMedicalRecordByAttendanceId(id));
     }
 
-    @ApiOperation(nickname = "attendance-event-post", value = "Insere um novo evento de atendimento")
+    @Operation(summary = "attendance-event-post", description = "Insere um novo evento de atendimento")
     @PostMapping("/event")
     @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
     public ResponseEntity<Void> persist(

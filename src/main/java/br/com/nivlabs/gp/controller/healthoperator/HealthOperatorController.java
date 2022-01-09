@@ -21,8 +21,8 @@ import br.com.nivlabs.gp.controller.filters.HealthOperatorFilters;
 import br.com.nivlabs.gp.models.dto.HealthOperatorDTO;
 import br.com.nivlabs.gp.models.dto.HealthOperatorInfoDTO;
 import br.com.nivlabs.gp.service.healthoperator.HealthOperatorService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 
@@ -32,12 +32,12 @@ import io.swagger.annotations.ApiOperation;
  *
  * @since 4 de agosto de 2020
  */
-@Api("Endpoint - HealthOperator")
+@Tag(name = "Operadora de Saúde", description = "Endpoint - Operações com operadoras de saúde")
 @RestController
 @RequestMapping(value = "/health-operator")
 public class HealthOperatorController extends BaseController<HealthOperatorService> {
 
-    @ApiOperation(nickname = "health-operator-get", value = "Busca uma página de operadoras de plano de saúde")
+    @Operation(summary = "health-operator-get", description = "Busca uma página de operadoras de plano de saúde")
     @GetMapping
     @PreAuthorize("hasAnyRole('OPERADORA_LEITURA', 'OPERADORA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<HealthOperatorDTO>> findPage(HealthOperatorFilters filters) {
@@ -46,14 +46,14 @@ public class HealthOperatorController extends BaseController<HealthOperatorServi
         return ResponseEntity.ok(service.getPage(filters, pageSettings));
     }
 
-    @ApiOperation(nickname = "health-operator-get-id", value = "Busca uma operadora baseada no identificador")
+    @Operation(summary = "health-operator-get-id", description = "Busca uma operadora baseada no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('OPERADORA_LEITURA', 'OPERADORA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<HealthOperatorInfoDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findByHealthOperatorId(id));
     }
 
-    @ApiOperation(nickname = "health-operator-post", value = "Adiciona uma operadora de saúde")
+    @Operation(summary = "health-operator-post", description = "Adiciona uma operadora de saúde")
     @PostMapping
     @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthOperatorInfoDTO> creatHealthOperator(@Validated @RequestBody(required = true) HealthOperatorInfoDTO request) {
@@ -61,7 +61,7 @@ public class HealthOperatorController extends BaseController<HealthOperatorServi
 
     }
 
-    @ApiOperation(nickname = "health-operator-put", value = "Atualiza uma operadora de saúde")
+    @Operation(summary = "health-operator-put", description = "Atualiza uma operadora de saúde")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthOperatorInfoDTO> updateHealthOperator(@PathVariable("id") Long id,

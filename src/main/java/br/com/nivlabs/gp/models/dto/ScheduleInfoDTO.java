@@ -6,35 +6,34 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.enums.ScheduleStatus;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Informações do agendamento")
+@Schema(description = "Informações do agendamento")
 public class ScheduleInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -7082539967186369611L;
 
-    @ApiModelProperty("Identificador único do agendamento")
+    @Schema(description = "Identificador único do agendamento")
     private Long id;
 
-    @ApiModelProperty("Paciente do agendamento")
+    @Schema(description = "Paciente do agendamento")
     private PatientInfoDTO patient;
 
-    @ApiModelProperty("Profissional do agendamento")
+    @Schema(description = "Profissional do agendamento")
     private ResponsibleInfoDTO professional;
 
-    @ApiModelProperty("Data/Hora agendada")
+    @Schema(description = "Data/Hora agendada")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime schedulingDateAndTime;
 
-    @ApiModelProperty("Data/Hora do agendamento")
+    @Schema(description = "Data/Hora do agendamento")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime createdAt;
 
-    @ApiModelProperty("Anotações sobre o agendamento")
+    @Schema(description = "Anotações sobre o agendamento")
     private String annotation;
 
-    @ApiModelProperty("Situação atual do agendamento")
+    @Schema(description = "Situação atual do agendamento")
     private ScheduleStatus status = ScheduleStatus.WAITING_CONFIRMATION;
 
     public ScheduleInfoDTO() {

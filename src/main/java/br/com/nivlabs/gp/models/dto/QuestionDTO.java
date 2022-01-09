@@ -2,18 +2,17 @@ package br.com.nivlabs.gp.models.dto;
 
 import javax.validation.constraints.NotBlank;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Questão do formulário dinâmico")
+@Schema(description = "Questão do formulário dinâmico")
 public class QuestionDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -7700694137849034946L;
 
-    @ApiModelProperty("Questão do formulário dinâmico")
+    @Schema(description = "Questão do formulário dinâmico")
     @NotBlank(message = "Informar a questão do formulário é obrigatório.")
     private DynamicFormQuestionDTO dynamicFormQuestion;
 
-    @ApiModelProperty("Resposta da questão")
+    @Schema(description = "Resposta da questão")
     @NotBlank(message = "Informar a resposta é obrigatório.")
     private String response;
 

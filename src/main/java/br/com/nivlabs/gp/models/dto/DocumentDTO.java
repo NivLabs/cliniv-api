@@ -9,8 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import br.com.nivlabs.gp.enums.DocumentType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe DocumentDTO.java
@@ -20,37 +19,37 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 31 de out de 2019
  */
 
-@ApiModel(description = "Documento")
+@Schema(description = "Documento")
 public class DocumentDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8977997168527769344L;
 
-    @ApiModelProperty("Identificador único da pessoa")
+    @Schema(description = "Identificador único da pessoa")
     private Long personId;
 
-    @ApiModelProperty("Tipo do documento pessoal, ex: CPF, CNPJ, RG, CNPJ")
+    @Schema(description = "Tipo do documento pessoal, ex: CPF, CNPJ, RG, CNPJ")
     @NotNull(message = "O tipo do documeno deve ser informado")
     @NotEmpty(message = "O tipo do documeno deve ser informado")
     @NotBlank(message = "O tipo do documeno deve ser informado")
     @Enumerated(EnumType.STRING)
     private DocumentType type;
 
-    @ApiModelProperty("Valor do documento pessoal")
+    @Schema(description = "Valor do documento pessoal")
     @NotNull(message = "O documeno deve ser informado")
     @NotEmpty(message = "O documeno deve ser informado")
     @NotBlank(message = "O documento deve ser informado")
     private String value;
 
-    @ApiModelProperty("Órgão expedidor")
+    @Schema(description = "Órgão expedidor")
     private String dispatcher;
 
-    @ApiModelProperty("Data de expedição")
+    @Schema(description = "Data de expedição")
     private LocalDate expeditionDate;
 
-    @ApiModelProperty("Data de Validade do documento")
+    @Schema(description = "Data de Validade do documento")
     private LocalDate validate;
 
-    @ApiModelProperty("UF de expedição")
+    @Schema(description = "UF de expedição")
     private String uf;
 
     public DocumentDTO() {

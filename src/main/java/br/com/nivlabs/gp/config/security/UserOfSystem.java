@@ -118,7 +118,7 @@ public class UserOfSystem implements UserDetails {
         this.authorities.iterator().forEachRemaining(item -> permissions.add(item.getAuthority()));
         info.put(INFO_USER_NAME, this.username);
         info.put(INFO_AUTHORIZED, permissions);
-        info.put(INFO_PERSON_NAME, personName);
+        info.put(INFO_PERSON_NAME, this.personName);
         return info;
     }
 }

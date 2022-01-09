@@ -16,36 +16,36 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.models.dto.HealthPlanDTO;
 import br.com.nivlabs.gp.service.healthplan.HealthPlanService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Api("Endpoint - HealthPlan")
+@Tag(name = "Planos de Saúde", description = "Endpoint - Operações com planos de saúde")
 @RestController
 @RequestMapping(value = "/health-operator/health-plan")
 public class HealthPlanController extends BaseController<HealthPlanService> {
 
-    @ApiOperation(nickname = "health-plan-get-id", value = "Busca um plano de saúde baseada no identificador")
+    @Operation(summary = "health-plan-get-id", description = "Busca um plano de saúde baseada no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('OPERADORA_LEITURA', 'OPERADORA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> findHealthPlanById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findHealthPlanById(id));
     }
 
-    @ApiOperation(nickname = "health-plan-get-ansCode", value = "Busca um plano de saúde baseada no código da ANS")
+    @Operation(summary = "health-plan-get-ansCode", description = "Busca um plano de saúde baseada no código da ANS")
     @GetMapping("/ansCode/{ansCode}")
     @PreAuthorize("hasAnyRole('OPERADORA_LEITURA', 'OPERADORA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> findHealthPlanByAnsCode(@PathVariable("ansCode") Long ansCode) {
         return ResponseEntity.ok(service.findHealthPlanByAnsCode(ansCode));
     }
 
-    @ApiOperation(nickname = "health-plan-post", value = "Adiciona um plano de saúde")
+    @Operation(summary = "health-plan-post", description = "Adiciona um plano de saúde")
     @PostMapping
     @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> updateHealthPlan(@Validated @RequestBody(required = true) HealthPlanDTO request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
     }
 
-    @ApiOperation(nickname = "health-plan-delet", value = "Deleta uma operadora de saúde")
+    @Operation(summary = "health-plan-delet", description = "Deleta uma operadora de saúde")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> deleteHealthPlan(@PathVariable("id") Long id) {
@@ -53,7 +53,7 @@ public class HealthPlanController extends BaseController<HealthPlanService> {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @ApiOperation(nickname = "health-plan-put", value = "Atualiza um plano de saúde")
+    @Operation(summary = "health-plan-put", description = "Atualiza um plano de saúde")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('OPERADORA_ESCRITA', 'ADMIN')")
     public ResponseEntity<HealthPlanDTO> updateHealthPlan(@PathVariable("id") Long id,

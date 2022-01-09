@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.models.dto.PrescriptionInfoDTO;
 import br.com.nivlabs.gp.service.attendance.prescription.PrescriptionService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Controlador de entrada para processos com precrição médica do paciente
@@ -24,12 +24,12 @@ import io.swagger.annotations.ApiOperation;
  * @since 10-10-2021
  *
  */
-@Api(value = "Endpoint - Prescrição do paciente")
+@Tag(name = "Precrição do paciente", description = "Endpoint - Prescrição do paciente")
 @RestController
 @RequestMapping("/attendance/prescription")
 public class PrescriptionController extends BaseController<PrescriptionService> {
 
-    @ApiOperation(nickname = "prescription-post", value = "Insere uma nova prescrição do paciente no atendimento")
+    @Operation(summary = "prescription-post", description = "Insere uma nova prescrição do paciente no atendimento")
     @PostMapping
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> persist(@Validated @RequestBody(required = true) PrescriptionInfoDTO request,

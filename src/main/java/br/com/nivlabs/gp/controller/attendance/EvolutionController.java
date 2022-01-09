@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.models.dto.EvolutionInfoDTO;
 import br.com.nivlabs.gp.service.evolution.EvolutionService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Controlador de entrada para processos com evolução clínica do paciente
@@ -21,12 +21,12 @@ import io.swagger.annotations.ApiOperation;
  * @author viniciosarodrigues
  *
  */
-@Api(value = "Endpoint - Evolução clínica do paciente")
+@Tag(name = "Evolução do Paciente", description = "Endpoint - Evolução clínica do paciente")
 @RestController
 @RequestMapping("/attendance/evolution")
 public class EvolutionController extends BaseController<EvolutionService> {
 
-    @ApiOperation(nickname = "evolution-post", value = "Insere uma nova evolução do paciente na aplicação")
+    @Operation(summary = "evolution-post", description = "Insere uma nova evolução do paciente na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<EvolutionInfoDTO> persist(@Validated @RequestBody(required = true) EvolutionInfoDTO request) {

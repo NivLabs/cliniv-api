@@ -12,11 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.repository.UserRepository;
 
 /**
  * Classe AuthorizationFilter.java
@@ -28,13 +27,13 @@ import br.com.nivlabs.gp.exception.HttpException;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private JwtUtils jwtUtils;
-    private UserDetailsService userDetailsService;
+    private UserRepository userDetailsService;
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
-            UserDetailsService userDetailsService) {
+            UserRepository userDao) {
         super(authenticationManager);
         this.jwtUtils = jwtUtils;
-        this.userDetailsService = userDetailsService;
+        this.userDetailsService = userDao;
     }
 
     @Override
@@ -42,11 +41,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
 
         String authorizationHeader = req.getHeader("Authorization");
+        String customerIdHeader = req.getHeader("CUSTOMER_ID");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 
             UsernamePasswordAuthenticationToken auth = null;
             try {
+                if (customerIdHeader == null || customerIdHeader.isEmpty()) {
+                    throw new HttpException(HttpStatus.UNAUTHORIZED, "Cabeçalho de identificação do cliente não enviado");
+                }
+
                 auth = getAuthentication(authorizationHeader.substring(7));
             } catch (HttpException e) {
                 if (e.getStatus() == HttpStatus.UNAUTHORIZED) {
@@ -97,8 +101,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
         if (jwtUtils.isValidToken(token)) {
             String userName = jwtUtils.getUserName(token);
-            UserDetails user = userDetailsService.loadUserByUsername(userName);
-            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            var user = userDetailsService.findByUserName(userName)
+                    .orElseThrow(() -> new HttpException(HttpStatus.UNAUTHORIZED, "Não autorizado"));
+
+            var userOfSystem =
+                             new UserOfSystem(user.getUserName(), user.getPassword(), user.getPerson(), !user.isActive(), user.getRoles());
+
+            return new UsernamePasswordAuthenticationToken(userOfSystem, null, userOfSystem.getAuthorities());
         }
         return null;
     }

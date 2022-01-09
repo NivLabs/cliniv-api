@@ -5,8 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe FeeDTO.java
@@ -15,32 +14,32 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 22 de jul de 2020
  */
-@ApiModel(description = "Taxas")
+@Schema(description = "Taxas")
 public class FeeDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 139714345053962715L;
 
-    @ApiModelProperty("Identificador único da taxa")
+    @Schema(description = "Identificador único da taxa")
     private String id;
 
-    @ApiModelProperty("Código da taxa")
+    @Schema(description = "Código da taxa")
     private String code;
 
-    @ApiModelProperty("Descrição da taxa")
+    @Schema(description = "Descrição da taxa")
     private String description;
 
-    @ApiModelProperty("Detalhe")
+    @Schema(description = "Detalhe")
     private String detail;
 
-    @ApiModelProperty("Início de vigência")
+    @Schema(description = "Início de vigência")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime startOfTerm;
 
-    @ApiModelProperty("Fim de vigência")
+    @Schema(description = "Fim de vigência")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime endOfTerm;
 
-    @ApiModelProperty("Data final de implantação")
+    @Schema(description = "Data final de implantação")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime endOfImplantationDate;
 

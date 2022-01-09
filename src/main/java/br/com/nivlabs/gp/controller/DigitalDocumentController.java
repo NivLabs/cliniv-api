@@ -9,20 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.service.digitaldocument.DigitalDocumentService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-/**
- * 
- * @author viniciosarodrigues
- *
- */
-@Api("Endpoint - Informações de Documentos Digitais")
+@Tag(name = "Documentos digitais", description = "Endpoint - Informações de Documentos Digitais")
 @RestController
 @RequestMapping(value = "/digital-document")
 public class DigitalDocumentController extends BaseController<DigitalDocumentService> {
 
-    @ApiOperation(nickname = "digital-document-get-about", value = "Busca documento digital por identificador")
+    @Operation(summary = "digital-document-get-about", description = "Busca documento digital por identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('DOCUMENTO_LEITURA', 'DOCUMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<DigitalDocumentDTO> getById(@PathVariable("id") Long id) {

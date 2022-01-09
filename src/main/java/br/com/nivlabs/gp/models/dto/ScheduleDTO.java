@@ -6,34 +6,33 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.enums.ScheduleStatus;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Informações resumidas do agendamento")
+@Schema(description = "Informações resumidas do agendamento")
 public class ScheduleDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 3038808084714295686L;
 
-    @ApiModelProperty("Identificador do agendamento")
+    @Schema(description = "Identificador do agendamento")
     private Long id;
 
-    @ApiModelProperty("Nome do paciente")
+    @Schema(description = "Nome do paciente")
     private String patientName;
 
-    @ApiModelProperty("CPF do paciente")
+    @Schema(description = "CPF do paciente")
     private String patientCpf;
 
-    @ApiModelProperty("Identificador único do profissional")
+    @Schema(description = "Identificador único do profissional")
     private Long professionalId;
 
-    @ApiModelProperty("Nome do profissional")
+    @Schema(description = "Nome do profissional")
     private String professionalName;
 
-    @ApiModelProperty("Data/Hora do agendamento")
+    @Schema(description = "Data/Hora do agendamento")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime schedulingDateAndTime;
 
-    @ApiModelProperty("Situação atual do agendamento")
+    @Schema(description = "Situação atual do agendamento")
     private ScheduleStatus status = ScheduleStatus.WAITING_CONFIRMATION;
 
     public ScheduleDTO(Long id, String patientName, String patientCpf, Long professionalId, String professionalName,

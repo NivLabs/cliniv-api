@@ -3,8 +3,7 @@ package br.com.nivlabs.gp.models.dto;
 import javax.validation.constraints.NotNull;
 
 import br.com.nivlabs.gp.enums.EventType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Objeto externo que representa o encerramento de um atendimento
@@ -12,16 +11,16 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel(description = "Encerramento de atendimento")
+@Schema(description = "Encerramento de atendimento")
 public class CloseAttandenceDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4058913578939379862L;
 
-    @ApiModelProperty("Identificador do Tipo do evento de encerramento")
+    @Schema(description = "Identificador do Tipo do evento de encerramento")
     @NotNull(message = "Informe o tipo de evento de encerramento")
     private EventType eventType;
 
-    @ApiModelProperty("Observações do encerramento (se houver)")
+    @Schema(description = "Observações do encerramento (se houver)")
     private String observations;
 
     public CloseAttandenceDTO(EventType eventType, String observations) {

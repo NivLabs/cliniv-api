@@ -1,4 +1,4 @@
-package br.com.nivlabs.gp.config;
+package br.com.nivlabs.gp.config.db;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
