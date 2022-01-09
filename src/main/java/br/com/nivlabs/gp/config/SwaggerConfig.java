@@ -21,8 +21,8 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi api() {
         return GroupedOpenApi.builder()
-                .group("springshop-public")
-                .pathsToMatch("/public/**")
+                .group("nivlab-gp")
+                .pathsToMatch("/**")
                 .build();
     }
 
@@ -32,7 +32,7 @@ public class SwaggerConfig {
                 .info(new Info().title(nameOwner + " Service Store")
                         .description("Este é o catálogo de serviços RESTFUL da " + nameOwner + ", para saber mais sobre acesse: ["
                                 + nameOwner + "](" + ulrOwner + ").")
-                        .version("v0.0.1")
+                        .version("v1.0.0")
                         .license(new License().name("MIT")
                                 .url("https://github.com/NiV-Labs/gestao-de-prontuario-ui/blob/master/LICENSE")))
                 .externalDocs(new ExternalDocumentation()

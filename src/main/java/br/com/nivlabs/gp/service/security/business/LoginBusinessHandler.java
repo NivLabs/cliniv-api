@@ -12,6 +12,7 @@ import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.UserApplication;
 import br.com.nivlabs.gp.models.dto.CredentialsDTO;
 import br.com.nivlabs.gp.repository.UserRepository;
+import br.com.nivlabs.gp.util.StringUtils;
 
 /**
  * Componente de operações de login
@@ -32,6 +33,9 @@ public class LoginBusinessHandler {
 
     @Transactional
     public String login(CredentialsDTO credentials, String customerId) {
+        if (StringUtils.isNullOrEmpty(customerId)) {
+            throw new HttpException(HttpStatus.UNAUTHORIZED, "Cabeçalho de identificação do cliente não enviado");
+        }
         UserApplication user = userDao.findByUserName(credentials.getUsername())
                 .orElseThrow(() -> new HttpException(HttpStatus.UNAUTHORIZED, "Usuário e/ou senha inválidos!"));
         boolean isExpired = !user.isActive();

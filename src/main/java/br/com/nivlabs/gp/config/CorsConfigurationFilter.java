@@ -13,10 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-
-import br.com.nivlabs.gp.exception.HttpException;
 
 /**
  * Classe CorsFilter.java
@@ -37,10 +34,6 @@ public class CorsConfigurationFilter implements Filter {
 
         resp.setHeader("Access-Control-Allow-Origin", req.getHeader("Origin"));
         resp.setHeader("Access-Control-Allow-Credentials", "true");
-
-        if (req.getHeader("CUSTOMER_ID") == null || req.getHeader("CUSTOMER_ID").isEmpty()) {
-            throw new HttpException(HttpStatus.UNAUTHORIZED, "Cabeçalho de identificação do cliente não enviado");
-        }
 
         if ("OPTIONS".equals(req.getMethod())) {
             resp.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");
