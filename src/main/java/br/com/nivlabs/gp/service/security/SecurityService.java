@@ -66,8 +66,8 @@ public class SecurityService implements BaseService {
      * @param request Credenciais
      * @return Token
      */
-    public String login(CredentialsDTO request) {
-        return loginHandler.login(request);
+    public String login(CredentialsDTO request, String customerId) {
+        return loginHandler.login(request, customerId);
     }
 
 }

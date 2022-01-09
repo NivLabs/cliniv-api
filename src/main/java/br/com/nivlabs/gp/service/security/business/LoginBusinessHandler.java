@@ -31,7 +31,7 @@ public class LoginBusinessHandler {
     private JwtUtils jwtUtils;
 
     @Transactional
-    public String login(CredentialsDTO credentials) {
+    public String login(CredentialsDTO credentials, String customerId) {
         UserApplication user = userDao.findByUserName(credentials.getUsername())
                 .orElseThrow(() -> new HttpException(HttpStatus.UNAUTHORIZED, "Usuário e/ou senha inválidos!"));
         boolean isExpired = !user.isActive();
@@ -40,6 +40,7 @@ public class LoginBusinessHandler {
             throw new HttpException(HttpStatus.UNAUTHORIZED, "Usuário e/ou senha inválidos!");
         }
         return jwtUtils
-                .generateToken(new UserOfSystem(user.getUserName(), user.getPassword(), user.getPerson(), isExpired, user.getRoles()));
+                .generateToken(new UserOfSystem(user.getUserName(), user.getPassword(), user.getPerson(), isExpired, user.getRoles(),
+                        customerId));
     }
 }

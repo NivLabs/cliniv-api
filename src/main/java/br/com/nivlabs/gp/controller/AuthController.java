@@ -1,5 +1,6 @@
 package br.com.nivlabs.gp.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
@@ -34,8 +35,9 @@ public class AuthController extends BaseController<SecurityService> {
 
     @Operation(summary = "login-post", description = "Realiza o Login na aplicação")
     @PostMapping
-    public ResponseEntity<Void> login(@RequestBody @Validated CredentialsDTO request, HttpServletResponse response) {
-        String token = service.login(request);
+    public ResponseEntity<Void> login(@RequestBody @Validated CredentialsDTO credentials, HttpServletRequest request,
+                                      HttpServletResponse response) {
+        String token = service.login(credentials, request.getHeader("CUSTOMER_ID"));
         response.addHeader(HEADER_AUTHORIZATION_NAME, "Bearer " + token);
         response.addHeader(HEADER_ACCESS_CONTROL_EXPOSE_NAME, HEADER_AUTHORIZATION_NAME);
         return ResponseEntity.noContent().build();
