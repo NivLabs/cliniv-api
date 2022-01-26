@@ -9,7 +9,7 @@ package br.com.nivlabs.gp.config.db;
  */
 public class TenantContext {
 
-    final public static String DEFAULT_TENANT = "gpdemo";
+    final public static String DEFAULT_TENANT = "gpdefault";
 
     private static final ThreadLocal<String> currentTenant = ThreadLocal.withInitial(() -> DEFAULT_TENANT);
 
