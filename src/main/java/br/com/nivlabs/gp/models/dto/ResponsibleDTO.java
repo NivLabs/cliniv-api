@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.nivlabs.gp.enums.Gender;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe ResponsibleDTO.java
@@ -14,7 +14,7 @@ import io.swagger.annotations.ApiModel;
  * 
  * @since 7 de set de 2019
  */
-@ApiModel(description = "Profissional ou responsável")
+@Schema(description = "Profissional ou responsável")
 public class ResponsibleDTO extends PersonDTO {
     private static final long serialVersionUID = -5141572031863436326L;
 

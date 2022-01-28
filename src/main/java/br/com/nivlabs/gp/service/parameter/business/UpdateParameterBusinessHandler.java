@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.gp.ApplicationMain;
 import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Parameter;
@@ -52,7 +51,6 @@ public class UpdateParameterBusinessHandler implements BaseBusinessHandler {
         else
             logger.info("O novo valor pertence à um parâmetro do tipo password, não será exibido.");
         repository.save(parameter);
-        ApplicationMain.reloadParameter(repository);
     }
 
     /**

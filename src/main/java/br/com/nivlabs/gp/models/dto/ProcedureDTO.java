@@ -4,28 +4,27 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Resumo de Procedimento")
+@Schema(description = "Resumo de Procedimento")
 public class ProcedureDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4991985626952633251L;
 
-    @ApiModelProperty("Identificador do procedimento")
+    @Schema(description = "Identificador do procedimento")
     private Long id;
 
-    @ApiModelProperty("Descrição do procedimento")
+    @Schema(description = "Descrição do procedimento")
     @NotNull(message = "O(A) nome/descrição do procedimento é obrigatório(a)")
     private String description;
 
-    @ApiModelProperty("Valor base do procedimento")
+    @Schema(description = "Valor base do procedimento")
     private BigDecimal baseValue;
 
-    @ApiModelProperty("Periodicidade")
+    @Schema(description = "Periodicidade")
     private String frequency;
 
-    @ApiModelProperty("Requer autorização especial")
+    @Schema(description = "Requer autorização especial")
     private boolean specialAuthorization;
 
     /**

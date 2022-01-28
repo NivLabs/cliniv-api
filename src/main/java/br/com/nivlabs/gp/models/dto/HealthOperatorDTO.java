@@ -1,30 +1,29 @@
 package br.com.nivlabs.gp.models.dto;
 
 import br.com.nivlabs.gp.enums.Modality;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Operadora de plano de saúde")
+@Schema(description = "Operadora de plano de saúde")
 public class HealthOperatorDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -8486624597576546424L;
 
-    @ApiModelProperty("Identificador único  da operadora")
+    @Schema(description = "Identificador único  da operadora")
     private Long id;
 
-    @ApiModelProperty("Código ANS")
+    @Schema(description = "Código ANS")
     private String ansCode;
 
-    @ApiModelProperty("CNPJ")
+    @Schema(description = "CNPJ")
     private String cnpj;
 
-    @ApiModelProperty("Razão social")
+    @Schema(description = "Razão social")
     private String companyName;
 
-    @ApiModelProperty("Nome fantasia")
+    @Schema(description = "Nome fantasia")
     private String fantasyName;
 
-    @ApiModelProperty("Modalidade da operadora")
+    @Schema(description = "Modalidade da operadora")
     private Modality modality;
 
     /**

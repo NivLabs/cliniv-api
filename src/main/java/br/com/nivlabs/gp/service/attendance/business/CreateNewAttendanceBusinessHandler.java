@@ -14,11 +14,10 @@ import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.Responsible;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
-import br.com.nivlabs.gp.models.dto.PatientInfoDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
+import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
-import br.com.nivlabs.gp.service.patient.PatientService;
 
 /**
  * 
@@ -38,7 +37,7 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
     @Autowired
     private AttendanceEventRepository attendanceEventRepo;
     @Autowired
-    private PatientService patientService;
+    private PatientRepository patientDao;
     @Autowired
     SearchAttendanceBusinessHandler searchAttendanceBusinessHandler;
     @Autowired
@@ -59,13 +58,15 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
         } catch (HttpException e) {
             logger.info("Nenhum atendimento ativo encontrado, iniciando criação de um novo atendimento.");
             if (e.getStatus().equals(HttpStatus.NOT_FOUND)) {
-                PatientInfoDTO savedPatient = patientService.findByPatientId(request.getPatientId());
-
+                if (!patientDao.existsById(request.getPatientId())) {
+                    throw new HttpException(HttpStatus.NOT_FOUND,
+                            String.format("Paciente com o identificador %s não encontrado!", request.getPatientId()));
+                }
                 Attendance convertedAttendance = new Attendance();
                 convertedAttendance.setId(null);
                 convertedAttendance.setReasonForEntry(request.getEntryCause());
                 convertedAttendance.setLevel(request.getLevel());
-                convertedAttendance.setPatient(new Patient(savedPatient.getId()));
+                convertedAttendance.setPatient(new Patient(request.getPatientId()));
                 convertedAttendance.setCurrentAccommodation(new Accommodation(request.getAccommodationId(), null, null, null));
 
                 switch (request.getEventType()) {

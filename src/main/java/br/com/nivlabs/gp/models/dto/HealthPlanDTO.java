@@ -7,48 +7,47 @@ import javax.validation.constraints.NotNull;
 import br.com.nivlabs.gp.enums.Abragency;
 import br.com.nivlabs.gp.enums.ContractType;
 import br.com.nivlabs.gp.enums.Segmentation;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Plano de saúde")
+@Schema(description = "Plano de saúde")
 public class HealthPlanDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -6773781566276160000L;
 
-    @ApiModelProperty("Identificador único  do plano")
+    @Schema(description = "Identificador único  do plano")
     private Long id;
 
-    @ApiModelProperty("Código da operadora do plano")
+    @Schema(description = "Código da operadora do plano")
     @NotNull(message = "O código da operadora do plano (ANS) é obrigatório")
     private String operatorCode;
 
-    @ApiModelProperty("Nome da operadora do plano")
+    @Schema(description = "Nome da operadora do plano")
     private String operatorName;
 
-    @ApiModelProperty("Código do plano")
+    @Schema(description = "Código do plano")
     @NotNull(message = "O código do plano de saúde é obrigatório")
     private Long planCode;
 
-    @ApiModelProperty("Nome comercial")
+    @Schema(description = "Nome comercial")
     @NotNull(message = "O nome comercial do plano de saúde é obrigatório")
     private String commercialName;
 
-    @ApiModelProperty("Segmentação")
+    @Schema(description = "Segmentação")
     @NotNull(message = "A segmentação do plano é obrigatória")
     private Segmentation segmentation;
 
-    @ApiModelProperty("Tipo do contrato")
+    @Schema(description = "Tipo do contrato")
     @NotNull(message = "O tipo de contrato do plano é obrigatório")
     private ContractType contractType;
 
-    @ApiModelProperty("Abrangência")
+    @Schema(description = "Abrangência")
     @NotNull(message = "A abrangência do plano é obrigatória")
     private Abragency abrangency;
 
-    @ApiModelProperty("Tipo do plano")
+    @Schema(description = "Tipo do plano")
     private String type;
 
-    @ApiModelProperty("Código do plano de saúde do paciente")
+    @Schema(description = "Código do plano de saúde do paciente")
     private String patientPlanNumber;
 
     public Long getId() {

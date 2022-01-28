@@ -5,22 +5,21 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Licença de uso")
+@Schema(description = "Licença de uso")
 public class LicenseDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 5513329730873896353L;
 
-    @ApiModelProperty("Chave de acesso à API")
+    @Schema(description = "Chave de acesso à API")
     private String key;
 
-    @ApiModelProperty("Data de início")
+    @Schema(description = "Data de início")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime startDate;
 
-    @ApiModelProperty("Data fim")
+    @Schema(description = "Data fim")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime endDate;
 

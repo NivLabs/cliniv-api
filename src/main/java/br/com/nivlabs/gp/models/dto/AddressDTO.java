@@ -3,8 +3,7 @@ package br.com.nivlabs.gp.models.dto;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe AddressDTO.java
@@ -13,35 +12,35 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 18 de out de 2019
  */
-@ApiModel(description = "Endereço")
+@Schema(description = "Endereço")
 public class AddressDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 5868142007921449692L;
 
-    @ApiModelProperty("Rua do endereço")
+    @Schema(description = "Rua do endereço")
     @NotNull(message = "Informe a rua do endereço")
     private String street;
 
-    @ApiModelProperty("Número do imóvel")
+    @Schema(description = "Número do imóvel")
     @NotNull(message = "Informe um número para o endereço")
     private String addressNumber;
 
-    @ApiModelProperty("Complemento do endereço, se houver")
+    @Schema(description = "Complemento do endereço, se houver")
     private String complement;
 
-    @ApiModelProperty("CEP do endereço")
+    @Schema(description = "CEP do endereço")
     @Size(min = 8, max = 8, message = "O CEP deve conter 8 dígitos, apenas números")
     private String postalCode;
 
-    @ApiModelProperty("Estado")
+    @Schema(description = "Estado")
     @NotNull(message = "Informe o estado do endereço")
     private String state;
 
-    @ApiModelProperty("Bairro")
+    @Schema(description = "Bairro")
     @NotNull(message = "Informe o bairro do endereço")
     private String neighborhood;
 
-    @ApiModelProperty("Cidade")
+    @Schema(description = "Cidade")
     @NotNull(message = "Informe a cidade do endereço")
     private String city;
 

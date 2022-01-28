@@ -1,6 +1,7 @@
 package br.com.nivlabs.gp.config.security;
 
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.domain.Role;
+import br.com.nivlabs.gp.util.StringUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -47,14 +50,16 @@ public class JwtUtils {
      * @param token
      * @return
      */
-    public boolean isValidToken(String token) {
+    public boolean isValidToken(String token, String customerIdFromHeader) {
         Claims claims = getClaims(token);
         if (claims != null) {
+            String customerId = claims.get("customerId", String.class);
             String userName = claims.getSubject();
             Date expirationDate = claims.getExpiration();
             Date dateNow = new Date(System.currentTimeMillis());
 
-            if (userName != null && expirationDate != null && dateNow.before(expirationDate)) {
+            if (userName != null && expirationDate != null && dateNow.before(expirationDate) && !StringUtils.isNullOrEmpty(customerId)
+                    && customerId.equals(customerIdFromHeader)) {
                 return true;
             }
         }
@@ -82,6 +87,11 @@ public class JwtUtils {
         Claims claims = getClaims(token);
         if (claims != null)
             return claims.getSubject();
+        return null;
+    }
+
+    public List<Role> getRoles() {
+        // TODO Auto-generated method stub
         return null;
     }
 }

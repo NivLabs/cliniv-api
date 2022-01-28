@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.models.dto.EventTypeDTO;
 import br.com.nivlabs.gp.service.eventtype.EventTypeService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 
@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiOperation;
  *
  * @since 8 de set de 2019
  */
-@Api("Endpoint - Tipo Evento")
+@Tag(name = "Tipo de evento", description = "Endpoint - Tipo Evento")
 @RestController
 @RequestMapping(value = "/event-type")
 public class EventTypeController {
@@ -35,7 +35,7 @@ public class EventTypeController {
     @Autowired
     private EventTypeService service;
 
-    @ApiOperation(nickname = "eventtype-get", value = "Busca uma página de tipos de eventos")
+    @Operation(summary = "eventtype-get", description = "Busca uma página de tipos de eventos")
     @GetMapping
     public ResponseEntity<List<EventTypeDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                        @RequestParam(value = "linesPerPage", defaultValue = "100") Integer linesPerPage,

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe MedicineDTO.java
@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiModel;
  * @since 5 de dez de 2019
  */
 
-@ApiModel(description = "Informações de medicamento")
+@Schema(description = "Informações de medicamento")
 public class MedicineInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -1687147074910399813L;

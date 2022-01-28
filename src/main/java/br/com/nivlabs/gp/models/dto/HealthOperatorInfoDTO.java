@@ -9,38 +9,37 @@ import org.springframework.http.HttpStatus;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.Modality;
 import br.com.nivlabs.gp.exception.HttpException;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Operadora de plano de saúde")
+@Schema(description = "Operadora de plano de saúde")
 public class HealthOperatorInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -8630352370406381983L;
 
-    @ApiModelProperty("Identificador único  da operadora")
+    @Schema(description = "Identificador único  da operadora")
     private Long id;
 
-    @ApiModelProperty("Código ANS")
+    @Schema(description = "Código ANS")
     @NotNull(message = "Informe o código ANS da operadora")
     private String ansCode;
 
-    @ApiModelProperty("Documento CNPJ")
+    @Schema(description = "Documento CNPJ")
     @NotNull(message = "Informe o CNPJ da operadora")
     private DocumentDTO document;
 
-    @ApiModelProperty("Razão social")
+    @Schema(description = "Razão social")
     @NotNull(message = "Informe a razão social da operadora")
     private String companyName;
 
-    @ApiModelProperty("Nome fantasia")
+    @Schema(description = "Nome fantasia")
     @NotNull(message = "Informe o nome fantasia da operadora")
     private String fantasyName;
 
-    @ApiModelProperty("Modalidade da operadora")
+    @Schema(description = "Modalidade da operadora")
     @NotNull(message = "Informe a modalidade da operadora")
     private Modality modality;
 
-    @ApiModelProperty("Planos de saúde")
+    @Schema(description = "Planos de saúde")
     private List<HealthPlanDTO> healthPlans;
 
     public Long getId() {

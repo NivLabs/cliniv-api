@@ -5,8 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe MedicalProcedureDTO.java
@@ -15,21 +14,21 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 22 de jul de 2020
  */
-@ApiModel(description = "Procedimento")
+@Schema(description = "Procedimento")
 public class MedicalProcedureDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8019585889759791849L;
 
-    @ApiModelProperty("Identificador único do procedimento")
+    @Schema(description = "Identificador único do procedimento")
     private String id;
 
-    @ApiModelProperty("Código do procedimento")
+    @Schema(description = "Código do procedimento")
     private String code;
 
-    @ApiModelProperty("Descrição do procedimento")
+    @Schema(description = "Descrição do procedimento")
     private String description;
 
-    @ApiModelProperty("Detalhes do procedimento")
+    @Schema(description = "Detalhes do procedimento")
     private String detail;
 
     @DateTimeFormat(iso = ISO.DATE)

@@ -6,8 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe NewPasswordRequestDTO.java
@@ -16,25 +15,25 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 15 de set de 2019
  */
-@ApiModel(description = "Requisição de Senha perdida")
+@Schema(description = "Requisição de Senha perdida")
 public class ChangePasswordByForgotPasswordRequestDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 8663867905476131957L;
 
-    @ApiModelProperty("Nome de usuário ou e-mail")
+    @Schema(description = "Nome de usuário ou e-mail")
     @NotNull(message = "Informe um e-mail ou nome de usuário!")
     private String username;
 
-    @ApiModelProperty("Nome completo da mãe")
+    @Schema(description = "Nome completo da mãe")
     @NotNull(message = "Informe o nome materno completo!")
     private String motherName;
 
-    @ApiModelProperty("Data de nascimento")
+    @Schema(description = "Data de nascimento")
     @NotNull(message = "Informe a data de nascimento!")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate bornDate;
 
-    @ApiModelProperty("Nova senha")
+    @Schema(description = "Nova senha")
     @NotNull(message = "Informe a nova senha!")
     private String newPassword;
 

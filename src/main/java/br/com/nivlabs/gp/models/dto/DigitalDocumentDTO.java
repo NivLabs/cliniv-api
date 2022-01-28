@@ -3,8 +3,7 @@ package br.com.nivlabs.gp.models.dto;
 import java.time.LocalDateTime;
 
 import br.com.nivlabs.gp.enums.DigitalDocumentType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Documento digital de eventos de atendimento
@@ -12,27 +11,27 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel(description = "Documento Digital")
+@Schema(description = "Documento Digital")
 public class DigitalDocumentDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -870502165996369141L;
 
-    @ApiModelProperty("Identificador único do documento")
+    @Schema(description = "Identificador único do documento")
     private Long id;
 
-    @ApiModelProperty("Identificador do evento de atendimento")
+    @Schema(description = "Identificador do evento de atendimento")
     private Long attendanceEventId;
 
-    @ApiModelProperty("Tipo do documento")
+    @Schema(description = "Tipo do documento")
     private DigitalDocumentType type;
 
-    @ApiModelProperty("Base64 do documento")
+    @Schema(description = "Base64 do documento")
     private String base64;
 
-    @ApiModelProperty("Nome ou título do documento")
+    @Schema(description = "Nome ou título do documento")
     private String name;
 
-    @ApiModelProperty("Data da criação do documento")
+    @Schema(description = "Data da criação do documento")
     private LocalDateTime createdAt;
 
     public DigitalDocumentDTO() {

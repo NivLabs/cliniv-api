@@ -8,8 +8,7 @@ import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Esta classe representa as informações detalhadas do usuário, serve para criação e atualização das informações do usuário
@@ -17,26 +16,26 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel(description = "Informações detalhadas do usuário")
+@Schema(description = "Informações detalhadas do usuário")
 public class UserInfoDTO extends PersonInfoDTO {
 
     private static final long serialVersionUID = 2270108536170182840L;
 
-    @ApiModelProperty("Nome de usuário")
+    @Schema(description = "Nome de usuário")
     @NotNull(message = "Informe o nome de usuário")
     @Size(max = 80, min = 2, message = "O nome de usuário deve conter de 2 a 80 caracteres")
     private String userName;
 
-    @ApiModelProperty("Data de criação do usuário")
+    @Schema(description = "Data de criação do usuário")
     private LocalDateTime createdAt;
 
-    @ApiModelProperty("Situação cadastral (Ativo | Inativo)")
+    @Schema(description = "Situação cadastral (Ativo | Inativo)")
     private boolean active;
 
-    @ApiModelProperty("Flag de primeiro login")
+    @Schema(description = "Flag de primeiro login")
     private boolean firstSignin;
 
-    @ApiModelProperty("Papéis do usuário")
+    @Schema(description = "Papéis do usuário")
     private List<RoleDTO> roles = new ArrayList<>();
 
     /**

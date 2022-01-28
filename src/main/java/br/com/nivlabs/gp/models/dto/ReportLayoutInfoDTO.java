@@ -7,8 +7,7 @@ import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe ReportLayoutDTO.java
@@ -17,28 +16,28 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 24 de janeiro de 2021
  */
-@ApiModel(description = "Layout de Relatório")
+@Schema(description = "Layout de Relatório")
 public class ReportLayoutInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4393173881706823820L;
 
-    @ApiModelProperty("Identificador único do layout")
+    @Schema(description = "Identificador único do layout")
     private Long id;
 
-    @ApiModelProperty("Nome ou título do layout")
+    @Schema(description = "Nome ou título do layout")
     private String name;
 
-    @ApiModelProperty("Descrição do layout")
+    @Schema(description = "Descrição do layout")
     private String description;
 
-    @ApiModelProperty("Base64 do layout")
+    @Schema(description = "Base64 do layout")
     private String base64;
 
-    @ApiModelProperty("Data da criação do layout")
+    @Schema(description = "Data da criação do layout")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime createdAt;
 
-    @ApiModelProperty("Lista de parâmetros do layout")
+    @Schema(description = "Lista de parâmetros do layout")
     private List<ReportLayoutParameterDTO> params;
 
     /**

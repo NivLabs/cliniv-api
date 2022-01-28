@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.NewParameterValueDTO;
 import br.com.nivlabs.gp.service.parameter.ParameterService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 
@@ -22,12 +22,12 @@ import io.swagger.annotations.ApiOperation;
  * 
  * @since 30 de nov de 2019
  */
-@Api("Endpoint - Manipulação de parâmetros")
+@Tag(name = "Parâmetros", description = "Endpoint - Manipulação de parâmetros")
 @RestController
 @RequestMapping(value = "/parameter")
 public class ParameterController extends BaseController<ParameterService> {
 
-    @ApiOperation(nickname = "parameter-put-parameter", value = "Atualiza valor de parâmetro de aplicação")
+    @Operation(summary = "parameter-put-parameter", description = "Atualiza valor de parâmetro de aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('PARAMETRO_ESCRITA', 'ADMIN')")
     public ResponseEntity<InstituteDTO> updateParameter(@PathVariable("id") Long id, @RequestBody NewParameterValueDTO newValue) {

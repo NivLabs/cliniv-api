@@ -4,8 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe ResponsibleInfoDTO.java
@@ -14,18 +13,18 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 9 de fev de 2020
  */
-@ApiModel(description = "Responsible or professional informations")
+@Schema(description = "Responsible or professional informations")
 public class ResponsibleInfoDTO extends PersonInfoDTO {
 
     private static final long serialVersionUID = 3558512431533807447L;
 
-    @ApiModelProperty("Registro profissional do responsável (Se houver)")
+    @Schema(description = "Registro profissional do responsável (Se houver)")
     private ProfessionalIdentityDTO professionalIdentity;
 
-    @ApiModelProperty("Data / Hora de criação")
+    @Schema(description = "Data / Hora de criação")
     private LocalDateTime createdAt;
 
-    @ApiModelProperty("Especializaçõs do responsável (Se houver)")
+    @Schema(description = "Especializaçõs do responsável (Se houver)")
     private List<SpecialityDTO> specializations = new ArrayList<>();
 
     public ProfessionalIdentityDTO getProfessionalIdentity() {

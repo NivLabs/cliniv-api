@@ -18,8 +18,7 @@ import br.com.nivlabs.gp.enums.EthnicGroup;
 import br.com.nivlabs.gp.enums.Gender;
 import br.com.nivlabs.gp.enums.GenderIdentity;
 import br.com.nivlabs.gp.enums.PatientType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 
@@ -29,97 +28,97 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 18-09-2021
  *
  */
-@ApiModel(description = "Informações detalhadas do paciente")
+@Schema(description = "Informações detalhadas do paciente")
 public class PatientInfoDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = 1575416178033511932L;
 
-    @ApiModelProperty("Identificador único do paciente")
+    @Schema(description = "Identificador único do paciente")
     private Long id;
 
-    @ApiModelProperty("Identificador único de pessoa")
+    @Schema(description = "Identificador único de pessoa")
     private Long personId;
 
-    @ApiModelProperty("Nome completo do paciente")
+    @Schema(description = "Nome completo do paciente")
     @NotNull(message = "Nome completo é obrigatório")
     @Size(min = 3, max = 45, message = "O nome completo é obrigatório")
     private String fullName;
 
-    @ApiModelProperty("Nome social do paciente")
+    @Schema(description = "Nome social do paciente")
     private String socialName;
 
-    @ApiModelProperty("Data de nascimento")
+    @Schema(description = "Data de nascimento")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDate bornDate;
 
-    @ApiModelProperty("Documento do paciente")
+    @Schema(description = "Documento do paciente")
     @NotNull(message = "O documento deve ser informado")
     private DocumentDTO document;
 
-    @ApiModelProperty("Lista de documentos do paciente")
+    @Schema(description = "Lista de documentos do paciente")
     private List<DocumentDTO> documents = new ArrayList<>();
 
-    @ApiModelProperty("Gênero (sexo) do paciente")
+    @Schema(description = "Gênero (sexo) do paciente")
     @NotNull(message = "O gênero deve ser informado")
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ApiModelProperty("Identidade de gênero (orientação) do paciente")
+    @Schema(description = "Identidade de gênero (orientação) do paciente")
     @Enumerated(EnumType.STRING)
     private GenderIdentity genderIdentity;
 
-    @ApiModelProperty("Nome do pai do paciente")
+    @Schema(description = "Nome do pai do paciente")
     private String fatherName;
 
-    @ApiModelProperty("Nome da mãe do paciente")
+    @Schema(description = "Nome da mãe do paciente")
     private String motherName;
 
-    @ApiModelProperty("Número de telefone/celular principal do paciente")
+    @Schema(description = "Número de telefone/celular principal do paciente")
     private String principalNumber;
 
-    @ApiModelProperty("Número de telefone/celular secundário do paciente")
+    @Schema(description = "Número de telefone/celular secundário do paciente")
     private String secondaryNumber;
 
-    @ApiModelProperty("E-mail do paciente")
+    @Schema(description = "E-mail do paciente")
     private String email;
 
-    @ApiModelProperty("Endereço do paciente")
+    @Schema(description = "Endereço do paciente")
     private AddressDTO address;
 
-    @ApiModelProperty("Foto de perfil do paciente")
+    @Schema(description = "Foto de perfil do paciente")
     private String profilePhoto;
 
-    @ApiModelProperty("Número do SUS do paciente")
+    @Schema(description = "Número do SUS do paciente")
     @Size(max = 15, message = "O código do deve conter no máximo 15 dígitos.")
     private String cnsNumber;
 
-    @ApiModelProperty("Tipo do paciente (Identificado ou não identificado)")
+    @Schema(description = "Tipo do paciente (Identificado ou não identificado)")
     private PatientType type;
 
-    @ApiModelProperty("Anotações sobre o paciente")
+    @Schema(description = "Anotações sobre o paciente")
     @Size(max = 10000, message = "As anotações não devem passar de 300 caracteres")
     private String annotations;
 
-    @ApiModelProperty("Data de criação do registro")
+    @Schema(description = "Data de criação do registro")
     private LocalDateTime createdAt;
 
-    @ApiModelProperty("Alergias do paciente")
+    @Schema(description = "Alergias do paciente")
     private List<String> allergies = new ArrayList<>();
 
-    @ApiModelProperty("Histórico de atendimentos do paciente")
+    @Schema(description = "Histórico de atendimentos do paciente")
     private List<AttendanceDTO> attendanceHistory = new ArrayList<>();
 
-    @ApiModelProperty("Plano de saúde do paciente")
+    @Schema(description = "Plano de saúde do paciente")
     private HealthPlanDTO healthPlan;
 
-    @ApiModelProperty("Grupo Étnico do paciente")
+    @Schema(description = "Grupo Étnico do paciente")
     @Enumerated(EnumType.STRING)
     private EthnicGroup ethnicGroup;
 
-    @ApiModelProperty("Tipo sanguíneo do paciente")
+    @Schema(description = "Tipo sanguíneo do paciente")
     @Enumerated(EnumType.STRING)
     private BloodType bloodType;
 
-    @ApiModelProperty("Nacionalidade do paciente")
+    @Schema(description = "Nacionalidade do paciente")
     private String nationality;
 
     /**

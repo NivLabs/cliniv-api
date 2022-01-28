@@ -4,8 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.nivlabs.gp.enums.AttendanceLevel;
 import br.com.nivlabs.gp.enums.EventType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 
@@ -15,34 +14,34 @@ import io.swagger.annotations.ApiModelProperty;
  *
  * @since 8 de set de 2019
  */
-@ApiModel(description = "Requisição de Atendimento")
+@Schema(description = "Requisição de Atendimento")
 public class NewAttandenceDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 2370290606342755763L;
 
-    @ApiModelProperty("Código do paciente")
+    @Schema(description = "Código do paciente")
     @NotNull(message = "Informar o código do paciente é obrigatório")
     private Long patientId;
 
-    @ApiModelProperty("Tipo do Evento")
+    @Schema(description = "Tipo do Evento")
     private EventType eventType;
 
-    @ApiModelProperty("Código da especialidade procurada")
+    @Schema(description = "Código da especialidade procurada")
     @NotNull(message = "Informar o código da especialidade requisitada é obrigatório")
     private Long specialityId;
 
-    @ApiModelProperty("Código do profissional responsável pela entrada")
+    @Schema(description = "Código do profissional responsável pela entrada")
     private Long responsibleId;
 
-    @ApiModelProperty("Código da acomodação de origem do atendimento, ex: Triagem")
+    @Schema(description = "Código da acomodação de origem do atendimento, ex: Triagem")
     @NotNull(message = "Informar a acomodação de origem é obrigatório")
     private Long accommodationId;
 
-    @ApiModelProperty("Breve descrição do motivo da entrada|visita do paciente")
+    @Schema(description = "Breve descrição do motivo da entrada|visita do paciente")
     @NotNull(message = "Informar o motivo da visita é obrigatório")
     private String entryCause;
 
-    @ApiModelProperty("Nível de risco do atendimento")
+    @Schema(description = "Nível de risco do atendimento")
     @NotNull(message = "O nível de risco do atendimento deve ser informado")
     private AttendanceLevel level;
 

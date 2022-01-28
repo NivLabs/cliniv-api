@@ -6,36 +6,35 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Prescrição do paciente")
+@Schema(description = "Prescrição do paciente")
 public class PrescriptionInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 6743345972601222205L;
 
-    @ApiModelProperty("Identificador único da prescrição")
+    @Schema(description = "Identificador único da prescrição")
     Long id;
 
     @NotNull(message = "O identificador do atendimento deve ser informado")
-    @ApiModelProperty("Identificador único do atendimento")
+    @Schema(description = "Identificador único do atendimento")
     private Long attendanceId;
 
     @NotNull(message = "A data/hora de início de vigência da prescrição deve ser informada")
-    @ApiModelProperty("Data/Hora início")
+    @Schema(description = "Data/Hora início")
     private LocalDateTime datetimeInit;
 
     @NotNull(message = "A data/hora de fim de vigência da prescrição deve ser informada")
-    @ApiModelProperty("Data/Hora fim")
+    @Schema(description = "Data/Hora fim")
     private LocalDateTime datetimeEnd;
 
-    @ApiModelProperty("Itens da prescrição")
+    @Schema(description = "Itens da prescrição")
     List<PrescriptionItemDTO> items = new ArrayList<>();
 
-    @ApiModelProperty("Indica uma prescrição especial com duas vias para medicamentos de receita obrigatória")
+    @Schema(description = "Indica uma prescrição especial com duas vias para medicamentos de receita obrigatória")
     private boolean special;
 
-    @ApiModelProperty("Indica que a prescrição deve ser usada no prontuário para controle de checagem de medicamento")
+    @Schema(description = "Indica que a prescrição deve ser usada no prontuário para controle de checagem de medicamento")
     private boolean insertToMedicalRecords;
 
     public PrescriptionInfoDTO() {

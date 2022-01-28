@@ -1,7 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * DTO resumido de especialidade
@@ -9,15 +8,15 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel(description = "Especialidade")
+@Schema(description = "Especialidade")
 public class SpecialityDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -8113675301888267134L;
 
-    @ApiModelProperty("Identificador único da especialidade")
+    @Schema(description = "Identificador único da especialidade")
     private Long id;
 
-    @ApiModelProperty("Nome da especialidade")
+    @Schema(description = "Nome da especialidade")
     private String name;
 
     public SpecialityDTO(Long id, String name) {

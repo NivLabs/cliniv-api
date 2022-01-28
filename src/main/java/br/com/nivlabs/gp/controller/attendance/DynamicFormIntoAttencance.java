@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.models.dto.NewDynamicFormAnsweredDTO;
 import br.com.nivlabs.gp.service.dynamicform.DynamicFormService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Api("Endpoint - Formulários dinâmicos do atendimento")
+@Tag(name = "Formulários Dinâmicos", description = "Endpoint - Formulários dinâmicos do atendimento")
 @RestController
 @RequestMapping(value = "/attendance")
 public class DynamicFormIntoAttencance {
@@ -24,7 +24,7 @@ public class DynamicFormIntoAttencance {
     @Autowired
     private DynamicFormService service;
 
-    @ApiOperation(nickname = "dynamic-form-into-attendance-post", value = "Insere um novo formulário respondido na aplicação")
+    @Operation(summary = "dynamic-form-into-attendance-post", description = "Insere um novo formulário respondido na aplicação")
     @PostMapping("/{idAttendance}/dynamic-form")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<NewDynamicFormAnsweredDTO> persist(@PathVariable("idAttendance") Long idAttendance,

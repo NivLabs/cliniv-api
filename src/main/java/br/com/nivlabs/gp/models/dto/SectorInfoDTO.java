@@ -7,8 +7,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * 
@@ -18,21 +17,21 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 06-10-2021
  *
  */
-@ApiModel(description = "Informações do Setor")
+@Schema(description = "Informações do Setor")
 public class SectorInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -8018406138528606923L;
 
-    @ApiModelProperty("Identificador único do setor")
+    @Schema(description = "Identificador único do setor")
     private Long id;
 
-    @ApiModelProperty("Descrição do setor")
+    @Schema(description = "Descrição do setor")
     private String description;
 
-    @ApiModelProperty("Lista de salas e leitos do setor (Acomodações)")
+    @Schema(description = "Lista de salas e leitos do setor (Acomodações)")
     private List<AccommodationDTO> listOfRoomsOrBeds = new ArrayList<>();
 
-    @ApiModelProperty("Data / Hora de criação do setor")
+    @Schema(description = "Data / Hora de criação do setor")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime createdAt;
 

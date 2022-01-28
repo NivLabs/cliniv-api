@@ -5,8 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe MaterialDTO.java
@@ -15,44 +14,44 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 22 de jul de 2020
  */
-@ApiModel(description = "Materiais")
+@Schema(description = "Materiais")
 public class MaterialDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -906864967600182992L;
 
-    @ApiModelProperty("Identificador único do material")
+    @Schema(description = "Identificador único do material")
     private String id;
 
-    @ApiModelProperty("Código do material")
+    @Schema(description = "Código do material")
     private String code;
 
-    @ApiModelProperty("Descrição do material")
+    @Schema(description = "Descrição do material")
     private String description;
 
-    @ApiModelProperty("Modelo")
+    @Schema(description = "Modelo")
     private String model;
 
-    @ApiModelProperty("Registro da ANVISA")
+    @Schema(description = "Registro da ANVISA")
     private String anvisaRegistration;
 
-    @ApiModelProperty("Classe de risco")
+    @Schema(description = "Classe de risco")
     private String riskClass;
 
-    @ApiModelProperty("Descrição técnica")
+    @Schema(description = "Descrição técnica")
     private String technicalDescription;
 
-    @ApiModelProperty("Fornecedor")
+    @Schema(description = "Fornecedor")
     private String manufacturer;
 
-    @ApiModelProperty("Data início vigência")
+    @Schema(description = "Data início vigência")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime expirationStartDate;
 
-    @ApiModelProperty("Data fim vigência")
+    @Schema(description = "Data fim vigência")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime expirationDate;
 
-    @ApiModelProperty("Data fim de implantação")
+    @Schema(description = "Data fim de implantação")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime implantationEndDate;
 

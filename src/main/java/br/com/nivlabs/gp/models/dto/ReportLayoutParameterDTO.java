@@ -1,7 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe ReportLayoutParameterDTO.java
@@ -10,28 +9,28 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 24 de janeiro de 2021
  */
-@ApiModel(description = "Parametros do layout de relatorio")
+@Schema(description = "Parametros do layout de relatorio")
 public class ReportLayoutParameterDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 5486172987281764933L;
 
-    @ApiModelProperty("Identificador único do parâmetro")
+    @Schema(description = "Identificador único do parâmetro")
     private Long id;
 
-    @ApiModelProperty("Nome do parâmetro")
+    @Schema(description = "Nome do parâmetro")
     private String name;
 
-    @ApiModelProperty("Tipo do parâmetro")
+    @Schema(description = "Tipo do parâmetro")
     private String type;
 
-    @ApiModelProperty("Descrição do parâmetro")
+    @Schema(description = "Descrição do parâmetro")
     private String description;
 
-    @ApiModelProperty("Valor padrão do parâmetro")
+    @Schema(description = "Valor padrão do parâmetro")
     private String defaultValue;
 
     // Propriedade utilizada na geração do relatório
-    @ApiModelProperty("Valor informado do parâmetro")
+    @Schema(description = "Valor informado do parâmetro")
     private String value;
 
     public ReportLayoutParameterDTO() {

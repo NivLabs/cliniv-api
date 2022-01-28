@@ -1,7 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe SectorDTO.java
@@ -10,15 +9,15 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 13 de dez de 2019
  */
-@ApiModel(description = "Setor")
+@Schema(description = "Setor")
 public class SectorDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -8018406138528606923L;
 
-    @ApiModelProperty("Identificador único do setor")
+    @Schema(description = "Identificador único do setor")
     private Long id;
 
-    @ApiModelProperty("Descrição do setor")
+    @Schema(description = "Descrição do setor")
     private String description;
 
     public SectorDTO() {

@@ -2,21 +2,23 @@ package br.com.nivlabs.gp.config.security;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import br.com.nivlabs.gp.config.db.TenantContext;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.repository.UserRepository;
 
 /**
  * Classe AuthorizationFilter.java
@@ -25,16 +27,19 @@ import br.com.nivlabs.gp.exception.HttpException;
  * 
  * @since 15 de set de 2019
  */
+@Order(2)
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
+    private static final String CUSTOMER_ID_HEADER = "CUSTOMER_ID";
+
     private JwtUtils jwtUtils;
-    private UserDetailsService userDetailsService;
+    private UserRepository userDetailsService;
 
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
-            UserDetailsService userDetailsService) {
+            UserRepository userDao) {
         super(authenticationManager);
         this.jwtUtils = jwtUtils;
-        this.userDetailsService = userDetailsService;
+        this.userDetailsService = userDao;
     }
 
     @Override
@@ -42,12 +47,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
 
         String authorizationHeader = req.getHeader("Authorization");
+        String customerIdHeader = req.getHeader(CUSTOMER_ID_HEADER);
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 
             UsernamePasswordAuthenticationToken auth = null;
             try {
-                auth = getAuthentication(authorizationHeader.substring(7));
+                if (customerIdHeader == null || customerIdHeader.isEmpty()) {
+                    throw new HttpException(HttpStatus.UNAUTHORIZED, "Cabeçalho de identificação do cliente não enviado");
+                }
+                Optional.ofNullable(req.getHeader(CUSTOMER_ID_HEADER)).ifPresent(TenantContext::setCurrentTenant);
+                auth = getAuthentication(authorizationHeader.substring(7), customerIdHeader);
             } catch (HttpException e) {
                 if (e.getStatus() == HttpStatus.UNAUTHORIZED) {
                     resp.setStatus(401);
@@ -94,11 +104,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
      * @param token
      * @return
      */
-    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        if (jwtUtils.isValidToken(token)) {
+    private UsernamePasswordAuthenticationToken getAuthentication(String token, String customerId) {
+        if (jwtUtils.isValidToken(token, customerId)) {
             String userName = jwtUtils.getUserName(token);
-            UserDetails user = userDetailsService.loadUserByUsername(userName);
-            return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+
+            var user = userDetailsService.findByUserName(userName.trim().toUpperCase())
+                    .orElseThrow(() -> new HttpException(HttpStatus.UNAUTHORIZED, "Não autorizado"));
+
+            var userOfSystem =
+                             new UserOfSystem(user.getUserName(), user.getPassword(), user.getPerson(), !user.isActive(), user.getRoles(),
+                                     customerId);
+
+            return new UsernamePasswordAuthenticationToken(userOfSystem, null, userOfSystem.getAuthorities());
         }
         return null;
     }

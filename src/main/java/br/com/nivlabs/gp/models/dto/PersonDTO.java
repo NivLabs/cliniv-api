@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.enums.Gender;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe PersonDTO.java
@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModel;
  * @since 9 de fev de 2020
  */
 
-@ApiModel(description = "Pessoa")
+@Schema(description = "Pessoa")
 public abstract class PersonDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -1442279002298984040L;

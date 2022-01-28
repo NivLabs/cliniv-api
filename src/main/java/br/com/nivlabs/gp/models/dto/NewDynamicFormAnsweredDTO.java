@@ -5,19 +5,18 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Requisição de preenchimento de formulário dinâmico")
+
 public class NewDynamicFormAnsweredDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 1489473679769549274L;
 
-    @ApiModelProperty("Título do documento")
+    @Schema(description = "Título do documento")
     @NotNull(message = "O título do documento deve ser informado")
     private String documentTitle;
 
-    @ApiModelProperty("Respostas do formulário")
+    @Schema(description = "Respostas do formulário")
     private Set<QuestionDTO> listOfResponse = new HashSet<>();
 
     public NewDynamicFormAnsweredDTO() {

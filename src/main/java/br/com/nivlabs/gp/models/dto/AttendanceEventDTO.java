@@ -6,8 +6,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe VisitEventDTO.java
@@ -17,28 +16,28 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 18 de nov de 2019
  */
 
-@ApiModel(description = "Evento do Atendimento")
+@Schema(description = "Evento do Atendimento")
 public class AttendanceEventDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -5192545539633937184L;
 
-    @ApiModelProperty("Identificador único do evento do atendimento")
+    @Schema(description = "Identificador único do evento do atendimento")
     private Long id;
 
-    @ApiModelProperty("Data e hora do evento do atendimento")
+    @Schema(description = "Data e hora do evento do atendimento")
     @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime datetime;
 
-    @ApiModelProperty("Descrição do evento do atendimento")
+    @Schema(description = "Descrição do evento do atendimento")
     private String description;
 
-    @ApiModelProperty("Documentos gerados pelo evento do atendimento")
+    @Schema(description = "Documentos gerados pelo evento do atendimento")
     private List<DigitalDocumentDTO> documents;
 
-    @ApiModelProperty("Acomodação onde o evento foi ou será realizado")
+    @Schema(description = "Acomodação onde o evento foi ou será realizado")
     private AccommodationDTO accommodation;
 
-    @ApiModelProperty("Profissional que adicionou o evento")
+    @Schema(description = "Profissional que adicionou o evento")
     private ResponsibleDTO professional;
 
     public AttendanceEventDTO() {

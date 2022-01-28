@@ -4,8 +4,7 @@ import java.time.LocalDate;
 
 import br.com.nivlabs.gp.enums.Gender;
 import br.com.nivlabs.gp.enums.PatientType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe PatientDTO.java
@@ -14,15 +13,15 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 15 de set de 2019
  */
-@ApiModel(description = "Informações do Paciente")
+@Schema(description = "Informações do Paciente")
 public class PatientDTO extends PersonDTO {
 
     private static final long serialVersionUID = -1070682704153329772L;
 
-    @ApiModelProperty("CNS")
+    @Schema(description = "CNS")
     private String cnsNumber;
 
-    @ApiModelProperty("Tipo do paciente (Identificado ou não identificado)")
+    @Schema(description = "Tipo do paciente (Identificado ou não identificado)")
     private PatientType type;
 
     public PatientDTO() {

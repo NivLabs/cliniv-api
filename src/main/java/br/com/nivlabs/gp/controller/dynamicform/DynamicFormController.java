@@ -27,8 +27,8 @@ import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.controller.filters.DynamicFormFilters;
 import br.com.nivlabs.gp.models.dto.DynamicFormDTO;
 import br.com.nivlabs.gp.service.dynamicform.DynamicFormService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Formulários dinâmicos da aplicação
@@ -36,9 +36,9 @@ import io.swagger.annotations.ApiOperation;
  * @author viniciosarodrigues
  *
  */
-@Api(value = "Endpoint - Formulários Dinâmicos")
+@Tag(name = "Fomulários Dinâmicos", description = "Endpoint - Formulários Dinâmicos")
 @RestController
-@RequestMapping("/dynamic-form")
+@RequestMapping(value = "/dynamic-form")
 public class DynamicFormController extends BaseController<DynamicFormService> {
 
     /**
@@ -47,14 +47,14 @@ public class DynamicFormController extends BaseController<DynamicFormService> {
      * @param id Identificador único do formulário
      * @return Informações detalhadas de um formulário dinâmico
      */
-    @ApiOperation(nickname = "dynamic-form-get-id", value = "Busca um formulário de anamnese baseado no identificador")
+    @Operation(summary = "dynamic-form-get-id", description = "Busca um formulário de anamnese baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'FORMULARIO_ESCRITA', 'FORMULARIO_LEITURA', 'ADMIN')")
     public ResponseEntity<DynamicFormDTO> findFormById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @ApiOperation(nickname = "dynamic-form-page", value = "Busca uma anamnese baseada no identificador")
+    @Operation(summary = "dynamic-form-page", description = "Busca uma anamnese baseada no identificador")
     @GetMapping
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'FORMULARIO_ESCRITA', 'FORMULARIO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<DynamicFormDTO>> findPageOfAnamnesisForms(DynamicFormFilters filters) {
@@ -63,7 +63,7 @@ public class DynamicFormController extends BaseController<DynamicFormService> {
         return ResponseEntity.ok(service.findPageOfDymicaForm(filters, pageSettings));
     }
 
-    @ApiOperation(nickname = "dynamic-form-delete-id", value = "Deleta um formulário dinâmico pelo identificador")
+    @Operation(summary = "dynamic-form-delete-id", description = "Deleta um formulário dinâmico pelo identificador")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id) {
@@ -71,7 +71,7 @@ public class DynamicFormController extends BaseController<DynamicFormService> {
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(nickname = "dynamic-form-post", value = "Insere um novo formulário dinâmico na aplicação")
+    @Operation(summary = "dynamic-form-post", description = "Insere um novo formulário dinâmico na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<DynamicFormDTO> persist(@Validated @RequestBody(required = true) DynamicFormDTO request,
@@ -82,7 +82,7 @@ public class DynamicFormController extends BaseController<DynamicFormService> {
 
     }
 
-    @ApiOperation(nickname = "dynamic-form-put", value = "Atualiza um formulário na aplicação")
+    @Operation(summary = "dynamic-form-put", description = "Atualiza um formulário na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<DynamicFormDTO> updateForm(@PathVariable("id") Long id,

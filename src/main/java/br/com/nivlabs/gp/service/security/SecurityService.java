@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.gp.models.dto.ChangePasswordByForgotPasswordRequestDTO;
+import br.com.nivlabs.gp.models.dto.CredentialsDTO;
 import br.com.nivlabs.gp.models.dto.NewPasswordRequestDTO;
 import br.com.nivlabs.gp.service.BaseService;
 import br.com.nivlabs.gp.service.security.business.ChangePasswordByForgotPasswordBusinessHandler;
+import br.com.nivlabs.gp.service.security.business.LoginBusinessHandler;
 import br.com.nivlabs.gp.service.security.business.ResetPasswordBusinessHandler;
 import br.com.nivlabs.gp.service.security.business.UpdatePasswordBusinessHandler;
 
@@ -27,6 +29,8 @@ public class SecurityService implements BaseService {
     UpdatePasswordBusinessHandler updatePasswordBusinessHandler;
     @Autowired
     ResetPasswordBusinessHandler resetPasswordBusinessHandler;
+    @Autowired
+    LoginBusinessHandler loginHandler;
 
     /**
      * Cria uma nova senha devido à esquecimento
@@ -54,6 +58,16 @@ public class SecurityService implements BaseService {
      */
     public void resetPassword(Long id) {
         resetPasswordBusinessHandler.resetPassword(id);
+    }
+
+    /**
+     * Realiza o login na aplicação
+     * 
+     * @param request Credenciais
+     * @return Token
+     */
+    public String login(CredentialsDTO request, String customerId) {
+        return loginHandler.login(request, customerId);
     }
 
 }

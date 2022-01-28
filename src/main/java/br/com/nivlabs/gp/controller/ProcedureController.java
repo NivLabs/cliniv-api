@@ -23,8 +23,8 @@ import br.com.nivlabs.gp.controller.filters.ProcedureFilters;
 import br.com.nivlabs.gp.models.dto.ProcedureDTO;
 import br.com.nivlabs.gp.models.dto.ProcedureInfoDTO;
 import br.com.nivlabs.gp.service.procedure.ProcedureService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * 
@@ -34,12 +34,12 @@ import io.swagger.annotations.ApiOperation;
  *
  * @since 8 de set de 2019
  */
-@Api("Endpoint - Procedimento ou Evento")
+@Tag(name = "Procedimentos e Evntos", description = "Endpoint - Procedimento ou Evento")
 @RestController
 @RequestMapping(value = "/procedure")
 public class ProcedureController extends BaseController<ProcedureService> {
 
-    @ApiOperation(nickname = "procedure-get", value = "Busca uma página de procedimentos")
+    @Operation(summary = "procedure-get", description = "Busca uma página de procedimentos")
     @GetMapping
     public ResponseEntity<Page<ProcedureDTO>> findPage(ProcedureFilters filters) {
         Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
@@ -47,13 +47,13 @@ public class ProcedureController extends BaseController<ProcedureService> {
         return ResponseEntity.ok(service.getResumedPage(filters, pageSettings));
     }
 
-    @ApiOperation(nickname = "procedure-get-id", value = "Busca um procedimento à partir do identificador")
+    @Operation(summary = "procedure-get-id", description = "Busca um procedimento à partir do identificador")
     @GetMapping("{id}")
     public ResponseEntity<ProcedureInfoDTO> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @ApiOperation(nickname = "procedure-post", value = "Cria um novo procedimento no sistema")
+    @Operation(summary = "procedure-post", description = "Cria um novo procedimento no sistema")
     @PostMapping
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<ProcedureInfoDTO> persist(@Validated @RequestBody(required = true) ProcedureInfoDTO request,
@@ -63,7 +63,7 @@ public class ProcedureController extends BaseController<ProcedureService> {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProcedure);
     }
 
-    @ApiOperation(nickname = "procedure-put", value = "Atualiza um procedimento existente no sistema")
+    @Operation(summary = "procedure-put", description = "Atualiza um procedimento existente no sistema")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<ProcedureInfoDTO> update(@PathVariable("id") Long id,
@@ -71,7 +71,7 @@ public class ProcedureController extends BaseController<ProcedureService> {
         return ResponseEntity.ok().body(service.update(id, request));
     }
 
-    @ApiOperation(nickname = "procedure-delete-id", value = "Deleta um procedimento pelo identificador")
+    @Operation(summary = "procedure-delete-id", description = "Deleta um procedimento pelo identificador")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('FORMULARIO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {

@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.service.external.CEPService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Api(value = "Endpoint - CEP")
+@Tag(name = "CEP", description = "Endpoint - Serviços de operações com CEP")
 @RestController
 @RequestMapping("/cep")
 public class CepController {
@@ -20,7 +20,7 @@ public class CepController {
     @Autowired
     private CEPService service;
 
-    @ApiOperation(nickname = "cep-get", value = "Busca CEP em API externa")
+    @Operation(summary = "cep-get", description = "Busca CEP em API externa")
     @GetMapping("/{cep}")
     public ResponseEntity<AddressDTO> get(@PathVariable("cep") String cep) {
         return ResponseEntity.ok(service.get(cep));

@@ -6,8 +6,7 @@ import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe SpecialityInfoDTO.java Representa a informação detalhada da especialidade.
@@ -17,19 +16,19 @@ import io.swagger.annotations.ApiModelProperty;
  * @since 10 de jan de 2020
  */
 
-@ApiModel(description = "Informações da especialidade")
+@Schema(description = "Informações da especialidade")
 public class SpecialityInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 4419810660458356444L;
 
-    @ApiModelProperty("Identificador único da especialidade")
+    @Schema(description = "Identificador único da especialidade")
     private Long id;
 
-    @ApiModelProperty("Nome da especialidade")
+    @Schema(description = "Nome da especialidade")
     @NotNull(message = "Informe o nome da especialidade")
     private String name;
 
-    @ApiModelProperty("Descrição da especialidade")
+    @Schema(description = "Descrição da especialidade")
     private String description;
 
     private List<ResponsibleDTO> responsibles = new ArrayList<>();

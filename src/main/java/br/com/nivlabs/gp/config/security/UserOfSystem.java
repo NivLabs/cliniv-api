@@ -31,11 +31,13 @@ public class UserOfSystem implements UserDetails {
     public static final String INFO_AUTHORIZED = "authorized";
     public static final String INFO_PERSON_NAME = "personName";
     public static final String INFO_USER_NAME = "user";
+    public static final String CUSTOMER_ID = "customerId";
 
     private String username;
     private String password;
     private String personName;
     private Boolean isExpired;
+    private String customerId;
 
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -47,8 +49,9 @@ public class UserOfSystem implements UserDetails {
      * @param person
      * @param isExpired
      * @param roles
+     * @param customerId
      */
-    public UserOfSystem(String username, String password, Person person, Boolean isExpired, List<Role> roles) {
+    public UserOfSystem(String username, String password, Person person, Boolean isExpired, List<Role> roles, String customerId) {
         super();
         this.personName = getPersonName(person);
         this.username = username;
@@ -56,6 +59,7 @@ public class UserOfSystem implements UserDetails {
         this.isExpired = isExpired;
         this.authorities = roles.stream().map(x -> new SimpleGrantedAuthority(x.getName()))
                 .collect(Collectors.toList());
+        this.customerId = customerId;
     }
 
     /**
@@ -118,7 +122,8 @@ public class UserOfSystem implements UserDetails {
         this.authorities.iterator().forEachRemaining(item -> permissions.add(item.getAuthority()));
         info.put(INFO_USER_NAME, this.username);
         info.put(INFO_AUTHORIZED, permissions);
-        info.put(INFO_PERSON_NAME, personName);
+        info.put(INFO_PERSON_NAME, this.personName);
+        info.put(CUSTOMER_ID, this.customerId);
         return info;
     }
 }

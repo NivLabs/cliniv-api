@@ -25,8 +25,8 @@ import br.com.nivlabs.gp.event.CreatedResourceEvent;
 import br.com.nivlabs.gp.models.dto.SpecialityDTO;
 import br.com.nivlabs.gp.models.dto.SpecialityInfoDTO;
 import br.com.nivlabs.gp.service.speciality.SpecialityService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Classe SpecialityController.java
@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiOperation;
  * 
  * @since 6 de jan de 2020
  */
-@Api("Endpoint - Especialidade")
+@Tag(name = "Especialidade", description = "Endpoint - Especialidade")
 @RestController
 @RequestMapping(value = "/speciality")
 public class SpecialityController {
@@ -45,7 +45,7 @@ public class SpecialityController {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @ApiOperation(nickname = "speciality-get-page", value = "Busca uma página de especialidades")
+    @Operation(summary = "speciality-get-page", description = "Busca uma página de especialidades")
     @GetMapping
     @PreAuthorize("hasAnyRole('ESPECIALIDADE_ESCRITA', 'ESPECIALIDADE_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<SpecialityDTO>> findList(SpecialityFilter filters) {
@@ -54,14 +54,14 @@ public class SpecialityController {
         return ResponseEntity.ok(specService.getPage(filters, pageSettings));
     }
 
-    @ApiOperation(nickname = "speciality-get-id", value = "Busca informações detalhadas de uma especialidade")
+    @Operation(summary = "speciality-get-id", description = "Busca informações detalhadas de uma especialidade")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ESPECIALIDADE_ESCRITA', 'ESPECIALIDADE_LEITURA', 'ADMIN')")
     public ResponseEntity<SpecialityInfoDTO> findById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(specService.findById(id));
     }
 
-    @ApiOperation(nickname = "speciality-post", value = "Insere uma nova especialidade na aplicação")
+    @Operation(summary = "speciality-post", description = "Insere uma nova especialidade na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('ESPECIALIDADE_ESCRITA', 'ADMIN')")
     public ResponseEntity<SpecialityInfoDTO> persist(@Validated @RequestBody(required = true) SpecialityInfoDTO request,
@@ -74,7 +74,7 @@ public class SpecialityController {
 
     }
 
-    @ApiOperation(nickname = "speciality-put", value = "Atualiza um uma especialidade na aplicação")
+    @Operation(summary = "speciality-put", description = "Atualiza um uma especialidade na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ESPECIALIDADE_ESCRITA', 'ADMIN')")
     public ResponseEntity<SpecialityInfoDTO> update(@PathVariable("id") Long id,

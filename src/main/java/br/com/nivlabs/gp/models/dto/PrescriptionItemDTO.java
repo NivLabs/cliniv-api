@@ -8,38 +8,37 @@ import javax.validation.constraints.NotNull;
 
 import br.com.nivlabs.gp.enums.TimeIntervalType;
 import br.com.nivlabs.gp.models.domain.UnitOfMeasurement;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Item da prescrição do paciente")
+@Schema(description = "Item da prescrição do paciente")
 public class PrescriptionItemDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 2268618756493323347L;
 
-    @ApiModelProperty("Sequencial do item da prescrição")
+    @Schema(description = "Sequencial do item da prescrição")
     @NotNull(message = "Informe o sequencial do item da prescrição")
     private Long sequential;
 
-    @ApiModelProperty("Descrição do item da prescrição")
+    @Schema(description = "Descrição do item da prescrição")
     @NotNull(message = "Informe a descrição do item da prescrição")
     private String description;
 
-    @ApiModelProperty("Observações/Instruções para o item da prescrição")
+    @Schema(description = "Observações/Instruções para o item da prescrição")
     private String observations;
 
-    @ApiModelProperty("Via de administração da medicação")
+    @Schema(description = "Via de administração da medicação")
     private String routeOfAdministration;
 
-    @ApiModelProperty("Dose da medicação à ser administrada")
+    @Schema(description = "Dose da medicação à ser administrada")
     private BigDecimal dosage;
 
-    @ApiModelProperty("Unidade de medida para a dosagem do medicamento")
+    @Schema(description = "Unidade de medida para a dosagem do medicamento")
     private UnitOfMeasurement unitOfMeasurement;
 
-    @ApiModelProperty("Intervalo de tempo entre o uso do medicamento/procedimento")
+    @Schema(description = "Intervalo de tempo entre o uso do medicamento/procedimento")
     private Integer timeInterval;
 
-    @ApiModelProperty("Tipo do intervalo de tempo")
+    @Schema(description = "Tipo do intervalo de tempo")
     @Enumerated(EnumType.STRING)
     private TimeIntervalType timeIntervalType;
 

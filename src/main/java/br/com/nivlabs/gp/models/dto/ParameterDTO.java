@@ -4,39 +4,32 @@ import java.util.Arrays;
 
 import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.enums.ParameterAliasType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-/**
- * Parâmetros da aplicação
- * 
- * @author viniciosarodrigues
- *
- */
-@ApiModel(description = "Parâmetro da apliação")
+@Schema(description = "Parâmetro da apliação")
 public class ParameterDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 647659232405015211L;
 
-    @ApiModelProperty("Identificador único do parâmetro")
+    @Schema(description = "Identificador único do parâmetro")
     private Long id;
 
-    @ApiModelProperty("Apelido do parâmetro")
+    @Schema(description = "Apelido do parâmetro")
     private ParameterAliasType alias;
 
-    @ApiModelProperty("Nome do parâmetro")
+    @Schema(description = "Nome do parâmetro")
     private String name;
 
-    @ApiModelProperty("Grupo do parâmetro")
+    @Schema(description = "Grupo do parâmetro")
     private String group;
 
-    @ApiModelProperty("Metatipo do parâmetro")
+    @Schema(description = "Metatipo do parâmetro")
     private MetaType metaType;
 
-    @ApiModelProperty("Valor do parâmetro")
+    @Schema(description = "Valor do parâmetro")
     private String value;
 
-    @ApiModelProperty("Grupo de valores para metatipos de grupo (GROUP)")
+    @Schema(description = "Grupo de valores para metatipos de grupo (GROUP)")
     private String[] groupValues;
 
     /**

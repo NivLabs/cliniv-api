@@ -1,7 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe InstituteInfoDTO.java
@@ -10,57 +9,57 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  * @since 30 de nov de 2019
  */
-@ApiModel(description = "Informações detalhadas da instituição")
+@Schema(description = "Informações detalhadas da instituição")
 public class InstituteInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -3104969606567859458L;
 
-    @ApiModelProperty("CPNJ da instituição")
+    @Schema(description = "CPNJ da instituição")
     private String cnpj;
 
-    @ApiModelProperty("CNES")
+    @Schema(description = "CNES")
     private String cnes;
 
-    @ApiModelProperty("Nome fantasia")
+    @Schema(description = "Nome fantasia")
     private String name;
 
-    @ApiModelProperty("Nome empresarial")
+    @Schema(description = "Nome empresarial")
     private String corporativeName;
 
-    @ApiModelProperty("Natureza Legal")
+    @Schema(description = "Natureza Legal")
     private String legalNature;
 
-    @ApiModelProperty("Rua do endereço")
+    @Schema(description = "Rua do endereço")
     private String street;
 
-    @ApiModelProperty("Número do endereço")
+    @Schema(description = "Número do endereço")
     private String addressNumber;
 
-    @ApiModelProperty("Complemento do endereço")
+    @Schema(description = "Complemento do endereço")
     private String complement;
 
-    @ApiModelProperty("Código postal")
+    @Schema(description = "Código postal")
     private String postalCode;
 
-    @ApiModelProperty("Estado do endereço")
+    @Schema(description = "Estado do endereço")
     private String state;
 
-    @ApiModelProperty("Bairro")
+    @Schema(description = "Bairro")
     private String neighborhood;
 
-    @ApiModelProperty("Cidade")
+    @Schema(description = "Cidade")
     private String city;
 
-    @ApiModelProperty("Telefone")
+    @Schema(description = "Telefone")
     private String phone;
 
-    @ApiModelProperty("Dependência")
+    @Schema(description = "Dependência")
     private String dependency;
 
-    @ApiModelProperty("Tipo da instituição")
+    @Schema(description = "Tipo da instituição")
     private String instituteType;
 
-    @ApiModelProperty("Gestor")
+    @Schema(description = "Gestor")
     private String management;
 
     public InstituteInfoDTO() {

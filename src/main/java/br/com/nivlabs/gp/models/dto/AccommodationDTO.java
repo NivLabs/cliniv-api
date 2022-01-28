@@ -3,9 +3,9 @@ package br.com.nivlabs.gp.models.dto;
 import javax.validation.constraints.NotNull;
 
 import br.com.nivlabs.gp.enums.AccommodationType;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(value = "Accomodation", description = "Sala (ambulatório) ou Leito")
+@Schema(name = "Accomodation", description = "Sala (ambulatório) ou Leito")
 public class AccommodationDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 1574668174638044648L;

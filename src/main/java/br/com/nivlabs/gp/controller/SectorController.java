@@ -27,8 +27,8 @@ import br.com.nivlabs.gp.models.dto.AccommodationDTO;
 import br.com.nivlabs.gp.models.dto.SectorDTO;
 import br.com.nivlabs.gp.models.dto.SectorInfoDTO;
 import br.com.nivlabs.gp.service.sector.SectorService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * Classe SectorController.java
@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiOperation;
  *
  * @since 13 Dez, 2019
  */
-@Api("Endpoint - Setor")
+@Tag(name = "Setor", description = "Endpoint - Setor")
 @RestController
 @RequestMapping(value = "/sector")
 public class SectorController extends BaseController<SectorService> {
@@ -45,7 +45,7 @@ public class SectorController extends BaseController<SectorService> {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    @ApiOperation(nickname = "sector-get", value = "Busca uma página de setores")
+    @Operation(summary = "sector-get", description = "Busca uma página de setores")
     @GetMapping
     @PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Page<SectorDTO>> getPageSectors(SectorFilters filters) {
@@ -54,7 +54,7 @@ public class SectorController extends BaseController<SectorService> {
         return ResponseEntity.ok(service.getPage(filters, pageSettings));
     }
 
-    @ApiOperation(nickname = "sector-post", value = "Insere um novo setor na aplicação")
+    @Operation(summary = "sector-post", description = "Insere um novo setor na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<SectorInfoDTO> persist(@Validated @RequestBody(required = true) SectorInfoDTO newsector,
@@ -67,7 +67,7 @@ public class SectorController extends BaseController<SectorService> {
 
     }
 
-    @ApiOperation(nickname = "sector-put", value = "Atualiza um setor na aplicação")
+    @Operation(summary = "sector-put", description = "Atualiza um setor na aplicação")
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<SectorInfoDTO> update(@PathVariable("id") Long id,
@@ -75,7 +75,7 @@ public class SectorController extends BaseController<SectorService> {
         return ResponseEntity.ok().body(service.update(id, sector));
     }
 
-    @ApiOperation(nickname = "room-or-bet-put", value = "Atualiza uma sala (ambulatório) ou leito na aplicação")
+    @Operation(summary = "room-or-bet-put", description = "Atualiza uma sala (ambulatório) ou leito na aplicação")
     @PutMapping("/room-or-bed/{id}")
     @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<AccommodationDTO> updateRoomOrBed(@PathVariable("id") Long id,
@@ -83,7 +83,7 @@ public class SectorController extends BaseController<SectorService> {
         return ResponseEntity.ok().body(service.updateAccommodation(id, request));
     }
 
-    @ApiOperation(nickname = "room-or-bet-post", value = "Cria uma sala (ambulatório) ou leito na aplicação")
+    @Operation(summary = "room-or-bet-post", description = "Cria uma sala (ambulatório) ou leito na aplicação")
     @PostMapping("/room-or-bed")
     @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<AccommodationDTO> persist(@Validated @RequestBody(required = true) AccommodationDTO request,
@@ -95,7 +95,7 @@ public class SectorController extends BaseController<SectorService> {
         return ResponseEntity.ok().body(createdsector);
     }
 
-    @ApiOperation(nickname = "room-or-bet-delete", value = "Deleta uma sala (ambulatório) ou leito na aplicação")
+    @Operation(summary = "room-or-bet-delete", description = "Deleta uma sala (ambulatório) ou leito na aplicação")
     @DeleteMapping("/room-or-bed/{id}")
     @PreAuthorize("hasAnyRole('SETOR_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> deleteRoomOrBed(@PathVariable("id") Long id) {
@@ -103,7 +103,7 @@ public class SectorController extends BaseController<SectorService> {
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(nickname = "sector-get-id", value = "Busca um setor baseado no identificador")
+    @Operation(summary = "sector-get-id", description = "Busca um setor baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('SETOR_LEITURA', 'SETOR_ESCRITA', 'EVENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<SectorInfoDTO> findById(@PathVariable("id") Long id) {

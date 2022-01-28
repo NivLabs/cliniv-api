@@ -10,41 +10,40 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import br.com.nivlabs.gp.enums.EventType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Evento de Atendimento")
+@Schema(description = "Evento de Atendimento")
 public class NewAttendanceEventDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 9069758427814475745L;
 
-    @ApiModelProperty("Identificador do Atendimento")
+    @Schema(description = "Identificador do Atendimento")
     @NotNull(message = "O código do atendimeno é obrigatório")
     private Long attendanceId;
 
-    @ApiModelProperty("Data/Hora do evento")
+    @Schema(description = "Data/Hora do evento")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDateTime eventDateTime;
 
-    @ApiModelProperty("Dovumentos do evento (se houver)")
+    @Schema(description = "Dovumentos do evento (se houver)")
     private List<DigitalDocumentDTO> documents = new ArrayList<>();
 
-    @ApiModelProperty("Tipo do evento")
+    @Schema(description = "Tipo do evento")
     @NotNull(message = "Informar o tipo do evento é obrigatório")
     private EventType eventType;
 
-    @ApiModelProperty("Obsevações (se houver)")
+    @Schema(description = "Obsevações (se houver)")
     private String observations;
 
-    @ApiModelProperty("Procedimento do evento (se houver)")
+    @Schema(description = "Procedimento do evento (se houver)")
     private ProcedureInfoDTO procedure;
 
-    @ApiModelProperty("Responsável por gerar o evento")
+    @Schema(description = "Responsável por gerar o evento")
     @NotNull(message = "Obrigado informar um responsável")
     private ResponsibleInfoDTO responsible;
 
     @NotNull(message = "Informar a sala ou leito em que o evento foi realizado é obrigatório")
-    @ApiModelProperty("Sala ou leito em que o evento ocorreu")
+    @Schema(description = "Sala ou leito em que o evento ocorreu")
     private AccommodationDTO accommodation;
 
     /**

@@ -3,21 +3,20 @@ package br.com.nivlabs.gp.models.dto;
 import javax.validation.constraints.NotNull;
 
 import br.com.nivlabs.gp.enums.MetaType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@ApiModel(description = "Questão do formulário dinâmico")
+@Schema(description = "Questão do formulário dinâmico")
 public class DynamicFormQuestionDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = -1666755500493520346L;
 
-    @ApiModelProperty("Identificador único da questão do formulário dinâmico")
+    @Schema(description = "Identificador único da questão do formulário dinâmico")
     private Long id;
 
-    @ApiModelProperty("Questão do formulário dinâmico")
+    @Schema(description = "Questão do formulário dinâmico")
     @NotNull(message = "Informe a questão")
     private String question;
 
-    @ApiModelProperty("Tipo da questão")
+    @Schema(description = "Tipo da questão")
     @NotNull(message = "Informe o tipo da questão")
     private MetaType metaType;
 

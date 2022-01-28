@@ -1,7 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe interna para representar os papéis do usuário
@@ -9,18 +8,18 @@ import io.swagger.annotations.ApiModelProperty;
  * @author viniciosarodrigues
  *
  */
-@ApiModel(description = "Papel de acesso (role)")
+@Schema(description = "Papel de acesso (role)")
 public class RoleDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -4723369199443894800L;
 
-    @ApiModelProperty("Identificador único do papel do usuário")
+    @Schema(description = "Identificador único do papel do usuário")
     private Long id;
 
-    @ApiModelProperty("Nome do papel do usuário")
+    @Schema(description = "Nome do papel do usuário")
     private String name;
 
-    @ApiModelProperty("Descrição do papel do usuáiro")
+    @Schema(description = "Descrição do papel do usuáiro")
     private String description;
 
     public RoleDTO(Long id, String name, String description) {
