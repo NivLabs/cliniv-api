@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.gp.ApplicationMain;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.enums.EventType;
 import br.com.nivlabs.gp.enums.ParameterAliasType;
@@ -120,7 +119,9 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      */
     @Transactional
     private void checkParameters(Attendance attendance) {
-        if (parameterDao.findByAlias(ParameterAliasType.BLOCKS_READING_THE_MEDICAL_RECORD_WITHOUT_ACTIVE_SERVICE).isPresent()) {
+        var blocksReadingMedicalRecord = parameterDao
+                .findByAlias(ParameterAliasType.BLOCKS_READING_THE_MEDICAL_RECORD_WITHOUT_ACTIVE_SERVICE);
+        if (blocksReadingMedicalRecord.isPresent() && Boolean.valueOf(blocksReadingMedicalRecord.get().getValue())) {
             logger.info("O parâmetro que bloqueia a leitura de prontuário sem atendimento ativo está habilitado, iniciando processo de verificação...");
             attendanceDao.findByPatientAndExitDateTimeIsNull(new Patient(attendance.getPatient().getId()))
                     .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
@@ -129,7 +130,8 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
                                                                                                         attendance.getPatient().getPerson()
                                                                                                                 .getFullName())));
         }
-        if (!ApplicationMain.SETTINGS.getBooleanValue(ParameterAliasType.ENABLE_SERVICE_SHARING)) {
+        var enableServiceSharingParameter = parameterDao.findByAlias(ParameterAliasType.ENABLE_SERVICE_SHARING);
+        if (enableServiceSharingParameter.isPresent() && !Boolean.valueOf(enableServiceSharingParameter.get().getValue())) {
             logger.info("O parâmetro de compartilhamento de atendimentos está inativo, iniciando checagem do profissional...");
             logger.info("Iniciando busca de profissional pelo usuário da requisição...");
             UserInfoDTO userInfo = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
