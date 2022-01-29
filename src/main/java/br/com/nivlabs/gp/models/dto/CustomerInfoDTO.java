@@ -1,5 +1,6 @@
 package br.com.nivlabs.gp.models.dto;
 
+import br.com.nivlabs.gp.manager.models.CGCType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Informações do cliente")
@@ -10,8 +11,11 @@ public class CustomerInfoDTO extends DataTransferObjectBase {
     @Schema(description = "Identificador único do Cliente")
     private Long id;
 
-    @Schema(description = "CNPJ")
-    private String cnpj;
+    @Schema(description = "Tipo de CGC")
+    private CGCType cgcType;
+
+    @Schema(description = "Cadastro geral do contribuinte (CPF/CNPJ)")
+    private String cgc;
 
     @Schema(description = "Cadastro Nacional de Estabelecimento de saúde")
     private String cnes;
@@ -64,12 +68,20 @@ public class CustomerInfoDTO extends DataTransferObjectBase {
         this.id = id;
     }
 
-    public String getCnpj() {
-        return cnpj;
+    public CGCType getCgcType() {
+        return cgcType;
     }
 
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+    public void setCgcType(CGCType cgcType) {
+        this.cgcType = cgcType;
+    }
+
+    public String getCgc() {
+        return cgc;
+    }
+
+    public void setCgc(String cgc) {
+        this.cgc = cgc;
     }
 
     public String getCnes() {
@@ -178,10 +190,41 @@ public class CustomerInfoDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "CustomerInfoDTO [id=" + id + ", cnpj=" + cnpj + ", cnes=" + cnes + ", name=" + name + ", phone=" + phone
-                + ", corporativeName=" + corporativeName + ", legalNature=" + legalNature + ", dependency=" + dependency
-                + ", instituteType=" + instituteType + ", managerName=" + managerName + ", managerPhone=" + managerPhone + ", managerMail="
-                + managerMail + ", license=" + license + ", address=" + address + ", logoBase64=" + logoBase64 + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("CustomerInfoDTO [id=");
+        builder.append(id);
+        builder.append(", cgcType=");
+        builder.append(cgcType);
+        builder.append(", cgc=");
+        builder.append(cgc);
+        builder.append(", cnes=");
+        builder.append(cnes);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", phone=");
+        builder.append(phone);
+        builder.append(", corporativeName=");
+        builder.append(corporativeName);
+        builder.append(", legalNature=");
+        builder.append(legalNature);
+        builder.append(", dependency=");
+        builder.append(dependency);
+        builder.append(", instituteType=");
+        builder.append(instituteType);
+        builder.append(", managerName=");
+        builder.append(managerName);
+        builder.append(", managerPhone=");
+        builder.append(managerPhone);
+        builder.append(", managerMail=");
+        builder.append(managerMail);
+        builder.append(", license=");
+        builder.append(license);
+        builder.append(", address=");
+        builder.append(address);
+        builder.append(", logoBase64=");
+        builder.append(logoBase64);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

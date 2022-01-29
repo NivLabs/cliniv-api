@@ -9,7 +9,7 @@ import br.com.nivlabs.gp.controller.filters.SpecialityFilter;
 import br.com.nivlabs.gp.models.dto.SpecialityDTO;
 import br.com.nivlabs.gp.models.dto.SpecialityInfoDTO;
 import br.com.nivlabs.gp.service.speciality.business.CreateSpecialityBusinessHandler;
-import br.com.nivlabs.gp.service.speciality.business.SearchSpecialityBusinessHander;
+import br.com.nivlabs.gp.service.speciality.business.SearchSpecialityBusinessHandler;
 import br.com.nivlabs.gp.service.speciality.business.UpdateSpecialityBusinessHandler;
 
 /**
@@ -24,7 +24,7 @@ import br.com.nivlabs.gp.service.speciality.business.UpdateSpecialityBusinessHan
 public class SpecialityService {
 
     @Autowired
-    private SearchSpecialityBusinessHander searchSpecialityBusinessHander;
+    private SearchSpecialityBusinessHandler searchSpecialityBusinessHander;
     @Autowired
     private CreateSpecialityBusinessHandler createSpecialityBusinessHandler;
     @Autowired

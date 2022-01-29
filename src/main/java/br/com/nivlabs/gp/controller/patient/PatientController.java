@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.nivlabs.gp.controller.BaseController;
 import br.com.nivlabs.gp.controller.filters.PatientFilters;
 import br.com.nivlabs.gp.enums.DocumentType;
 import br.com.nivlabs.gp.event.CreatedResourceEvent;
@@ -41,10 +42,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Paciente", description = "Endpoint - Operações com Paciente")
 @RestController
 @RequestMapping(value = "/patient")
-public class PatientController {
-
-    @Autowired
-    private PatientService service;
+public class PatientController extends BaseController<PatientService> {
 
     @Autowired
     private ApplicationEventPublisher publisher;
