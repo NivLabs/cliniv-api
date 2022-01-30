@@ -19,7 +19,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 @Configuration
 public class HibernateConfig {
 
-    private static final String PACKAGES_TO_SCAN = "br.com.nivlabs.gp.models.domain";
+    private static final String PACKAGES_TO_SCAN_DOMAIN = "br.com.nivlabs.gp.models.domain";
+    private static final String PACKAGES_TO_SCAN_MANAGER = "br.com.nivlabs.gp.manager.models";
     private final JpaProperties jpaProperties;
 
     public HibernateConfig(JpaProperties jpaProperties) {
@@ -43,7 +44,7 @@ public class HibernateConfig {
 
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan(PACKAGES_TO_SCAN);
+        em.setPackagesToScan(PACKAGES_TO_SCAN_DOMAIN, PACKAGES_TO_SCAN_MANAGER);
         em.setJpaVendorAdapter(jpaVendorAdapter());
         em.setJpaPropertyMap(properties);
 

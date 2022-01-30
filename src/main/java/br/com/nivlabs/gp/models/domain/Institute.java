@@ -1,16 +1,20 @@
 package br.com.nivlabs.gp.models.domain;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+
+import br.com.nivlabs.gp.manager.models.CGCType;
+import br.com.nivlabs.gp.models.BaseObjectWithId;
 
 /**
  * 
@@ -22,7 +26,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "INSTITUTO")
-public class Institute implements Serializable {
+public class Institute extends BaseObjectWithId {
 
     private static final long serialVersionUID = -8389926388826078313L;
 
@@ -30,8 +34,12 @@ public class Institute implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "CNPJ")
-    private String cnpj;
+    @Column(name = "CGC_TIPO")
+    @Enumerated(EnumType.STRING)
+    private CGCType cgcType;
+
+    @Column(name = "CGC")
+    private String cgc;
 
     @Column(name = "CNES")
     private String cnes;
@@ -115,12 +123,20 @@ public class Institute implements Serializable {
         this.id = id;
     }
 
-    public String getCnpj() {
-        return cnpj;
+    public CGCType getCgcType() {
+        return cgcType;
     }
 
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+    public void setCgcType(CGCType cgcType) {
+        this.cgcType = cgcType;
+    }
+
+    public String getCgc() {
+        return cgc;
+    }
+
+    public void setCgc(String cgc) {
+        this.cgc = cgc;
     }
 
     public String getCnes() {
@@ -243,6 +259,30 @@ public class Institute implements Serializable {
         this.instituteType = instituteType;
     }
 
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
+    public String getManagerPhone() {
+        return managerPhone;
+    }
+
+    public void setManagerPhone(String managerPhone) {
+        this.managerPhone = managerPhone;
+    }
+
+    public String getManagerMail() {
+        return managerMail;
+    }
+
+    public void setManagerMail(String managerMail) {
+        this.managerMail = managerMail;
+    }
+
     public Date getLicenseDate() {
         return licenseDate;
     }
@@ -283,38 +323,63 @@ public class Institute implements Serializable {
         this.endDate = endDate;
     }
 
-    public String getManagerName() {
-        return managerName;
-    }
-
-    public void setManagerName(String managerName) {
-        this.managerName = managerName;
-    }
-
-    public String getManagerPhone() {
-        return managerPhone;
-    }
-
-    public void setManagerPhone(String managerPhone) {
-        this.managerPhone = managerPhone;
-    }
-
-    public String getManagerMail() {
-        return managerMail;
-    }
-
-    public void setManagerMail(String managerMail) {
-        this.managerMail = managerMail;
-    }
-
     @Override
     public String toString() {
-        return "Institute [id=" + id + ", cnpj=" + cnpj + ", cnes=" + cnes + ", companyLogo=" + companyLogo + ", name=" + name
-                + ", corporativeName=" + corporativeName + ", legalNature=" + legalNature + ", street=" + street + ", addressNumber="
-                + addressNumber + ", complement=" + complement + ", postalCode=" + postalCode + ", state=" + state + ", neighborhood="
-                + neighborhood + ", city=" + city + ", phone=" + phone + ", dependency=" + dependency + ", instituteType=" + instituteType
-                + ", managerName=" + managerName + ", managerPhone=" + managerPhone + ", managerMail=" + managerMail + ", licenseDate="
-                + licenseDate + ", userOfRegister=" + userOfRegister + ", key=" + key + ", startDate=" + startDate + ", endDate=" + endDate
-                + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Institute [id=");
+        builder.append(id);
+        builder.append(", cgcType=");
+        builder.append(cgcType);
+        builder.append(", cgc=");
+        builder.append(cgc);
+        builder.append(", cnes=");
+        builder.append(cnes);
+        builder.append(", companyLogo=");
+        builder.append(companyLogo);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", corporativeName=");
+        builder.append(corporativeName);
+        builder.append(", legalNature=");
+        builder.append(legalNature);
+        builder.append(", street=");
+        builder.append(street);
+        builder.append(", addressNumber=");
+        builder.append(addressNumber);
+        builder.append(", complement=");
+        builder.append(complement);
+        builder.append(", postalCode=");
+        builder.append(postalCode);
+        builder.append(", state=");
+        builder.append(state);
+        builder.append(", neighborhood=");
+        builder.append(neighborhood);
+        builder.append(", city=");
+        builder.append(city);
+        builder.append(", phone=");
+        builder.append(phone);
+        builder.append(", dependency=");
+        builder.append(dependency);
+        builder.append(", instituteType=");
+        builder.append(instituteType);
+        builder.append(", managerName=");
+        builder.append(managerName);
+        builder.append(", managerPhone=");
+        builder.append(managerPhone);
+        builder.append(", managerMail=");
+        builder.append(managerMail);
+        builder.append(", licenseDate=");
+        builder.append(licenseDate);
+        builder.append(", userOfRegister=");
+        builder.append(userOfRegister);
+        builder.append(", key=");
+        builder.append(key);
+        builder.append(", startDate=");
+        builder.append(startDate);
+        builder.append(", endDate=");
+        builder.append(endDate);
+        builder.append("]");
+        return builder.toString();
     }
+
 }

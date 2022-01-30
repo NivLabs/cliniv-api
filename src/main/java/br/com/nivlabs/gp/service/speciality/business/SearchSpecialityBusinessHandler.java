@@ -29,7 +29,7 @@ import br.com.nivlabs.gp.service.BaseBusinessHandler;
  *
  */
 @Component
-public class SearchSpecialityBusinessHander implements BaseBusinessHandler {
+public class SearchSpecialityBusinessHandler implements BaseBusinessHandler {
 
     @Autowired
     protected Logger logger;
