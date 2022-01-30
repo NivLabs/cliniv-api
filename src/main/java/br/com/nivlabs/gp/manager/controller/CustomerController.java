@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +22,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping(value = "/customer")
 public class CustomerController extends BaseController<CustomerService> {
 
-    @Operation(summary = "customer-post", description = "Insere um novo paciente na aplicação")
+    @Operation(summary = "customer-post", description = "Insere um novo cliente na base de pré-cadastro")
     @PostMapping
     public ResponseEntity<Void> persist(@Validated @RequestBody(required = true) NewCustomerDTO request,
                                         HttpServletResponse response) {
         service.persist(request);
         return ResponseEntity.noContent().build();
 
+    }
+
+    @Operation(summary = "customer-get-confirm", description = "Confirma a criação de um novo cliente na base de pré-cadastro")
+    @GetMapping("/confirm/{uuid}")
+    public void confirmUuid(@PathVariable("uuid") String uuid, HttpServletResponse httpServletResponse) {
+        httpServletResponse.setHeader("Location", service.confirmUUID(uuid));
+        httpServletResponse.setStatus(302);
     }
 }

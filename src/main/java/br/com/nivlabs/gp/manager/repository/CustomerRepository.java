@@ -18,6 +18,20 @@ import br.com.nivlabs.gp.manager.models.Customer;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
+    /**
+     * Busca cliente por CGC
+     * 
+     * @param cgc Cadastro geral do contribuinte
+     * @return Cliente encontrado
+     */
     Optional<Customer> findByCgc(String cgc);
+
+    /**
+     * Busca cliente por UUID
+     * 
+     * @param uuid Identificador universal único do cliente
+     * @return Cliente encontrado
+     */
+    Optional<Customer> findByUuid(String uuid);
 
 }

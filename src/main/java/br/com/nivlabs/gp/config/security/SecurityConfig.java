@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] PUBLIC_MATCHES_GET = {"/server/", "/server", "/actuator/**", "/status", "/dashboard"};
 
-    private static final String[] PUBLIC_MATCHES_POST = {"/auth/forgot/**", "/auth", "/customer"};
+    private static final String[] PUBLIC_MATCHES_POST = {"/auth/forgot/**", "/auth", "/customer", "/customer/confirm/**"};
 
     /**
      * Configurações gerais de segurança da API

@@ -1,11 +1,19 @@
 package br.com.nivlabs.gp.manager.service.customer.business;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.mail.MessagingException;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.integration.email.EmailService;
 import br.com.nivlabs.gp.manager.dto.NewCustomerDTO;
 import br.com.nivlabs.gp.manager.models.Customer;
 import br.com.nivlabs.gp.manager.repository.CustomerRepository;
@@ -25,6 +33,11 @@ public class CreateCustomerBusinessHandler implements BaseBusinessHandler {
 
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${nivlabs.api.baseUrl}")
+    private String baseUrl;
 
     public void create(NewCustomerDTO request) {
         logger.info("Iniciando processo de cadastro de cliente nas bases internas...");
@@ -35,7 +48,29 @@ public class CreateCustomerBusinessHandler implements BaseBusinessHandler {
         }
 
         Customer customer = convertRequest(request);
-        customerRepository.save(customer);
+        customer = customerRepository.save(customer);
+        logger.info("Cliente cadastrado com sucesso :: Cod: {} | Nome do gestor: {}", customer.getId(), customer.getManagerName());
+        sendConfirmationMail(customer);
+    }
+
+    /**
+     * Envia e-mail de confirmação de novo registro
+     * 
+     * @param customer Cliente cadastrado
+     */
+    private void sendConfirmationMail(Customer customer) {
+        try {
+            logger.info("Iniciando envio de e-mail de confirmação...");
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("url", baseUrl + "/customer/confirm/" + customer.getUuid());
+            vars.put("clinicName", customer.getClinicName());
+            vars.put("managerName", customer.getManagerName());
+            emailService
+                    .sendHtmlMessage(emailService.prepareHtmlMessage("Confirmação CliNiv", "email/ativacao", vars, customer.getEmail()));
+        } catch (MessagingException e) {
+            logger.error("Falha ao tentar enviar o e-mail de confirmação!", e);
+        }
+
     }
 
     /**
@@ -52,6 +87,7 @@ public class CreateCustomerBusinessHandler implements BaseBusinessHandler {
         customer.setEmail(request.getEmail());
         customer.setManagerName(request.getManagerName());
         customer.setPrincipalPhone(request.getPrincipalPhone());
+        customer.setUuid(UUID.randomUUID().toString());
         return customer;
     }
 

@@ -1,5 +1,8 @@
 package br.com.nivlabs.gp.manager.models;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -45,6 +48,12 @@ public class Customer extends BaseObjectWithId {
 
     @Column(name = "EMAIL")
     private String email;
+
+    @Column(name = "UUID")
+    private String uuid;
+
+    @Column(name = "DH_CONFIRMACAO")
+    private LocalDateTime confirmationDateTime;
 
     public Long getId() {
         return id;
@@ -102,25 +111,40 @@ public class Customer extends BaseObjectWithId {
         this.email = email;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public LocalDateTime getConfirmationDateTime() {
+        return confirmationDateTime;
+    }
+
+    public void setConfirmationDateTime(LocalDateTime confirmationDateTime) {
+        this.confirmationDateTime = confirmationDateTime;
+    }
+
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Customer [id=");
-        builder.append(id);
-        builder.append(", clinicName=");
-        builder.append(clinicName);
-        builder.append(", managerName=");
-        builder.append(managerName);
-        builder.append(", cgcType=");
-        builder.append(cgcType);
-        builder.append(", cgc=");
-        builder.append(cgc);
-        builder.append(", principalPhone=");
-        builder.append(principalPhone);
-        builder.append(", email=");
-        builder.append(email);
-        builder.append("]");
-        return builder.toString();
+    public int hashCode() {
+        return Objects.hash(cgc, cgcType, clinicName, confirmationDateTime, email, id, managerName, principalPhone, uuid);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Customer other = (Customer) obj;
+        return Objects.equals(cgc, other.cgc) && cgcType == other.cgcType && Objects.equals(clinicName, other.clinicName)
+                && Objects.equals(confirmationDateTime, other.confirmationDateTime) && Objects.equals(email, other.email)
+                && Objects.equals(id, other.id) && Objects.equals(managerName, other.managerName)
+                && Objects.equals(principalPhone, other.principalPhone) && Objects.equals(uuid, other.uuid);
     }
 
 }
