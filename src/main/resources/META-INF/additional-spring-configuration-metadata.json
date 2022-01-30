@@ -2,11 +2,51 @@
   {
     "name": "nivlabs.integration.email.default-sender",
     "type": "java.lang.String",
-    "description": "A description for 'nivlabs.integration.email.default-sender'"
+    "description": "Parâmetro de email remetente padrão"
+  },  
+  {
+    "name": "nivlabs.api.baseUrl",
+    "type": "java.lang.String",
+    "description": "URL base da API"
+  },
+  {
+    "name": "nivlabs.ui.baseUrl",
+    "type": "java.lang.String",
+    "description": "URL base da UI"
   },
   {
     "name": "jwt.secret",
     "type": "java.lang.String",
-    "description": "A description for 'jwt.secret'"
+    "description": "Chave secreta para composição do JWT"
+  },
+  {
+    "name": "jwt.expiration",
+    "type": "java.lang.String",
+    "description": "Tempo de expiração dos tokens JWT"
+  },
+  {
+    "name": "swagger.owner.url",
+    "type": "java.lang.String",
+    "description": "URL do Owner da API"
+  },
+  {
+    "name": "swagger.owner.name",
+    "type": "java.lang.String",
+    "description": "Nome do Owner da API"
+  },
+  {
+    "name": "img.prefix.client.profile",
+    "type": "java.lang.String",
+    "description": "Prefixo de imagens para envio ao S3"
+  },
+  {
+    "name": "img.profile.size",
+    "type": "java.lang.String",
+    "description": "Tamanho máximo da imagem de perfil"
+  },
+  {
+    "name": "secret-key.property",
+    "type": "java.lang.String",
+    "description": "Chave secreta da aplicação"
   }
 ]}

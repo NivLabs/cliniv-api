@@ -8,6 +8,7 @@ import javax.mail.MessagingException;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +36,9 @@ public class CreateCustomerBusinessHandler implements BaseBusinessHandler {
     @Autowired
     private EmailService emailService;
 
+    @Value("${nivlabs.api.baseUrl}")
+    private String baseUrl;
+
     public void create(NewCustomerDTO request) {
         logger.info("Iniciando processo de cadastro de cliente nas bases internas...");
         if (customerRepository.findByCgc(request.getCgc()).isPresent()) {
@@ -58,7 +62,7 @@ public class CreateCustomerBusinessHandler implements BaseBusinessHandler {
         try {
             logger.info("Iniciando envio de e-mail de confirmação...");
             Map<String, Object> vars = new HashMap<>();
-            vars.put("url", "https://gestao-prontuario.herokuapp.com/customer/confirm/" + customer.getUuid());
+            vars.put("url", baseUrl + "/customer/confirm/" + customer.getUuid());
             vars.put("clinicName", customer.getClinicName());
             vars.put("managerName", customer.getManagerName());
             emailService
