@@ -187,6 +187,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
             healthPlanInfo.setOperatorCode(healthPlanEntity.getHealthOperator().getAnsCode());
             healthPlanInfo.setOperatorName(healthPlanEntity.getHealthOperator().getCompanyName());
             healthPlanInfo.setSegmentation(healthPlanEntity.getSegmentation());
+            healthPlanInfo.setPatientPlanNumber(patient.getHealthPlanCode());
             patientInfo.setHealthPlan(healthPlanInfo);
             logger.info("Plano de saúde do paciente :: {}", healthPlanInfo);
         }

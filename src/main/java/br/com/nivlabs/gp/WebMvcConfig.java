@@ -17,10 +17,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final TenantInterceptor tenantInterceptor;
 
+    /**
+     * Adicionando tenant às configurações da aplicação
+     * 
+     * @param tenantInterceptor Interceptador de troca de schemas
+     */
     public WebMvcConfig(TenantInterceptor tenantInterceptor) {
         this.tenantInterceptor = tenantInterceptor;
     }
 
+    /**
+     * Interceptador de requisições para troca de schema
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tenantInterceptor);

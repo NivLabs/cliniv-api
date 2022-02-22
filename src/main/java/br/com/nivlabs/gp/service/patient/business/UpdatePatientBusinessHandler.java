@@ -70,7 +70,6 @@ public class UpdatePatientBusinessHandler extends CreateOrUpdatePatientBusinessH
         patientRepo.saveAndFlush(patientEntity);
 
         logger.info("Cadastro do paciente :: {} | {} :: atualizado com sucesso!", request.getId(), request.getFullName());
-
         return request;
     }
 
