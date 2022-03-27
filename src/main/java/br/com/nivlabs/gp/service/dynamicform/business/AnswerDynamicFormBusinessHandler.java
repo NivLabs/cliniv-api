@@ -135,7 +135,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
                 responseConverted.setAnswer(response.getResponse());
             }
             responseConverted.setAttendanceId(attendanceId);
-            logger.info("Inserindo pergunta respondida:: {}", responseConverted);
+            logger.info("Inserindo pergunta respondida :: {}", responseConverted);
             formRepo.saveAndFlush(responseConverted);
         });
     }

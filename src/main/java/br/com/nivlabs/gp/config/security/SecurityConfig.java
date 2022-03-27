@@ -40,7 +40,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserRepository userDao;
 
-    private static final String[] PUBLIC_MATCHES = {"/v2/**", "/webjars/**", "/swagger-ui/**", "/api-docs/**",
+    private static final String[] PUBLIC_MATCHES = {"/v2/**",
+                                                    "/webjars/**",
+                                                    "/swagger-ui/**",
+                                                    "/api-docs/**",
                                                     "/swagger-resources/**"};
 
     private static final String[] PUBLIC_MATCHES_GET = {"/server/", "/server", "/actuator/**", "/status", "/dashboard"};
