@@ -1,6 +1,8 @@
 package br.com.nivlabs.gp.report;
 
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.nivlabs.gp.config.db.TenantContext;
 import br.com.nivlabs.gp.exception.HttpException;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -46,6 +49,25 @@ public class JasperReportsCreator {
     }
 
     /**
+     * Contrói dinamicamente o datasource para o Jasper
+     * 
+     * @param tenantIdentifier Identificador do Schema
+     * @return Conexão válida
+     * @throws SQLException
+     */
+    public Connection getConnection(String tenantIdentifier) throws SQLException {
+        final Connection connection = datasource.getConnection();
+        try {
+            connection.createStatement().execute("USE " + tenantIdentifier);
+        } catch (SQLException e) {
+            logger.error("Não foi possivel alterar para o schema {}", tenantIdentifier, e);
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Falha ao iniciar conexão com banco, verifique os logs para mais informações!");
+        }
+        return connection;
+    }
+
+    /**
      * Cria o JasperPrint com os parâmetros
      * 
      * @param paramsToReport - Parâmetros do relatório
@@ -57,12 +79,23 @@ public class JasperReportsCreator {
     private JasperPrint getPrinterByStream(ReportParam paramsToReport, InputStream reportStream)
             throws JRException {
         JasperReport reportCompiled = null;
+        Connection connection = null;
         try {
+            connection = getConnection(TenantContext.getCurrentTenant());
+            logger.info("Iniciando processo de geração de documento :: Datasource Utilizado: {}", TenantContext.getCurrentTenant());
             reportCompiled = JasperCompileManager.compileReport(reportStream);
-            return JasperFillManager.fillReport(reportCompiled, paramsToReport.getParams(), datasource.getConnection());
+            return JasperFillManager.fillReport(reportCompiled, paramsToReport.getParams(), connection);
         } catch (Exception e) {
             logger.error("Falha ao tentar compilar o relatório para o Jasper", e);
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha na criação do relatório");
+        } finally {
+            try {
+                if (datasource.getConnection() != null && !datasource.getConnection().isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                logger.warn("Não foi possível encerrar a conexão :: ", e);
+            }
         }
     }
 
