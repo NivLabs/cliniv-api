@@ -11,15 +11,17 @@ import br.com.nivlabs.gp.models.dto.DocumentTemplateInfoDTO;
 import br.com.nivlabs.gp.service.BaseService;
 import br.com.nivlabs.gp.service.documenttemplate.business.CreateDocumentTemplateBusinessHandler;
 import br.com.nivlabs.gp.service.documenttemplate.business.SearchDocumentTemplateBusinessHandler;
+import br.com.nivlabs.gp.service.documenttemplate.business.UpdateDocumentTemplateBusinessHandler;
 
 @Service
 public class DocumentTemplateService implements BaseService {
 
     @Autowired
     private SearchDocumentTemplateBusinessHandler searchDocumentTemplateBusinessHandler;
-
     @Autowired
     private CreateDocumentTemplateBusinessHandler createDocumentTemplateBusinessHandler;
+    @Autowired
+    private UpdateDocumentTemplateBusinessHandler updateDocumentTemplateBusinessHandler;
 
     /**
      * Realiza a busca paginada de templates de documentos
@@ -51,4 +53,17 @@ public class DocumentTemplateService implements BaseService {
     public DocumentTemplateInfoDTO create(DocumentTemplateInfoDTO request) {
         return createDocumentTemplateBusinessHandler.create(request);
     }
+
+    /**
+     * Realiza a atualização de um template de documento para o usuário logado
+     * 
+     * @param id Identificador único do template
+     * @param request Requisição de criação de template de documento
+     * @return Informações de um template de documento
+     */
+    public DocumentTemplateInfoDTO update(Long id, DocumentTemplateInfoDTO request) {
+        request.setId(id);
+        return updateDocumentTemplateBusinessHandler.update(request);
+    }
+
 }

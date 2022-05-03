@@ -1,5 +1,6 @@
 package br.com.nivlabs.gp.service.documenttemplate.business;
 
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,8 @@ import br.com.nivlabs.gp.util.SecurityContextUtil;
 public class CreateDocumentTemplateBusinessHandler implements BaseBusinessHandler {
 
     @Autowired
+    private Logger logger;
+    @Autowired
     private DocumentTemplateRepository dao;
     @Autowired
     private UserRepository userRepository;
@@ -27,6 +30,7 @@ public class CreateDocumentTemplateBusinessHandler implements BaseBusinessHandle
      * @return Template de documento criado na base
      */
     public DocumentTemplateInfoDTO create(DocumentTemplateInfoDTO request) {
+        logger.info("Iniciando processo de atualização de modelo de documento :: {}", request.getId());
         var userName = SecurityContextUtil.getAuthenticatedUser().getUsername();
         var user = userRepository.findByUserName(userName).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 "Nenhum usuário com o nome '" + userName + "' encontrado, o processo de busca de templates foi cancelado."));
@@ -35,9 +39,11 @@ public class CreateDocumentTemplateBusinessHandler implements BaseBusinessHandle
         template.setUserId(user.getId());
         template.setDescription(request.getDescription());
         template.setText(request.getText());
+        logger.info("Usuário encontrado! Criando informações cadastrais para modelo de documento para o usuário {}", userName);
 
         template = dao.save(template);
 
+        logger.info("Modelo de documento criado com sucesso por {}!", userName);
         return convertDocument(template);
     }
 
