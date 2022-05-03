@@ -101,7 +101,7 @@ public class SearchSpecialityBusinessHandler implements BaseBusinessHandler {
         responsibleDTO.setProfessionalIdentity(responsible.getProfessionalIdentity());
         responsibleDTO.setInitialsIdentity(responsible.getInitialsIdentity());
 
-        responsibleDTO.setFullName(personEntity.getFatherName());
+        responsibleDTO.setFullName(personEntity.getFullName());
         responsibleDTO.setSocialName(personEntity.getSocialName());
         responsibleDTO.setCpf(personEntity.getCpf());
         responsibleDTO.setBornDate(personEntity.getBornDate());
