@@ -74,5 +74,4 @@ public class HealthOperatorRepositoryCustomImpl extends GenericCustomRepository<
         }
         return predicates.toArray(new Predicate[predicates.size()]);
     }
-
 }
