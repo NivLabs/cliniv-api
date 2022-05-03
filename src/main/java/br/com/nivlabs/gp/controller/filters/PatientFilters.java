@@ -33,10 +33,6 @@ public class PatientFilters extends CustomFilters {
         return "%".concat(socialName).concat("%");
     }
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
-
     public String getId() {
         return id;
     }
@@ -51,6 +47,30 @@ public class PatientFilters extends CustomFilters {
 
     public PatientType getType() {
         return type;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setSocialName(String socialName) {
+        this.socialName = socialName;
+    }
+
+    public void setCnsNumber(String cnsNumber) {
+        this.cnsNumber = cnsNumber;
+    }
+
+    public void setType(PatientType type) {
+        this.type = type;
     }
 
     @Override
