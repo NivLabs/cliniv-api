@@ -3,12 +3,20 @@ package br.com.nivlabs.gp.models.domain;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
+@Embeddable
 public class DocumentTemplatePK implements Serializable {
 
     private static final long serialVersionUID = -7840554737274545252L;
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "ID_USUARIO")
     private Long userId;
 
     public DocumentTemplatePK() {

@@ -83,7 +83,7 @@ public class SearchSpecialityBusinessHandler implements BaseBusinessHandler {
             specialityInfo.getResponsibles().add(responsibleDTO);
         });
 
-        logger.info("Especialidade convertida :: {}", specialityEntity);
+        logger.info("Especialidade convertida :: {}", specialityInfo);
         return specialityInfo;
     }
 

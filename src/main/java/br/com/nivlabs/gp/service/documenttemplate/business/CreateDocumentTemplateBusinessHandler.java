@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.DocumentTemplate;
+import br.com.nivlabs.gp.models.domain.DocumentTemplatePK;
 import br.com.nivlabs.gp.models.dto.DocumentTemplateInfoDTO;
 import br.com.nivlabs.gp.repository.DocumentTemplateRepository;
 import br.com.nivlabs.gp.repository.UserRepository;
@@ -30,16 +31,14 @@ public class CreateDocumentTemplateBusinessHandler implements BaseBusinessHandle
      * @return Template de documento criado na base
      */
     public DocumentTemplateInfoDTO create(DocumentTemplateInfoDTO request) {
-        logger.info("Iniciando processo de atualização de modelo de documento :: {}", request.getId());
         var userName = SecurityContextUtil.getAuthenticatedUser().getUsername();
         var user = userRepository.findByUserName(userName).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 "Nenhum usuário com o nome '" + userName + "' encontrado, o processo de busca de templates foi cancelado."));
+        logger.info("Iniciando processo de criação de modelo de documento para o usuário :: {}", userName);
         DocumentTemplate template = new DocumentTemplate();
-        template.setId(null);
-        template.setUserId(user.getId());
+        template.setPk(new DocumentTemplatePK(null, user.getId()));
         template.setDescription(request.getDescription());
         template.setText(request.getText());
-        logger.info("Usuário encontrado! Criando informações cadastrais para modelo de documento para o usuário {}", userName);
 
         template = dao.save(template);
 
@@ -55,7 +54,7 @@ public class CreateDocumentTemplateBusinessHandler implements BaseBusinessHandle
      */
     private DocumentTemplateInfoDTO convertDocument(DocumentTemplate entity) {
         DocumentTemplateInfoDTO response = new DocumentTemplateInfoDTO();
-        response.setId(entity.getId());
+        response.setId(entity.getPk().getId());
         response.setDescription(entity.getDescription());
         response.setText(entity.getText());
         return response;

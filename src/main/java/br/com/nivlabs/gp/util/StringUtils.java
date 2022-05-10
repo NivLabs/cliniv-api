@@ -64,10 +64,59 @@ public abstract class StringUtils {
     public static String dateFormat(Date date, String format) {
         return new SimpleDateFormat(format).format(date);
     }
-    
-	public static LocalDateTime convertStringToDate(String stringDate) {
-		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+
+    public static LocalDateTime convertStringToDate(String stringDate) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
         return LocalDateTime.parse(stringDate, format);
-	}
+    }
+
+    /**
+     * Formata número de telefone
+     * 
+     * @param phoneNum Número do telefone
+     * @return Número do telefone formatado
+     */
+    public static String printPhone(String phoneNum) {
+        if (phoneNum == null)
+            return "";
+        phoneNum = getDigits(phoneNum);
+        StringBuilder sb = new StringBuilder(15);
+        StringBuilder temp = new StringBuilder(phoneNum);
+
+        while (temp.length() < 10)
+            temp.insert(0, "0");
+
+        char[] chars = temp.toString().toCharArray();
+
+        sb.append("(");
+        for (int i = 0; i < chars.length; i++) {
+            if (i == 2)
+                sb.append(") ");
+            else if (i == 3 && phoneNum.length() == 11)
+                sb.append(" ");
+            else if (i == 7 && phoneNum.length() == 11)
+                sb.append("-");
+            else if (i == 6 && phoneNum.length() == 10)
+                sb.append("-");
+            sb.append(chars[i]);
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Formata CEP
+     * 
+     * @param cep CEP
+     * @return CEP formatado
+     */
+    public static String printCEP(String cep) {
+        if (cep == null)
+            return "";
+        cep = getDigits(cep);
+        if (cep.length() != 8)
+            return "";
+        return cep.substring(0, 2) + "." + cep.substring(2, 5) + "-" + cep.substring(5, 8);
+    }
 
 }

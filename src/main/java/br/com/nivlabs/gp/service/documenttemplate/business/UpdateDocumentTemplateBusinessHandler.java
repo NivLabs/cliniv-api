@@ -33,7 +33,8 @@ public class UpdateDocumentTemplateBusinessHandler implements BaseBusinessHandle
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                         "Nenhum padrão de documento encontrado com o código " + request.getId() + " para o usuário " + userName));
 
-        logger.info("Documento encontrado :: {} | {}... Atualizando informações...", template.getId(), template.getUserId());
+        logger.info("Documento encontrado :: {} | {}... Atualizando informações...", template.getPk().getId(),
+                    template.getPk().getUserId());
 
         template.setDescription(request.getDescription());
         template.setText(request.getText());

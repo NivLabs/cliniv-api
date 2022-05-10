@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import br.com.nivlabs.gp.controller.filters.DocumentTemplateFilter;
 import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.DocumentTemplate;
+import br.com.nivlabs.gp.models.domain.DocumentTemplatePK_;
 import br.com.nivlabs.gp.models.domain.DocumentTemplate_;
 import br.com.nivlabs.gp.models.dto.DocumentTemplateDTO;
 import br.com.nivlabs.gp.repository.custom.CustomFilters;
@@ -38,7 +39,7 @@ public class DocumentTemplateRepositoryCustomImpl extends GenericCustomRepositor
         Root<DocumentTemplate> root = criteria.from(DocumentTemplate.class);
 
         criteria.select(builder.construct(DocumentTemplateDTO.class,
-                                          root.get(DocumentTemplate_.id),
+                                          root.get(DocumentTemplate_.pk).get(DocumentTemplatePK_.id),
                                           root.get(DocumentTemplate_.description)));
         return getPage(filters, pageSettings, builder, criteria, root);
     }
@@ -52,7 +53,7 @@ public class DocumentTemplateRepositoryCustomImpl extends GenericCustomRepositor
         List<Predicate> predicates = new ArrayList<>();
 
         if (filters.getUserId() != null) {
-            predicates.add(builder.equal(root.get(DocumentTemplate_.userId), filters.getUserId()));
+            predicates.add(builder.equal(root.get(DocumentTemplate_.pk).get(DocumentTemplatePK_.userId), filters.getUserId()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getDescription())) {
             predicates.add(builder.like(root.get(DocumentTemplate_.description), filters.getDescription()));

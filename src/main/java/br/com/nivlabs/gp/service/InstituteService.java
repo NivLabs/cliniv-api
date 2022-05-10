@@ -54,6 +54,9 @@ public class InstituteService implements BaseService {
     @Autowired
     private ParameterRepository paramRepo;
 
+    private static List<Institute> CACHE_INSTITUTE_INFO = null;
+    private static Long MILI_REPRESENTATION = null;
+
     public InstituteDTO getSettings() {
 
         InstituteDTO response = new InstituteDTO();
@@ -62,11 +65,17 @@ public class InstituteService implements BaseService {
         List<Parameter> parameters = paramRepo.findAll();
         parameters.sort((primary, scondary) -> primary.getId().compareTo(scondary.getId()));
 
-        logger.info("Buscando informações da instituição...");
-        List<Institute> institutes = instituteRepo.findAll();
+        if (CACHE_INSTITUTE_INFO == null || MILI_REPRESENTATION < System.currentTimeMillis()) {
+            logger.info("Buscando informações da instituição...");
+            CACHE_INSTITUTE_INFO = instituteRepo.findAll();
+            MILI_REPRESENTATION = System.currentTimeMillis() + 3600000;
+        } else {
+            logger.info("Dados da instituição em cache. Tempo da próxima carga :: "
+                    + (((System.currentTimeMillis() - MILI_REPRESENTATION) / 1000) / 60) * -1 + " minuto(s)");
+        }
 
-        if (!institutes.isEmpty()) {
-            Institute institute = institutes.get(0);
+        if (!CACHE_INSTITUTE_INFO.isEmpty()) {
+            Institute institute = CACHE_INSTITUTE_INFO.get(0);
             CustomerInfoDTO customer = new CustomerInfoDTO();
             AddressDTO address = new AddressDTO();
             LicenseDTO license = new LicenseDTO();

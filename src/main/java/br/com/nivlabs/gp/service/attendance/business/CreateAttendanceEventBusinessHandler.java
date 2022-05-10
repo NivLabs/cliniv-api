@@ -28,6 +28,7 @@ import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 import br.com.nivlabs.gp.repository.ProcedureRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
 import br.com.nivlabs.gp.service.digitaldocument.DigitalDocumentService;
+import br.com.nivlabs.gp.service.report.ReportService;
 import br.com.nivlabs.gp.service.responsible.ResponsibleService;
 import br.com.nivlabs.gp.service.userservice.UserService;
 import br.com.nivlabs.gp.util.SecurityContextUtil;
@@ -46,9 +47,11 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
 
     @Autowired
     private Logger logger;
-
     @Autowired
     private AttendanceEventRepository attendanceEventRepo;
+    @Autowired
+    private ProcedureRepository procedureRepository;
+
     @Autowired
     private DigitalDocumentService docService;
     @Autowired
@@ -56,7 +59,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
     @Autowired
     private ResponsibleService responsibleService;
     @Autowired
-    private ProcedureRepository procedureRepository;
+    private ReportService reportService;
 
     /**
      * Cria um novo evento de atendimento
@@ -96,6 +99,12 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
 
         Long newEventId = attendanceEventRepo.save(newAttendanceEvent).getId();
+
+        if (request.getObservations() != null) {
+            var digitalDocumentoFromDocumentTemplate = reportService
+                    .generateDocumentFromFormatedText(newEventId, newAttendanceEvent.getTitle(), request.getObservations());
+            request.getDocuments().add(digitalDocumentoFromDocumentTemplate);
+        }
         insertDocuments(newEventId, request.getDocuments());
 
     }

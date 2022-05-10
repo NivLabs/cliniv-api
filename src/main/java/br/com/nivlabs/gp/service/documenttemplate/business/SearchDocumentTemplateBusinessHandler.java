@@ -36,7 +36,7 @@ public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandle
      */
     public DocumentTemplateInfoDTO byId(Long id) {
         DocumentTemplate entity = documentTemplateRepository.findById(new DocumentTemplatePK(id, getContextUserInformations().getId()))
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Templete de documento com id %s não encontrado"));
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Modelo do documento com o identificador %s não foi encontrado"));
 
         return convertDocument(entity);
     }
@@ -49,7 +49,7 @@ public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandle
      */
     private DocumentTemplateInfoDTO convertDocument(DocumentTemplate entity) {
         DocumentTemplateInfoDTO response = new DocumentTemplateInfoDTO();
-        response.setId(entity.getId());
+        response.setId(entity.getPk().getId());
         response.setDescription(entity.getDescription());
         response.setText(entity.getText());
         return response;
@@ -77,7 +77,7 @@ public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandle
     private UserApplication getContextUserInformations() {
         var userName = SecurityContextUtil.getAuthenticatedUser().getUsername();
         var user = userRepository.findByUserName(userName).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
-                "Nenhum usuário com o nome '" + userName + "' encontrado, o processo de busca de templates foi cancelado."));
+                "Nenhum usuário com o nome '" + userName + "' encontrado, o processo de busca de modeslo de documento foi cancelado."));
         return user;
     }
 }

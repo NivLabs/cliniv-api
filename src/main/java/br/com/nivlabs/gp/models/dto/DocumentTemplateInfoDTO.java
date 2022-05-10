@@ -1,5 +1,8 @@
 package br.com.nivlabs.gp.models.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "DocumentTemplate", description = "Template de documento")
@@ -11,9 +14,13 @@ public class DocumentTemplateInfoDTO extends DataTransferObjectBase {
     private Long id;
 
     @Schema(description = "Descrição/Nome do template")
+    @NotNull(message = "A descrição do modelo do documento deve ser informada")
+    @NotEmpty(message = "A descrição do modelo do documento deve ser informada")
     private String description;
 
     @Schema(description = "Texto do template")
+    @NotNull(message = "O texto do modelo do documento deve ser informado")
+    @NotEmpty(message = "O texto do modelo do documento deve ser informado")
     private String text;
 
     public DocumentTemplateInfoDTO() {

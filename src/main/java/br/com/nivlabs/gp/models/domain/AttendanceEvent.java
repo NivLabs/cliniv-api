@@ -2,6 +2,7 @@ package br.com.nivlabs.gp.models.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
@@ -75,6 +77,7 @@ public class AttendanceEvent extends BaseObjectWithId {
     private String title;
 
     @Column(name = "OBSERVACOES")
+    @Lob
     private String observations;
 
     @Column(name = "DH_EVENTO")
@@ -150,11 +153,11 @@ public class AttendanceEvent extends BaseObjectWithId {
     }
 
     public String getObservations() {
-        return observations;
+        return observations != null ? new String(Base64.getDecoder().decode(observations)) : null;
     }
 
     public void setObservations(String observations) {
-        this.observations = observations;
+        this.observations = observations != null ? Base64.getEncoder().encodeToString(observations.getBytes()) : null;
     }
 
     public LocalDateTime getEventDateTime() {

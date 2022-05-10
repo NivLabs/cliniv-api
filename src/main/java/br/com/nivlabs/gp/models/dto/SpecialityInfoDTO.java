@@ -2,7 +2,6 @@ package br.com.nivlabs.gp.models.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.validation.constraints.NotNull;
 
@@ -75,24 +74,6 @@ public class SpecialityInfoDTO extends DataTransferObjectBase {
 
     public void setResponsibles(List<ResponsibleDTO> responsibles) {
         this.responsibles = responsibles;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(description, id, name, responsibles);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SpecialityInfoDTO other = (SpecialityInfoDTO) obj;
-        return Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
-                && Objects.equals(responsibles, other.responsibles);
     }
 
     @Override

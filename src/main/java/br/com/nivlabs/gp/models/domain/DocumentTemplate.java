@@ -1,52 +1,38 @@
 package br.com.nivlabs.gp.models.domain;
 
+import java.util.Base64;
 import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import br.com.nivlabs.gp.models.BaseObjectWithId;
+import br.com.nivlabs.gp.models.BaseObject;
 
 @Entity
 @Table(name = "TEMPLATE_DOC")
-@IdClass(DocumentTemplatePK.class)
-public class DocumentTemplate extends BaseObjectWithId {
+public class DocumentTemplate extends BaseObject {
 
     private static final long serialVersionUID = -6658552159562710059L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Id
-    @Column(name = "ID_USUARIO")
-    private Long userId;
+    private DocumentTemplatePK pk;
 
     @Column(name = "DESCRICAO")
     private String description;
 
     @Column(name = "TEXTO_TEMPLATE")
+    @Lob
     private String text;
 
-    public Long getId() {
-        return id;
+    public DocumentTemplatePK getPk() {
+        return pk;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setPk(DocumentTemplatePK pk) {
+        this.pk = pk;
     }
 
     public String getDescription() {
@@ -58,16 +44,16 @@ public class DocumentTemplate extends BaseObjectWithId {
     }
 
     public String getText() {
-        return text;
+        return text != null ? new String(Base64.getDecoder().decode(text)) : null;
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.text = text != null ? Base64.getEncoder().encodeToString(text.getBytes()) : null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, id, text, userId);
+        return Objects.hash(description, pk, text);
     }
 
     @Override
@@ -79,8 +65,6 @@ public class DocumentTemplate extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         DocumentTemplate other = (DocumentTemplate) obj;
-        return Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(text, other.text)
-                && Objects.equals(userId, other.userId);
+        return Objects.equals(description, other.description) && Objects.equals(pk, other.pk) && Objects.equals(text, other.text);
     }
-
 }

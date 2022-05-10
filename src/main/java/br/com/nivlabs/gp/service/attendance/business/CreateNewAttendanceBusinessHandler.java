@@ -10,14 +10,18 @@ import br.com.nivlabs.gp.exception.HttpException;
 import br.com.nivlabs.gp.models.domain.Accommodation;
 import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.AttendanceEvent;
+import br.com.nivlabs.gp.models.domain.DigitalDocument;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.domain.Responsible;
+import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.gp.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.gp.models.dto.NewAttandenceDTO;
 import br.com.nivlabs.gp.repository.AttendanceEventRepository;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
+import br.com.nivlabs.gp.repository.DigitalDocumentRepository;
 import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
+import br.com.nivlabs.gp.service.report.ReportService;
 
 /**
  * 
@@ -39,9 +43,13 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
     @Autowired
     private PatientRepository patientDao;
     @Autowired
+    DigitalDocumentRepository digitalDocumentRepo;
+    @Autowired
     SearchAttendanceBusinessHandler searchAttendanceBusinessHandler;
     @Autowired
     SearchMedicalRecordBusinessHandler searchMedicalRecordBusinessHandler;
+    @Autowired
+    ReportService reportService;
 
     /**
      * Realiza a criação de um novo atendimento à partir do DTO
@@ -107,9 +115,10 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
     private void createEntryEvent(Attendance attendanceEntity, NewAttandenceDTO newAttendanceRequest) {
         AttendanceEvent entryEvent = new AttendanceEvent();
         entryEvent.setEventDateTime(attendanceEntity.getEntryDateTime());
-        entryEvent.setTitle(attendanceEntity.getReasonForEntry());
+        entryEvent.setTitle("INÍCIO DO ATENDIMENTO");
         entryEvent.setAttendance(new Attendance(attendanceEntity.getId()));
         entryEvent.setAccommodation(attendanceEntity.getCurrentAccommodation());
+        entryEvent.setObservations(newAttendanceRequest.getEntryCause());
 
         if (newAttendanceRequest.getResponsibleId() != null)
             // Verificar Responsável
@@ -117,6 +126,21 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
 
         entryEvent.setEventType(newAttendanceRequest.getEventType());
 
-        attendanceEventRepo.save(entryEvent);
+        entryEvent = attendanceEventRepo.save(entryEvent);
+
+        if (entryEvent.getObservations() != null) {
+            DigitalDocumentDTO digitalDocumentoFromDocumentTemplate = reportService
+                    .generateDocumentFromFormatedText(entryEvent.getId(), entryEvent.getTitle(), entryEvent.getObservations());
+            logger.info("Documento sendo processado :: Código do evento -> {} | Nome -> {}", entryEvent.getId(), entryEvent.getTitle());
+            DigitalDocument document = new DigitalDocument();
+            document.setBase64(digitalDocumentoFromDocumentTemplate.getBase64());
+            document.setName(digitalDocumentoFromDocumentTemplate.getName());
+            document.setType(digitalDocumentoFromDocumentTemplate.getType());
+            document.setCreatedAt(digitalDocumentoFromDocumentTemplate.getCreatedAt());
+            document.setAttendanceEvent(new AttendanceEvent(entryEvent.getId()));
+
+            document = digitalDocumentRepo.save(document);
+            logger.info("Documentos criados com sucesso!");
+        }
     }
 }
