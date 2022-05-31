@@ -16,6 +16,7 @@ import br.com.nivlabs.gp.models.domain.Attendance;
 import br.com.nivlabs.gp.models.domain.Patient;
 import br.com.nivlabs.gp.models.dto.AttendanceDTO;
 import br.com.nivlabs.gp.repository.AttendanceRepository;
+import br.com.nivlabs.gp.repository.PatientRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
 
 /**
@@ -34,6 +35,8 @@ public class SearchAttendanceBusinessHandler implements BaseBusinessHandler {
 
     @Autowired
     private AttendanceRepository attendanceRepo;
+    @Autowired
+    private PatientRepository patientRepository;
 
     /**
      * 

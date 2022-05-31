@@ -3,12 +3,15 @@ package br.com.nivlabs.gp.service;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +56,11 @@ public class InstituteService implements BaseService {
 
     @Autowired
     private ParameterRepository paramRepo;
+    @Autowired
+    HttpServletRequest request;
+
+    private static Map<String, List<Institute>> CACHE_INSTITUTE_INFO = new HashMap<>();
+    private static Long MILI_REPRESENTATION = null;
 
     public InstituteDTO getSettings() {
 
@@ -62,11 +70,19 @@ public class InstituteService implements BaseService {
         List<Parameter> parameters = paramRepo.findAll();
         parameters.sort((primary, scondary) -> primary.getId().compareTo(scondary.getId()));
 
-        logger.info("Buscando informações da instituição...");
-        List<Institute> institutes = instituteRepo.findAll();
+        if ((CACHE_INSTITUTE_INFO.get(request.getHeader("CUSTOMER_ID")) == null
+                || CACHE_INSTITUTE_INFO.get(request.getHeader("CUSTOMER_ID")).isEmpty())
+                || MILI_REPRESENTATION < System.currentTimeMillis()) {
+            logger.info("Buscando informações da instituição para o cliente :: {}...", request.getHeader("CUSTOMER_ID"));
+            CACHE_INSTITUTE_INFO.put(request.getHeader("CUSTOMER_ID"), instituteRepo.findAll());
+            MILI_REPRESENTATION = System.currentTimeMillis() + 3600000;
+        } else {
+            logger.info("Dados da instituição em cache. Tempo da próxima carga :: "
+                    + (((System.currentTimeMillis() - MILI_REPRESENTATION) / 1000) / 60) * -1 + " minuto(s)");
+        }
 
-        if (!institutes.isEmpty()) {
-            Institute institute = institutes.get(0);
+        if (!request.getHeader("CUSTOMER_ID").isEmpty()) {
+            Institute institute = CACHE_INSTITUTE_INFO.get(request.getHeader("CUSTOMER_ID")).get(0);
             CustomerInfoDTO customer = new CustomerInfoDTO();
             AddressDTO address = new AddressDTO();
             LicenseDTO license = new LicenseDTO();
@@ -100,7 +116,8 @@ public class InstituteService implements BaseService {
             Institute institute = optionalRet.get();
             institute.setCompanyLogo(file.getBase64());
             instituteRepo.save(institute);
-            logger.info("Logo Inserida");
+            logger.info("Logo Inserida, limpando cache...");
+            CACHE_INSTITUTE_INFO.remove(request.getHeader("CUSTOMER_ID"));
         }
     }
 

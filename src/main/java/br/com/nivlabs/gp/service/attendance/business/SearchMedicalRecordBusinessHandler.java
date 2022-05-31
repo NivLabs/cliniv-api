@@ -157,7 +157,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
     @Transactional
     public MedicalRecordDTO getActiveMedicalRecord(Long patientId) {
         Patient patient = patientDao.findById(patientId)
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Paciente não encontrado!"));
+                .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Paciente não encontrado!"));
 
         Person person = patient.getPerson();
 

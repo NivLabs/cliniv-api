@@ -9,6 +9,7 @@ import java.util.Base64;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +17,29 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.nivlabs.gp.enums.DigitalDocumentType;
 import br.com.nivlabs.gp.enums.MetaType;
 import br.com.nivlabs.gp.exception.HttpException;
+import br.com.nivlabs.gp.models.domain.Attendance;
+import br.com.nivlabs.gp.models.domain.AttendanceEvent;
+import br.com.nivlabs.gp.models.domain.Patient;
+import br.com.nivlabs.gp.models.domain.Person;
 import br.com.nivlabs.gp.models.domain.ReportLayout;
+import br.com.nivlabs.gp.models.dto.AddressDTO;
 import br.com.nivlabs.gp.models.dto.DigitalDocumentDTO;
+import br.com.nivlabs.gp.models.dto.InstituteDTO;
 import br.com.nivlabs.gp.models.dto.ReportGenerationRequestDTO;
 import br.com.nivlabs.gp.report.JasperReportsCreator;
 import br.com.nivlabs.gp.report.ReportParam;
+import br.com.nivlabs.gp.repository.AttendanceEventRepository;
+import br.com.nivlabs.gp.repository.AttendanceRepository;
 import br.com.nivlabs.gp.repository.ReportRepository;
 import br.com.nivlabs.gp.service.BaseBusinessHandler;
+import br.com.nivlabs.gp.service.InstituteService;
+import br.com.nivlabs.gp.service.report.business.internalmodel.ReportHeaderInformation;
+import br.com.nivlabs.gp.util.SecurityContextUtil;
+import br.com.nivlabs.gp.util.StringUtils;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 
 /**
@@ -41,9 +57,17 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
     protected Logger logger;
 
     @Autowired
-    protected JasperReportsCreator jasperReportCreator;
+    private JasperReportsCreator jasperReportCreator;
     @Autowired
-    protected ReportRepository reportRepository;
+    private ReportRepository reportRepository;
+    @Autowired
+    private AttendanceEventRepository attendanceEventRepo;
+    @Autowired
+    private AttendanceRepository attendanceRepo;
+    @Autowired
+    private InstituteService instituteService;
+
+    private static final String GENERIC_REPORT_SOURCE = "reports/generico.jrxml";
 
     /**
      * Cria um documento digital anexado a um atendimento
@@ -56,7 +80,7 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
      */
     @Transactional
     public DigitalDocumentDTO generateFromJxmlStream(Long attendanceEventId, String reportName, ReportParam params,
-                                       InputStream reportInputStream) {
+                                                     InputStream reportInputStream) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: {} :: Instância -> {}",
                         reportName, reportInputStream);
@@ -101,6 +125,113 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
         } catch (Exception e) {
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento...\n".concat(e.getMessage()), e);
         }
+    }
+
+    /**
+     * Gera um relatório à partir de um texto livre
+     * 
+     * @param text Texto livre
+     * @return Documento digital
+     */
+    @Transactional
+    public DigitalDocumentDTO generateFromFormatedText(Long attendanceEventId, String title, String text) {
+        InputStream reportInputStream = null;
+        ByteArrayOutputStream outputStream = null;
+        try {
+            reportInputStream = new ClassPathResource(GENERIC_REPORT_SOURCE)
+                    .getInputStream();
+            outputStream = new ByteArrayOutputStream();
+            JasperPrint jasperPrint = JasperFillManager.fillReport(JasperCompileManager.compileReport(reportInputStream),
+                                                                   getReportHeaderInformationFromAttendance(attendanceEventId, title, text)
+                                                                           .getParameters(),
+                                                                   new JREmptyDataSource());
+
+            JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+
+            DigitalDocumentDTO document = new DigitalDocumentDTO();
+            document.setCreatedAt(LocalDateTime.now());
+            document.setName(title);
+            document.setType(DigitalDocumentType.PDF);
+            document.setBase64(Base64.getEncoder().withoutPadding().encodeToString(outputStream.toByteArray()));
+            document.setAttendanceEventId(attendanceEventId);
+            return document;
+        } catch (Exception e) {
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento...\n".concat(e.getMessage()), e);
+        } finally {
+            try {
+                if (reportInputStream != null)
+                    reportInputStream.close();
+            } catch (Exception e) {
+                logger.error("Falha ao fechar o InputStream da geração do relatório!", e);
+            }
+            try {
+                if (outputStream != null)
+                    outputStream.close();
+            } catch (Exception e) {
+                logger.error("Falha ao fechar o OutputStream da geração do relatório!", e);
+            }
+        }
+    }
+
+    /**
+     * Busca informações do cabeçalho do relatório à partir de um código de atendimento
+     * 
+     * @param attendanceId Código do atendimento
+     * @return Informações do cabeçalho do relatório
+     */
+    @Transactional
+    private ReportHeaderInformation getReportHeaderInformationFromAttendance(Long attendanceEventId, String title, String text) {
+        ReportHeaderInformation headerInfo = new ReportHeaderInformation();
+        headerInfo.setDocTitle(title);
+        headerInfo.setReportText(text);
+        AttendanceEvent event = attendanceEventRepo.findById(attendanceEventId).orElseThrow(() -> new HttpException(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                "Evento de atendimento não encontrado para anexar o documento, entre em contato com o suporte se o erro persistir."));
+
+        // Parâmetros da instituição
+        InstituteDTO institute = instituteService.getSettings();
+        headerInfo.setHospitalLogo(institute.getCustomerInfo().getLogoBase64());
+        headerInfo.setFormatedHospitalPhone(StringUtils.printPhone(institute.getCustomerInfo().getPhone()));
+        AddressDTO address = institute.getCustomerInfo().getAddress();
+        headerInfo.setFormatedHospitalAddress(address.getStreet() + ", " + address.getAddressNumber() + ", "
+                + (address.getComplement() != null ? address.getComplement() + ", "
+                                                   : "")
+                + address.getCity() + " - "
+                + address.getState() + " - " + StringUtils.printCEP(address.getPostalCode()));
+
+        // Parâmetros do atendimento
+        Attendance attendance = event.getAttendance();
+        if (attendance.getPatient() == null) {
+            attendance = attendanceRepo.findById(attendance.getId())
+                    .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                            "Não foi possível encontrar o atendimento para o evento de atendimento em questão, favor solicitar suporte."));
+        }
+        headerInfo.setAttendanceId(attendance.getId());
+        headerInfo.setAttendanceAccomodation(attendance.getCurrentAccommodation() != null
+                                                                                          ? attendance.getCurrentAccommodation()
+                                                                                                  .getDescription()
+                                                                                          : null);
+        headerInfo.setAttendanceIniDatetime(attendance.getEntryDateTime());
+        headerInfo.setAttendanceEndDatetime(attendance.getExitDateTime());
+
+        // Parâmetros do solicitante
+        headerInfo.setReaderName(SecurityContextUtil.getAuthenticatedUser().getPersonName());
+        // headerInfo.setUserId(SecurityContextUtil.getAuthenticatedUser().getUsername());
+
+        // Parâmetros do paciente
+        Patient patient = attendance.getPatient();
+        Person person = patient.getPerson();
+        headerInfo.setPatientId(patient.getId());
+        headerInfo.setPatientBloodType(person.getBloodType() != null ? person.getBloodType().name() : null);
+        headerInfo.setPatientBornDate(person.getBornDate());
+        headerInfo.setPatientName(person.getFullName());
+        headerInfo.setPatientCNS(patient.getCnsNumber());
+        headerInfo.setPatientEthinicGroup(person.getEthnicGroup() != null ? person.getEthnicGroup().name() : null);
+        headerInfo.setPatientMotherName(person.getMotherName());
+        headerInfo.setPatientNationality(person.getNationality());
+        headerInfo.setFormatedPatientCPF(person.getCpf());
+
+        return headerInfo;
     }
 
     /**

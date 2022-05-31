@@ -59,6 +59,18 @@ public class ReportService implements BaseService {
     }
 
     /**
+     * Cria um documento digital anexado a um atendimento
+     * 
+     * @param attendanceEventId Código identificador único do atendimento
+     * @param title Título do relatório
+     * @param text Texto Livre que será convertido em documento
+     * @return Documento digital do relatório gerado
+     */
+    public DigitalDocumentDTO generateDocumentFromFormatedText(Long attendanceEventId, String title, String text) {
+        return generateReportBusinessHandler.generateFromFormatedText(attendanceEventId, title, text);
+    }
+
+    /**
      * Cria relatório à partir de um layout pré-configurado
      * 
      * @param id Identificador único de Layout de Relatório

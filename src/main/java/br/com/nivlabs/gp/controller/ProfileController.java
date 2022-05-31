@@ -1,7 +1,6 @@
 package br.com.nivlabs.gp.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -9,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nivlabs.gp.config.security.UserOfSystem;
 import br.com.nivlabs.gp.models.dto.UserInfoDTO;
 import br.com.nivlabs.gp.service.userservice.UserService;
+import br.com.nivlabs.gp.util.SecurityContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -31,9 +30,7 @@ public class ProfileController extends BaseController<UserService> {
     @Operation(summary = "profile-get", description = "Busca dados do perfil do usuário logado")
     @GetMapping
     public ResponseEntity<UserInfoDTO> getMe() {
-        UserOfSystem userFromSession = (UserOfSystem) SecurityContextHolder.getContext().getAuthentication()
-                .getPrincipal();
-        return ResponseEntity.ok(service.findByUserName(userFromSession.getUsername()));
+        return ResponseEntity.ok(service.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername()));
     }
 
     @Operation(summary = "profile-put", description = "Atualiza dados do perfil do usuário logado")
