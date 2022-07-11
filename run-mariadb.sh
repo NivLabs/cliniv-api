@@ -10,4 +10,4 @@ echo "Removendo imagem do MariaDB ..."
 docker rm MariaDB
 
 echo "Rodando MariaDB Atualizado..."
-docker run  -p 3306:3306/tcp --name MariaDB -e MYSQL_USER=admin -e MYSQL_PASSWORD=admin -e MYSQL_DATABASE=devdb -e MYSQL_ROOT_PASSWORD=root -d mariadb:latest
+docker run  -p 3306:3306/tcp --name MariaDB -e MYSQL_USER=admin -e MYSQL_PASSWORD=admin -e MYSQL_DATABASE=gpdefault -e MYSQL_ROOT_PASSWORD=root -d mariadb:latest
