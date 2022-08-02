@@ -17,4 +17,4 @@ export URL_DB=jdbc:mariadb://localhost:3306/devdb?user=admin&password=admin
 
 echo "Aguardando start do MariaDB..."
 sleep 30s
-jdk-16/bin/java -jar target/gestao-de-prontuario.jar
+jdk-16/bin/java -jar target/cliniv-api.jar
