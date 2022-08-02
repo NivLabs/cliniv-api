@@ -1,4 +1,4 @@
 FROM openjdk:17
-ADD target/gestao-de-prontuario.jar gestao-de-prontuario.jar
+ADD target/cliniv-api.jar cliniv-api.jar
 EXPOSE 	8080
-ENTRYPOINT ["java", "-jar", "gestao-de-prontuario.jar"]
+ENTRYPOINT ["java", "-jar", "cliniv-api.jar"]

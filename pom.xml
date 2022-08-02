@@ -6,15 +6,15 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.6</version>
+		<version>2.6.10</version>
 		<relativePath />
 	</parent>
 
 	<groupId>br.com.nivlabs</groupId>
-	<artifactId>gestao-de-prontuario</artifactId>
+	<artifactId>cliniv-api</artifactId>
 	<version>v1.0.0</version>
-	<name>Gestão de Prontuário</name>
-	<description>API da aplicação de Gestão de Prontuário</description>
+	<name>CliNiv API</name>
+	<description>API da aplicação de CliNiv</description>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -150,10 +150,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-		</dependency> -->
 		<!-- Dependências para integração com envio de e-mail -->
 
 	</dependencies>

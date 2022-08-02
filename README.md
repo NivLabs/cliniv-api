@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://gestao-prontuario.herokuapp.com">
+  <a href="https://cliniv-api.herokuapp.com">
     <img alt="NLGP Logo" src="./readme/logo.png" width="350px" />
   </a>
 </h1>
@@ -17,7 +17,7 @@ O NLGP-API é uma API Rest criada inicialmente como doação para hospitais que 
 </p>
 
 Atualmente encontra-se na versão 1.1.0
-[Swagger](https://gestao-prontuario.herokuapp.com/swagger-ui.html)
+[Swagger](https://cliniv-api.herokuapp.com/swagger-ui.html)
 
 ---
 
