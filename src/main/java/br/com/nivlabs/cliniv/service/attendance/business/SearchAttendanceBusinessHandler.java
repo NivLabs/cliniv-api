@@ -16,7 +16,6 @@ import br.com.nivlabs.cliniv.models.domain.Attendance;
 import br.com.nivlabs.cliniv.models.domain.Patient;
 import br.com.nivlabs.cliniv.models.dto.AttendanceDTO;
 import br.com.nivlabs.cliniv.repository.AttendanceRepository;
-import br.com.nivlabs.cliniv.repository.PatientRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 
 /**
@@ -35,8 +34,6 @@ public class SearchAttendanceBusinessHandler implements BaseBusinessHandler {
 
     @Autowired
     private AttendanceRepository attendanceRepo;
-    @Autowired
-    private PatientRepository patientRepository;
 
     /**
      * 

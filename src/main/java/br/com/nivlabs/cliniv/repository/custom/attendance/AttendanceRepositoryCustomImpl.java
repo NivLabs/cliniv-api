@@ -17,18 +17,18 @@ import org.springframework.http.HttpStatus;
 import br.com.nivlabs.cliniv.controller.filters.AttendanceFilters;
 import br.com.nivlabs.cliniv.enums.ActiveType;
 import br.com.nivlabs.cliniv.exception.HttpException;
+import br.com.nivlabs.cliniv.models.domain.Accommodation_;
 import br.com.nivlabs.cliniv.models.domain.Attendance;
+import br.com.nivlabs.cliniv.models.domain.Attendance_;
+import br.com.nivlabs.cliniv.models.domain.Patient_;
+import br.com.nivlabs.cliniv.models.domain.Person_;
+import br.com.nivlabs.cliniv.models.domain.Sector_;
 import br.com.nivlabs.cliniv.models.dto.AttendanceDTO;
 import br.com.nivlabs.cliniv.models.dto.SectorInfoDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.service.sector.SectorService;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.Accommodation_;
-import br.com.nivlabs.cliniv.models.domain.Attendance_;
-import br.com.nivlabs.cliniv.models.domain.Patient_;
-import br.com.nivlabs.cliniv.models.domain.Person_;
-import br.com.nivlabs.cliniv.models.domain.Sector_;
 
 /**
  * Implementação de repositório customizado
@@ -54,6 +54,7 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
                                           root.get(Attendance_.patient).get(Patient_.person).get(Person_.fullName),
                                           root.get(Attendance_.patient).get(Patient_.person).get(Person_.socialName),
                                           root.get(Attendance_.entryDateTime),
+                                          root.get(Attendance_.exitDateTime),
                                           root.get(Attendance_.reasonForEntry),
                                           root.get(Attendance_.entryType),
                                           root.get(Attendance_.patient).get(Patient_.id),

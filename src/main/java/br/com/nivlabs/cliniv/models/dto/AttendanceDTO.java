@@ -1,7 +1,6 @@
 package br.com.nivlabs.cliniv.models.dto;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import br.com.nivlabs.cliniv.enums.AttendanceLevel;
 import br.com.nivlabs.cliniv.enums.EntryType;
@@ -31,6 +30,9 @@ public class AttendanceDTO extends DataTransferObjectBase {
 
     @Schema(description = "Data da entrada")
     private LocalDateTime entryDatetime;
+
+    @Schema(description = "Data da alta")
+    private LocalDateTime exitDatetime;
 
     @Schema(description = "Causa da Entrada")
     private String entryCause;
@@ -73,13 +75,15 @@ public class AttendanceDTO extends DataTransferObjectBase {
      * @param sectorDescripton
      * @param level
      */
-    public AttendanceDTO(Long id, String fullName, String socialName, LocalDateTime entryDatetime, String entryCause,
+    public AttendanceDTO(Long id, String fullName, String socialName, LocalDateTime entryDatetime, LocalDateTime exitDatetime,
+            String entryCause,
             EntryType type, Long patientId, String sectorDescription, String cnsNumber, AttendanceLevel level) {
         super();
         this.id = id;
         this.fullName = fullName;
         this.socialName = socialName;
         this.entryDatetime = entryDatetime;
+        this.exitDatetime = exitDatetime;
         this.entryCause = entryCause;
         this.type = type;
         this.patientId = patientId;
@@ -188,6 +192,14 @@ public class AttendanceDTO extends DataTransferObjectBase {
         this.level = level;
     }
 
+    public LocalDateTime getExitDatetime() {
+        return exitDatetime;
+    }
+
+    public void setExitDatetime(LocalDateTime exitDatetime) {
+        this.exitDatetime = exitDatetime;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -199,6 +211,8 @@ public class AttendanceDTO extends DataTransferObjectBase {
         builder.append(socialName);
         builder.append(", entryDatetime=");
         builder.append(entryDatetime);
+        builder.append(", exitDatetime=");
+        builder.append(exitDatetime);
         builder.append(", entryCause=");
         builder.append(entryCause);
         builder.append(", isFinished=");
@@ -217,29 +231,6 @@ public class AttendanceDTO extends DataTransferObjectBase {
         builder.append(level);
         builder.append("]");
         return builder.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(cnsNumber, entryCause, entryDatetime, fullName, id, isFinished, level, patientId, patientType,
-                            sectorDescription, socialName, type);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        AttendanceDTO other = (AttendanceDTO) obj;
-        return Objects.equals(cnsNumber, other.cnsNumber) && Objects.equals(entryCause, other.entryCause)
-                && Objects.equals(entryDatetime, other.entryDatetime) && Objects.equals(fullName, other.fullName)
-                && Objects.equals(id, other.id) && Objects.equals(isFinished, other.isFinished) && level == other.level
-                && Objects.equals(patientId, other.patientId) && patientType == other.patientType
-                && Objects.equals(sectorDescription, other.sectorDescription) && Objects.equals(socialName, other.socialName)
-                && type == other.type;
     }
 
 }

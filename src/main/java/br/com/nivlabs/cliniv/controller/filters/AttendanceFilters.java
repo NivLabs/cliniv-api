@@ -24,7 +24,7 @@ public class AttendanceFilters extends CustomFilters {
 
     public ActiveType getActiveType() {
         if (activeType == null)
-            this.activeType = ActiveType.ACTIVE;
+            this.activeType = ActiveType.ALL;
         return this.activeType;
     }
 
