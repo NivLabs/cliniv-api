@@ -1,5 +1,5 @@
 package br.com.nivlabs.cliniv.enums;
 
 public enum ActiveType {
-    ACTIVE, ALL
+    ACTIVE, ALL, NOT_ACTIVE
 }

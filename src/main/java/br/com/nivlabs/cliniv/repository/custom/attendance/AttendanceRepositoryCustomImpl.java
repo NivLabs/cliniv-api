@@ -12,6 +12,8 @@ import javax.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.AttendanceFilters;
@@ -61,6 +63,7 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
                                           root.get(Attendance_.currentAccommodation).get(Accommodation_.sector).get(Sector_.description),
                                           root.get(Attendance_.patient).get(Patient_.cnsNumber),
                                           root.get(Attendance_.level)));
+        pageSettings.getSortOr(Sort.by(Direction.DESC, Attendance_.ENTRY_DATE_TIME));
         return getPage(filters, pageSettings, builder, criteria, root);
     }
 
@@ -95,7 +98,7 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         if (filters.getActiveType() != null) {
             if (filters.getActiveType() == ActiveType.ACTIVE)
                 predicates.add(builder.isNull(root.get(Attendance_.exitDateTime)));
-            else
+            else if (filters.getActiveType() == ActiveType.NOT_ACTIVE)
                 predicates.add(builder.isNotNull(root.get(Attendance_.exitDateTime)));
         }
 
