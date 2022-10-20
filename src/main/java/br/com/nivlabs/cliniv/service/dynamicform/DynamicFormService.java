@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.dynamicform;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.DynamicFormFilters;
@@ -71,8 +70,8 @@ public class DynamicFormService implements BaseService {
      * @param pageSettings Configurações de paginação
      * @return Página de formulários de anamnese
      */
-    public Page<DynamicFormDTO> findPageOfDymicaForm(DynamicFormFilters filters, Pageable pageSettings) {
-        return searchDynamicFormBusinessHandler.getPage(filters, pageSettings);
+    public Page<DynamicFormDTO> findPageOfDymicaForm(DynamicFormFilters filters) {
+        return searchDynamicFormBusinessHandler.getPage(filters);
     }
 
     /**

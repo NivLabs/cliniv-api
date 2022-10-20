@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.alergy.business;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.cliniv.controller.filters.AllergyFilters;
@@ -24,7 +23,7 @@ public class SearchAlergyBusinessHandler implements BaseBusinessHandler {
     @Autowired
     private AllergyRepository allergyRepository;
 
-    public Page<AllergyDTO> getPage(AllergyFilters filters, Pageable pageSettings) {
-        return allergyRepository.resumedList(filters, pageSettings);
+    public Page<AllergyDTO> getPage(AllergyFilters filters) {
+        return allergyRepository.resumedList(filters);
     }
 }

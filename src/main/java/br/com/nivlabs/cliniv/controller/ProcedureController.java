@@ -3,9 +3,6 @@ package br.com.nivlabs.cliniv.controller;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,9 +39,7 @@ public class ProcedureController extends BaseController<ProcedureService> {
     @Operation(summary = "procedure-get", description = "Busca uma página de procedimentos")
     @GetMapping
     public ResponseEntity<Page<ProcedureDTO>> findPage(ProcedureFilters filters) {
-        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
-                                               Direction.valueOf(filters.getDirection()), filters.getOrderBy());
-        return ResponseEntity.ok(service.getResumedPage(filters, pageSettings));
+        return ResponseEntity.ok(service.getResumedPage(filters));
     }
 
     @Operation(summary = "procedure-get-id", description = "Busca um procedimento à partir do identificador")

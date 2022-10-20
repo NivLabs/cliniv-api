@@ -4,7 +4,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,8 @@ public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandle
      */
     public DocumentTemplateInfoDTO byId(Long id) {
         DocumentTemplate entity = documentTemplateRepository.findById(new DocumentTemplatePK(id, getContextUserInformations().getId()))
-                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Modelo do documento com o identificador %s não foi encontrado"));
+                .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
+                        "Modelo do documento com o identificador %s não foi encontrado"));
 
         return convertDocument(entity);
     }
@@ -64,9 +64,9 @@ public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandle
      * @return Página de templates
      */
     @Transactional
-    public Page<DocumentTemplateDTO> getPage(DocumentTemplateFilter filters, Pageable pageSettings) {
+    public Page<DocumentTemplateDTO> getPage(DocumentTemplateFilter filters) {
         filters.setUserId(getContextUserInformations().getId());
-        return documentTemplateRepository.resumedList(filters, pageSettings);
+        return documentTemplateRepository.resumedList(filters);
     }
 
     /**

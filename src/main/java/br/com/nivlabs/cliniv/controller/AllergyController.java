@@ -8,9 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,9 +45,7 @@ public class AllergyController extends BaseController<AllergyService> {
     @GetMapping
     @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<AllergyDTO>> findPage(AllergyFilters filters) {
-        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
-                                               filters.getOrderBy());
-        return ResponseEntity.ok(service.getPage(filters, pageSettings));
+        return ResponseEntity.ok(service.getPage(filters));
     }
 
     @Operation(summary = "allergies-patient-post", description = "Insere informações de alergias do paciente")

@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.sector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.SectorFilters;
@@ -49,8 +48,8 @@ public class SectorService implements BaseService {
      * @param pageRequest Configurações de paginação
      * @return Página de setores
      */
-    public Page<SectorDTO> getPage(SectorFilters filters, Pageable pageRequest) {
-        return searchSectorBusinessHandler.getPage(filters, pageRequest);
+    public Page<SectorDTO> getPage(SectorFilters filters) {
+        return searchSectorBusinessHandler.getPage(filters);
     }
 
     /**

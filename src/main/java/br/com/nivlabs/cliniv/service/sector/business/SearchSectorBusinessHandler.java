@@ -5,7 +5,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -42,9 +41,9 @@ public class SearchSectorBusinessHandler implements BaseBusinessHandler {
      * @param pageRequest Configurações de paginação
      * @return Página de setores
      */
-    public Page<SectorDTO> getPage(SectorFilters filters, Pageable pageRequest) {
+    public Page<SectorDTO> getPage(SectorFilters filters) {
         logger.info("Iniciando busca paginada de setores :: {}", filters);
-        return sectorRepository.resumedList(filters, pageRequest);
+        return sectorRepository.resumedList(filters);
     }
 
     /**

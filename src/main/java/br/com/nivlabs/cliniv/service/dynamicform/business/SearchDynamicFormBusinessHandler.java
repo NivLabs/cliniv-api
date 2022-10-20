@@ -5,7 +5,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -40,9 +39,9 @@ public class SearchDynamicFormBusinessHandler implements BaseBusinessHandler {
      * @param pageSettings Configurações de paginação
      * @return Página de formulários de anamnese
      */
-    public Page<DynamicFormDTO> getPage(DynamicFormFilters filters, Pageable pageSettings) {
+    public Page<DynamicFormDTO> getPage(DynamicFormFilters filters) {
         logger.info("Iniciando busca de formulários dinâmicos..");
-        return dynamicFormRepo.resumedList(filters, pageSettings);
+        return dynamicFormRepo.resumedList(filters);
     }
 
     /**

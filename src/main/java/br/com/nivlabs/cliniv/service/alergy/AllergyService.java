@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.alergy;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.AllergyFilters;
@@ -45,8 +44,8 @@ public class AllergyService implements BaseService {
      * @param pageSettings Configurações de paginação
      * @return Página filtrada de alergias
      */
-    public Page<AllergyDTO> getPage(AllergyFilters filters, Pageable pageSettings) {
-        return searchAlergyBusinessHandler.getPage(filters, pageSettings);
+    public Page<AllergyDTO> getPage(AllergyFilters filters) {
+        return searchAlergyBusinessHandler.getPage(filters);
     }
 
 }

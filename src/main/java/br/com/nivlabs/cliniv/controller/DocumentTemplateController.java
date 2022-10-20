@@ -1,9 +1,6 @@
 package br.com.nivlabs.cliniv.controller;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +26,7 @@ public class DocumentTemplateController extends BaseController<DocumentTemplateS
     @Operation(summary = "document-template-get", description = "Busca uma página de modelos de documentos")
     @GetMapping
     public ResponseEntity<Page<DocumentTemplateDTO>> findPage(DocumentTemplateFilter filters) {
-        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
-                                               filters.getOrderBy());
-        return ResponseEntity.ok(service.getPage(filters, pageSettings));
+        return ResponseEntity.ok(service.getPage(filters));
     }
 
     @Operation(summary = "document-template-get-id", description = "Busca um modelo de documento baseado no identificador")

@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -48,9 +47,9 @@ public class SearchHealthOperatorBusinessHandler implements BaseBusinessHandler 
      * @param pageRequest Configurações de paginação
      * @return Página de operadoras de planos de saúde
      */
-    public Page<HealthOperatorDTO> getPage(HealthOperatorFilters filters, Pageable pageRequest) {
+    public Page<HealthOperatorDTO> getPage(HealthOperatorFilters filters) {
         logger.info("Iniciando busca filtrada por Operadoras de saúde");
-        return healthOperatorRepository.resumedList(filters, pageRequest);
+        return healthOperatorRepository.resumedList(filters);
     }
 
     /**

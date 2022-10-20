@@ -2,9 +2,6 @@ package br.com.nivlabs.cliniv.controller;
 
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,9 +30,7 @@ public class ScheduleController extends BaseController<ScheduleService> {
     @GetMapping
     @PreAuthorize("hasAnyRole('AGENDA_LEITURA', 'AGENDA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<List<ScheduleDTO>> getSchedulesByFilters(ScheduleFilters filters) {
-        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(),
-                                               Direction.valueOf(filters.getDirection()), filters.getOrderBy());
-        return ResponseEntity.ok(service.findByFilters(filters, pageSettings));
+        return ResponseEntity.ok(service.findByFilters(filters));
     }
 
     @Operation(summary = "schedule-get-id", description = "Busca um agendamento")

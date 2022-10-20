@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -43,9 +42,9 @@ public class SearchAttendanceBusinessHandler implements BaseBusinessHandler {
      * @param pageRequest Configurações de paginação
      * @return Página de atendimentos
      */
-    public Page<AttendanceDTO> getPage(AttendanceFilters filters, Pageable pageRequest) {
+    public Page<AttendanceDTO> getPage(AttendanceFilters filters) {
         logger.info("Iniciando uma busca de atendimentos paginada com filtros :: {}", filters);
-        return attendanceRepo.resumedList(filters, pageRequest);
+        return attendanceRepo.resumedList(filters);
     }
 
     /**

@@ -1,9 +1,6 @@
 package br.com.nivlabs.cliniv.controller;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,9 +37,7 @@ public class ResponsibleController extends BaseController<ResponsibleService> {
     @GetMapping
     @PreAuthorize("hasAnyRole('PROFISSIONAL_LEITURA', 'PROFISSIONAL_ESCRITA',  'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Page<ResponsibleDTO>> findPage(ResponsibleFilters filters) {
-        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
-                                               filters.getOrderBy());
-        return ResponseEntity.ok(service.searchEntityPage(filters, pageSettings));
+        return ResponseEntity.ok(service.searchEntityPage(filters));
     }
 
     @Operation(summary = "responsible-post", description = "Insere um novo responsável na aplicação")

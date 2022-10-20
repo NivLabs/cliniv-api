@@ -2,9 +2,6 @@ package br.com.nivlabs.cliniv.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -44,9 +41,7 @@ public class UserController extends BaseController<UserService> {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<Page<UserDTO>> findPage(UserFilters filters) {
-        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
-                                               filters.getOrderBy());
-        return ResponseEntity.ok(service.searchEntityPage(filters, pageSettings));
+        return ResponseEntity.ok(service.searchEntityPage(filters));
     }
 
     @Operation(summary = "user-get-id", description = "Busca um usuário baseado no ID")

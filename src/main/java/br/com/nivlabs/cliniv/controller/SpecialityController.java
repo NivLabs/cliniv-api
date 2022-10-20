@@ -5,9 +5,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,9 +46,7 @@ public class SpecialityController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ESPECIALIDADE_ESCRITA', 'ESPECIALIDADE_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<SpecialityDTO>> findList(SpecialityFilter filters) {
-        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
-                                               filters.getOrderBy());
-        return ResponseEntity.ok(specService.getPage(filters, pageSettings));
+        return ResponseEntity.ok(specService.getPage(filters));
     }
 
     @Operation(summary = "speciality-get-id", description = "Busca informações detalhadas de uma especialidade")

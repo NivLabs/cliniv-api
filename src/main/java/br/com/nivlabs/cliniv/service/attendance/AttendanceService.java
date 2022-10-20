@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.AttendanceFilters;
@@ -50,8 +49,8 @@ public class AttendanceService implements BaseService {
      * @param pageRequest Configurações de paginação
      * @return Página de atendimentos
      */
-    public Page<AttendanceDTO> getAttendancesPage(AttendanceFilters filters, Pageable pageRequest) {
-        return searchAttendanceBusinessHandler.getPage(filters, pageRequest);
+    public Page<AttendanceDTO> getAttendancesPage(AttendanceFilters filters) {
+        return searchAttendanceBusinessHandler.getPage(filters);
     }
 
     /**

@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.patient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.PatientFilters;
@@ -42,8 +41,8 @@ public class PatientService implements BaseService {
      * @param pageRequest Configurações da paginação
      * @return Página com informações resumidas de pacientes
      */
-    public Page<PatientDTO> getPage(PatientFilters filters, Pageable pageRequest) {
-        return patientSearchBusinessHandler.getPage(filters, pageRequest);
+    public Page<PatientDTO> getPage(PatientFilters filters) {
+        return patientSearchBusinessHandler.getPage(filters);
     }
 
     /**

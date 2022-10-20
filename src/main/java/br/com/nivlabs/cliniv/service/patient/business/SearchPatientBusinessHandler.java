@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -58,9 +57,9 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
      * @param pageRequest Configurações da paginação
      * @return Página com informações resumidas de pacientes
      */
-    public Page<PatientDTO> getPage(PatientFilters filters, Pageable pageRequest) {
+    public Page<PatientDTO> getPage(PatientFilters filters) {
         logger.info("Iniciando busca paginada de paciente com filtros :: {}", filters);
-        return patientRepo.resumedList(filters, pageRequest);
+        return patientRepo.resumedList(filters);
     }
 
     /**

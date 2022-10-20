@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.procedure;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.ProcedureFilters;
@@ -40,8 +39,8 @@ public class ProcedureService implements BaseService {
      * @param pageRequest Configurações de paginação
      * @return Página de procedimentos
      */
-    public Page<ProcedureDTO> getResumedPage(ProcedureFilters filters, Pageable pageRequest) {
-        return searchProcedureBusinessHandler.getPage(filters, pageRequest);
+    public Page<ProcedureDTO> getResumedPage(ProcedureFilters filters) {
+        return searchProcedureBusinessHandler.getPage(filters);
     }
 
     /**

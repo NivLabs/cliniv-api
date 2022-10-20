@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.speciality;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.SpecialityFilter;
@@ -37,8 +36,8 @@ public class SpecialityService {
      * @param pageSettings Configurações de paginação
      * @return Informações paginadas de especialidades cadastradas no sistema
      */
-    public Page<SpecialityDTO> getPage(SpecialityFilter filter, Pageable pageSettings) {
-        return searchSpecialityBusinessHander.getPage(filter, pageSettings);
+    public Page<SpecialityDTO> getPage(SpecialityFilter filter) {
+        return searchSpecialityBusinessHander.getPage(filter);
     }
 
     /**

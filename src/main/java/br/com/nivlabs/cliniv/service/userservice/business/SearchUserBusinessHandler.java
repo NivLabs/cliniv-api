@@ -8,7 +8,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -54,8 +53,8 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
      * @param pageSettings Configurações de paginação
      * @return Página filtrada de usuários
      */
-    public Page<UserDTO> getPage(UserFilters filters, Pageable pageSettings) {
-        return userRepo.resumedList(filters, pageSettings);
+    public Page<UserDTO> getPage(UserFilters filters) {
+        return userRepo.resumedList(filters);
     }
 
     /**

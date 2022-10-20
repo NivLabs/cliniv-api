@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.healthoperator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.HealthOperatorFilters;
@@ -38,8 +37,8 @@ public class HealthOperatorService implements BaseService {
      * @param pageRequest Configurações de paginação
      * @return Página de operadoras de planos de saúde
      */
-    public Page<HealthOperatorDTO> getPage(HealthOperatorFilters filters, Pageable pageRequest) {
-        return searchHealthOperatorBusinessHandler.getPage(filters, pageRequest);
+    public Page<HealthOperatorDTO> getPage(HealthOperatorFilters filters) {
+        return searchHealthOperatorBusinessHandler.getPage(filters);
     }
 
     /**

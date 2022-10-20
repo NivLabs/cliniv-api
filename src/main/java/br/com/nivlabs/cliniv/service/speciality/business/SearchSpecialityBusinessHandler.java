@@ -5,7 +5,6 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -44,9 +43,9 @@ public class SearchSpecialityBusinessHandler implements BaseBusinessHandler {
      * @param pageSettings Configurações de paginação
      * @return Informações paginadas de especialidades cadastradas no sistema
      */
-    public Page<SpecialityDTO> getPage(SpecialityFilter filter, Pageable pageSettings) {
+    public Page<SpecialityDTO> getPage(SpecialityFilter filter) {
         logger.info("Iniciando processo de busca paginada de especialidades :: {}", filter);
-        return specialityRepository.resumedList(filter, pageSettings);
+        return specialityRepository.resumedList(filter);
     }
 
     /**

@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -60,8 +59,8 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
      * @param pageRequest Configuraçõe de paginação
      * @return Página de responsáveis e profissionais
      */
-    public Page<ResponsibleDTO> getPage(ResponsibleFilters filters, Pageable pageRequest) {
-        return responsibleRepo.resumedList(filters, pageRequest);
+    public Page<ResponsibleDTO> getPage(ResponsibleFilters filters) {
+        return responsibleRepo.resumedList(filters);
     }
 
     /**

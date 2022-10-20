@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.documenttemplate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.DocumentTemplateFilter;
@@ -30,8 +29,8 @@ public class DocumentTemplateService implements BaseService {
      * @param pageSettings Configurações de paginação
      * @return Página de templates
      */
-    public Page<DocumentTemplateDTO> getPage(DocumentTemplateFilter filters, Pageable pageSettings) {
-        return searchDocumentTemplateBusinessHandler.getPage(filters, pageSettings);
+    public Page<DocumentTemplateDTO> getPage(DocumentTemplateFilter filters) {
+        return searchDocumentTemplateBusinessHandler.getPage(filters);
     }
 
     /**

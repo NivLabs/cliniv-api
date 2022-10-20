@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.responsible;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.nivlabs.cliniv.controller.filters.ResponsibleFilters;
@@ -38,8 +37,8 @@ public class ResponsibleService implements BaseService {
      * @param pageRequest Configuraçõe de paginação
      * @return Página de responsáveis e profissionais
      */
-    public Page<ResponsibleDTO> searchEntityPage(ResponsibleFilters filters, Pageable pageRequest) {
-        return searchResponsibleBusinessHandler.getPage(filters, pageRequest);
+    public Page<ResponsibleDTO> searchEntityPage(ResponsibleFilters filters) {
+        return searchResponsibleBusinessHandler.getPage(filters);
     }
 
     /**
