@@ -9,18 +9,17 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.DocumentTemplateFilter;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.DocumentTemplate;
+import br.com.nivlabs.cliniv.models.domain.DocumentTemplatePK_;
+import br.com.nivlabs.cliniv.models.domain.DocumentTemplate_;
 import br.com.nivlabs.cliniv.models.dto.DocumentTemplateDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.DocumentTemplatePK_;
-import br.com.nivlabs.cliniv.models.domain.DocumentTemplate_;
 
 /**
  * Repositório customizado para Templates de documentos
@@ -32,7 +31,7 @@ public class DocumentTemplateRepositoryCustomImpl extends GenericCustomRepositor
         implements DocumentTemplateRepositoryCustom {
 
     @Override
-    public Page<DocumentTemplateDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<DocumentTemplateDTO> resumedList(CustomFilters filters) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<DocumentTemplateDTO> criteria = builder.createQuery(DocumentTemplateDTO.class);
@@ -41,7 +40,7 @@ public class DocumentTemplateRepositoryCustomImpl extends GenericCustomRepositor
         criteria.select(builder.construct(DocumentTemplateDTO.class,
                                           root.get(DocumentTemplate_.pk).get(DocumentTemplatePK_.id),
                                           root.get(DocumentTemplate_.description)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

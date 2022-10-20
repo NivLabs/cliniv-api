@@ -9,17 +9,16 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.SpecialityFilter;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Speciality;
+import br.com.nivlabs.cliniv.models.domain.Speciality_;
 import br.com.nivlabs.cliniv.models.dto.SpecialityDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.Speciality_;
 
 /**
  * Repositório de Especialidades dos profissionais
@@ -31,7 +30,7 @@ public class SpecialityRepositoryCustomImpl extends GenericCustomRepository<Spec
         implements SpecialityRepositoryCustom {
 
     @Override
-    public Page<SpecialityDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<SpecialityDTO> resumedList(CustomFilters filters) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<SpecialityDTO> criteria = builder.createQuery(SpecialityDTO.class);
@@ -40,7 +39,7 @@ public class SpecialityRepositoryCustomImpl extends GenericCustomRepository<Spec
         criteria.select(builder.construct(SpecialityDTO.class,
                                           root.get(Speciality_.id),
                                           root.get(Speciality_.name)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

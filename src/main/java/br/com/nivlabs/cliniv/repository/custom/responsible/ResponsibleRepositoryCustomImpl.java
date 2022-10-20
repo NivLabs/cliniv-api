@@ -9,18 +9,17 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.ResponsibleFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
+import br.com.nivlabs.cliniv.models.domain.Person_;
 import br.com.nivlabs.cliniv.models.domain.Responsible;
+import br.com.nivlabs.cliniv.models.domain.Responsible_;
 import br.com.nivlabs.cliniv.models.dto.ResponsibleDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.Person_;
-import br.com.nivlabs.cliniv.models.domain.Responsible_;
 
 /**
  * Repositório de Profissionais e responsáveis customizado
@@ -32,7 +31,7 @@ public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Res
         implements ResponsibleRepositoryCustom {
 
     @Override
-    public Page<ResponsibleDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<ResponsibleDTO> resumedList(CustomFilters filters) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<ResponsibleDTO> criteria = builder.createQuery(ResponsibleDTO.class);
         Root<Responsible> root = criteria.from(Responsible.class);
@@ -47,7 +46,7 @@ public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Res
                                           root.get(Responsible_.person).get(Person_.gender),
                                           root.get(Responsible_.professionalIdentity),
                                           root.get(Responsible_.initialsIdentity)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

@@ -30,7 +30,7 @@ import br.com.nivlabs.cliniv.models.domain.Allergy_;
 public class AllergyRepositoryCustomImpl extends GenericCustomRepository<Allergy, AllergyDTO> implements AllergyRepositoryCustom {
 
     @Override
-    public Page<AllergyDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<AllergyDTO> resumedList(CustomFilters filters) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<AllergyDTO> criteria = builder.createQuery(AllergyDTO.class);
         Root<Allergy> root = criteria.from(Allergy.class);
@@ -38,7 +38,7 @@ public class AllergyRepositoryCustomImpl extends GenericCustomRepository<Allergy
         criteria.select(builder.construct(AllergyDTO.class,
                                           root.get(Allergy_.id),
                                           root.get(Allergy_.description)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

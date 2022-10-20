@@ -9,17 +9,16 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.HealthOperatorFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.HealthOperator;
+import br.com.nivlabs.cliniv.models.domain.HealthOperator_;
 import br.com.nivlabs.cliniv.models.dto.HealthOperatorDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.HealthOperator_;
 
 /**
  * Repositório customizado para operadoras de saúde
@@ -31,7 +30,7 @@ public class HealthOperatorRepositoryCustomImpl extends GenericCustomRepository<
         implements HealthOperatorRepositoryCustom {
 
     @Override
-    public Page<HealthOperatorDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<HealthOperatorDTO> resumedList(CustomFilters filters) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<HealthOperatorDTO> criteria = builder.createQuery(HealthOperatorDTO.class);
@@ -44,7 +43,7 @@ public class HealthOperatorRepositoryCustomImpl extends GenericCustomRepository<
                                           root.get(HealthOperator_.companyName),
                                           root.get(HealthOperator_.fantasyName),
                                           root.get(HealthOperator_.modality)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

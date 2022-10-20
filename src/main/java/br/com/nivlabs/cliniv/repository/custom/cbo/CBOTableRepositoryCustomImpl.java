@@ -9,17 +9,16 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.CBOFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.CBOTable;
+import br.com.nivlabs.cliniv.models.domain.CBOTable_;
 import br.com.nivlabs.cliniv.models.dto.CBOTableDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.CBOTable_;
 
 /**
  * Repositório customisado para CBO
@@ -30,7 +29,7 @@ import br.com.nivlabs.cliniv.models.domain.CBOTable_;
 public class CBOTableRepositoryCustomImpl extends GenericCustomRepository<CBOTable, CBOTableDTO> implements CBOTableRepositoryCustom {
 
     @Override
-    public Page<CBOTableDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<CBOTableDTO> resumedList(CustomFilters filters) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<CBOTableDTO> criteria = builder.createQuery(CBOTableDTO.class);
@@ -39,7 +38,7 @@ public class CBOTableRepositoryCustomImpl extends GenericCustomRepository<CBOTab
         criteria.select(builder.construct(CBOTableDTO.class,
                                           root.get(CBOTable_.id),
                                           root.get(CBOTable_.description)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

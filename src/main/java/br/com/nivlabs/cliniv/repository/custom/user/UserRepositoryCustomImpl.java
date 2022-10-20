@@ -9,18 +9,17 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.UserFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
+import br.com.nivlabs.cliniv.models.domain.Person_;
 import br.com.nivlabs.cliniv.models.domain.UserApplication;
+import br.com.nivlabs.cliniv.models.domain.UserApplication_;
 import br.com.nivlabs.cliniv.models.dto.UserDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.Person_;
-import br.com.nivlabs.cliniv.models.domain.UserApplication_;
 
 /**
  * Repositório de usuário customizado
@@ -31,7 +30,7 @@ import br.com.nivlabs.cliniv.models.domain.UserApplication_;
 public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplication, UserDTO> implements UserRepositoryCustom {
 
     @Override
-    public Page<UserDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<UserDTO> resumedList(CustomFilters filters) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<UserDTO> criteria = builder.createQuery(UserDTO.class);
@@ -46,7 +45,7 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
                                           root.get(UserApplication_.person).get(Person_.principalNumber),
                                           root.get(UserApplication_.person).get(Person_.gender),
                                           root.get(UserApplication_.userName)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

@@ -9,18 +9,17 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.PatientFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Patient;
+import br.com.nivlabs.cliniv.models.domain.Patient_;
+import br.com.nivlabs.cliniv.models.domain.Person_;
 import br.com.nivlabs.cliniv.models.dto.PatientDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.Patient_;
-import br.com.nivlabs.cliniv.models.domain.Person_;
 
 /**
  * Repositório customizado para buscas paginadas de pacientes
@@ -31,7 +30,7 @@ import br.com.nivlabs.cliniv.models.domain.Person_;
 public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient, PatientDTO> implements PatientRepositoryCustom {
 
     @Override
-    public Page<PatientDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<PatientDTO> resumedList(CustomFilters filters) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<PatientDTO> criteria = builder.createQuery(PatientDTO.class);
@@ -47,7 +46,7 @@ public class PatientRepositoryCustomImpl extends GenericCustomRepository<Patient
                                           root.get(Patient_.person).get(Person_.gender),
                                           root.get(Patient_.cnsNumber),
                                           root.get(Patient_.type)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

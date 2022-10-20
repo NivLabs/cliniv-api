@@ -9,17 +9,16 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.SectorFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Sector;
+import br.com.nivlabs.cliniv.models.domain.Sector_;
 import br.com.nivlabs.cliniv.models.dto.SectorDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.Sector_;
 
 /**
  * Repositório de Profissionais e responsáveis customizado
@@ -30,7 +29,7 @@ import br.com.nivlabs.cliniv.models.domain.Sector_;
 public class SectorRepositoryCustomImpl extends GenericCustomRepository<Sector, SectorDTO> implements SectorRepositoryCustom {
 
     @Override
-    public Page<SectorDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<SectorDTO> resumedList(CustomFilters filters) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<SectorDTO> criteria = builder.createQuery(SectorDTO.class);
         Root<Sector> root = criteria.from(Sector.class);
@@ -38,7 +37,7 @@ public class SectorRepositoryCustomImpl extends GenericCustomRepository<Sector, 
         criteria.select(builder.construct(SectorDTO.class,
                                           root.get(Sector_.id),
                                           root.get(Sector_.description)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

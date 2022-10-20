@@ -9,17 +9,16 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.ProcedureFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.tiss.Procedure;
+import br.com.nivlabs.cliniv.models.domain.tiss.Procedure_;
 import br.com.nivlabs.cliniv.models.dto.ProcedureDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.tiss.Procedure_;
 
 /**
  * Repositório customizado para procedimentos e eventos (TISS + TUSS)
@@ -31,7 +30,7 @@ public class ProcedureRepositoryCustomImpl extends GenericCustomRepository<Proce
         implements ProcedureRepositoryCustom {
 
     @Override
-    public Page<ProcedureDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<ProcedureDTO> resumedList(CustomFilters filters) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<ProcedureDTO> criteria = builder.createQuery(ProcedureDTO.class);
         Root<Procedure> root = criteria.from(Procedure.class);
@@ -42,7 +41,7 @@ public class ProcedureRepositoryCustomImpl extends GenericCustomRepository<Proce
                                           root.get(Procedure_.baseValue),
                                           root.get(Procedure_.frequency),
                                           root.get(Procedure_.specialAuthorization)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class DynamicFormRepositoryCustomImpl extends GenericCustomRepository<Dyn
         implements DynamicFormRepositoryCustom {
 
     @Override
-    public Page<DynamicFormDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<DynamicFormDTO> resumedList(CustomFilters filters) {
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<DynamicFormDTO> criteria = builder.createQuery(DynamicFormDTO.class);
         Root<DynamicForm> root = criteria.from(DynamicForm.class);
@@ -40,7 +40,7 @@ public class DynamicFormRepositoryCustomImpl extends GenericCustomRepository<Dyn
                                           root.get(DynamicForm_.id),
                                           root.get(DynamicForm_.title)));
 
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

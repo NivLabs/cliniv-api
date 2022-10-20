@@ -11,21 +11,20 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import br.com.nivlabs.cliniv.controller.filters.ScheduleFilters;
 import br.com.nivlabs.cliniv.enums.ScheduleStatus;
 import br.com.nivlabs.cliniv.exception.HttpException;
+import br.com.nivlabs.cliniv.models.domain.Patient_;
+import br.com.nivlabs.cliniv.models.domain.Person_;
+import br.com.nivlabs.cliniv.models.domain.Responsible_;
 import br.com.nivlabs.cliniv.models.domain.Schedule;
+import br.com.nivlabs.cliniv.models.domain.Schedule_;
 import br.com.nivlabs.cliniv.models.dto.ScheduleDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.Patient_;
-import br.com.nivlabs.cliniv.models.domain.Person_;
-import br.com.nivlabs.cliniv.models.domain.Responsible_;
-import br.com.nivlabs.cliniv.models.domain.Schedule_;
 
 /**
  * Implementação customizada de paginação para agendamentos
@@ -35,7 +34,7 @@ import br.com.nivlabs.cliniv.models.domain.Schedule_;
  */
 public class ScheduleRepositoryCustomImpl extends GenericCustomRepository<Schedule, ScheduleDTO> implements ScheduleRepositoryCustom {
     @Override
-    public Page<ScheduleDTO> resumedList(CustomFilters filters, Pageable pageSettings) {
+    public Page<ScheduleDTO> resumedList(CustomFilters filters) {
 
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleDTO> criteria = builder.createQuery(ScheduleDTO.class);
@@ -50,7 +49,7 @@ public class ScheduleRepositoryCustomImpl extends GenericCustomRepository<Schedu
                                           root.get(Schedule_.professional).get(Responsible_.person).get(Person_.fullName),
                                           root.get(Schedule_.schedulingDateAndTime),
                                           root.get(Schedule_.status)));
-        return getPage(filters, pageSettings, builder, criteria, root);
+        return getPage(filters, builder, criteria, root);
     }
 
     @Override

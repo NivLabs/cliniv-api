@@ -14,7 +14,11 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+
+import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Classe gerénica para implementação de repositórios customizados com paginação
@@ -102,8 +106,18 @@ public abstract class GenericCustomRepository<T extends Serializable, R extends 
      * @param pageSettings
      * @return
      */
-    protected Page<R> getPage(CustomFilters filters, Pageable pageSettings, CriteriaBuilder builder, CriteriaQuery<R> criteria,
+    protected Page<R> getPage(CustomFilters filters, CriteriaBuilder builder, CriteriaQuery<R> criteria,
                               Root<T> root) {
+
+        Pageable pageSettings = PageRequest.of(filters.getPage(), filters.getSize(), Direction.valueOf(filters.getDirection()),
+                                               filters.getOrderBy());
+
+        if (!StringUtils.isNullOrEmpty(filters.getOrderBy())) {
+            if (!filters.getDirection().equals(Direction.ASC.name()))
+                criteria.orderBy(builder.desc(root.get(filters.getOrderBy())));
+            else
+                criteria.orderBy(builder.asc(root.get(filters.getOrderBy())));
+        }
 
         criteria.where(createRestrictions(filters, builder, root));
         TypedQuery<R> query = createQuery(criteria, pageSettings);
