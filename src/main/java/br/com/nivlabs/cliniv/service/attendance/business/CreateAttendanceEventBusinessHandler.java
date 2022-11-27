@@ -73,10 +73,10 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
         if (request.getEventDateTime() == null) {
             request.setEventDateTime(LocalDateTime.now());
         }
-
+        Long responsibleId = request.getResponsible() != null ? request.getResponsible().getId() : null;
         if (request.getResponsible() == null || request.getResponsible().getId() == null) {
             UserInfoDTO userInfo = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
-            request.setResponsible(getResponsibleFromUser(userInfo));
+            responsibleId = getResponsibleFromUser(userInfo).getId();
         }
 
         logger.info("Iniciando o processo de criação de evento de atendimento");
@@ -94,7 +94,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
         newAttendanceEvent.setEventDateTime(LocalDateTime.now());
         newAttendanceEvent.setEventType(request.getEventType());
         newAttendanceEvent.setObservations(request.getObservations());
-        newAttendanceEvent.setResponsible(new Responsible(request.getResponsible().getId()));
+        newAttendanceEvent.setResponsible(new Responsible(responsibleId));
         newAttendanceEvent.setAccommodation(convertAccommodation(request.getAccommodation()));
         newAttendanceEvent.setTitle(request.getEventType().getDescription());
         if (request.getProcedure() != null && !StringUtils.isNullOrEmpty(request.getProcedure().getDescription())) {
