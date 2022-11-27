@@ -3,6 +3,7 @@ package br.com.nivlabs.cliniv.service.schedule;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -29,8 +30,12 @@ import br.com.nivlabs.cliniv.models.dto.ProfessionalIdentityDTO;
 import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.ScheduleDTO;
 import br.com.nivlabs.cliniv.models.dto.ScheduleInfoDTO;
+import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
 import br.com.nivlabs.cliniv.repository.ScheduleRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
+import br.com.nivlabs.cliniv.service.userservice.UserService;
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
@@ -49,6 +54,10 @@ public class SearchScheduleBusinessHandler implements BaseBusinessHandler {
 
     @Autowired
     protected ScheduleRepository scheduleRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ResponsibleService responsibleService;
 
     /**
      * Consulta de agendamento paginada
@@ -58,7 +67,17 @@ public class SearchScheduleBusinessHandler implements BaseBusinessHandler {
      * @return Lista paginada de agendamentos
      */
     public Page<ScheduleDTO> getPage(ScheduleFilters filters) {
-        logger.info("Iniciando a busca filtrada por informações da agenda");
+        final boolean isAdmin = !SecurityContextUtil.getAuthenticatedUser().getAuthorities().stream()
+                .filter(role -> role.getAuthority().equals(SecurityContextUtil.ROLE_ADMIN))
+                .collect(Collectors.toList()).isEmpty();
+
+        final UserInfoDTO user = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
+
+        ResponsibleInfoDTO responsibleInformations = getResponsibleFromUser(user);
+        if (responsibleInformations != null && !isAdmin) {
+            logger.info("Iniciando a busca filtrada por informações da agenda do profissional");
+            filters.setProfessionalId(responsibleInformations.getId().toString());
+        }
         if (filters.getSelectedDate() == null) {
             filters.setSelectedDate(LocalDate.now());
         }
@@ -290,6 +309,22 @@ public class SearchScheduleBusinessHandler implements BaseBusinessHandler {
         }
         DocumentDTO document = new DocumentDTO(null, DocumentType.CPF, source.getCpf(), null, null, null, null);
         target.setDocument(document);
+    }
+
+    /**
+     * Busca o responsável pela criação de evento de atendimento
+     * 
+     * @param requestOwner Usuário da solicitação
+     * @return Responsável logado
+     */
+    private ResponsibleInfoDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
+        logger.info("Iniciando busca de responsável pelo usuário da requisição...");
+        ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
+        if (responsibleInformations.getId() == null)
+            throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
+        logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
+
+        return responsibleInformations;
     }
 
 }

@@ -14,6 +14,8 @@ import br.com.nivlabs.cliniv.config.security.UserOfSystem;
  */
 public class SecurityContextUtil {
 
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+
     private SecurityContextUtil() {
     }
 
