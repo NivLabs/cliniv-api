@@ -21,6 +21,7 @@ import br.com.nivlabs.cliniv.models.domain.Attendance;
 import br.com.nivlabs.cliniv.models.domain.Attendance_;
 import br.com.nivlabs.cliniv.models.domain.Patient_;
 import br.com.nivlabs.cliniv.models.domain.Person_;
+import br.com.nivlabs.cliniv.models.domain.Responsible_;
 import br.com.nivlabs.cliniv.models.domain.Sector_;
 import br.com.nivlabs.cliniv.models.dto.AttendanceDTO;
 import br.com.nivlabs.cliniv.models.dto.SectorInfoDTO;
@@ -87,6 +88,11 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         if (!StringUtils.isNullOrEmpty(filters.getSectorId()) && !StringUtils.isNullOrEmpty(StringUtils.getDigits(filters.getSectorId()))) {
             In<Long> inClause = builder.in(root.get(Attendance_.currentAccommodation).get(Accommodation_.id));
             predicates.add(getAccommodationsFormSectorId(inClause, filters.getSectorId()));
+        }
+        if (!StringUtils.isNullOrEmpty(filters.getProfissionalId())) {
+            predicates.add(builder.or(builder.equal(root.get(Attendance_.professional).get(Responsible_.id),
+                                                    Long.parseLong(filters.getProfissionalId())),
+                                      builder.isNull(root.get(Attendance_.professional).get(Responsible_.id))));
         }
         if (filters.getEntryType() != null) {
             predicates.add(builder.equal(root.get(Attendance_.entryType), filters.getEntryType()));

@@ -14,8 +14,13 @@ import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Attendance;
 import br.com.nivlabs.cliniv.models.domain.Patient;
 import br.com.nivlabs.cliniv.models.dto.AttendanceDTO;
+import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
+import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
 import br.com.nivlabs.cliniv.repository.AttendanceRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
+import br.com.nivlabs.cliniv.service.userservice.UserService;
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 
 /**
  * 
@@ -33,6 +38,10 @@ public class SearchAttendanceBusinessHandler implements BaseBusinessHandler {
 
     @Autowired
     private AttendanceRepository attendanceRepo;
+    @Autowired
+    private ResponsibleService responsibleService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 
@@ -43,6 +52,10 @@ public class SearchAttendanceBusinessHandler implements BaseBusinessHandler {
      * @return Página de atendimentos
      */
     public Page<AttendanceDTO> getPage(AttendanceFilters filters) {
+        if (!SecurityContextUtil.isAdmin()) {
+            UserInfoDTO userInfo = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
+            filters.setProfissionalId(getResponsibleFromUser(userInfo).getId().toString());
+        }
         logger.info("Iniciando uma busca de atendimentos paginada com filtros :: {}", filters);
         return attendanceRepo.resumedList(filters);
     }
@@ -72,6 +85,22 @@ public class SearchAttendanceBusinessHandler implements BaseBusinessHandler {
             listOfDto.add(dto);
         });
         return listOfDto;
+    }
+
+    /**
+     * Busca o responsável pela criação de evento de atendimento
+     * 
+     * @param requestOwner Usuário da solicitação
+     * @return Responsável logado
+     */
+    private ResponsibleInfoDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
+        logger.info("Iniciando busca de responsável pelo usuário da requisição...");
+        ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
+        if (responsibleInformations.getId() == null)
+            throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
+        logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
+
+        return responsibleInformations;
     }
 
 }

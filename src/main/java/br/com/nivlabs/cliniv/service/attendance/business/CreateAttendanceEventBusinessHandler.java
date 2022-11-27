@@ -25,6 +25,7 @@ import br.com.nivlabs.cliniv.models.dto.ProcedureDTO;
 import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
 import br.com.nivlabs.cliniv.repository.AttendanceEventRepository;
+import br.com.nivlabs.cliniv.repository.AttendanceRepository;
 import br.com.nivlabs.cliniv.repository.ProcedureRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.service.digitaldocument.DigitalDocumentService;
@@ -49,6 +50,8 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
     private Logger logger;
     @Autowired
     private AttendanceEventRepository attendanceEventRepo;
+    @Autowired
+    private AttendanceRepository attendanceRepository;
     @Autowired
     private ProcedureRepository procedureRepository;
 
@@ -82,6 +85,10 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
         logger.info("Identificador do tipo do evento: {}", request.getEventType());
         logger.info("Data/Hora do evento: {}", request.getEventDateTime());
 
+        Attendance attendanceEntity = attendanceRepository.findById(request.getAttendanceId())
+                .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                        "Atendimento inexistente, não é possível criar um evento!"));
+
         AttendanceEvent newAttendanceEvent = new AttendanceEvent();
         newAttendanceEvent.setAttendance(new Attendance(request.getAttendanceId()));
         newAttendanceEvent.setEventDateTime(LocalDateTime.now());
@@ -99,6 +106,17 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
 
         Long newEventId = attendanceEventRepo.save(newAttendanceEvent).getId();
+        if ((attendanceEntity.getProfessional() == null
+                && request.getResponsible() != null
+                && request.getResponsible().getId() != null)
+                ||
+                (request.getResponsible() != null
+                        && request.getResponsible().getId() != null
+                        && attendanceEntity.getProfessional() != null
+                        && !request.getResponsible().getId().equals(attendanceEntity.getProfessional().getId()))) {
+            logger.info("Iniciando atualização do profissional responsável do atendimento");
+            attendanceEntity.setProfessional(new Responsible(request.getResponsible().getId()));
+        }
 
         if (request.getObservations() != null) {
             var digitalDocumentoFromDocumentTemplate = reportService

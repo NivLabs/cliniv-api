@@ -3,7 +3,6 @@ package br.com.nivlabs.cliniv.service.schedule;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -67,14 +66,10 @@ public class SearchScheduleBusinessHandler implements BaseBusinessHandler {
      * @return Lista paginada de agendamentos
      */
     public Page<ScheduleDTO> getPage(ScheduleFilters filters) {
-        final boolean isAdmin = !SecurityContextUtil.getAuthenticatedUser().getAuthorities().stream()
-                .filter(role -> role.getAuthority().equals(SecurityContextUtil.ROLE_ADMIN))
-                .collect(Collectors.toList()).isEmpty();
-
         final UserInfoDTO user = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
 
         ResponsibleInfoDTO responsibleInformations = getResponsibleFromUser(user);
-        if (responsibleInformations != null && !isAdmin) {
+        if (responsibleInformations != null && !SecurityContextUtil.isAdmin()) {
             logger.info("Iniciando a busca filtrada por informações da agenda do profissional");
             filters.setProfessionalId(responsibleInformations.getId().toString());
         }

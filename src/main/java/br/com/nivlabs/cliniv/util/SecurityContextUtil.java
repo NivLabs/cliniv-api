@@ -1,5 +1,7 @@
 package br.com.nivlabs.cliniv.util;
 
+import java.util.stream.Collectors;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import br.com.nivlabs.cliniv.config.security.UserOfSystem;
@@ -19,11 +21,27 @@ public class SecurityContextUtil {
     private SecurityContextUtil() {
     }
 
+    /**
+     * Retorna o usuário logado no sistema
+     * 
+     * @return Usuário logado
+     */
     public static UserOfSystem getAuthenticatedUser() {
         try {
             return (UserOfSystem) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * Retorna se o usuário logado é usuário administrador ou não
+     * 
+     * @return TRUE - Administrado | FALSE - Não administrador
+     */
+    public static boolean isAdmin() {
+        return !getAuthenticatedUser().getAuthorities().stream()
+                .filter(role -> role.getAuthority().equals(SecurityContextUtil.ROLE_ADMIN))
+                .collect(Collectors.toList()).isEmpty();
     }
 }
