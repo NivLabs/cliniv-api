@@ -140,11 +140,24 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
                 throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                         "Você não tem um profissional vinculado ao seu usuário.");
             logger.info("Profissional encontrado :: {} | {}", responsibleInformations.getId(), responsibleInformations.getFullName());
-            if (attendance.getProfessional() != null && responsibleInformations.getId().equals(attendance.getProfessional().getId())) {
-                logger.info("Verificando se o profissional é o responsável pelo atendimento ativo atual...");
-                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Você não é o profissional responsável pelo atendimento!");
+            logger.info("Verificando se o profissional é o responsável pelo atendimento ativo atual...");
+            if (attendance.getProfessional() != null && !responsibleInformations.getId().equals(attendance.getProfessional().getId())) {
+                final Responsible professional = attendance.getProfessional();
+                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                        "Você não é o profissional responsável pelo atendimento! O profissional responsável é o " +
+                                professional.getId() + " - " + professional.getPerson().getFullName());
+            } else if (!attendance.getEvents().isEmpty()) {
+                final List<AttendanceEvent> validsEvents = attendance.getEvents().stream().filter(event -> event.getResponsible() != null)
+                        .sorted((eventBegin, eventNext) -> eventNext.getId() > eventBegin.getId() ? 1 : -1).collect(Collectors.toList());
+                if (!validsEvents.isEmpty()) {
+                    Responsible professional = validsEvents.get(0).getResponsible();
+                    if (!responsibleInformations.getId().equals(professional.getId())) {
+                        throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
+                                "Você não é o profissional responsável pelo atendimento! O profissional responsável é o " +
+                                        professional.getId() + "-" + professional.getPerson().getFullName());
+                    }
+                }
             }
-
         }
     }
 
