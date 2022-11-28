@@ -107,15 +107,13 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
 
         Long newEventId = attendanceEventRepo.save(newAttendanceEvent).getId();
         if ((attendanceEntity.getProfessional() == null
-                && request.getResponsible() != null
-                && request.getResponsible().getId() != null)
+                && responsibleId != null)
                 ||
-                (request.getResponsible() != null
-                        && request.getResponsible().getId() != null
+                (responsibleId != null
                         && attendanceEntity.getProfessional() != null
-                        && !request.getResponsible().getId().equals(attendanceEntity.getProfessional().getId()))) {
+                        && !responsibleId.equals(attendanceEntity.getProfessional().getId()))) {
             logger.info("Iniciando atualização do profissional responsável do atendimento");
-            attendanceEntity.setProfessional(new Responsible(request.getResponsible().getId()));
+            attendanceEntity.setProfessional(new Responsible(responsibleId));
         }
 
         if (request.getObservations() != null) {
