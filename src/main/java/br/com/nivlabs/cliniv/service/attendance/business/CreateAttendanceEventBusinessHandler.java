@@ -81,7 +81,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
 
         logger.info("Iniciando o processo de criação de evento de atendimento");
         logger.info("Identificador do atendimento: {}", request.getAttendanceId());
-        logger.info("Identificador do solicitante: {}", request.getResponsible().getId());
+        logger.info("Identificador do solicitante: {}", responsibleId);
         logger.info("Identificador do tipo do evento: {}", request.getEventType());
         logger.info("Data/Hora do evento: {}", request.getEventDateTime());
 
