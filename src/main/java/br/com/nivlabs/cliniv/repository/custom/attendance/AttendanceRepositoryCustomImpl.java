@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -20,7 +22,9 @@ import br.com.nivlabs.cliniv.models.domain.Accommodation_;
 import br.com.nivlabs.cliniv.models.domain.Attendance;
 import br.com.nivlabs.cliniv.models.domain.Attendance_;
 import br.com.nivlabs.cliniv.models.domain.Patient_;
+import br.com.nivlabs.cliniv.models.domain.Person;
 import br.com.nivlabs.cliniv.models.domain.Person_;
+import br.com.nivlabs.cliniv.models.domain.Responsible;
 import br.com.nivlabs.cliniv.models.domain.Responsible_;
 import br.com.nivlabs.cliniv.models.domain.Sector_;
 import br.com.nivlabs.cliniv.models.dto.AttendanceDTO;
@@ -48,6 +52,8 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<AttendanceDTO> criteria = builder.createQuery(AttendanceDTO.class);
         Root<Attendance> root = criteria.from(Attendance.class);
+        Join<Responsible, Person> responsibleEntityJoin = root.join(Attendance_.PROFESSIONAL, JoinType.LEFT)
+                .join(Responsible_.PERSON, JoinType.LEFT);
 
         criteria.select(builder.construct(AttendanceDTO.class,
                                           root.get(Attendance_.id),
@@ -60,7 +66,8 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
                                           root.get(Attendance_.patient).get(Patient_.id),
                                           root.get(Attendance_.currentAccommodation).get(Accommodation_.sector).get(Sector_.description),
                                           root.get(Attendance_.patient).get(Patient_.cnsNumber),
-                                          root.get(Attendance_.level)));
+                                          root.get(Attendance_.level),
+                                          responsibleEntityJoin.get(Person_.fullName)));
         return getPage(filters, builder, criteria, root);
     }
 

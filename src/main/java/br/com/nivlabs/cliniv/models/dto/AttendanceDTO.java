@@ -58,6 +58,9 @@ public class AttendanceDTO extends DataTransferObjectBase {
     @Schema(description = "Nível de risco do paciente do atendimento")
     private AttendanceLevel level;
 
+    @Schema(description = "Nome do profissional responsável pelo atendimento")
+    private String responsibleName;
+
     /**
      * Construtor usado para paginação
      * 
@@ -65,19 +68,18 @@ public class AttendanceDTO extends DataTransferObjectBase {
      * @param fullName
      * @param socialName
      * @param entryDatetime
+     * @param exitDatetime
      * @param entryCause
-     * @param isFinished
      * @param type
-     * @param patientType
      * @param patientId
      * @param sectorDescription
      * @param cnsNumber
-     * @param sectorDescripton
      * @param level
+     * @param responsibleName
      */
     public AttendanceDTO(Long id, String fullName, String socialName, LocalDateTime entryDatetime, LocalDateTime exitDatetime,
             String entryCause,
-            EntryType type, Long patientId, String sectorDescription, String cnsNumber, AttendanceLevel level) {
+            EntryType type, Long patientId, String sectorDescription, String cnsNumber, AttendanceLevel level, String responsibleName) {
         super();
         this.id = id;
         this.fullName = fullName;
@@ -90,6 +92,7 @@ public class AttendanceDTO extends DataTransferObjectBase {
         this.sectorDescription = sectorDescription;
         this.cnsNumber = cnsNumber;
         this.level = level;
+        this.responsibleName = responsibleName;
     }
 
     public AttendanceDTO() {
@@ -200,6 +203,14 @@ public class AttendanceDTO extends DataTransferObjectBase {
         this.exitDatetime = exitDatetime;
     }
 
+    public String getResponsibleName() {
+        return responsibleName;
+    }
+
+    public void setResponsibleName(String responsibleName) {
+        this.responsibleName = responsibleName;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -229,6 +240,8 @@ public class AttendanceDTO extends DataTransferObjectBase {
         builder.append(cnsNumber);
         builder.append(", level=");
         builder.append(level);
+        builder.append(", responsibleName=");
+        builder.append(responsibleName);
         builder.append("]");
         return builder.toString();
     }
