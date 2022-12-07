@@ -75,7 +75,7 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
     private AccommodationDTO lastAccommodation;
 
     @Schema(description = "Profissional")
-    private ResponsibleDTO lascProfessional;
+    private ResponsibleDTO lastProfessional;
 
     @Schema(description = "Sexo")
     private Gender gender;
@@ -375,12 +375,12 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         this.attendanceLevel = attendanceLevel;
     }
 
-    public ResponsibleDTO getLascProfessional() {
-        return lascProfessional;
+    public ResponsibleDTO getLastProfessional() {
+        return lastProfessional;
     }
 
-    public void setLascProfessional(ResponsibleDTO lascProfessional) {
-        this.lascProfessional = lascProfessional;
+    public void setLastProfessional(ResponsibleDTO lastProfessional) {
+        this.lastProfessional = lastProfessional;
     }
 
     @Override
@@ -414,8 +414,8 @@ public class MedicalRecordDTO extends DataTransferObjectBase {
         builder.append(bornDate);
         builder.append(", lastAccommodation=");
         builder.append(lastAccommodation);
-        builder.append(", lascProfessional=");
-        builder.append(lascProfessional);
+        builder.append(", lastProfessional=");
+        builder.append(lastProfessional);
         builder.append(", gender=");
         builder.append(gender);
         builder.append(", events=");

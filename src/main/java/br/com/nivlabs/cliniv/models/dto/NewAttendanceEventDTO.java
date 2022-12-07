@@ -18,7 +18,7 @@ public class NewAttendanceEventDTO extends DataTransferObjectBase {
     private static final long serialVersionUID = 9069758427814475745L;
 
     @Schema(description = "Identificador do Atendimento")
-    @NotNull(message = "O código do atendimeno é obrigatório")
+    @NotNull(message = "O código do atendimento é obrigatório")
     private Long attendanceId;
 
     @Schema(description = "Data/Hora do evento")

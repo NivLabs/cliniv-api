@@ -101,7 +101,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
         if (!medicalRecord.getEvents().isEmpty()) {
             medicalRecord.setLastAccommodation(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getAccommodation());
-            medicalRecord.setLascProfessional(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getProfessional());
+            medicalRecord.setLastProfessional(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getProfessional());
         }
 
         medicalRecord.getAllergies()
@@ -199,7 +199,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
         if (!medicalRecord.getEvents().isEmpty()) {
             medicalRecord.setLastAccommodation(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getAccommodation());
-            medicalRecord.setLascProfessional(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getProfessional());
+            medicalRecord.setLastProfessional(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getProfessional());
         }
 
         medicalRecord.setAttendanceLevel(attendance.getLevel());
