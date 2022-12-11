@@ -106,6 +106,7 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
                         break;
                     default:
                         convertedAttendance.setEntryType(EntryType.GENERIC);
+                        break;
                 }
 
                 convertedAttendance = attendanceRepo.save(convertedAttendance);
