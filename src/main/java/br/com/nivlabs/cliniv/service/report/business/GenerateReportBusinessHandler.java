@@ -2,6 +2,7 @@ package br.com.nivlabs.cliniv.service.report.business;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -118,12 +119,47 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
                 String.format("Layout com o identificador %s não encontrado!", layoutId)));
 
         byte[] bytes = Base64.getDecoder().decode(reportLayout.getXml());
+        return generate(bytes, reportLayout.getName(), params);
+    }
 
+    /**
+     * Gera um relatório à partir de um array de bytes
+     * 
+     * @param bytes Array de bytes do relatório
+     * @param reportName Nome do relatório
+     * @param params Parâmetros do relatório
+     * @return Documento digital com o base64 do relatório
+     */
+    @Transactional
+    public DigitalDocumentDTO generate(byte[] bytes, String reportName, ReportGenerationRequestDTO params) {
         try (InputStream reportInputStream = new ByteArrayInputStream(bytes)) {
             ReportParam reportParam = convertParams(params);
-            return generateFromJxmlStream(0L, reportLayout.getName(), reportParam, reportInputStream);
+            return generateFromJxmlStream(0L, reportName, reportParam, reportInputStream);
         } catch (Exception e) {
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento...\n".concat(e.getMessage()), e);
+        }
+    }
+
+    /**
+     * Gera um relatório à partir de um array de bytes
+     * 
+     * @param bytes Array de bytes do relatório
+     * @param reportName Nome do relatório
+     * @param params Parâmetros do relatório
+     * @return Documento digital com o base64 do relatório
+     */
+    @Transactional
+    public DigitalDocumentDTO generate(InputStream reportInputStream, String reportName, ReportParam reportParams) {
+        try {
+            return generateFromJxmlStream(0L, reportName, reportParams, reportInputStream);
+        } catch (Exception e) {
+            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento...\n".concat(e.getMessage()), e);
+        } finally {
+            try {
+                reportInputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

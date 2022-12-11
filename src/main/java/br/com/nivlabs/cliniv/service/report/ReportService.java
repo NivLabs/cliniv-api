@@ -82,6 +82,18 @@ public class ReportService implements BaseService {
     }
 
     /**
+     * Cria relatório à partir de um array de bytes de um JXML
+     * 
+     * @param bytes Array de bytes do relatório Jasper
+     * @param name Nome do relatório
+     * @param params Parâmetros do relatŕoio
+     * @return Documento digital gerado do relatório
+     */
+    public DigitalDocumentDTO generateDocumentFromJxmlStream(InputStream reportInputStream, String name, ReportParam params) {
+        return generateReportBusinessHandler.generate(reportInputStream, name, params);
+    }
+
+    /**
      * Busca um layout de relatório por identificador único
      * 
      * @param id Identificador único do layout de relatório

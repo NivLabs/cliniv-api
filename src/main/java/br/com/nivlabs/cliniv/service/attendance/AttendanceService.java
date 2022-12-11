@@ -9,13 +9,16 @@ import org.springframework.stereotype.Service;
 import br.com.nivlabs.cliniv.controller.filters.AttendanceFilters;
 import br.com.nivlabs.cliniv.models.dto.AttendanceDTO;
 import br.com.nivlabs.cliniv.models.dto.CloseAttandenceDTO;
+import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.cliniv.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.cliniv.models.dto.NewAttandenceDTO;
 import br.com.nivlabs.cliniv.models.dto.NewAttendanceEventDTO;
+import br.com.nivlabs.cliniv.models.dto.ReportParametersDTO;
 import br.com.nivlabs.cliniv.service.BaseService;
 import br.com.nivlabs.cliniv.service.attendance.business.CloseAttendanceBusinessHandler;
 import br.com.nivlabs.cliniv.service.attendance.business.CreateAttendanceEventBusinessHandler;
 import br.com.nivlabs.cliniv.service.attendance.business.CreateNewAttendanceBusinessHandler;
+import br.com.nivlabs.cliniv.service.attendance.business.GenerateAttendanceReportBusinessHandler;
 import br.com.nivlabs.cliniv.service.attendance.business.SearchAttendanceBusinessHandler;
 import br.com.nivlabs.cliniv.service.attendance.business.SearchMedicalRecordBusinessHandler;
 
@@ -40,6 +43,8 @@ public class AttendanceService implements BaseService {
     CloseAttendanceBusinessHandler closeAttendanceBusinessHandler;
     @Autowired
     CreateAttendanceEventBusinessHandler createAttendanceEventBusinessHandler;
+    @Autowired
+    GenerateAttendanceReportBusinessHandler generateAttendanceReportBusinessHandler;
 
     /**
      * 
@@ -111,5 +116,15 @@ public class AttendanceService implements BaseService {
      */
     public void createNewAttendanceEvent(NewAttendanceEventDTO request) {
         createAttendanceEventBusinessHandler.create(request);
+    }
+
+    /**
+     * Realiza a geração de um relatório de atendimentos (Por profissional ou geral)
+     * 
+     * @param reportParameters Parâmetros do relatório
+     * @return Documento digital com o relatório gerado
+     */
+    public DigitalDocumentDTO generateReport(ReportParametersDTO reportParameters) {
+        return generateAttendanceReportBusinessHandler.generate(reportParameters);
     }
 }

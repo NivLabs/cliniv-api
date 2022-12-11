@@ -24,9 +24,11 @@ import br.com.nivlabs.cliniv.controller.filters.AttendanceFilters;
 import br.com.nivlabs.cliniv.event.CreatedResourceEvent;
 import br.com.nivlabs.cliniv.models.dto.AttendanceDTO;
 import br.com.nivlabs.cliniv.models.dto.CloseAttandenceDTO;
+import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.cliniv.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.cliniv.models.dto.NewAttandenceDTO;
 import br.com.nivlabs.cliniv.models.dto.NewAttendanceEventDTO;
+import br.com.nivlabs.cliniv.models.dto.ReportParametersDTO;
 import br.com.nivlabs.cliniv.service.attendance.AttendanceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -84,7 +86,7 @@ public class AttendanceController extends BaseController<AttendanceService> {
      */
     @Operation(summary = "attendance-put", description = "Finaliza um atendimento na aplicação")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ATENDIMENTO_ALTA', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> closeAttendance(@PathVariable("id") Long id,
                                                 @Validated @RequestBody(required = true) CloseAttandenceDTO request,
                                                 HttpServletResponse response) {
@@ -130,13 +132,21 @@ public class AttendanceController extends BaseController<AttendanceService> {
 
     @Operation(summary = "attendance-event-post", description = "Insere um novo evento de atendimento")
     @PostMapping("/event")
-    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<Void> persist(
                                         @Validated @RequestBody(required = true) NewAttendanceEventDTO newAttendanceEvent,
                                         HttpServletResponse response) {
         service.createNewAttendanceEvent(newAttendanceEvent);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+
+    }
+
+    @Operation(summary = "attendance-report-post", description = "Gera um relatório de atendimentos")
+    @PostMapping("/report")
+    @PreAuthorize("hasAnyRole('RECEPCAO', 'MEDICO', 'ENFERMEIRO', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
+    public ResponseEntity<DigitalDocumentDTO> report(@Validated @RequestBody(required = true) ReportParametersDTO reportParameters) {
+        return ResponseEntity.ok(service.generateReport(reportParameters));
 
     }
 

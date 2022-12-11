@@ -90,6 +90,7 @@ public abstract class CreateOrUpdateReportLayoutBusinessHandler implements BaseB
             case "java.util.Date":
                 return MetaType.DATE.name();
             case "java.lang.Long":
+            case "java.lang.Integer":
                 return MetaType.NUMBER.name();
             default:
                 throw new HttpException(HttpStatus.BAD_REQUEST,
