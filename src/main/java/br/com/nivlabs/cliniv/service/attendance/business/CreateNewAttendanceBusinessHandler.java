@@ -16,12 +16,17 @@ import br.com.nivlabs.cliniv.models.domain.Responsible;
 import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.cliniv.models.dto.MedicalRecordDTO;
 import br.com.nivlabs.cliniv.models.dto.NewAttandenceDTO;
+import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
+import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
 import br.com.nivlabs.cliniv.repository.AttendanceEventRepository;
 import br.com.nivlabs.cliniv.repository.AttendanceRepository;
 import br.com.nivlabs.cliniv.repository.DigitalDocumentRepository;
 import br.com.nivlabs.cliniv.repository.PatientRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.service.report.ReportService;
+import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
+import br.com.nivlabs.cliniv.service.userservice.UserService;
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 
 /**
  * 
@@ -50,6 +55,10 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
     SearchMedicalRecordBusinessHandler searchMedicalRecordBusinessHandler;
     @Autowired
     ReportService reportService;
+    @Autowired
+    ResponsibleService responsibleService;
+    @Autowired
+    UserService userService;
 
     /**
      * Realiza a criação de um novo atendimento à partir do DTO
@@ -76,6 +85,14 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
                 convertedAttendance.setLevel(request.getLevel());
                 convertedAttendance.setPatient(new Patient(request.getPatientId()));
                 convertedAttendance.setCurrentAccommodation(new Accommodation(request.getAccommodationId(), null, null, null));
+                if (request.getResponsibleId() != null && responsibleService.findById(request.getPatientId()) != null) {
+                    convertedAttendance.setProfessional(new Responsible(request.getResponsibleId()));
+                } else {
+                    logger.info("Verificando o usuário da solicitação");
+                    UserInfoDTO user = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
+                    ResponsibleInfoDTO responsible = getResponsibleFromUser(user);
+                    convertedAttendance.setProfessional(new Responsible(responsible.getId()));
+                }
 
                 switch (request.getEventType()) {
                     case MEDICAL_EMERGENCY:
@@ -141,6 +158,28 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
 
             document = digitalDocumentRepo.save(document);
             logger.info("Documentos criados com sucesso!");
+        }
+    }
+
+    /**
+     * Busca o responsável pela requisição da prescrição baseado no usuário
+     * 
+     * @param requestOwner
+     * @return
+     */
+    private ResponsibleInfoDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
+        try {
+            logger.info("Iniciando busca de responsável pelo usuário da requisição...");
+            var responsible = responsibleService.findByCpf(requestOwner.getDocument().getValue());
+            if (responsible.getId() == null) {
+                return null;
+            }
+            return responsible;
+        } catch (HttpException e) {
+            if (e.getStatus() == HttpStatus.NOT_FOUND) {
+                return null;
+            }
+            throw e;
         }
     }
 }
