@@ -3,6 +3,8 @@ package br.com.nivlabs.cliniv.service.attendance.business;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -31,6 +33,7 @@ public class GenerateAttendanceReportBusinessHandler implements BaseBusinessHand
     private static final String GENERIC_REPORT_SOURCE = "reports/attendance_report.jrxml";
     private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
 
+    @Transactional
     public DigitalDocumentDTO generate(ReportParametersDTO reportParameters) {
 
         logger.info("Solicitação de criação do relatório de atendimento recebida... Parâmetros :: {}", reportParameters);
@@ -66,6 +69,7 @@ public class GenerateAttendanceReportBusinessHandler implements BaseBusinessHand
      * @param reportInputStream Stream do Relatório (jxml)
      * @return Documento digital do relatório gerado
      */
+    @Transactional
     private DigitalDocumentDTO generateFromJxmlStream(ReportParam params) {
         try {
             return reportService.generateDocumentFromJxmlStream(new ClassPathResource(GENERIC_REPORT_SOURCE).getInputStream(),
