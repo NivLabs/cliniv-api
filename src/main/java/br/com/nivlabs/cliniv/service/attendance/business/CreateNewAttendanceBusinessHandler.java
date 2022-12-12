@@ -85,13 +85,15 @@ public class CreateNewAttendanceBusinessHandler implements BaseBusinessHandler {
                 convertedAttendance.setLevel(request.getLevel());
                 convertedAttendance.setPatient(new Patient(request.getPatientId()));
                 convertedAttendance.setCurrentAccommodation(new Accommodation(request.getAccommodationId(), null, null, null));
-                if (request.getResponsibleId() != null && responsibleService.findById(request.getPatientId()) != null) {
+                if (request.getResponsibleId() != null && responsibleService.findById(request.getResponsibleId()) != null) {
                     convertedAttendance.setProfessional(new Responsible(request.getResponsibleId()));
                 } else {
                     logger.info("Verificando o usuário da solicitação");
                     UserInfoDTO user = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
                     ResponsibleInfoDTO responsible = getResponsibleFromUser(user);
-                    convertedAttendance.setProfessional(new Responsible(responsible.getId()));
+                    if (responsible != null) {
+                        convertedAttendance.setProfessional(new Responsible(responsible.getId()));
+                    }
                 }
 
                 switch (request.getEventType()) {
