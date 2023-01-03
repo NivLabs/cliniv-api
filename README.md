@@ -1,13 +1,13 @@
 <h1 align="center">
   <a href="https://cliniv-api.herokuapp.com">
-    <img alt="NLGP Logo" src="./readme/logo.png" width="350px" />
+    <img alt="NivLabs Logo" src="./readme/logo.png" width="350px" />
   </a>
 </h1>
 <h2 align="center">
-  NiV Labs - Gestão de Prontuário - API
+  CliNiv - API
 </h2>
 
-O NLGP-API é uma API Rest criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no processo de prontuário. O NLGP-API é integrado com um client baseado em Angular, o [NLGP-UI](https://github.com/niv-labs/gestao-de-prontuario-ui).
+CliNiv-API é uma API Rest criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no processo de prontuário. O CliNiv-API é integrado com um client baseado em Angular, o [CliNiv-UI](https://github.com/niv-labs/cliniv-ui).
 
 <p align="center">
     <a href="https://github.com/niv-labs/">
@@ -72,18 +72,33 @@ Para rodar o projeto, existem alguns requisítos mínimos de configurações, s�
 ## MariaDB
 ### Sem Docker
 
-Para que seja possível rodar a aplicação, faz-se necessário configurar previamente as informações de conexão no arquivo `application-dev.properties` deste projeto.
+Para que seja possível rodar a aplicação, faz-se necessário configurar previamente as informações de conexão no arquivo `application-prod.properties` deste projeto.
 
 Um setup inicial válido para uma base nova pode seguir os padrões abaixo:
 
-- URL de conexão da base `spring.datasource.url=jdbc:mariadb://[SERVIDOR]:[PORTA]/[BASE]?user=[NOME_USUARIO]&password=[SENHA]&createDatabaseIfNotExist=TRUE`, o `createDatabaseIfNotExist=TRUE` faz com que o próprio framework crie a base de dados.
+- URL de conexão da base `spring.datasource.url=jdbc:mariadb://[SERVIDOR]:[PORTA]`.
 
-- No meu caso, a primeira linha do meu `application-dev.properties` fica `spring.datasource.url=jdbc:mariadb://localhost:3306/devdb?user=admin&password=123456dv&createDatabaseIfNotExist=TRUE`
+- No meu caso, a primeira linha do meu `application-prod.properties` fica `spring.datasource.url=jdbc:mariadb://localhost:3306`
+
+- As duas linhas seguintes servem para você informar o usuário e a senha de conexão.
+
+- Não informamos o nome da base neste momento porque a aplicação possui um sistema de múltiplas bases. Isto será explicado mais abaixo.
 
 ### Com Docker
 O projeto possui um build pronto do MariaDB em Docker, neste caso não precisamos alterar nada, basta executar o shellscript `./run-mariadb.sh` e seguir para o próximo passo.
 
 OBS: Obrigatório ter o Docker instalado.
+
+- URL de conexão da base `spring.datasource.url=jdbc:mariadb://[SERVIDOR]:[PORTA]`.
+
+- No meu caso, a primeira linha do meu `application-prod.properties` fica `spring.datasource.url=jdbc:mariadb://localhost:3306`
+
+- As duas linhas seguintes servem para você informar o usuário e a senha de conexão.
+
+- Não informamos o nome da base neste momento porque a aplicação possui um sistema de múltiplas bases. Isto será explicado mais abaixo.
+
+### Observações
+A base de dados deve ser criada manualmente no MariaDB em ambos os casos. A diferença entre elas é que com o Docker não há a necessidade de instalação do banco, facilitando o desenvolvimento.
 
 ---
 
@@ -91,17 +106,17 @@ OBS: Obrigatório ter o Docker instalado.
 
 ### Usando Docker
 #### Passo 1
-- 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/gestao-de-prontuario.git`
+- 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/cliniv-api.git`
 
 #### Passo 1
 - 🔃 Rode o script `./startWithDocker.sh`
 
-OBS: Obrigatório ter o Docker instalado.
+- OBS: Obrigatório ter o Docker instalado.
 
 ### Usando o Eclipse ou STS
 #### Passo 1
 
-- 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/gestao-de-prontuario.git`
+- 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/cliniv-api.git`
 
 #### Passo 2
 
@@ -109,14 +124,13 @@ OBS: Obrigatório ter o Docker instalado.
 
 #### Passo 3
 
-- 📝 Altere a primeira linha do `application.properties`para `spring.profiles.active=dev`
-
-#### Passo 4
-
 - 🔃 Rode a aplicação com botão direito do mouse no projeto, `run as` > `Spring Boot App`. Também é possível rodar a aplicação à partir da classe `ApplicationMain` dentro do projeto, basca clicar com o botão direito na classe e seguir o mesmo fluxo.
 
 #### Dica
-Se você estiver usando o Eclipse, pode ser uma boa ideia baixar o plugin disponibilizado pela Pitoval no marketplace, o `Spring Tools 4 (release)`
+- Se você estiver usando o Eclipse, pode ser uma boa ideia baixar o plugin disponibilizado pela Pitoval no marketplace, o `Spring Tools 4 (release)`.
+
+#### Dica 2
+- A aplicação utiliza um sistema de múltiplas conexões, para que a API saiba qual base se conectar, deve-se informar o nome da mesma via cabeçalho com a chave `CUSTOMER_ID`.
 
 ---
 
@@ -163,6 +177,7 @@ Esta área especifica definições técnicas da aplicação, suas característic
 
 - NiV Labs :: [NiV Labs](http://www.nivlabs.com.br)
 - Atendimento :: [atendimento@nivlabs.com.br](atendimento@nivlabs.com.br)
+- Vinícios (eu) :: [viniciosrodrigues@nivlabs.com.br](viniciosrodrigues@nivlabs.com.br)
 
 ---
 
