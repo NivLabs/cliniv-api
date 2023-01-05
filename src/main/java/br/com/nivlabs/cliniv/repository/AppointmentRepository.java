@@ -20,4 +20,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
 
     @Query(nativeQuery = true, value = "SELECT distinct(DAY(DATA_HORA)) FROM AGENDAMENTO a WHERE a.DATA_HORA >= :initDate AND a.DATA_HORA <= :finalDate")
     public List<Integer> findDaysWithAppointment(LocalDate initDate, LocalDate finalDate);
+
+    @Query(nativeQuery = true, value = "SELECT distinct(DAY(DATA_HORA)) FROM AGENDAMENTO a WHERE a.DATA_HORA >= :initDate AND a.DATA_HORA <= :finalDate AND a.ID_RESPONSAVEL = :professionalId")
+    public List<Integer> findDaysWithAppointmentAndProfessionalId(LocalDate initDate, LocalDate finalDate, Long professionalId);
 }

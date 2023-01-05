@@ -338,7 +338,15 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
         final LocalDate initDate = filters.getSelectedDate().with(TemporalAdjusters.firstDayOfMonth());
         final LocalDate finalDate = filters.getSelectedDate().with(TemporalAdjusters.lastDayOfMonth());
 
-        final List<Integer> daysWithAppointment = scheduleRepository.findDaysWithAppointment(initDate, finalDate);
+        final List<Integer> daysWithAppointment = filters.getProfessionalId() != null && !filters.getProfessionalId().isEmpty()
+                                                                                                                                ? scheduleRepository
+                                                                                                                                        .findDaysWithAppointmentAndProfessionalId(initDate,
+                                                                                                                                                                                  finalDate,
+                                                                                                                                                                                  Long.parseLong(filters
+                                                                                                                                                                                          .getProfessionalId()))
+                                                                                                                                : scheduleRepository
+                                                                                                                                        .findDaysWithAppointment(initDate,
+                                                                                                                                                                 finalDate);
         if (daysWithAppointment != null) {
             daysWithAppointment.forEach(day -> {
                 if (!day.equals(filters.getSelectedDate().getDayOfMonth())) {
