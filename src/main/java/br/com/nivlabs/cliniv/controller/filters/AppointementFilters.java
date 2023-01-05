@@ -13,7 +13,7 @@ import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
  * @author viniciosarodrigues
  *
  */
-public class ScheduleFilters extends CustomFilters {
+public class AppointementFilters extends CustomFilters {
 
     private static final long serialVersionUID = 5552517752886764329L;
 
@@ -50,7 +50,7 @@ public class ScheduleFilters extends CustomFilters {
 
     @Override
     public String toString() {
-        return "ScheduleFilters [professionalId=" + professionalId + ", selectedDate=" + selectedDate + ", status=" + status + "]";
+        return "AppointementFilters [professionalId=" + professionalId + ", selectedDate=" + selectedDate + ", status=" + status + "]";
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ScheduleFilters extends CustomFilters {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ScheduleFilters other = (ScheduleFilters) obj;
+        AppointementFilters other = (AppointementFilters) obj;
         if (professionalId == null) {
             if (other.professionalId != null)
                 return false;

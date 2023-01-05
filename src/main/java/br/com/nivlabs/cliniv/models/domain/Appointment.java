@@ -1,6 +1,7 @@
 package br.com.nivlabs.cliniv.models.domain;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,8 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-import br.com.nivlabs.cliniv.enums.ScheduleStatus;
+import br.com.nivlabs.cliniv.enums.AppointmentStatus;
 import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
 
 /**
@@ -23,8 +25,9 @@ import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
  * @author viniciosarodrigues
  *
  */
+@Table
 @Entity(name = "AGENDAMENTO")
-public class Schedule extends BaseObjectWithCreatedAt {
+public class Appointment extends BaseObjectWithCreatedAt {
 
     private static final long serialVersionUID = 4186684259235415032L;
 
@@ -41,14 +44,14 @@ public class Schedule extends BaseObjectWithCreatedAt {
     private Responsible professional;
 
     @Column(name = "DATA_HORA")
-    private LocalDateTime schedulingDateAndTime;
+    private LocalDateTime appointmentDateAndTime;
 
     @Column(name = "ANOTACOES")
     private String annotation;
 
     @Column(name = "SITUACAO")
     @Enumerated(EnumType.STRING)
-    private ScheduleStatus status;
+    private AppointmentStatus status;
 
     public Long getId() {
         return id;
@@ -74,12 +77,12 @@ public class Schedule extends BaseObjectWithCreatedAt {
         this.professional = professional;
     }
 
-    public LocalDateTime getSchedulingDateAndTime() {
-        return schedulingDateAndTime;
+    public LocalDateTime getAppointmentDateAndTime() {
+        return appointmentDateAndTime;
     }
 
-    public void setSchedulingDateAndTime(LocalDateTime schedulingDateAndTime) {
-        this.schedulingDateAndTime = schedulingDateAndTime;
+    public void setAppointmentDateAndTime(LocalDateTime appointmentDateAndTime) {
+        this.appointmentDateAndTime = appointmentDateAndTime;
     }
 
     public String getAnnotation() {
@@ -90,32 +93,36 @@ public class Schedule extends BaseObjectWithCreatedAt {
         this.annotation = annotation;
     }
 
-    public ScheduleStatus getStatus() {
+    public AppointmentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ScheduleStatus status) {
+    public void setStatus(AppointmentStatus status) {
         this.status = status;
     }
 
-
-    
     @Override
     public String toString() {
-        return "Schedule [id=" + id + ", patient=" + patient + ", professional=" + professional + ", annotation=" + annotation + ", status="
-                + status + "]";
+        StringBuilder builder = new StringBuilder();
+        builder.append("Appointment [id=");
+        builder.append(id);
+        builder.append(", patient=");
+        builder.append(patient);
+        builder.append(", professional=");
+        builder.append(professional);
+        builder.append(", appointmentDateAndTime=");
+        builder.append(appointmentDateAndTime);
+        builder.append(", annotation=");
+        builder.append(annotation);
+        builder.append(", status=");
+        builder.append(status);
+        builder.append("]");
+        return builder.toString();
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((annotation == null) ? 0 : annotation.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((patient == null) ? 0 : patient.hashCode());
-        result = prime * result + ((professional == null) ? 0 : professional.hashCode());
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
-        return result;
+        return Objects.hash(annotation, appointmentDateAndTime, id, patient, professional, status);
     }
 
     @Override
@@ -126,30 +133,10 @@ public class Schedule extends BaseObjectWithCreatedAt {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Schedule other = (Schedule) obj;
-        if (annotation == null) {
-            if (other.annotation != null)
-                return false;
-        } else if (!annotation.equals(other.annotation))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (patient == null) {
-            if (other.patient != null)
-                return false;
-        } else if (!patient.equals(other.patient))
-            return false;
-        if (professional == null) {
-            if (other.professional != null)
-                return false;
-        } else if (!professional.equals(other.professional))
-            return false;
-        if (status != other.status)
-            return false;
-        return true;
+        Appointment other = (Appointment) obj;
+        return Objects.equals(annotation, other.annotation) && Objects.equals(appointmentDateAndTime, other.appointmentDateAndTime)
+                && Objects.equals(id, other.id) && Objects.equals(patient, other.patient)
+                && Objects.equals(professional, other.professional) && status == other.status;
     }
 
 }

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -15,10 +16,11 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import br.com.nivlabs.cliniv.enums.ScheduleStatus;
+import br.com.nivlabs.cliniv.enums.AppointmentStatus;
 
+@Entity
 @Table(name = "AGENDA_CONFIRMACAO")
-public class WebScheduleConfirmation implements Serializable {
+public class WebAppointmentConfirmation implements Serializable {
 
     private static final long serialVersionUID = 3844020943998908507L;
 
@@ -34,7 +36,7 @@ public class WebScheduleConfirmation implements Serializable {
 
     @Column(name = "SITUACAO", length = 45)
     @Enumerated(EnumType.STRING)
-    private ScheduleStatus status;
+    private AppointmentStatus status;
 
     @Column(name = "DATA_CRIACAO")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -72,11 +74,11 @@ public class WebScheduleConfirmation implements Serializable {
         this.originIp = originIp;
     }
 
-    public ScheduleStatus getStatus() {
+    public AppointmentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ScheduleStatus status) {
+    public void setStatus(AppointmentStatus status) {
         this.status = status;
     }
 
@@ -126,7 +128,7 @@ public class WebScheduleConfirmation implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        WebScheduleConfirmation other = (WebScheduleConfirmation) obj;
+        WebAppointmentConfirmation other = (WebAppointmentConfirmation) obj;
         if (createdAt == null) {
             if (other.createdAt != null)
                 return false;
@@ -164,7 +166,7 @@ public class WebScheduleConfirmation implements Serializable {
 
     @Override
     public String toString() {
-        return "WebScheduleConfirmation [id=" + id + ", dateTimeResponse=" + dateTimeResponse + ", originIp=" + originIp + ", status="
+        return "WebAppointmentConfirmation [id=" + id + ", dateTimeResponse=" + dateTimeResponse + ", originIp=" + originIp + ", status="
                 + status + ", createdAt=" + createdAt + ", patient=" + patient + ", responsible=" + responsible + "]";
     }
 

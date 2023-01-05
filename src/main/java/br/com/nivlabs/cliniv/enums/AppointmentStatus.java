@@ -6,7 +6,7 @@ package br.com.nivlabs.cliniv.enums;
  * @author viniciosarodrigues
  *
  */
-public enum ScheduleStatus {
+public enum AppointmentStatus {
     WAITING_CONFIRMATION, // Aguardando confirmação do paciente
     CONFIRMED,  // Paciente confirmou
     COMPLETED,  // Paciente compareceu

@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.cliniv.enums.ScheduleStatus;
+import br.com.nivlabs.cliniv.enums.AppointmentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Informações resumidas do agendamento")
-public class ScheduleDTO extends DataTransferObjectBase {
+public class AppointmentDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = 3038808084714295686L;
 
@@ -33,10 +33,10 @@ public class ScheduleDTO extends DataTransferObjectBase {
     private LocalDateTime schedulingDateAndTime;
 
     @Schema(description = "Situação atual do agendamento")
-    private ScheduleStatus status = ScheduleStatus.WAITING_CONFIRMATION;
+    private AppointmentStatus status = AppointmentStatus.WAITING_CONFIRMATION;
 
-    public ScheduleDTO(Long id, String patientName, String patientCpf, Long professionalId, String professionalName,
-            LocalDateTime schedulingDateAndTime, ScheduleStatus status) {
+    public AppointmentDTO(Long id, String patientName, String patientCpf, Long professionalId, String professionalName,
+            LocalDateTime schedulingDateAndTime, AppointmentStatus status) {
         super();
         this.id = id;
         this.patientName = patientName;
@@ -47,7 +47,7 @@ public class ScheduleDTO extends DataTransferObjectBase {
         this.status = status;
     }
 
-    public ScheduleDTO() {
+    public AppointmentDTO() {
         super();
     }
 
@@ -99,17 +99,17 @@ public class ScheduleDTO extends DataTransferObjectBase {
         this.schedulingDateAndTime = schedulingDateAndTime;
     }
 
-    public ScheduleStatus getStatus() {
+    public AppointmentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ScheduleStatus status) {
+    public void setStatus(AppointmentStatus status) {
         this.status = status;
     }
 
     @Override
     public String toString() {
-        return "ScheduleDTO [id=" + id + ", patientName=" + patientName + ", patientCpf=" + patientCpf + ", professionalId="
+        return "AppointmentDTO [id=" + id + ", patientName=" + patientName + ", patientCpf=" + patientCpf + ", professionalId="
                 + professionalId + ", professionalName=" + professionalName + ", schedulingDateAndTime=" + schedulingDateAndTime
                 + ", status=" + status + "]";
     }
@@ -136,7 +136,7 @@ public class ScheduleDTO extends DataTransferObjectBase {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ScheduleDTO other = (ScheduleDTO) obj;
+        AppointmentDTO other = (AppointmentDTO) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

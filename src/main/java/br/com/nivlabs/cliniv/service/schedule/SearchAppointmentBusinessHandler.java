@@ -1,6 +1,7 @@
 package br.com.nivlabs.cliniv.service.schedule;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,24 +14,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.cliniv.controller.filters.ScheduleFilters;
+import br.com.nivlabs.cliniv.controller.filters.AppointementFilters;
 import br.com.nivlabs.cliniv.enums.DocumentType;
 import br.com.nivlabs.cliniv.exception.HttpException;
+import br.com.nivlabs.cliniv.models.domain.Appointment;
 import br.com.nivlabs.cliniv.models.domain.Patient;
 import br.com.nivlabs.cliniv.models.domain.Person;
 import br.com.nivlabs.cliniv.models.domain.PersonDocument;
 import br.com.nivlabs.cliniv.models.domain.Responsible;
-import br.com.nivlabs.cliniv.models.domain.Schedule;
 import br.com.nivlabs.cliniv.models.dto.AddressDTO;
+import br.com.nivlabs.cliniv.models.dto.AppointmentDTO;
+import br.com.nivlabs.cliniv.models.dto.AppointmentInfoDTO;
+import br.com.nivlabs.cliniv.models.dto.AppointmentsResponseDTO;
 import br.com.nivlabs.cliniv.models.dto.DocumentDTO;
 import br.com.nivlabs.cliniv.models.dto.HealthPlanDTO;
 import br.com.nivlabs.cliniv.models.dto.PatientInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.ProfessionalIdentityDTO;
 import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.ScheduleDTO;
-import br.com.nivlabs.cliniv.models.dto.ScheduleInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
-import br.com.nivlabs.cliniv.repository.ScheduleRepository;
+import br.com.nivlabs.cliniv.repository.AppointmentRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
 import br.com.nivlabs.cliniv.service.userservice.UserService;
@@ -46,13 +48,13 @@ import br.com.nivlabs.cliniv.util.StringUtils;
  *
  */
 @Component
-public class SearchScheduleBusinessHandler implements BaseBusinessHandler {
+public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     @Autowired
     protected Logger logger;
 
     @Autowired
-    protected ScheduleRepository scheduleRepository;
+    protected AppointmentRepository scheduleRepository;
     @Autowired
     private UserService userService;
     @Autowired
@@ -65,7 +67,7 @@ public class SearchScheduleBusinessHandler implements BaseBusinessHandler {
      * @param pageRequest Configurações de paginação
      * @return Lista paginada de agendamentos
      */
-    public Page<ScheduleDTO> getPage(ScheduleFilters filters) {
+    private Page<AppointmentDTO> getPage(AppointementFilters filters) {
         final UserInfoDTO user = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
 
         ResponsibleInfoDTO responsibleInformations = getResponsibleFromUser(user);
@@ -87,13 +89,13 @@ public class SearchScheduleBusinessHandler implements BaseBusinessHandler {
      * @return Informações detalhadas do agendamento
      */
     @Transactional
-    public ScheduleInfoDTO byId(Long id) {
-        Schedule scheduleEntity = scheduleRepository.findById(id)
+    public AppointmentInfoDTO byId(Long id) {
+        Appointment scheduleEntity = scheduleRepository.findById(id)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Agendamento não encontrado!"));
 
         logger.info("Paciente {} encontrado com sucesso!", scheduleEntity.getPatient().getPerson().getFullName());
 
-        ScheduleInfoDTO response = new ScheduleInfoDTO();
+        AppointmentInfoDTO response = new AppointmentInfoDTO();
 
         parseScheduleEntityToDTO(scheduleEntity, response);
 
@@ -107,12 +109,12 @@ public class SearchScheduleBusinessHandler implements BaseBusinessHandler {
      * @param scheduleInfo Objeto de transferência de agendamento
      */
     @Transactional
-    private void parseScheduleEntityToDTO(Schedule scheduleEntity, ScheduleInfoDTO scheduleInfo) {
+    private void parseScheduleEntityToDTO(Appointment scheduleEntity, AppointmentInfoDTO scheduleInfo) {
         logger.info("Iniciando conversão de entidade Agendamento para resposta...");
         scheduleInfo.setId(scheduleEntity.getId());
         scheduleInfo.setAnnotation(scheduleEntity.getAnnotation());
         scheduleInfo.setCreatedAt(scheduleEntity.getCreatedAt());
-        scheduleInfo.setSchedulingDateAndTime(scheduleEntity.getSchedulingDateAndTime());
+        scheduleInfo.setSchedulingDateAndTime(scheduleEntity.getAppointmentDateAndTime());
         scheduleInfo.setStatus(scheduleEntity.getStatus());
 
         scheduleInfo.setPatient(new PatientInfoDTO());
@@ -320,6 +322,32 @@ public class SearchScheduleBusinessHandler implements BaseBusinessHandler {
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
         return responsibleInformations;
+    }
+
+    /**
+     * Realiza a busca das informações da agenda
+     * 
+     * @param filters Filtro de busca
+     * @return Objeto de resposta de consulta de agenda
+     */
+    public AppointmentsResponseDTO find(AppointementFilters filters) {
+        AppointmentsResponseDTO response = new AppointmentsResponseDTO();
+        List<AppointmentDTO> content = getPage(filters).getContent();
+        response.setContent(content);
+
+        final LocalDate initDate = filters.getSelectedDate().with(TemporalAdjusters.firstDayOfMonth());
+        final LocalDate finalDate = filters.getSelectedDate().with(TemporalAdjusters.lastDayOfMonth());
+
+        final List<Integer> daysWithAppointment = scheduleRepository.findDaysWithAppointment(initDate, finalDate);
+        if (daysWithAppointment != null) {
+            daysWithAppointment.forEach(day -> {
+                if (!day.equals(filters.getSelectedDate().getDayOfMonth())) {
+                    response.getDaysWithAppointment().add(day);
+                }
+            });
+        }
+
+        return response;
     }
 
 }

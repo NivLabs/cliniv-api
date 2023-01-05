@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.cliniv.enums.ScheduleStatus;
+import br.com.nivlabs.cliniv.enums.AppointmentStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Informações do agendamento")
-public class ScheduleInfoDTO extends DataTransferObjectBase {
+public class AppointmentInfoDTO extends DataTransferObjectBase {
 
     private static final long serialVersionUID = -7082539967186369611L;
 
@@ -22,21 +22,21 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
     @Schema(description = "Profissional do agendamento")
     private ResponsibleInfoDTO professional;
 
-    @Schema(description = "Data/Hora agendada")
-    @DateTimeFormat(iso = ISO.DATE)
+    @Schema(description = "Data agendada")
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime schedulingDateAndTime;
 
-    @Schema(description = "Data/Hora do agendamento")
-    @DateTimeFormat(iso = ISO.DATE)
+    @Schema(description = "Datado agendamento")
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     private LocalDateTime createdAt;
 
     @Schema(description = "Anotações sobre o agendamento")
     private String annotation;
 
     @Schema(description = "Situação atual do agendamento")
-    private ScheduleStatus status = ScheduleStatus.WAITING_CONFIRMATION;
+    private AppointmentStatus status = AppointmentStatus.WAITING_CONFIRMATION;
 
-    public ScheduleInfoDTO() {
+    public AppointmentInfoDTO() {
         super();
     }
 
@@ -80,11 +80,11 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
         this.annotation = annotation;
     }
 
-    public ScheduleStatus getStatus() {
+    public AppointmentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(ScheduleStatus status) {
+    public void setStatus(AppointmentStatus status) {
         this.status = status;
     }
 
@@ -98,7 +98,7 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        return "ScheduleInfoDTO [id=" + id + ", patient=" + patient + ", professional=" + professional + ", schedulingDateAndTime="
+        return "AppointmentInfoDTO [id=" + id + ", patient=" + patient + ", professional=" + professional + ", schedulingDateAndTime="
                 + schedulingDateAndTime + ", createdAt=" + createdAt + ", annotation=" + annotation + ", status=" + status + "]";
     }
 
@@ -124,7 +124,7 @@ public class ScheduleInfoDTO extends DataTransferObjectBase {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ScheduleInfoDTO other = (ScheduleInfoDTO) obj;
+        AppointmentInfoDTO other = (AppointmentInfoDTO) obj;
         if (annotation == null) {
             if (other.annotation != null)
                 return false;

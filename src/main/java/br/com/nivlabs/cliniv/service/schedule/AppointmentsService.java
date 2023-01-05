@@ -1,7 +1,6 @@
 package br.com.nivlabs.cliniv.service.schedule;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,49 +9,49 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.nivlabs.cliniv.controller.filters.ScheduleFilters;
+import br.com.nivlabs.cliniv.controller.filters.AppointementFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Patient;
 import br.com.nivlabs.cliniv.models.domain.Responsible;
-import br.com.nivlabs.cliniv.models.domain.Schedule;
+import br.com.nivlabs.cliniv.models.domain.Appointment;
+import br.com.nivlabs.cliniv.models.dto.AppointmentInfoDTO;
+import br.com.nivlabs.cliniv.models.dto.AppointmentsResponseDTO;
 import br.com.nivlabs.cliniv.models.dto.PatientInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.ScheduleDTO;
-import br.com.nivlabs.cliniv.models.dto.ScheduleInfoDTO;
-import br.com.nivlabs.cliniv.repository.ScheduleRepository;
+import br.com.nivlabs.cliniv.repository.AppointmentRepository;
 import br.com.nivlabs.cliniv.service.BaseService;
 import br.com.nivlabs.cliniv.service.patient.PatientService;
 import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
 
 /**
- * Classe ScheduleService.java
+ * Classe AppointmentsService.java
  * 
  * @author viniciosarodrigues
  *
  */
 @Service
-public class ScheduleService implements BaseService {
+public class AppointmentsService implements BaseService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private ScheduleRepository principalRepo;
+    private AppointmentRepository principalRepo;
     @Autowired
     private ResponsibleService responsibleService;
     @Autowired
     private PatientService patientService;
 
     @Autowired
-    private SearchScheduleBusinessHandler searchScheduleBusinessHandler;
+    private SearchAppointmentBusinessHandler searchScheduleBusinessHandler;
 
     /**
      * Realiza uma busca filtrada de agendamentos baseado na data
      * 
      * @param filters Filtros da requisição (Query Param)
-     * @return Lista filtrada de Agendamentos
+     * @return Objeto com lista filtrada de Agendamentos e dias do mês com agendamentos marcados
      */
-    public List<ScheduleDTO> findByFilters(ScheduleFilters filters) {
-        return searchScheduleBusinessHandler.getPage(filters).getContent();
+    public AppointmentsResponseDTO findByFilters(AppointementFilters filters) {
+        return searchScheduleBusinessHandler.find(filters);
     }
 
     /**
@@ -61,7 +60,7 @@ public class ScheduleService implements BaseService {
      * @param id Identificador único do agendamento
      * @return Informações detalhadas do agendamento
      */
-    public ScheduleInfoDTO findById(Long id) {
+    public AppointmentInfoDTO findById(Long id) {
         return searchScheduleBusinessHandler.byId(id);
     }
 
@@ -71,7 +70,7 @@ public class ScheduleService implements BaseService {
      * @param request Informações de um agendamento
      * @return Informações de um agendamento atualizado pós persistência
      */
-    public ScheduleInfoDTO create(ScheduleInfoDTO request) {
+    public AppointmentInfoDTO create(AppointmentInfoDTO request) {
         logger.info("Iniciando processo de criação de agendamento");
         validateRequest(null, request);
         return persist(request);
@@ -84,7 +83,7 @@ public class ScheduleService implements BaseService {
      * @param request Informações de uma atualização de agendamento
      * @return Informações de um agendamento pós atualização
      */
-    public ScheduleInfoDTO update(Long id, ScheduleInfoDTO request) {
+    public AppointmentInfoDTO update(Long id, AppointmentInfoDTO request) {
         logger.info("Iniciando processo de atualização de agendamento");
         validateRequest(id, request);
         return persist(request);
@@ -96,8 +95,8 @@ public class ScheduleService implements BaseService {
      * @param request
      * @return
      */
-    private ScheduleInfoDTO persist(ScheduleInfoDTO request) {
-        Schedule entity = new Schedule();
+    private AppointmentInfoDTO persist(AppointmentInfoDTO request) {
+        Appointment entity = new Appointment();
         BeanUtils.copyProperties(request, entity);
         entity.setPatient(new Patient(request.getPatient().getId()));
         entity.setProfessional(new Responsible(request.getProfessional().getId()));
@@ -111,9 +110,9 @@ public class ScheduleService implements BaseService {
      * 
      * @param request
      */
-    private void validateRequest(Long id, ScheduleInfoDTO request) {
+    private void validateRequest(Long id, AppointmentInfoDTO request) {
         if (id != null) {
-            Schedule schedule = principalRepo.findById(id)
+            Appointment schedule = principalRepo.findById(id)
                     .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Agendamento não encontrado"));
             logger.warn("Agendamento localizado, prosseguindo com as validações :: Cod: {} | Paciente: {} | Profissional {}",
                         schedule.getId(), schedule.getPatient().getPerson().getFullName(),
@@ -138,7 +137,7 @@ public class ScheduleService implements BaseService {
      * 
      * @param professional
      */
-    private void checkProfessional(ScheduleInfoDTO request) {
+    private void checkProfessional(AppointmentInfoDTO request) {
         ResponsibleInfoDTO professional = request.getProfessional();
         logger.info("Verificando se o profissional já está cadastrado...");
         if (professional == null || professional.getId() == null) {
@@ -156,7 +155,7 @@ public class ScheduleService implements BaseService {
      * 
      * @param patient
      */
-    private void checkPatient(ScheduleInfoDTO request) {
+    private void checkPatient(AppointmentInfoDTO request) {
         PatientInfoDTO patient = request.getPatient();
         logger.info("Verificando se o paciente já está cadastrado...");
         if (patient == null || patient.getId() == null) {
