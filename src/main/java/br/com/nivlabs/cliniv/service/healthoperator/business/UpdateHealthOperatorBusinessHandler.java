@@ -36,7 +36,7 @@ public class UpdateHealthOperatorBusinessHandler extends CreateHealthOperatorBus
                         String.format("Operadora com o id %s não encontrada.", request.getId())));
 
         logger.info("Operadora encontrada {}", healthOperatorEntity.getCompanyName());
-        convertRequestToEntity(request);
+        healthOperatorEntity = convertRequestToEntity(request);
 
         logger.info("Salvando atualização de cadastro no banco");
         healthOperatorRepository.save(healthOperatorEntity);

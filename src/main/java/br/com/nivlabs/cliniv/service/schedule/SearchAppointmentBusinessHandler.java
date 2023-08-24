@@ -1,7 +1,6 @@
 package br.com.nivlabs.cliniv.service.schedule;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.cliniv.controller.filters.AppointementFilters;
+import br.com.nivlabs.cliniv.controller.filters.AppointmentFilters;
 import br.com.nivlabs.cliniv.enums.DocumentType;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Appointment;
@@ -67,7 +66,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      * @param pageRequest Configurações de paginação
      * @return Lista paginada de agendamentos
      */
-    private Page<AppointmentDTO> getPage(AppointementFilters filters) {
+    private Page<AppointmentDTO> getPage(AppointmentFilters filters) {
         final UserInfoDTO user = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
 
         ResponsibleInfoDTO responsibleInformations = getResponsibleFromUser(user);
@@ -75,8 +74,11 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
             logger.info("Iniciando a busca filtrada por informações da agenda do profissional");
             filters.setProfessionalId(responsibleInformations.getId().toString());
         }
-        if (filters.getSelectedDate() == null) {
-            filters.setSelectedDate(LocalDate.now());
+        if (filters.getStartDate() == null) {
+            filters.setStartDate(LocalDate.now());
+        }
+        if (filters.getEndDate() == null) {
+            filters.setEndDate(LocalDate.now());
         }
         filters.setSize(100);
         return scheduleRepository.resumedList(filters);
@@ -330,30 +332,10 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      * @param filters Filtro de busca
      * @return Objeto de resposta de consulta de agenda
      */
-    public AppointmentsResponseDTO find(AppointementFilters filters) {
+    public AppointmentsResponseDTO find(AppointmentFilters filters) {
         AppointmentsResponseDTO response = new AppointmentsResponseDTO();
-        List<AppointmentDTO> content = getPage(filters).getContent();
+        final List<AppointmentDTO> content = getPage(filters).getContent();
         response.setContent(content);
-
-        final LocalDate initDate = filters.getSelectedDate().with(TemporalAdjusters.firstDayOfMonth());
-        final LocalDate finalDate = filters.getSelectedDate().with(TemporalAdjusters.lastDayOfMonth());
-
-        final List<Integer> daysWithAppointment = filters.getProfessionalId() != null && !filters.getProfessionalId().isEmpty()
-                                                                                                                                ? scheduleRepository
-                                                                                                                                        .findDaysWithAppointmentAndProfessionalId(initDate,
-                                                                                                                                                                                  finalDate,
-                                                                                                                                                                                  Long.parseLong(filters
-                                                                                                                                                                                          .getProfessionalId()))
-                                                                                                                                : scheduleRepository
-                                                                                                                                        .findDaysWithAppointment(initDate,
-                                                                                                                                                                 finalDate);
-        if (daysWithAppointment != null) {
-            daysWithAppointment.forEach(day -> {
-                if (!day.equals(filters.getSelectedDate().getDayOfMonth())) {
-                    response.getDaysWithAppointment().add(day);
-                }
-            });
-        }
 
         return response;
     }

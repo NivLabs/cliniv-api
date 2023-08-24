@@ -13,7 +13,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
-import br.com.nivlabs.cliniv.controller.filters.AppointementFilters;
+import br.com.nivlabs.cliniv.controller.filters.AppointmentFilters;
 import br.com.nivlabs.cliniv.enums.AppointmentStatus;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Appointment;
@@ -55,7 +55,7 @@ public class AppointmentRepositoryCustomImpl extends GenericCustomRepository<App
 
     @Override
     protected Predicate[] createRestrictions(CustomFilters customFilters, CriteriaBuilder builder, Root<Appointment> root) {
-        if (!(customFilters instanceof AppointementFilters filters)) {
+        if (!(customFilters instanceof AppointmentFilters filters)) {
             throw new HttpException(HttpStatus.BAD_REQUEST, "O filtro enviado não é um filtro de agendamento");
         }
         List<Predicate> predicates = new ArrayList<>();
@@ -64,12 +64,10 @@ public class AppointmentRepositoryCustomImpl extends GenericCustomRepository<App
             predicates.add(builder.equal(root.get(Appointment_.professional).get(Responsible_.id),
                                          Long.parseLong(filters.getProfessionalId())));
         }
-        if (filters.getSelectedDate() != null) {
-            predicates.add(builder.and(builder.greaterThan(root.get(Appointment_.appointmentDateAndTime),
-                                                           LocalDateTime.of(filters.getSelectedDate(), LocalTime.MIN)),
-                                       builder.lessThan(root.get(Appointment_.appointmentDateAndTime),
-                                                        LocalDateTime.of(filters.getSelectedDate(), LocalTime.MAX))));
-        }
+        predicates.add(builder.and(builder.greaterThan(root.get(Appointment_.appointmentDateAndTime),
+                                                       LocalDateTime.of(filters.getStartDate(), LocalTime.MIN)),
+                                   builder.lessThan(root.get(Appointment_.appointmentDateAndTime),
+                                                    LocalDateTime.of(filters.getEndDate(), LocalTime.MAX))));
         if (!StringUtils.isNullOrEmpty(filters.getStatus())) {
             predicates.add(builder.equal(root.get(Appointment_.status), handleScheduleStatus(filters.getStatus())));
         }

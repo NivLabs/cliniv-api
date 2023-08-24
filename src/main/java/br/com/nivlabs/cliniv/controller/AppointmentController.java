@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.nivlabs.cliniv.controller.filters.AppointementFilters;
+import br.com.nivlabs.cliniv.controller.filters.AppointmentFilters;
 import br.com.nivlabs.cliniv.models.dto.AppointmentInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.AppointmentsResponseDTO;
 import br.com.nivlabs.cliniv.service.schedule.AppointmentsService;
@@ -27,7 +27,7 @@ public class AppointmentController extends BaseController<AppointmentsService> {
     @Operation(summary = "appointment-get", description = "Busca informações de agendamentos baseados num filtro")
     @GetMapping
     @PreAuthorize("hasAnyRole('AGENDA_LEITURA', 'AGENDA_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-    public ResponseEntity<AppointmentsResponseDTO> getSchedulesByFilters(AppointementFilters filters) {
+    public ResponseEntity<AppointmentsResponseDTO> getSchedulesByFilters(AppointmentFilters filters) {
         return ResponseEntity.ok(service.findByFilters(filters));
     }
 

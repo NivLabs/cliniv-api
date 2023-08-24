@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.com.nivlabs.cliniv.controller.filters.AppointementFilters;
+import br.com.nivlabs.cliniv.controller.filters.AppointmentFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Patient;
 import br.com.nivlabs.cliniv.models.domain.Responsible;
@@ -50,7 +50,7 @@ public class AppointmentsService implements BaseService {
      * @param filters Filtros da requisição (Query Param)
      * @return Objeto com lista filtrada de Agendamentos e dias do mês com agendamentos marcados
      */
-    public AppointmentsResponseDTO findByFilters(AppointementFilters filters) {
+    public AppointmentsResponseDTO findByFilters(AppointmentFilters filters) {
         return searchScheduleBusinessHandler.find(filters);
     }
 

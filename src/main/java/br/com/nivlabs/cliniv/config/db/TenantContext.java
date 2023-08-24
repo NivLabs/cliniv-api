@@ -9,7 +9,7 @@ package br.com.nivlabs.cliniv.config.db;
  */
 public class TenantContext {
 
-    final public static String DEFAULT_TENANT = "gpdefault";
+    final public static String DEFAULT_TENANT = "cliniv";
 
     private static final ThreadLocal<String> currentTenant = ThreadLocal.withInitial(() -> DEFAULT_TENANT);
 

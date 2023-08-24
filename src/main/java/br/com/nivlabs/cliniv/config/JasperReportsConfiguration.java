@@ -20,7 +20,7 @@ public class JasperReportsConfiguration {
      * @return
      */
     @Bean
-    public JasperReportsCreator createJasperReport() {
+    JasperReportsCreator createJasperReport() {
         return new JasperReportsCreator();
     }
 }
