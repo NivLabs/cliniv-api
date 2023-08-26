@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <Pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CLINIV_APPRENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./logs/deepds-api.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>./logs/cliniv_%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    
+    <logger name="br.com.nivlabs.cliniv" level="INFO" additivity="true">
+	    <appender-ref ref="CLINIV_APPRENDER" />
+	</logger>
+	<logger name="org.springframework" level="INFO" additivity="true">
+		<appender-ref ref="CLINIV_APPRENDER" />
+	</logger>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
