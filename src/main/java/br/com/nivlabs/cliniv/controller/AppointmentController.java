@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.cliniv.controller.filters.AppointmentFilters;
 import br.com.nivlabs.cliniv.models.dto.AppointmentInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.AppointmentsResponseDTO;
-import br.com.nivlabs.cliniv.service.schedule.AppointmentsService;
+import br.com.nivlabs.cliniv.service.appointment.AppointmentsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 

@@ -1,4 +1,4 @@
-package br.com.nivlabs.cliniv.service.schedule;
+package br.com.nivlabs.cliniv.service.appointment.business;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
