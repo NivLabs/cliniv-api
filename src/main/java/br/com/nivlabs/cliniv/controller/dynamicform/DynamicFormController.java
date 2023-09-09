@@ -44,14 +44,14 @@ public class DynamicFormController extends BaseController<DynamicFormService> {
      * @param id Identificador único do formulário
      * @return Informações detalhadas de um formulário dinâmico
      */
-    @Operation(summary = "dynamic-form-get-id", description = "Busca um formulário de anamnese baseado no identificador")
+    @Operation(summary = "dynamic-form-get-id", description = "Busca um formulário dinâmico baseado no identificador")
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'FORMULARIO_ESCRITA', 'FORMULARIO_LEITURA', 'ADMIN')")
     public ResponseEntity<DynamicFormDTO> findFormById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @Operation(summary = "dynamic-form-page", description = "Busca uma anamnese baseada no identificador")
+    @Operation(summary = "dynamic-form-page", description = "Busca uma página de formulários dinâmicos")
     @GetMapping
     @PreAuthorize("hasAnyRole('ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'FORMULARIO_ESCRITA', 'FORMULARIO_LEITURA', 'ADMIN')")
     public ResponseEntity<Page<DynamicFormDTO>> findPageOfAnamnesisForms(DynamicFormFilters filters) {

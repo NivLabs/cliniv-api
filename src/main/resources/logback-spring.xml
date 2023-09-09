@@ -8,7 +8,7 @@
     </appender>
 
     <appender name="CLINIV_APPRENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>./logs/deepds-api.log</file>
+        <file>./logs/cliniv-api.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./logs/cliniv_%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
 

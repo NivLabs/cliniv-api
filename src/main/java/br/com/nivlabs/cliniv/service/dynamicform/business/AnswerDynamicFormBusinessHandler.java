@@ -2,7 +2,6 @@ package br.com.nivlabs.cliniv.service.dynamicform.business;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.transaction.Transactional;
@@ -98,8 +97,8 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
             DigitalDocumentDTO document = reportService
                     .genareteDocumentFromJxmlStream(attendanceId, request.getDocumentTitle(),
-                                              getAnamnesisReportParams(attendanceId, request, user),
-                                              new ClassPathResource(REPORT_PATH).getInputStream());
+                                                    getAnamnesisReportParams(attendanceId, request, user),
+                                                    new ClassPathResource(REPORT_PATH).getInputStream());
             createAnamneseDocumentEvent(attendanceId, request, medicalRecord, document, user);
         } catch (IOException e) {
             logger.error("Falha ao gerar documento de Anamnese", e);
@@ -155,9 +154,8 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
         event.setEventType(EventType.REPORT);
         event.setAttendanceId(attendanceId);
-        event.setDocuments(Arrays.asList(document));
+        event.getDocuments().add(document);
         event.setEventDateTime(LocalDateTime.now());
-        event.setObservations(request.getDocumentTitle());
         event.setResponsible(getResponsibleFromUser(requestOwner));
         event.setAccommodation(medicalRecord.getLastAccommodation());
         logger.info("Evento processado, inserindo evento na base de dados...");
