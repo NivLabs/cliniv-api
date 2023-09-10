@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.nivlabs.cliniv.config.db.TenantContext;
@@ -57,7 +56,7 @@ public class JasperReportsCreator {
      * @throws SQLException
      */
     public Connection getConnection(String tenantIdentifier) throws SQLException {
-        final Connection connection = DataSourceUtils.doGetConnection(datasource);
+        final Connection connection = datasource.getConnection();
         try {
             connection.createStatement().execute("USE " + tenantIdentifier);
         } catch (SQLException e) {
