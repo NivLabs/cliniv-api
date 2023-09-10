@@ -101,7 +101,10 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
             newAttendanceEvent
                     .setTitle(request.getProcedure().getId().toString().concat(" - ").concat(request.getProcedure().getDescription()));
         } else if (request.getEventType() == EventType.REPORT && !request.getDocuments().isEmpty() && request.getDocuments().size() == 1) {
-            newAttendanceEvent.setTitle(request.getDocuments().get(0).getName());
+            final String documentName = request.getDocuments().get(0).getName();
+            logger.info("É um evento de relatório e possui apenas um documento, o nome do evento será o nome do documento :: {}",
+                        documentName);
+            newAttendanceEvent.setTitle(documentName);
         }
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
 
