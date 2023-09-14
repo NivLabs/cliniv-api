@@ -179,6 +179,10 @@ Esta área especifica definições técnicas da aplicação, suas característic
 - Atendimento :: [atendimento@nivlabs.com.br](atendimento@nivlabs.com.br)
 - Vinícios (eu) :: [viniciosrodrigues@nivlabs.com.br](viniciosrodrigues@nivlabs.com.br)
 
+> Você pode baixar os manuais aqui...
+
+- Manual do Usuário Final :: [Download](./readme/CliNiv - Manual do usuário final - v1.pdf)
+
 ---
 
 ## 📝 License
