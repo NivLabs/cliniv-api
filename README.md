@@ -181,7 +181,7 @@ Esta área especifica definições técnicas da aplicação, suas característic
 
 > Você pode baixar os manuais aqui...
 
-- Manual do Usuário Final :: [Download](./readme/CliNiv - Manual do usuário final - v1.pdf)
+- Manual do Usuário Final :: [Download](https://docs.google.com/document/d/18-D066qhbs9IVVW2Sj9Cx2qNrFSpkfLtfhJ_4UxF9v0)
 
 ---
 
