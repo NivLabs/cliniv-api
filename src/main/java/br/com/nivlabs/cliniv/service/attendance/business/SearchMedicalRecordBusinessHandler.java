@@ -202,6 +202,9 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
             medicalRecord.setLastProfessional(medicalRecord.getEvents().get(medicalRecord.getEvents().size() - 1).getProfessional());
         }
 
+        medicalRecord.getAllergies()
+                .addAll(attendance.getPatient().getAllergies().stream().map(PatientAllergy::getDescription).collect(Collectors.toList()));
+
         medicalRecord.setAttendanceLevel(attendance.getLevel());
 
         return medicalRecord;
