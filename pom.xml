@@ -152,6 +152,13 @@
 		</dependency>
 		<!-- Dependências para integração com envio de e-mail -->
 
+		<!--
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+		-->
+
 	</dependencies>
 
 	<build>
