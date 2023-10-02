@@ -20,6 +20,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+/**
+ * Filtro de auditoria de requisições
+ * 
+ * AuditLoggerFilter.java
+ *
+ * @author viniciosarodrigues
+ * @since 23-08-2021
+ *
+ */
 @Component
 public class AuditLoggerFilter extends OncePerRequestFilter {
 
@@ -47,22 +56,23 @@ public class AuditLoggerFilter extends OncePerRequestFilter {
     protected void doFilterWrapped(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
+            if (log.isInfoEnabled()) {
+                logRequest(request, request.getHeader("CUSTOMER_ID") + " - " + request.getRemoteAddr() + " - " + request.getRequestURI()
+                        + " | REQUISICAO |>");
+            }
             filterChain.doFilter(request, response);
         } finally {
-            afterRequest(request, response);
+            if (log.isInfoEnabled()) {
+                logResponse(response, request.getHeader("CUSTOMER_ID") + " - " + request.getRemoteAddr() + " - " + request.getRequestURI()
+                        + " | RESPOSTA |>");
+            }
             response.copyBodyToResponse();
         }
     }
 
-    protected void afterRequest(ContentCachingRequestWrapper request, ContentCachingResponseWrapper response) {
-        if (log.isInfoEnabled()) {
-            logRequestBody(request, request.getRemoteAddr() + " | OBJETO DA REQUISICAO |>");
-            logResponse(response, request.getRemoteAddr() + " | RESPOSTA DA APLICACAO |>");
-        }
-    }
-
-    private void logRequestBody(ContentCachingRequestWrapper request, String prefix) {
+    private void logRequest(ContentCachingRequestWrapper request, String prefix) {
         byte[] content = request.getContentAsByteArray();
+        log.info("{}", prefix);
         if (content.length > 0) {
             logContent(content, request.getContentType(), request.getCharacterEncoding(), prefix);
         }
@@ -85,6 +95,9 @@ public class AuditLoggerFilter extends OncePerRequestFilter {
                 String contentString = new String(content, contentEncoding);
                 contentString = hidePrivateAndLongInformation(contentString, "password");
                 contentString = hidePrivateAndLongInformation(contentString, "senha");
+                contentString = hidePrivateAndLongInformation(contentString, "oldPassword");
+                contentString = hidePrivateAndLongInformation(contentString, "newPassword");
+                contentString = hidePrivateAndLongInformation(contentString, "confirmNewPassword");
                 Stream.of(contentString.split("\r\n|\r|\n")).forEach(line -> log.info("{} {}", prefix, line));
             } catch (UnsupportedEncodingException e) {
                 log.info("{} [{} bytes content]", prefix, content.length);
