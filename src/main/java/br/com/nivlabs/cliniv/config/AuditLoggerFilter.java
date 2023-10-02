@@ -57,10 +57,14 @@ public class AuditLoggerFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             if (log.isInfoEnabled()) {
-                logRequest(request, request.getHeader("CUSTOMER_ID") + " - " + request.getRemoteAddr() + " - " + request.getRequestURI()
+                log.info(request.getHeader("CUSTOMER_ID") + " - " + request.getRemoteAddr() + " - " + request.getRequestURI()
                         + " | REQUISICAO |>");
             }
             filterChain.doFilter(request, response);
+
+            if (log.isInfoEnabled()) {
+                logRequest(request, " | OBJETO DA REQUISICAO |>");
+            }
         } finally {
             if (log.isInfoEnabled()) {
                 logResponse(response, request.getHeader("CUSTOMER_ID") + " - " + request.getRemoteAddr() + " - " + request.getRequestURI()
@@ -72,7 +76,6 @@ public class AuditLoggerFilter extends OncePerRequestFilter {
 
     private void logRequest(ContentCachingRequestWrapper request, String prefix) {
         byte[] content = request.getContentAsByteArray();
-        log.info("{}", prefix);
         if (content.length > 0) {
             logContent(content, request.getContentType(), request.getCharacterEncoding(), prefix);
         }
