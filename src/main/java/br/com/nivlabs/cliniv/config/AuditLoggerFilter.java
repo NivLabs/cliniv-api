@@ -20,6 +20,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+
 /**
  * Filtro de auditoria de requisições
  * 
@@ -57,7 +59,7 @@ public class AuditLoggerFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try {
             if (log.isInfoEnabled()) {
-                log.info(request.getHeader("CUSTOMER_ID") + " - " + request.getRemoteAddr() + " - " + request.getRequestURI()
+                log.info(request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY) + " - " + request.getRemoteAddr() + " - " + request.getRequestURI()
                         + " | REQUISICAO |>");
             }
             filterChain.doFilter(request, response);
@@ -67,7 +69,7 @@ public class AuditLoggerFilter extends OncePerRequestFilter {
             }
         } finally {
             if (log.isInfoEnabled()) {
-                logResponse(response, request.getHeader("CUSTOMER_ID") + " - " + request.getRemoteAddr() + " - " + request.getRequestURI()
+                logResponse(response, request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY) + " - " + request.getRemoteAddr() + " - " + request.getRequestURI()
                         + " | RESPOSTA |>");
             }
             response.copyBodyToResponse();

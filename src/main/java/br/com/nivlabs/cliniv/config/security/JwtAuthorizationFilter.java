@@ -19,6 +19,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import br.com.nivlabs.cliniv.config.db.TenantContext;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.repository.UserRepository;
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 
 /**
  * Classe AuthorizationFilter.java
@@ -29,8 +30,6 @@ import br.com.nivlabs.cliniv.repository.UserRepository;
  */
 @Order(2)
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-
-    private static final String CUSTOMER_ID_HEADER = "CUSTOMER_ID";
 
     private JwtUtils jwtUtils;
     private UserRepository userDetailsService;
@@ -47,7 +46,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             throws IOException, ServletException {
 
         String authorizationHeader = req.getHeader("Authorization");
-        String customerIdHeader = req.getHeader(CUSTOMER_ID_HEADER);
+        String customerIdHeader = req.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY);
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 
@@ -56,7 +55,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 if (customerIdHeader == null || customerIdHeader.isEmpty()) {
                     throw new HttpException(HttpStatus.UNAUTHORIZED, "Cabeçalho de identificação do cliente não enviado");
                 }
-                Optional.ofNullable(req.getHeader(CUSTOMER_ID_HEADER)).ifPresent(TenantContext::setCurrentTenant);
+                Optional.ofNullable(req.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY)).ifPresent(TenantContext::setCurrentTenant);
                 auth = getAuthentication(authorizationHeader.substring(7), customerIdHeader);
             } catch (HttpException e) {
                 if (e.getStatus() == HttpStatus.UNAUTHORIZED) {

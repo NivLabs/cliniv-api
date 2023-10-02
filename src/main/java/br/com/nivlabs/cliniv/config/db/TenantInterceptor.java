@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+
 /**
  * Interceptador de requisições para criação de conexão com esquema de dados
  * 
@@ -23,14 +25,14 @@ import org.springframework.web.servlet.ModelAndView;
 @Order(1)
 public class TenantInterceptor implements HandlerInterceptor {
 
-    private static final String CUSTOMER_ID_HEADER = "CUSTOMER_ID";
     @Autowired
     private Logger logger;
+
     @Override
-    
+
     public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) {
-        Optional.ofNullable(req.getHeader(CUSTOMER_ID_HEADER)).ifPresent(TenantContext::setCurrentTenant);
-        logger.info("Iniciando troca de schema para :: {}", req.getHeader(CUSTOMER_ID_HEADER));
+        Optional.ofNullable(req.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY)).ifPresent(TenantContext::setCurrentTenant);
+        logger.info("Iniciando troca de schema para :: {}", req.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY));
         return true;
     }
 

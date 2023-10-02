@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Institute;
+import br.com.nivlabs.cliniv.models.domain.Institute_;
 import br.com.nivlabs.cliniv.models.domain.Parameter;
 import br.com.nivlabs.cliniv.models.dto.AddressDTO;
 import br.com.nivlabs.cliniv.models.dto.CustomerInfoDTO;
@@ -35,8 +36,8 @@ import br.com.nivlabs.cliniv.models.dto.ParameterDTO;
 import br.com.nivlabs.cliniv.repository.InstituteRepository;
 import br.com.nivlabs.cliniv.repository.ParameterRepository;
 import br.com.nivlabs.cliniv.util.EncryptUtils;
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import br.com.nivlabs.cliniv.models.domain.Institute_;
 
 /**
  * 
@@ -70,19 +71,20 @@ public class InstituteService implements BaseService {
         List<Parameter> parameters = paramRepo.findAll();
         parameters.sort((primary, scondary) -> primary.getId().compareTo(scondary.getId()));
 
-        if ((CACHE_INSTITUTE_INFO.get(request.getHeader("CUSTOMER_ID")) == null
-                || CACHE_INSTITUTE_INFO.get(request.getHeader("CUSTOMER_ID")).isEmpty())
+        if ((CACHE_INSTITUTE_INFO.get(request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY)) == null
+                || CACHE_INSTITUTE_INFO.get(request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY)).isEmpty())
                 || MILI_REPRESENTATION < System.currentTimeMillis()) {
-            logger.info("Buscando informações da instituição para o cliente :: {}...", request.getHeader("CUSTOMER_ID"));
-            CACHE_INSTITUTE_INFO.put(request.getHeader("CUSTOMER_ID"), instituteRepo.findAll());
+            logger.info("Buscando informações da instituição para o cliente :: {}...",
+                        request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY));
+            CACHE_INSTITUTE_INFO.put(request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY), instituteRepo.findAll());
             MILI_REPRESENTATION = System.currentTimeMillis() + 3600000;
         } else {
             logger.info("Dados da instituição em cache. Tempo da próxima carga :: "
                     + (((System.currentTimeMillis() - MILI_REPRESENTATION) / 1000) / 60) * -1 + " minuto(s)");
         }
 
-        if (!request.getHeader("CUSTOMER_ID").isEmpty()) {
-            Institute institute = CACHE_INSTITUTE_INFO.get(request.getHeader("CUSTOMER_ID")).get(0);
+        if (!request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY).isEmpty()) {
+            Institute institute = CACHE_INSTITUTE_INFO.get(request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY)).get(0);
             CustomerInfoDTO customer = new CustomerInfoDTO();
             AddressDTO address = new AddressDTO();
             LicenseDTO license = new LicenseDTO();
@@ -117,7 +119,7 @@ public class InstituteService implements BaseService {
             institute.setCompanyLogo(file.getBase64());
             instituteRepo.save(institute);
             logger.info("Logo Inserida, limpando cache...");
-            CACHE_INSTITUTE_INFO.remove(request.getHeader("CUSTOMER_ID"));
+            CACHE_INSTITUTE_INFO.remove(request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY));
         }
     }
 

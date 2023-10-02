@@ -15,6 +15,7 @@ import br.com.nivlabs.cliniv.models.dto.ChangePasswordByForgotPasswordRequestDTO
 import br.com.nivlabs.cliniv.models.dto.CredentialsDTO;
 import br.com.nivlabs.cliniv.models.dto.NewPasswordRequestDTO;
 import br.com.nivlabs.cliniv.service.security.SecurityService;
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -37,7 +38,7 @@ public class AuthController extends BaseController<SecurityService> {
     @PostMapping
     public ResponseEntity<Void> login(@RequestBody @Validated CredentialsDTO credentials, HttpServletRequest request,
                                       HttpServletResponse response) {
-        String token = service.login(credentials, request.getHeader("CUSTOMER_ID"));
+        String token = service.login(credentials, request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY));
         response.addHeader(HEADER_AUTHORIZATION_NAME, "Bearer " + token);
         response.addHeader(HEADER_ACCESS_CONTROL_EXPOSE_NAME, HEADER_AUTHORIZATION_NAME);
         return ResponseEntity.noContent().build();
