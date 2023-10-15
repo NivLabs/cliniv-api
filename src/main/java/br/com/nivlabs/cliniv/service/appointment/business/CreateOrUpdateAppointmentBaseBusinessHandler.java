@@ -1,12 +1,14 @@
 package br.com.nivlabs.cliniv.service.appointment.business;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import br.com.nivlabs.cliniv.ApplicationMain;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Appointment;
 import br.com.nivlabs.cliniv.models.domain.Patient;
@@ -41,6 +43,7 @@ public abstract class CreateOrUpdateAppointmentBaseBusinessHandler implements Ba
         converted.setStatus(dto.getStatus());
         converted.setPatient(new Patient(dto.getPatient().getId()));
         converted.setProfessional(new Responsible(dto.getProfessional().getId()));
+        converted.setCreatedAt(LocalDateTime.now(ZoneId.of(ApplicationMain.AMERICA_SAO_PAULO)));
 
         return converted;
     }
