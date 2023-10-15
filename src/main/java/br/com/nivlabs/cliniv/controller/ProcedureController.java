@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
  *
  * @since 8 de set de 2019
  */
-@Tag(name = "Procedimentos e Evntos", description = "Endpoint - Procedimento ou Evento")
+@Tag(name = "Procedimentos e Eventos", description = "Endpoint - Procedimento ou Evento")
 @RestController
 @RequestMapping(value = "/procedure")
 public class ProcedureController extends BaseController<ProcedureService> {

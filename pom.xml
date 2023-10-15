@@ -152,12 +152,12 @@
 		</dependency>
 		<!-- Dependências para integração com envio de e-mail -->
 
-		<!--
-		<dependency>
+		
+		<!--dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-		</dependency>
-		-->
+		</dependency-->
+		
 
 	</dependencies>
 

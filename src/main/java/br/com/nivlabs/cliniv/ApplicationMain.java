@@ -11,10 +11,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ApplicationMain {
 
     public static AppSettings SETTINGS;
+    public static final String AMERICA_SAO_PAULO = "America/Sao_Paulo";
 
     @PostConstruct
     public void setTimeZone() {
-        TimeZone.setDefault(TimeZone.getTimeZone("America/Sao_Paulo"));
+        TimeZone.setDefault(TimeZone.getTimeZone(AMERICA_SAO_PAULO));
     }
 
     public static void main(String[] args) {

@@ -319,7 +319,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
     private ResponsibleInfoDTO getResponsibleFromUser(UserInfoDTO requestOwner) {
         logger.info("Iniciando busca de responsável pelo usuário da requisição...");
         ResponsibleInfoDTO responsibleInformations = responsibleService.findByCpf(requestOwner.getDocument().getValue());
-        if (responsibleInformations.getId() == null)
+        if (responsibleInformations.getId() == null && !SecurityContextUtil.isAdmin())
             throw new HttpException(HttpStatus.FORBIDDEN, "Sem presmissão! Você não tem um profissional vinculado ao seu usuário.");
         logger.info("Profissional encontrado :: {}", responsibleInformations.getFullName());
 
