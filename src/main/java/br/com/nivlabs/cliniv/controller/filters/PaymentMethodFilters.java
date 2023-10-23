@@ -2,16 +2,16 @@ package br.com.nivlabs.cliniv.controller.filters;
 
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 
-public class SectorFilters extends CustomFilters {
+public class PaymentMethodFilters extends CustomFilters {
 
-    private static final long serialVersionUID = 8928341349269829266L;
+    private static final long serialVersionUID = -1802026370115693015L;
 
     private String id;
 
-    private String description;
+    private String name;
 
-    public String getDescription() {
-        return "%".concat(this.description != null ? this.description : "").concat("%");
+    public String getName() {
+        return "%".concat(this.name != null ? this.name : "").concat("%");
     }
 
     public String getId() {
@@ -22,8 +22,8 @@ public class SectorFilters extends CustomFilters {
         this.id = id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -31,8 +31,8 @@ public class SectorFilters extends CustomFilters {
         StringBuilder builder = new StringBuilder();
         builder.append("SectorFilters [id=");
         builder.append(id);
-        builder.append(", description=");
-        builder.append(description);
+        builder.append(", name=");
+        builder.append(name);
         builder.append("]");
         return builder.toString();
     }

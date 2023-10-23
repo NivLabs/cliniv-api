@@ -3,6 +3,7 @@ package br.com.nivlabs.cliniv.service;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,6 @@ public class InstituteService implements BaseService {
     public InstituteDTO getSettings() {
 
         InstituteDTO response = new InstituteDTO();
-
         logger.info("Buscando informações de configurações...");
         List<Parameter> parameters = paramRepo.findAll();
         parameters.sort((primary, scondary) -> primary.getId().compareTo(scondary.getId()));
@@ -188,9 +188,9 @@ public class InstituteService implements BaseService {
     /**
      * Cria ou atualiza informações cadastrais da instituição principal
      * 
-     * @param request informações do cliente
+     * @param cutomerInfo informações do cliente
      */
-    public void createOrUpdate(CustomerInfoDTO request) {
+    public void createOrUpdate(CustomerInfoDTO cutomerInfo) {
         logger.info("Iniciando processo de atualização de dados cadastrais da instituição principal");
         Institute entity;
         Optional<Institute> institute = instituteRepo.findById(1L);
@@ -199,20 +199,21 @@ public class InstituteService implements BaseService {
         if (institute.isPresent()) {
             logger.info("Cadastro encontrado, atualizando o mesmo...");
             entity = institute.get();
-            CustomerInfoDTO customer = request;
+            CustomerInfoDTO customer = cutomerInfo;
             AddressDTO address = customer.getAddress();
             BeanUtils.copyProperties(address, entity, Institute_.ID);
             BeanUtils.copyProperties(customer, entity, Institute_.ID);
         } else {
             logger.info("Nenhum cadastro encontrado, iniciando um novo cadastro...");
             entity = new Institute();
-            CustomerInfoDTO customer = request;
+            CustomerInfoDTO customer = cutomerInfo;
             AddressDTO address = customer.getAddress();
             BeanUtils.copyProperties(address, entity);
             BeanUtils.copyProperties(customer, entity);
         }
         logger.info("Iniciando processo de persistência");
         instituteRepo.saveAndFlush(entity);
+        CACHE_INSTITUTE_INFO.put(request.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY), Arrays.asList(entity));
         logger.info("Dados cadastrais atualizados com sucesso!");
     }
 
