@@ -1,5 +1,6 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +56,9 @@ public class UserApplication extends BaseObjectWithCreatedAt {
     @Column(name = "PRIMEIRO_LOGIN")
     private boolean firstSignin;
 
+    @Column(name = "ULTIMO_ACESSO")
+    private LocalDateTime lastAcess;
+
     @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "USUARIO_PERMISSAO", joinColumns = {@JoinColumn(name = "ID_USUARIO")}, inverseJoinColumns = {@JoinColumn(name = "ID_PERMISSAO")})
@@ -65,7 +69,7 @@ public class UserApplication extends BaseObjectWithCreatedAt {
     }
 
     public UserApplication(Long id, Person person, String userName, String password, boolean active, boolean firstSignin,
-            List<Role> roles) {
+            LocalDateTime lastAcess, List<Role> roles) {
         super();
         this.id = id;
         this.person = person;
@@ -73,6 +77,7 @@ public class UserApplication extends BaseObjectWithCreatedAt {
         this.password = password;
         this.active = active;
         this.firstSignin = firstSignin;
+        this.lastAcess = lastAcess;
         this.roles = roles;
     }
 
@@ -174,32 +179,19 @@ public class UserApplication extends BaseObjectWithCreatedAt {
         return roles;
     }
 
+    public LocalDateTime getLastAcess() {
+        return lastAcess;
+    }
+
+    public void setLastAcess(LocalDateTime lastAcess) {
+        this.lastAcess = lastAcess;
+    }
+
     /**
      * @param roles the roles to set
      */
     public void setRoles(List<Role> roles) {
         this.roles = roles;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("UserApplication [id=");
-        builder.append(id);
-        builder.append(", person=");
-        builder.append(person);
-        builder.append(", userName=");
-        builder.append(userName);
-        builder.append(", password=");
-        builder.append(password);
-        builder.append(", active=");
-        builder.append(active);
-        builder.append(", firstSignin=");
-        builder.append(firstSignin);
-        builder.append(", roles=");
-        builder.append(roles);
-        builder.append("]");
-        return builder.toString();
     }
 
     @Override
