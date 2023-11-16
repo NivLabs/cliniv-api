@@ -26,35 +26,42 @@ public class Supplier extends BaseObjectWithId {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "DOCUMENTO")
+    @Column(name = "CPF_CNPJ")
     private String document;
+
+    @Column(name = "NOME_FANTASIA")
+    private String fantasyName;
+
+    @Column(name = "RAZAO_SOCIAL")
+    private String corporateReason;
+
+    @Column(name = "INSCRICAO_ESTADUAL")
+    private String stateRegistration;
+
+    @Column(name = "INSCRICAO_MUNICIPAL")
+    private String municipalResgistration;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TIPO")
     private SupplierType type;
 
-    @Column(name = "NOME")
-    private String name;
+    @Column(name = "OBSERVACAO")
+    private String observation;
+
+    @Column(name = "TELEFONE_PRINCIPAL")
+    private String principalPhone;
+
+    @Column(name = "TELEFONE_SECUNDARIO")
+    private String secondaryPhone;
+
+    @Column(name = "EMAIL")
+    private String email;
 
     @OneToOne(mappedBy = "supplier", cascade = CascadeType.ALL)
     private SupplierAddress address;
 
-    @OneToOne(mappedBy = "supplier", cascade = CascadeType.ALL)
-    private SupplierPaymentInformation paymentInformation;
-
     public Supplier() {
         super();
-    }
-
-    public Supplier(Long id, String document, SupplierType type, String name, SupplierAddress address,
-            SupplierPaymentInformation paymentInformation) {
-        super();
-        this.id = id;
-        this.document = document;
-        this.type = type;
-        this.name = name;
-        this.address = address;
-        this.paymentInformation = paymentInformation;
     }
 
     public Long getId() {
@@ -73,6 +80,38 @@ public class Supplier extends BaseObjectWithId {
         this.document = document;
     }
 
+    public String getFantasyName() {
+        return fantasyName;
+    }
+
+    public void setFantasyName(String fantasyName) {
+        this.fantasyName = fantasyName;
+    }
+
+    public String getCorporateReason() {
+        return corporateReason;
+    }
+
+    public void setCorporateReason(String corporateReason) {
+        this.corporateReason = corporateReason;
+    }
+
+    public String getStateRegistration() {
+        return stateRegistration;
+    }
+
+    public void setStateRegistration(String stateRegistration) {
+        this.stateRegistration = stateRegistration;
+    }
+
+    public String getMunicipalResgistration() {
+        return municipalResgistration;
+    }
+
+    public void setMunicipalResgistration(String municipalResgistration) {
+        this.municipalResgistration = municipalResgistration;
+    }
+
     public SupplierType getType() {
         return type;
     }
@@ -81,12 +120,36 @@ public class Supplier extends BaseObjectWithId {
         this.type = type;
     }
 
-    public String getName() {
-        return name;
+    public String getObservation() {
+        return observation;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
+
+    public String getPrincipalPhone() {
+        return principalPhone;
+    }
+
+    public void setPrincipalPhone(String principalPhone) {
+        this.principalPhone = principalPhone;
+    }
+
+    public String getSecondaryPhone() {
+        return secondaryPhone;
+    }
+
+    public void setSecondaryPhone(String secondaryPhone) {
+        this.secondaryPhone = secondaryPhone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public SupplierAddress getAddress() {
@@ -97,17 +160,10 @@ public class Supplier extends BaseObjectWithId {
         this.address = address;
     }
 
-    public SupplierPaymentInformation getPaymentInformation() {
-        return paymentInformation;
-    }
-
-    public void setPaymentInformation(SupplierPaymentInformation paymentInformation) {
-        this.paymentInformation = paymentInformation;
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(document, id, name, type);
+        return Objects.hash(address, corporateReason, document, email, fantasyName, id, municipalResgistration, observation, principalPhone,
+                            secondaryPhone, stateRegistration, type);
     }
 
     @Override
@@ -119,23 +175,12 @@ public class Supplier extends BaseObjectWithId {
         if (getClass() != obj.getClass())
             return false;
         Supplier other = (Supplier) obj;
-        return Objects.equals(document, other.document) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
-                && type == other.type;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Supplier [id=");
-        builder.append(id);
-        builder.append(", document=");
-        builder.append(document);
-        builder.append(", type=");
-        builder.append(type);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append("]");
-        return builder.toString();
+        return Objects.equals(address, other.address) && Objects.equals(corporateReason, other.corporateReason)
+                && Objects.equals(document, other.document) && Objects.equals(email, other.email)
+                && Objects.equals(fantasyName, other.fantasyName) && Objects.equals(id, other.id)
+                && Objects.equals(municipalResgistration, other.municipalResgistration) && Objects.equals(observation, other.observation)
+                && Objects.equals(principalPhone, other.principalPhone) && Objects.equals(secondaryPhone, other.secondaryPhone)
+                && Objects.equals(stateRegistration, other.stateRegistration) && type == other.type;
     }
 
 }

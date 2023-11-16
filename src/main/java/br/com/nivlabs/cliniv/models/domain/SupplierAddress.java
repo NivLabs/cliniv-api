@@ -159,29 +159,4 @@ public class SupplierAddress extends BaseObjectWithId {
                 && Objects.equals(state, other.state) && Objects.equals(street, other.street) && Objects.equals(supplier, other.supplier);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("SupplierAddress [id=");
-        builder.append(id);
-        builder.append(", supplier=");
-        builder.append(supplier);
-        builder.append(", street=");
-        builder.append(street);
-        builder.append(", addressNumber=");
-        builder.append(addressNumber);
-        builder.append(", complement=");
-        builder.append(complement);
-        builder.append(", postalCode=");
-        builder.append(postalCode);
-        builder.append(", state=");
-        builder.append(state);
-        builder.append(", neighborhood=");
-        builder.append(neighborhood);
-        builder.append(", city=");
-        builder.append(city);
-        builder.append("]");
-        return builder.toString();
-    }
-
 }

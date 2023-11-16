@@ -7,6 +7,6 @@ package br.com.nivlabs.cliniv.enums;
  *
  */
 public enum SupplierType {
-    PERSON, // Física
-    ENTITY // Jurídica
+    PRODUCT, // Fornecedor de produtos
+    SERVICE // Fornecedor de serviços
 }
