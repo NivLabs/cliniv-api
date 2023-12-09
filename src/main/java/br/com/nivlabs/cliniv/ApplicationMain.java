@@ -7,9 +7,11 @@ import javax.annotation.PostConstruct;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @EnableCaching
 @SpringBootApplication
+@EnableEurekaClient
 public class ApplicationMain {
 
     public static AppSettings SETTINGS;

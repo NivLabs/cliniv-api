@@ -25,7 +25,8 @@
 	</properties>
 
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
+		<!--
+		https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
@@ -87,14 +88,16 @@
 		</dependency>
 
 		<!-- Libs necessárias para o JasperReports -->
-		<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-functions -->
+		<!--
+		https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-functions -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports-functions</artifactId>
 			<version>6.19.0</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
+		<!--
+		https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
 			<artifactId>jasperreports</artifactId>
@@ -152,13 +155,16 @@
 		</dependency>
 		<!-- Dependências para integração com envio de e-mail -->
 
-		
-		<!--dependency>
+		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-		</dependency-->
-		
+		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+			<version>3.1.5</version>
+		</dependency>
 	</dependencies>
 
 	<build>
