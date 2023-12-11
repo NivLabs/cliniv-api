@@ -15,7 +15,11 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 public class ApplicationMain {
 
     public static AppSettings SETTINGS;
-    public static final String AMERICA_SAO_PAULO = "America/Sao_Paulo";
+    public static final String AMERICA_SAO_PAULO;
+
+    static {
+        AMERICA_SAO_PAULO = "America/Sao_Paulo";
+    }
 
     @PostConstruct
     public void setTimeZone() {
