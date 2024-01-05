@@ -13,8 +13,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @SpringBootApplication
 @EnableEurekaClient
 public class ApplicationMain {
-
-    public static AppSettings SETTINGS;
     public static final String AMERICA_SAO_PAULO;
 
     static {

@@ -21,7 +21,7 @@ import br.com.nivlabs.cliniv.repository.DashboardRepository;
 import br.com.nivlabs.cliniv.repository.ResponsibleRepository;
 import br.com.nivlabs.cliniv.repository.UserRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
-import br.com.nivlabs.cliniv.service.appointment.AppointmentsService;
+import br.com.nivlabs.cliniv.service.appointment.AppointmentService;
 import br.com.nivlabs.cliniv.service.sticker.StickerService;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 
@@ -46,7 +46,7 @@ public class ProcessDashboardCardsBusinessHandler implements BaseBusinessHandler
     @Autowired
     private ResponsibleRepository responsibleRepo;
     @Autowired
-    private AppointmentsService appointmentsService;
+    private AppointmentService appointmentsService;
     @Autowired
     private StickerService stickerService;
 

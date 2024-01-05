@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.nivlabs.cliniv.controller.filters.AppointmentFilters;
 import br.com.nivlabs.cliniv.models.dto.AppointmentInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.AppointmentsResponseDTO;
-import br.com.nivlabs.cliniv.service.appointment.AppointmentsService;
+import br.com.nivlabs.cliniv.service.appointment.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Agenda", description = "Endpoint - Operações da Agenda")
 @RestController
 @RequestMapping(value = "/appointment")
-public class AppointmentController extends BaseController<AppointmentsService> {
+public class AppointmentController extends BaseController<AppointmentService> {
 
     @Operation(summary = "appointment-get", description = "Busca informações de agendamentos baseados num filtro")
     @GetMapping

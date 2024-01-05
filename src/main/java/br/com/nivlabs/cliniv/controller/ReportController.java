@@ -1,7 +1,5 @@
 package br.com.nivlabs.cliniv.controller;
 
-import javax.validation.constraints.NotNull;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -68,7 +66,7 @@ public class ReportController extends BaseController<ReportService> {
     @PostMapping("/{id}")
     @PreAuthorize("hasAnyRole('RELATORIO_ESCRITA', 'RELATORIO_LEITURA', 'ADMIN')")
     public ResponseEntity<DigitalDocumentDTO> generateReport(@Validated @RequestBody(required = true) ReportGenerationRequestDTO reportParam,
-                                                             @NotNull @PathVariable("id") Long id) {
+                                                             @PathVariable("id") Long id) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(service.generateDocumentFromReportLayout(id, reportParam));
     }

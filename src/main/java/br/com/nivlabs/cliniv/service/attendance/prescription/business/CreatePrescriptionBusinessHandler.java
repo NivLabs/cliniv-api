@@ -39,12 +39,10 @@ import br.com.nivlabs.cliniv.service.userservice.UserService;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 
 /**
- * 
  * Componente específico para criação de prescriação
  *
  * @author viniciosarodrigues
  * @since 10-10-2021
- *
  */
 @Component
 public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
@@ -73,7 +71,7 @@ public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Cria uma nova prescrição médica do paciente
-     * 
+     *
      * @param request
      * @return
      */
@@ -90,9 +88,9 @@ public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
         logger.info("Iniciando criação do documento digital da prescrição");
         try {
             DigitalDocumentDTO document = reportService.genareteDocumentFromJxmlStream(request.getAttendanceId(), "Prescrição Médica",
-                                                                                       getReportParam(insetedPrescription.getId(), user),
-                                                                                       new ClassPathResource(REPORT_SOURCE)
-                                                                                               .getInputStream());
+                    getReportParam(insetedPrescription.getId(), user),
+                    new ClassPathResource(REPORT_SOURCE)
+                            .getInputStream());
             createDocumentEvent(request, document, responsible, medicalRecord);
         } catch (IOException e) {
             logger.error("Falha ao gerar documento de evolução", e);
@@ -103,9 +101,9 @@ public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte itens da prescrição vindos da requisição em itens da prescrição no modelo relacional
-     * 
-     * @param items Itens da prescrição
-     * @param medicalRecord Atendimento
+     *
+     * @param items        Itens da prescrição
+     * @param prescription Precrição do paciente
      * @return Lista de itens da prescrição convertida
      */
     private List<PrescriptionItem> convertItems(List<PrescriptionItemDTO> items, Prescription prescription) {
@@ -136,9 +134,9 @@ public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Insere uma prescrição médica na base de dados para controle da aplicação
-     * 
-     * @param request Requisição de nova prescrição médica
-     * @param responsible Responsável pela solicitação
+     *
+     * @param request       Requisição de nova prescrição médica
+     * @param responsible   Responsável pela solicitação
      * @param medicalRecord Atendimento em questão
      */
     private Prescription insertPrescription(PrescriptionInfoDTO request, ResponsibleInfoDTO responsible, MedicalRecordDTO medicalRecord) {
@@ -178,7 +176,7 @@ public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Cria um evento de documento para a prescrição
-     * 
+     *
      * @param request
      * @param document
      * @param requestOwner
@@ -189,9 +187,8 @@ public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
         event.setEventType(EventType.PRESCRIPTION);
         event.setAttendanceId(request.getAttendanceId());
-        event.setDocuments(Arrays.asList(document));
         event.setEventDateTime(LocalDateTime.now());
-        event.setObservations("Criação da prescrição");
+        event.getDocuments().add(document);
         event.setResponsible(requestOwner);
         event.setAccommodation(medicalRecord.getLastAccommodation());
         logger.info("Evento processado, inserindo evento na base de dados...");
@@ -202,7 +199,7 @@ public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca o responsável pela requisição da prescrição baseado no usuário
-     * 
+     *
      * @param requestOwner
      * @return
      */

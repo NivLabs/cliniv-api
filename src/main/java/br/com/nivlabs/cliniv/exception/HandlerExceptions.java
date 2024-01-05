@@ -1,11 +1,8 @@
 package br.com.nivlabs.cliniv.exception;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
+import br.com.nivlabs.cliniv.models.exception.ErrorItem;
+import com.netflix.discovery.shared.transport.TransportException;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,17 +15,19 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import br.com.nivlabs.cliniv.models.exception.ErrorItem;
-import io.jsonwebtoken.ExpiredJwtException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @ControllerAdvice
 public class HandlerExceptions {
 
-    private Logger logger = LoggerFactory.getLogger(HandlerExceptions.class);
+    final private Logger logger = LoggerFactory.getLogger(HandlerExceptions.class);
 
     /**
      * Captura erros não esperados
-     * 
+     *
      * @param e
      * @param req
      * @return
@@ -37,14 +36,14 @@ public class HandlerExceptions {
     public ResponseEntity<StandardErrorSpring> objetoNaoEncontrado(Throwable e, HttpServletRequest req) {
         logger.error("Falha interna não esperada :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(), "Falha interna", Arrays.asList(), e.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(), "Falha interna", List.of(), e.getMessage(),
                 req.getRequestURI());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
     }
 
     /**
      * Captura erros de padrões da API
-     * 
+     *
      * @param e
      * @param req
      * @return
@@ -53,7 +52,7 @@ public class HandlerExceptions {
     public ResponseEntity<StandardErrorSpring> validationException(HttpException e, HttpServletRequest req) {
         logger.error("Erro da requisição", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), e.getStatus().value(),
-                "Erro da requisição", Arrays.asList(), e.getMessage(), req.getRequestURI());
+                "Erro da requisição", List.of(), e.getMessage(), req.getRequestURI());
 
         return ResponseEntity.status(e.getStatus()).body(err);
     }
@@ -62,14 +61,14 @@ public class HandlerExceptions {
     public ResponseEntity<StandardErrorSpring> expiredJwtException(ExpiredJwtException e, HttpServletRequest req) {
         logger.error("Token expirado", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.UNAUTHORIZED.value(),
-                "Token expirado", Arrays.asList(), "Token expirado!", req.getRequestURI());
+                "Token expirado", List.of(), "Token expirado!", req.getRequestURI());
 
         return ResponseEntity.status(err.getStatus()).body(err);
     }
 
     /**
      * Trata exceções de propriedades inválidas
-     * 
+     *
      * @param e
      * @param req
      * @return
@@ -79,7 +78,7 @@ public class HandlerExceptions {
                                                                    HttpServletRequest req) {
         logger.error("Falha interna não esperada :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(),
-                HttpStatus.UNPROCESSABLE_ENTITY.value(), "Propriedade não reconhecida", Arrays.asList(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value(), "Propriedade não reconhecida", List.of(),
                 getPropertyMessageError(e), req.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
@@ -87,7 +86,7 @@ public class HandlerExceptions {
 
     /**
      * Captura nome da propriedade inválida do corpo da requisição
-     * 
+     *
      * @param e
      * @return
      */
@@ -100,7 +99,7 @@ public class HandlerExceptions {
 
     /**
      * Erro de validação
-     * 
+     *
      * @param e
      * @param req
      * @return
@@ -118,7 +117,7 @@ public class HandlerExceptions {
 
     /**
      * Trata a falta de permissão
-     * 
+     *
      * @param e
      * @param req
      * @return
@@ -128,7 +127,7 @@ public class HandlerExceptions {
                                                                                HttpServletRequest req) {
         logger.error("Acesso negado :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.FORBIDDEN.value(),
-                "Sem permissões", Arrays.asList(), "Seu usuário não tem permissão para acessar este recurso",
+                "Sem permissões", List.of(), "Seu usuário não tem permissão para acessar este recurso",
                 req.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
@@ -139,17 +138,12 @@ public class HandlerExceptions {
                                                                                HttpServletRequest req) {
         logger.error("Violação de Integridade :: ", e);
         StandardErrorSpring err = new StandardErrorSpring(System.currentTimeMillis(), HttpStatus.UNPROCESSABLE_ENTITY.value(),
-                "Violação de Integridade", Arrays.asList(), "Violação de integridade, esta ação não pode ser concluída",
+                "Violação de Integridade", List.of(), "Violação de integridade, esta ação não pode ser concluída",
                 req.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
 
-    /**
-     * 
-     * @param e
-     * @return
-     */
     private List<ErrorItem> getValidations(MethodArgumentNotValidException e) {
         List<ErrorItem> errors = new ArrayList<>();
         for (FieldError error : e.getBindingResult().getFieldErrors()) {

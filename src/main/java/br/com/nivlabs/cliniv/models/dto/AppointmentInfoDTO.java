@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Informações do agendamento")
 public class AppointmentInfoDTO extends DataTransferObjectBase {
 
-    private static final long serialVersionUID = -7082539967186369611L;
 
     @Schema(description = "Identificador único do agendamento")
     private Long id;
@@ -35,6 +34,8 @@ public class AppointmentInfoDTO extends DataTransferObjectBase {
 
     @Schema(description = "Situação atual do agendamento")
     private AppointmentStatus status = AppointmentStatus.WAITING_CONFIRMATION;
+
+    private AppointmentRecurrenceSettingsDTO repeatSettings;
 
     public AppointmentInfoDTO() {
         super();
@@ -96,68 +97,25 @@ public class AppointmentInfoDTO extends DataTransferObjectBase {
         this.createdAt = createdAt;
     }
 
+    public AppointmentRecurrenceSettingsDTO getRepeatSettings() {
+        return repeatSettings;
+    }
+
+    public void setRepeatSettings(AppointmentRecurrenceSettingsDTO repeatSettings) {
+        this.repeatSettings = repeatSettings;
+    }
+
     @Override
     public String toString() {
-        return "AppointmentInfoDTO [id=" + id + ", patient=" + patient + ", professional=" + professional + ", schedulingDateAndTime="
-                + schedulingDateAndTime + ", createdAt=" + createdAt + ", annotation=" + annotation + ", status=" + status + "]";
+        return "AppointmentInfoDTO{" +
+                "id=" + id +
+                ", patient=" + patient +
+                ", professional=" + professional +
+                ", schedulingDateAndTime=" + schedulingDateAndTime +
+                ", createdAt=" + createdAt +
+                ", annotation='" + annotation + '\'' +
+                ", status=" + status +
+                ", repeatSettings=" + repeatSettings +
+                '}';
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((annotation == null) ? 0 : annotation.hashCode());
-        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((patient == null) ? 0 : patient.hashCode());
-        result = prime * result + ((professional == null) ? 0 : professional.hashCode());
-        result = prime * result + ((schedulingDateAndTime == null) ? 0 : schedulingDateAndTime.hashCode());
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        AppointmentInfoDTO other = (AppointmentInfoDTO) obj;
-        if (annotation == null) {
-            if (other.annotation != null)
-                return false;
-        } else if (!annotation.equals(other.annotation))
-            return false;
-        if (createdAt == null) {
-            if (other.createdAt != null)
-                return false;
-        } else if (!createdAt.equals(other.createdAt))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (patient == null) {
-            if (other.patient != null)
-                return false;
-        } else if (!patient.equals(other.patient))
-            return false;
-        if (professional == null) {
-            if (other.professional != null)
-                return false;
-        } else if (!professional.equals(other.professional))
-            return false;
-        if (schedulingDateAndTime == null) {
-            if (other.schedulingDateAndTime != null)
-                return false;
-        } else if (!schedulingDateAndTime.equals(other.schedulingDateAndTime))
-            return false;
-        if (status != other.status)
-            return false;
-        return true;
-    }
-
 }

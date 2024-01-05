@@ -36,12 +36,10 @@ import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
- * 
  * Camada de negócio relacionada à processo de criação de evento de atendimento
- * 
+ *
  * @author viniciosarodrigues
  * @since 19-09-2021
- *
  */
 @Component
 public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler {
@@ -54,7 +52,6 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
     private AttendanceRepository attendanceRepository;
     @Autowired
     private ProcedureRepository procedureRepository;
-
     @Autowired
     private DigitalDocumentService docService;
     @Autowired
@@ -66,7 +63,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
 
     /**
      * Cria um novo evento de atendimento
-     * 
+     *
      * @param request Objeto de requisição de criação de novo evento de atendimento
      */
     public void create(NewAttendanceEventDTO request) {
@@ -100,10 +97,10 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
         if (request.getProcedure() != null && !StringUtils.isNullOrEmpty(request.getProcedure().getDescription())) {
             newAttendanceEvent
                     .setTitle(request.getProcedure().getId().toString().concat(" - ").concat(request.getProcedure().getDescription()));
-        } else if (request.getEventType() == EventType.REPORT && !request.getDocuments().isEmpty() && request.getDocuments().size() == 1) {
+        } else if (request.getEventType() == EventType.REPORT && request.getDocuments().size() == 1) {
             final String documentName = request.getDocuments().get(0).getName();
             logger.info("É um evento de relatório e possui apenas um documento, o nome do evento será o nome do documento :: {}",
-                        documentName);
+                    documentName);
             newAttendanceEvent.setTitle(documentName);
         }
         newAttendanceEvent.setProcedure(convertProcedure(request.getProcedure()));
@@ -120,9 +117,9 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
         }
 
         if (request.getObservations() != null) {
-            var digitalDocumentoFromDocumentTemplate = reportService
+            var digitalDocumentFromDocumentTemplate = reportService
                     .generateDocumentFromFormatedText(newEventId, newAttendanceEvent.getTitle(), request.getObservations());
-            request.getDocuments().add(digitalDocumentoFromDocumentTemplate);
+            request.getDocuments().add(digitalDocumentFromDocumentTemplate);
         }
         insertDocuments(newEventId, request.getDocuments());
 
@@ -130,7 +127,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
 
     /**
      * Busca o responsável pela criação de evento de atendimento
-     * 
+     *
      * @param requestOwner Usuário da solicitação
      * @return Responsável logado
      */
@@ -146,7 +143,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
 
     /**
      * Converte uma acomodação DTO para Entity
-     * 
+     *
      * @param accommodation Acomodação do novo evento (DTO)
      * @return Acomodação do novo evento (Entity)
      */
@@ -163,9 +160,9 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
 
     /**
      * Insere documentos na base
-     * 
+     *
      * @param attendanceEventId Identificador único do evento de atendimento
-     * @param documents Lista de documentos á serem inseridos na base
+     * @param documents         Lista de documentos á serem inseridos na base
      */
     private void insertDocuments(Long attendanceEventId, List<DigitalDocumentDTO> documents) {
         logger.info("Inserindo documentos digitais...");
@@ -181,7 +178,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
 
     /**
      * Converte o procedimento DTO para Entity
-     * 
+     *
      * @param procedure Procedimento (DTO)
      * @return Procedimento (Entity)
      */

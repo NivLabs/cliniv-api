@@ -1,6 +1,7 @@
 package br.com.nivlabs.cliniv.config.security;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,9 +22,8 @@ import br.com.nivlabs.cliniv.repository.UserRepository;
 
 /**
  * Classe SecurityConfig.java
- * 
+ *
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
  * @since 15 de set de 2019
  */
 @Configuration
@@ -41,10 +41,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserRepository userDao;
 
     private static final String[] PUBLIC_MATCHES = {"/v2/**",
-                                                    "/webjars/**",
-                                                    "/swagger-ui/**",
-                                                    "/api-docs/**",
-                                                    "/swagger-resources/**"};
+            "/webjars/**",
+            "/swagger-ui/**",
+            "/api-docs/**",
+            "/swagger-resources/**"};
 
     private static final String[] PUBLIC_MATCHES_GET = {"/server/", "/server", "/actuator/**", "/status", "/dashboard"};
 
@@ -73,23 +73,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Configura CORS
-     * 
+     *
      * @return CorsConfigurationSource
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configCors = new CorsConfiguration().applyPermitDefaultValues();
-        configCors.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
-        configCors.setAllowedHeaders(Arrays.asList("*"));
-        configCors.setAllowedOrigins(Arrays.asList("*"));
+        configCors.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+        configCors.setAllowedHeaders(List.of("*"));
+        configCors.setAllowedOrigins(List.of("*"));
         source.registerCorsConfiguration("/**", configCors);
         return source;
     }
 
     /**
      * Define a estratégia de criptografia da API
-     * 
+     *
      * @return BCryptPasswordEncoder
      */
     @Bean

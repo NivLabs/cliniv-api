@@ -19,7 +19,7 @@ import br.com.nivlabs.cliniv.service.appointment.business.UpdateAppointmentBusin
  *
  */
 @Service
-public class AppointmentsService implements BaseService {
+public class AppointmentService implements BaseService {
 
     @Autowired
     private Logger logger;
