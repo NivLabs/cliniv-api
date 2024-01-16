@@ -2,9 +2,9 @@ package br.com.nivlabs.cliniv.models.dto;
 
 import java.math.BigDecimal;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
 
 import br.com.nivlabs.cliniv.enums.TimeIntervalType;
 import br.com.nivlabs.cliniv.models.domain.UnitOfMeasurement;

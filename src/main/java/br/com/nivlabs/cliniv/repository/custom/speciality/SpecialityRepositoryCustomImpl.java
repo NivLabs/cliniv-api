@@ -3,10 +3,10 @@ package br.com.nivlabs.cliniv.repository.custom.speciality;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,9 +22,8 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Repositório de Especialidades dos profissionais
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class SpecialityRepositoryCustomImpl extends GenericCustomRepository<Speciality, SpecialityDTO>
         implements SpecialityRepositoryCustom {
@@ -37,8 +36,8 @@ public class SpecialityRepositoryCustomImpl extends GenericCustomRepository<Spec
         Root<Speciality> root = criteria.from(Speciality.class);
 
         criteria.select(builder.construct(SpecialityDTO.class,
-                                          root.get(Speciality_.id),
-                                          root.get(Speciality_.name)));
+                root.get("id"),
+                root.get("name")));
         return getPage(filters, builder, criteria, root);
     }
 
@@ -50,13 +49,13 @@ public class SpecialityRepositoryCustomImpl extends GenericCustomRepository<Spec
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-            predicates.add(builder.equal(root.get(Speciality_.id), Long.parseLong(filters.getId())));
+            predicates.add(builder.equal(root.get("id"), Long.parseLong(filters.getId())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getName())) {
-            predicates.add(builder.like(root.get(Speciality_.name), filters.getName()));
+            predicates.add(builder.like(root.get("name"), filters.getName()));
         }
 
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates.toArray(new Predicate[0]);
     }
 
 }

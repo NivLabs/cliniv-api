@@ -1,26 +1,26 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
+import java.time.ZoneId;
+import java.util.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import br.com.nivlabs.cliniv.ApplicationMain;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -31,20 +31,16 @@ import br.com.nivlabs.cliniv.models.domain.tiss.Procedure;
 
 /**
  * Classe VisitEvent.java
- * 
- * @version 1.0
+ *
  * @author <a href="mailto:williamsgomes45@gmail.com">Williams Gomes</a>
- * @since 08 Sept, 2019
- * 
- * @version 2.0
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
+ * @version 2.0
+ * @since 08 Sept, 2019
  * @since 15 Dez, 2019
  */
 @Entity
 @Table(name = "VISITA_EVENTO")
 public class AttendanceEvent extends BaseObjectWithId {
-
-    private static final long serialVersionUID = 8988537898462013276L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,7 +74,7 @@ public class AttendanceEvent extends BaseObjectWithId {
 
     @Column(name = "OBSERVACOES")
     @Lob
-    private String observations;
+    private byte[] observations;
 
     @Column(name = "DH_EVENTO")
     @DateTimeFormat(iso = ISO.DATE_TIME)
@@ -152,12 +148,13 @@ public class AttendanceEvent extends BaseObjectWithId {
         this.title = title;
     }
 
+
     public String getObservations() {
-        return observations != null ? new String(Base64.getDecoder().decode(observations)) : null;
+        return observations != null ? new String(Base64.getDecoder().decode(observations), StandardCharsets.UTF_8) : null;
     }
 
     public void setObservations(String observations) {
-        this.observations = observations != null ? Base64.getEncoder().encodeToString(observations.getBytes()) : null;
+        this.observations = observations != null ? Base64.getEncoder().encode(observations.getBytes()) : null;
     }
 
     public LocalDateTime getEventDateTime() {
@@ -169,58 +166,23 @@ public class AttendanceEvent extends BaseObjectWithId {
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("AttendanceEvent [id=");
-        builder.append(id);
-        builder.append(", eventType=");
-        builder.append(eventType);
-        builder.append(", responsible=");
-        builder.append(responsible);
-        builder.append(", attendance=");
-        builder.append(attendance);
-        builder.append(", procedure=");
-        builder.append(procedure);
-        builder.append(", documents=");
-        builder.append(documents);
-        builder.append(", accommodation=");
-        builder.append(accommodation);
-        builder.append(", title=");
-        builder.append(title);
-        builder.append(", observations=");
-        builder.append(observations);
-        builder.append(", eventDateTime=");
-        builder.append(eventDateTime);
-        builder.append("]");
-        return builder.toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AttendanceEvent that = (AttendanceEvent) o;
+        return Objects.equals(id, that.id) && eventType == that.eventType && Objects.equals(responsible, that.responsible) && Objects.equals(attendance, that.attendance) && Objects.equals(procedure, that.procedure) && Objects.equals(documents, that.documents) && Objects.equals(accommodation, that.accommodation) && Objects.equals(title, that.title) && Arrays.equals(observations, that.observations) && Objects.equals(eventDateTime, that.eventDateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accommodation, attendance, documents, eventDateTime, eventType, id, observations, procedure, responsible,
-                            title);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        AttendanceEvent other = (AttendanceEvent) obj;
-        return Objects.equals(accommodation, other.accommodation) && Objects.equals(attendance, other.attendance)
-                && Objects.equals(documents, other.documents) && Objects.equals(eventDateTime, other.eventDateTime)
-                && eventType == other.eventType && Objects.equals(id, other.id) && Objects.equals(observations, other.observations)
-                && Objects.equals(procedure, other.procedure) && Objects.equals(responsible, other.responsible)
-                && Objects.equals(title, other.title);
+        int result = Objects.hash(id, eventType, responsible, attendance, procedure, documents, accommodation, title, eventDateTime);
+        result = 31 * result + Arrays.hashCode(observations);
+        return result;
     }
 
     @PrePersist
     public void prePersist() {
-        final LocalDateTime now = LocalDateTime.now();
-        this.eventDateTime = now;
+        this.eventDateTime = LocalDateTime.now(ZoneId.of(ApplicationMain.AMERICA_SAO_PAULO));
     }
 
     public AttendanceEvent(Long id) {
@@ -228,4 +190,19 @@ public class AttendanceEvent extends BaseObjectWithId {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "AttendanceEvent{" +
+                "id=" + id +
+                ", eventType=" + eventType +
+                ", responsible=" + responsible +
+                ", attendance=" + attendance +
+                ", procedure=" + procedure +
+                ", documents=" + documents +
+                ", accommodation=" + accommodation +
+                ", title='" + title + '\'' +
+                ", observations=" + Arrays.toString(observations) +
+                ", eventDateTime=" + eventDateTime +
+                '}';
+    }
 }

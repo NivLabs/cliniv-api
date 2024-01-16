@@ -2,7 +2,7 @@ package br.com.nivlabs.cliniv.models.dto;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;

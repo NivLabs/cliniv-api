@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +40,9 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Componente específico para busca de agendamentos
- * 
  *
  * @author viniciosarodrigues
  * @since 10-10-2021
- *
  */
 @Component
 public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
@@ -61,16 +59,15 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Consulta de agendamento paginada
-     * 
+     *
      * @param filters Filtros de pesquisa
-     * @param pageRequest Configurações de paginação
      * @return Lista paginada de agendamentos
      */
     private Page<AppointmentDTO> getPage(AppointmentFilters filters) {
         final UserInfoDTO user = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername());
 
         ResponsibleInfoDTO responsibleInformations = getResponsibleFromUser(user);
-        if (responsibleInformations != null && !SecurityContextUtil.isAdmin()) {
+        if (!SecurityContextUtil.isAdmin()) {
             logger.info("Iniciando a busca filtrada por informações da agenda do profissional");
             filters.setProfessionalId(responsibleInformations.getId().toString());
         }
@@ -86,7 +83,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca agendamento por identificador único
-     * 
+     *
      * @param id Identificador único do agendamento
      * @return Informações detalhadas do agendamento
      */
@@ -106,9 +103,9 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Transfere informações da entidade de agendamento
-     * 
+     *
      * @param scheduleEntity Entidade relacional de agendamento
-     * @param scheduleInfo Objeto de transferência de agendamento
+     * @param scheduleInfo   Objeto de transferência de agendamento
      */
     @Transactional
     private void parseScheduleEntityToDTO(Appointment scheduleEntity, AppointmentInfoDTO scheduleInfo) {
@@ -132,9 +129,9 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Transfere informações de uma entidade relacional para um objeto de transferência de profissional
-     * 
+     *
      * @param professionalEntity Entidade relacional de profissional
-     * @param professionalInfo Objeto de transferência de profissional
+     * @param professionalInfo   Objeto de transferência de profissional
      */
     private void parseProfessionalEntityToDTO(Responsible professionalEntity, ResponsibleInfoDTO professionalInfo) {
         logger.info("Iniciando conversão de entidade Responsável para resposta...");
@@ -152,8 +149,8 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Transfere informações da entidade pessoa para DTO de profissional
-     * 
-     * @param person Entidade relacional de pessoa
+     *
+     * @param person           Entidade relacional de pessoa
      * @param professionalInfo DTO de profissional
      */
     @Transactional
@@ -179,9 +176,9 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Transfere informações de uma entidade relacional para um objeto de transferência do paciente
-     * 
+     *
      * @param patientEntity Entidade relacional de paciente
-     * @param patientInfo Objeto de transferência de paciente
+     * @param patientInfo   Objeto de transferência de paciente
      */
     @Transactional
     private void parsePatientEntityToDTO(Patient patientEntity, PatientInfoDTO patientInfo) {
@@ -213,12 +210,12 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte entidade do modelo relacional em objeto de transferência
-     * 
-     * @param patient Entidade do modelo relacional
-     * @return Objeto de transferência
+     *
+     * @param person      Informações da pessoa
+     * @param patientInfo Entidade do modelo relacional
      */
     @Transactional
-    private PatientInfoDTO parsePersonEntityToPatientInfo(Person person, PatientInfoDTO patientInfo) {
+    private void parsePersonEntityToPatientInfo(Person person, PatientInfoDTO patientInfo) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Patient -> PatientInfoDTO");
 
         patientInfo.setPersonId(person.getId());
@@ -253,12 +250,11 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
         patientInfo.setBloodType(person.getBloodType());
         patientInfo.setNationality(person.getNationality());
 
-        return patientInfo;
     }
 
     /**
      * Converte documentos de domínio para documentos de transferência
-     * 
+     *
      * @param documents Lista de documentos à serem convertidos
      * @return Lista de documentos convertidos
      */
@@ -280,7 +276,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Trata informações de documento no paciente
-     * 
+     *
      * @param personEntity
      * @param personInfo
      */
@@ -296,7 +292,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Trata informações de documento no responsável (Profissional)
-     * 
+     *
      * @param source
      * @param target
      */
@@ -312,7 +308,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca o responsável pela criação de evento de atendimento
-     * 
+     *
      * @param requestOwner Usuário da solicitação
      * @return Responsável logado
      */
@@ -328,7 +324,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Realiza a busca das informações da agenda
-     * 
+     *
      * @param filters Filtro de busca
      * @return Objeto de resposta de consulta de agenda
      */

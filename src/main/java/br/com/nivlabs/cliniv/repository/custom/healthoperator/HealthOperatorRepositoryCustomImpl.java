@@ -3,10 +3,10 @@ package br.com.nivlabs.cliniv.repository.custom.healthoperator;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,9 +22,8 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Repositório customizado para operadoras de saúde
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class HealthOperatorRepositoryCustomImpl extends GenericCustomRepository<HealthOperator, HealthOperatorDTO>
         implements HealthOperatorRepositoryCustom {
@@ -37,12 +36,12 @@ public class HealthOperatorRepositoryCustomImpl extends GenericCustomRepository<
         Root<HealthOperator> root = criteria.from(HealthOperator.class);
 
         criteria.select(builder.construct(HealthOperatorDTO.class,
-                                          root.get(HealthOperator_.id),
-                                          root.get(HealthOperator_.ansCode),
-                                          root.get(HealthOperator_.cnpj),
-                                          root.get(HealthOperator_.companyName),
-                                          root.get(HealthOperator_.fantasyName),
-                                          root.get(HealthOperator_.modality)));
+                root.get("id"),
+                root.get("ansCode"),
+                root.get("cnpj"),
+                root.get("companyName"),
+                root.get("fantasyName"),
+                root.get("modality")));
         return getPage(filters, builder, criteria, root);
     }
 
@@ -54,23 +53,23 @@ public class HealthOperatorRepositoryCustomImpl extends GenericCustomRepository<
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-            predicates.add(builder.equal(root.get(HealthOperator_.id), Long.parseLong(filters.getId())));
+            predicates.add(builder.equal(root.get("id"), Long.parseLong(filters.getId())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getAnsCode())) {
-            predicates.add(builder.equal(root.get(HealthOperator_.ansCode), Long.parseLong(filters.getAnsCode())));
+            predicates.add(builder.equal(root.get("ansCode"), Long.parseLong(filters.getAnsCode())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getCnpj())) {
-            predicates.add(builder.equal(root.get(HealthOperator_.cnpj), filters.getCnpj()));
+            predicates.add(builder.equal(root.get("cnpj"), filters.getCnpj()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getCompanyName())) {
-            predicates.add(builder.like(root.get(HealthOperator_.companyName), filters.getCompanyName()));
+            predicates.add(builder.like(root.get("companyName"), filters.getCompanyName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getFantasyName())) {
-            predicates.add(builder.like(root.get(HealthOperator_.fantasyName), filters.getFantasyName()));
+            predicates.add(builder.like(root.get("fantasyName"), filters.getFantasyName()));
         }
         if (filters.getModality() != null) {
-            predicates.add(builder.equal(root.get(HealthOperator_.modality), filters.getModality()));
+            predicates.add(builder.equal(root.get("modality"), filters.getModality()));
         }
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates.toArray(new Predicate[0]);
     }
 }

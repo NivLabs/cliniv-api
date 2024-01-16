@@ -1,6 +1,6 @@
 package br.com.nivlabs.cliniv.service.userservice.business;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

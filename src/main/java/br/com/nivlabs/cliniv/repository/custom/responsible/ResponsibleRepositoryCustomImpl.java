@@ -3,10 +3,10 @@ package br.com.nivlabs.cliniv.repository.custom.responsible;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,9 +23,8 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Repositório de Profissionais e responsáveis customizado
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Responsible, ResponsibleDTO>
         implements ResponsibleRepositoryCustom {
@@ -37,15 +36,15 @@ public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Res
         Root<Responsible> root = criteria.from(Responsible.class);
 
         criteria.select(builder.construct(ResponsibleDTO.class,
-                                          root.get(Responsible_.id),
-                                          root.get(Responsible_.person).get(Person_.fullName),
-                                          root.get(Responsible_.person).get(Person_.socialName),
-                                          root.get(Responsible_.person).get(Person_.cpf),
-                                          root.get(Responsible_.person).get(Person_.bornDate),
-                                          root.get(Responsible_.person).get(Person_.principalNumber),
-                                          root.get(Responsible_.person).get(Person_.gender),
-                                          root.get(Responsible_.professionalIdentity),
-                                          root.get(Responsible_.initialsIdentity)));
+                root.get("id"),
+                root.get("person").get("fullName"),
+                root.get("person").get("socialName"),
+                root.get("person").get("cpf"),
+                root.get("person").get("bornDate"),
+                root.get("person").get("principalNumber"),
+                root.get("person").get("gender"),
+                root.get("professionalIdentity"),
+                root.get("initialsIdentity")));
         return getPage(filters, builder, criteria, root);
     }
 
@@ -57,24 +56,24 @@ public class ResponsibleRepositoryCustomImpl extends GenericCustomRepository<Res
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-            predicates.add(builder.equal(root.get(Responsible_.id), Long.parseLong(filters.getId())));
+            predicates.add(builder.equal(root.get("id"), Long.parseLong(filters.getId())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getProfessionalIdentity())) {
-            predicates.add(builder.equal(root.get(Responsible_.professionalIdentity),
-                                         filters.getProfessionalIdentity()));
+            predicates.add(builder.equal(root.get("professionalIdentity"),
+                    filters.getProfessionalIdentity()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
-            predicates.add(builder.equal(root.get(Responsible_.person).get(Person_.cpf), filters.getCpf()));
+            predicates.add(builder.equal(root.get("person").get("cpf"), filters.getCpf()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getFullName())) {
-            predicates.add(builder.like(root.get(Responsible_.person).get(Person_.fullName),
-                                        filters.getFullName()));
+            predicates.add(builder.like(root.get("person").get("fullName"),
+                    filters.getFullName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getSocialName())) {
-            predicates.add(builder.like(root.get(Responsible_.person).get(Person_.socialName), filters.getSocialName()));
+            predicates.add(builder.like(root.get("person").get("socialName"), filters.getSocialName()));
         }
 
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates.toArray(new Predicate[0]);
     }
 
 }

@@ -2,7 +2,7 @@ package br.com.nivlabs.cliniv.event;
 
 import java.net.URI;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;

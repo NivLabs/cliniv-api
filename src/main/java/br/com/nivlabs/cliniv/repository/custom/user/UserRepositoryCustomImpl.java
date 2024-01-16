@@ -3,10 +3,10 @@ package br.com.nivlabs.cliniv.repository.custom.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,9 +23,8 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Repositório de usuário customizado
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplication, UserDTO> implements UserRepositoryCustom {
 
@@ -37,14 +36,14 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
         Root<UserApplication> root = criteria.from(UserApplication.class);
 
         criteria.select(builder.construct(UserDTO.class,
-                                          root.get(UserApplication_.id),
-                                          root.get(UserApplication_.person).get(Person_.fullName),
-                                          root.get(UserApplication_.person).get(Person_.socialName),
-                                          root.get(UserApplication_.person).get(Person_.cpf),
-                                          root.get(UserApplication_.person).get(Person_.bornDate),
-                                          root.get(UserApplication_.person).get(Person_.principalNumber),
-                                          root.get(UserApplication_.person).get(Person_.gender),
-                                          root.get(UserApplication_.userName)));
+                root.get("id"),
+                root.get("person").get("fullName"),
+                root.get("person").get("socialName"),
+                root.get("person").get("cpf"),
+                root.get("person").get("bornDate"),
+                root.get("person").get("principalNumber"),
+                root.get("person").get("gender"),
+                root.get(UserApplication_.userName)));
         return getPage(filters, builder, criteria, root);
     }
 
@@ -56,21 +55,21 @@ public class UserRepositoryCustomImpl extends GenericCustomRepository<UserApplic
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getUserName())) {
-            predicates.add(builder.like(root.get(UserApplication_.userName), filters.getUserName()));
+            predicates.add(builder.like(root.get("userName"), filters.getUserName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
-            predicates.add(builder.equal(root.get(UserApplication_.person).get(Person_.cpf), filters.getCpf()));
+            predicates.add(builder.equal(root.get("person").get("cpf"), filters.getCpf()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getFullName())) {
-            predicates.add(builder.like(root.get(UserApplication_.person).get(Person_.fullName), filters.getFullName()));
+            predicates.add(builder.like(root.get("person").get("fullName"), filters.getFullName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getSocialName())) {
-            predicates.add(builder.like(root.get(UserApplication_.person).get(Person_.socialName), filters.getSocialName()));
+            predicates.add(builder.like(root.get("person").get("socialName"), filters.getSocialName()));
         }
         if (filters.getGender() != null) {
-            predicates.add(builder.equal(root.get(UserApplication_.person).get(Person_.gender), filters.getGender()));
+            predicates.add(builder.equal(root.get("person").get("gender"), filters.getGender()));
         }
 
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates.toArray(new Predicate[0]);
     }
 }

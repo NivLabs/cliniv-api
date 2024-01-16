@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -21,16 +21,13 @@ import br.com.nivlabs.cliniv.enums.PatientType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * 
  * Informações detalhadas do paciente
  *
  * @author viniciosarodrigues
  * @since 18-09-2021
- *
  */
 @Schema(description = "Informações detalhadas do paciente")
 public class PatientInfoDTO extends DataTransferObjectBase {
-    private static final long serialVersionUID = 1575416178033511932L;
 
     @Schema(description = "Identificador único do paciente")
     private Long id;
@@ -487,61 +484,33 @@ public class PatientInfoDTO extends DataTransferObjectBase {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("PatientInfoDTO [id=");
-        builder.append(id);
-        builder.append(", personId=");
-        builder.append(personId);
-        builder.append(", fullName=");
-        builder.append(fullName);
-        builder.append(", socialName=");
-        builder.append(socialName);
-        builder.append(", bornDate=");
-        builder.append(bornDate);
-        builder.append(", document=");
-        builder.append(document);
-        builder.append(", documents=");
-        builder.append(documents);
-        builder.append(", gender=");
-        builder.append(gender);
-        builder.append(", genderIdentity=");
-        builder.append(genderIdentity);
-        builder.append(", fatherName=");
-        builder.append(fatherName);
-        builder.append(", motherName=");
-        builder.append(motherName);
-        builder.append(", principalNumber=");
-        builder.append(principalNumber);
-        builder.append(", secondaryNumber=");
-        builder.append(secondaryNumber);
-        builder.append(", email=");
-        builder.append(email);
-        builder.append(", address=");
-        builder.append(address);
-        builder.append(", profilePhoto=");
-        builder.append(profilePhoto);
-        builder.append(", cnsNumber=");
-        builder.append(cnsNumber);
-        builder.append(", type=");
-        builder.append(type);
-        builder.append(", annotations=");
-        builder.append(annotations);
-        builder.append(", createdAt=");
-        builder.append(createdAt);
-        builder.append(", allergies=");
-        builder.append(allergies);
-        builder.append(", attendanceHistory=");
-        builder.append(attendanceHistory);
-        builder.append(", healthPlan=");
-        builder.append(healthPlan);
-        builder.append(", ethnicGroup=");
-        builder.append(ethnicGroup);
-        builder.append(", bloodType=");
-        builder.append(bloodType);
-        builder.append(", nationality=");
-        builder.append(nationality);
-        builder.append("]");
-        return builder.toString();
+        return "PatientInfoDTO{" +
+                "id=" + id +
+                ", personId=" + personId +
+                ", fullName='" + fullName + '\'' +
+                ", socialName='" + socialName + '\'' +
+                ", bornDate=" + bornDate +
+                ", document=" + document +
+                ", documents=" + documents +
+                ", gender=" + gender +
+                ", genderIdentity=" + genderIdentity +
+                ", fatherName='" + fatherName + '\'' +
+                ", motherName='" + motherName + '\'' +
+                ", principalNumber='" + principalNumber + '\'' +
+                ", secondaryNumber='" + secondaryNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", address=" + address +
+                ", profilePhoto='" + profilePhoto + '\'' +
+                ", cnsNumber='" + cnsNumber + '\'' +
+                ", type=" + type +
+                ", annotations='" + annotations + '\'' +
+                ", createdAt=" + createdAt +
+                ", allergies=" + allergies +
+                ", attendanceHistory=" + attendanceHistory +
+                ", healthPlan=" + healthPlan +
+                ", ethnicGroup=" + ethnicGroup +
+                ", bloodType=" + bloodType +
+                ", nationality='" + nationality + '\'' +
+                '}';
     }
-
 }

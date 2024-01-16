@@ -2,7 +2,7 @@ package br.com.nivlabs.cliniv.service.patient.business;
 
 import java.time.LocalDateTime;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

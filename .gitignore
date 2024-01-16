@@ -25,3 +25,4 @@ nbdist/
 .nb-gradle/
 bin/
 jdk-15
+/.idea/

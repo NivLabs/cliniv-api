@@ -3,13 +3,13 @@ package br.com.nivlabs.cliniv.repository.custom.attendance;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaBuilder.In;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaBuilder.In;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,9 +36,8 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Implementação de repositório customizado
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Attendance, AttendanceDTO>
         implements AttendanceRepositoryCustom {
@@ -52,22 +51,22 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         CriteriaBuilder builder = this.entityManager.getCriteriaBuilder();
         CriteriaQuery<AttendanceDTO> criteria = builder.createQuery(AttendanceDTO.class);
         Root<Attendance> root = criteria.from(Attendance.class);
-        Join<Responsible, Person> responsibleEntityJoin = root.join(Attendance_.PROFESSIONAL, JoinType.LEFT)
-                .join(Responsible_.PERSON, JoinType.LEFT);
+        Join<Responsible, Person> responsibleEntityJoin = root.join("professional", JoinType.LEFT)
+                .join("person", JoinType.LEFT);
 
         criteria.select(builder.construct(AttendanceDTO.class,
-                                          root.get(Attendance_.id),
-                                          root.get(Attendance_.patient).get(Patient_.person).get(Person_.fullName),
-                                          root.get(Attendance_.patient).get(Patient_.person).get(Person_.socialName),
-                                          root.get(Attendance_.entryDateTime),
-                                          root.get(Attendance_.exitDateTime),
-                                          root.get(Attendance_.reasonForEntry),
-                                          root.get(Attendance_.entryType),
-                                          root.get(Attendance_.patient).get(Patient_.id),
-                                          root.get(Attendance_.currentAccommodation).get(Accommodation_.sector).get(Sector_.description),
-                                          root.get(Attendance_.patient).get(Patient_.cnsNumber),
-                                          root.get(Attendance_.level),
-                                          responsibleEntityJoin.get(Person_.fullName)));
+                root.get("id"),
+                root.get("patient").get("person").get("fullName"),
+                root.get("patient").get("person").get("socialName"),
+                root.get("entryDateTime"),
+                root.get("exitDateTime"),
+                root.get("reasonForEntry"),
+                root.get("entryType"),
+                root.get("patient").get("id"),
+                root.get("currentAccommodation").get("sector").get("description"),
+                root.get("patient").get("cnsNumber"),
+                root.get("level"),
+                responsibleEntityJoin.get("fullName")));
         return getPage(filters, builder, criteria, root);
     }
 
@@ -79,48 +78,41 @@ public class AttendanceRepositoryCustomImpl extends GenericCustomRepository<Atte
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getCpf())) {
-            predicates.add(builder.equal(root.get(Attendance_.patient).get(Patient_.person).get(Person_.cpf), filters.getCpf()));
+            predicates.add(builder.equal(root.get("patient").get("person").get("cpf"), filters.getCpf()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getFullName())) {
-            predicates.add(builder.like(root.get(Attendance_.patient).get(Patient_.person).get(Person_.fullName),
-                                        filters.getFullName()));
+            predicates.add(builder.like(root.get("patient").get("person").get("fullName"),
+                    filters.getFullName()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getSocialName())) {
-            predicates.add(builder.like(root.get(Attendance_.patient).get(Patient_.person).get(Person_.socialName),
-                                        filters.getSocialName()));
+            predicates.add(builder.like(root.get("patient").get("person").get("socialName"),
+                    filters.getSocialName()));
         }
         if (filters.getPatientType() != null) {
-            predicates.add(builder.equal(root.get(Attendance_.patient).get(Patient_.type), filters.getPatientType()));
+            predicates.add(builder.equal(root.get("patient").get("type"), filters.getPatientType()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getSectorId()) && !StringUtils.isNullOrEmpty(StringUtils.getDigits(filters.getSectorId()))) {
-            In<Long> inClause = builder.in(root.get(Attendance_.currentAccommodation).get(Accommodation_.id));
+            In<Long> inClause = builder.in(root.get("currentAccommodation").get("id"));
             predicates.add(getAccommodationsFormSectorId(inClause, filters.getSectorId()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getProfissionalId())) {
-            predicates.add(builder.or(builder.equal(root.get(Attendance_.professional).get(Responsible_.id),
-                                                    Long.parseLong(filters.getProfissionalId())),
-                                      builder.isNull(root.get(Attendance_.professional).get(Responsible_.id))));
+            predicates.add(builder.or(builder.equal(root.get("professional").get("id"),
+                            Long.parseLong(filters.getProfissionalId())),
+                    builder.isNull(root.get("professional").get("id"))));
         }
         if (filters.getEntryType() != null) {
-            predicates.add(builder.equal(root.get(Attendance_.entryType), filters.getEntryType()));
+            predicates.add(builder.equal(root.get("entryType"), filters.getEntryType()));
         }
         if (filters.getActiveType() != null) {
             if (filters.getActiveType() == ActiveType.ACTIVE)
-                predicates.add(builder.isNull(root.get(Attendance_.exitDateTime)));
+                predicates.add(builder.isNull(root.get("exitDateTime")));
             else if (filters.getActiveType() == ActiveType.NOT_ACTIVE)
-                predicates.add(builder.isNotNull(root.get(Attendance_.exitDateTime)));
+                predicates.add(builder.isNotNull(root.get("exitDateTime")));
         }
 
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates.toArray(new Predicate[0]);
     }
 
-    /**
-     * Busca todas as acomodações do setor filtrado
-     * 
-     * @param inClause
-     * @param sectorId
-     * @return
-     */
     private Predicate getAccommodationsFormSectorId(In<Long> inClause, String sectorId) {
         SectorInfoDTO sector = sectorService.findInfoById(Long.parseLong(sectorId));
         sector.getListOfRoomsOrBeds().forEach(accommodation -> inClause.value(accommodation.getId()));

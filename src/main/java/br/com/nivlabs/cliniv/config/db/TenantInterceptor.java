@@ -1,14 +1,16 @@
 package br.com.nivlabs.cliniv.config.db;
 
+import java.io.IOException;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,29 +18,30 @@ import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 
 /**
  * Interceptador de requisições para criação de conexão com esquema de dados
- * 
+ *
  * @author viniciosarodrigues
  * @since 08/01/2022
- *
  */
 @Component
 @Order(1)
-public class TenantInterceptor implements HandlerInterceptor {
+public class TenantInterceptor extends OncePerRequestFilter {
 
     @Autowired
     private Logger logger;
 
     @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        HttpServletRequest req = (HttpServletRequest) request;
+        String tenantName = req.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY);
+        if (!TenantContext.getCurrentTenant().equals(tenantName)) {
+            logger.info("Requisição com troca de tenant recebida :: {} -> {}", TenantContext.getCurrentTenant(), tenantName);
+            TenantContext.setCurrentTenant(tenantName);
+        }
 
-    public boolean preHandle(HttpServletRequest req, HttpServletResponse res, Object handler) {
-        Optional.ofNullable(req.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY)).ifPresent(TenantContext::setCurrentTenant);
-        logger.info("Iniciando troca de schema para :: {}", req.getHeader(SecurityContextUtil.CUSTOMER_ID_HEADER_KEY));
-        return true;
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)
-            throws Exception {
-        TenantContext.clear();
+        try {
+            filterChain.doFilter(request, response);
+        } finally {
+            TenantContext.clear();
+        }
     }
 }

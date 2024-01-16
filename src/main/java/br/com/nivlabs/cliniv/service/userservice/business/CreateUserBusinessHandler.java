@@ -1,38 +1,35 @@
 package br.com.nivlabs.cliniv.service.userservice.business;
 
-import java.time.LocalDateTime;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.enums.DocumentType;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Person;
 import br.com.nivlabs.cliniv.models.domain.UserApplication;
 import br.com.nivlabs.cliniv.models.dto.PersonInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /**
- * 
  * Componente específico para criação de usuário na aplicação
  *
  * @author viniciosarodrigues
  * @since 28-09-2021
- *
  */
 @Component
 public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler {
 
     @Autowired
-    private BCryptPasswordEncoder bc;
+    private PasswordEncoder bc;
     @Autowired
     protected SearchUserBusinessHandler searchUserBusinessHandler;
 
     /**
      * Cria um usuário um usuário na aplicação
-     * 
+     *
      * @param userInfo Informações do novo usuário
      * @return Informações do usuário criado
      */
@@ -59,7 +56,7 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
 
     /**
      * Busca uma pessoa válida baseada nas informações do usuário
-     * 
+     *
      * @param userInfo Informações do usuário à ser criado
      * @return Informações de pessoa física cadastrada (se houver)
      */
@@ -77,8 +74,8 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
             personInfo = personService.findByCpf(userInfo.getDocument().getValue());
         } catch (HttpException e) {
             logger.info(
-                        "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
-                        userInfo.getDocument().getType(), userInfo.getDocument().getValue());
+                    "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
+                    userInfo.getDocument().getType(), userInfo.getDocument().getValue());
             personInfo = new PersonInfoDTO();
         }
         return personInfo;
@@ -86,13 +83,13 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
 
     /**
      * Verifica se já existe cadastro prévio do usuário
-     * 
+     *
      * @param userInfo Informações do usuário
      */
     private void userCheckIfExists(UserInfoDTO userInfo) {
         try {
             logger.info("Verificando se já há cadastro de usuário na base de dados :: CPF da busca -> {}",
-                        userInfo.getDocument().getValue());
+                    userInfo.getDocument().getValue());
             UserInfoDTO user = searchUserBusinessHandler.byCPF(userInfo.getDocument().getValue());
             if (user != null && user.getId() != null) {
                 logger.warn("Usuário com o CPF {} já cadastrado.", userInfo.getDocument().getValue());
@@ -108,15 +105,15 @@ public class CreateUserBusinessHandler extends CreateOrUpdateUserBusinessHandler
             }
         } catch (HttpException e) {
             logger.info("Nenhum cadastro de usuário encontrado :: CPF da busca -> {}",
-                        userInfo.getDocument().getValue());
+                    userInfo.getDocument().getValue());
             logger.info("Continuando cadastro de usuário...");
         }
     }
 
     /**
      * Insere um usuário na base de dados
-     * 
-     * @param entity Informações do usuário
+     *
+     * @param entity       Informações do usuário
      * @param personFromDb informações da pessoa física
      * @return Usuário criado na aplicação
      */

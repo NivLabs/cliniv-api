@@ -3,7 +3,7 @@ package br.com.nivlabs.cliniv.service.security.business;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.cliniv.exception.HttpException;
@@ -22,11 +22,11 @@ public class ChangePasswordByForgotPasswordBusinessHandler implements BaseBusine
     UserRepository userRepo;
 
     @Autowired
-    BCryptPasswordEncoder bc;
+    PasswordEncoder bc;
 
     /**
      * Cria uma nova senha para o processo de esquecimento de senha
-     * 
+     *
      * @param request Requisição de nova senha por esquecimento
      */
     public void createNewPassword(ChangePasswordByForgotPasswordRequestDTO request) {

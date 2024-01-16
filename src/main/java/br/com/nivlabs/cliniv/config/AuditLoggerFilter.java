@@ -1,16 +1,10 @@
 package br.com.nivlabs.cliniv.config;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -20,30 +14,33 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
-import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Filtro de auditoria de requisições
- * 
+ * <p>
  * AuditLoggerFilter.java
  *
  * @author viniciosarodrigues
  * @since 23-08-2021
- *
  */
 @Component
 public class AuditLoggerFilter extends OncePerRequestFilter {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass().getName());
+    private final Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     private static final List<MediaType> VISIBLE_TYPES = Arrays.asList(
-                                                                       MediaType.valueOf("text/*"),
-                                                                       MediaType.APPLICATION_FORM_URLENCODED,
-                                                                       MediaType.APPLICATION_JSON,
-                                                                       MediaType.APPLICATION_XML,
-                                                                       MediaType.valueOf("application/*+json"),
-                                                                       MediaType.valueOf("application/*+xml"),
-                                                                       MediaType.MULTIPART_FORM_DATA);
+            MediaType.valueOf("text/*"),
+            MediaType.APPLICATION_FORM_URLENCODED,
+            MediaType.APPLICATION_JSON,
+            MediaType.APPLICATION_XML,
+            MediaType.valueOf("application/*+json"),
+            MediaType.valueOf("application/*+xml"),
+            MediaType.MULTIPART_FORM_DATA);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

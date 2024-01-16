@@ -1,6 +1,6 @@
 package br.com.nivlabs.cliniv.manager.controller;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

@@ -1,6 +1,6 @@
 package br.com.nivlabs.cliniv.manager.dto;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import br.com.nivlabs.cliniv.manager.models.CGCType;
 import br.com.nivlabs.cliniv.models.dto.DataTransferObjectBase;

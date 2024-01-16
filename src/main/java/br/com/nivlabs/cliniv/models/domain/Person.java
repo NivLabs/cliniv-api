@@ -1,41 +1,27 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import br.com.nivlabs.cliniv.enums.BloodType;
 import br.com.nivlabs.cliniv.enums.EthnicGroup;
 import br.com.nivlabs.cliniv.enums.Gender;
 import br.com.nivlabs.cliniv.enums.GenderIdentity;
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 /**
  * Classe Person.java
- * 
+ *
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
  * @since 18 de out de 2019
  */
 @Entity
 @Table(name = "PESSOA_FISICA")
 public class Person extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -3719485861961903955L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -81,7 +67,7 @@ public class Person extends BaseObjectWithId {
 
     @Column(name = "FOTO")
     @Lob
-    private String profilePhoto;
+    private byte[] profilePhoto;
 
     @Column(name = "EMAIL")
     private String email;
@@ -202,11 +188,11 @@ public class Person extends BaseObjectWithId {
     }
 
     public String getProfilePhoto() {
-        return profilePhoto;
+        return profilePhoto != null ? new String(Base64.getDecoder().decode(profilePhoto), StandardCharsets.UTF_8) : null;
     }
 
     public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto;
+        this.profilePhoto = profilePhoto != null ? Base64.getEncoder().encode(profilePhoto.getBytes()) : null;
     }
 
     public String getEmail() {

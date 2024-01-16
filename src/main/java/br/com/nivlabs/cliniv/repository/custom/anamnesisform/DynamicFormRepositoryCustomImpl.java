@@ -3,10 +3,10 @@ package br.com.nivlabs.cliniv.repository.custom.anamnesisform;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,9 +22,8 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Repositório customizado para filtragem paginada de formulários de anamnese
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class DynamicFormRepositoryCustomImpl extends GenericCustomRepository<DynamicForm, DynamicFormDTO>
         implements DynamicFormRepositoryCustom {
@@ -36,8 +35,8 @@ public class DynamicFormRepositoryCustomImpl extends GenericCustomRepository<Dyn
         Root<DynamicForm> root = criteria.from(DynamicForm.class);
 
         criteria.select(builder.construct(DynamicFormDTO.class,
-                                          root.get(DynamicForm_.id),
-                                          root.get(DynamicForm_.title)));
+                root.get("id"),
+                root.get("title")));
 
         return getPage(filters, builder, criteria, root);
     }
@@ -50,13 +49,13 @@ public class DynamicFormRepositoryCustomImpl extends GenericCustomRepository<Dyn
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-            predicates.add(builder.equal(root.get(DynamicForm_.id), Long.parseLong(filters.getId())));
+            predicates.add(builder.equal(root.get("id"), Long.parseLong(filters.getId())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getTitle())) {
-            predicates.add(builder.like(root.get(DynamicForm_.title), filters.getTitle()));
+            predicates.add(builder.like(root.get("title"), filters.getTitle()));
         }
 
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates.toArray(new Predicate[0]);
     }
 
 }

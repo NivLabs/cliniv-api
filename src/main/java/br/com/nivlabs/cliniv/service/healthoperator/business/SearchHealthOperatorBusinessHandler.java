@@ -3,7 +3,7 @@ package br.com.nivlabs.cliniv.service.healthoperator.business;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

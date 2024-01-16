@@ -3,20 +3,17 @@ package br.com.nivlabs.cliniv.models.domain;
 import java.util.Base64;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 
 import br.com.nivlabs.cliniv.models.BaseObject;
 
 @Entity
 @Table(name = "TEMPLATE_DOC")
 public class DocumentTemplate extends BaseObject {
-
-    private static final long serialVersionUID = -6658552159562710059L;
-
     @Id
     private DocumentTemplatePK pk;
 

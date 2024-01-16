@@ -1,36 +1,23 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.time.LocalDateTime;
-import java.util.Objects;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import br.com.nivlabs.cliniv.enums.DigitalDocumentType;
 import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
+import jakarta.persistence.*;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Objects;
 
 /**
  * Classe que representa os documentos digitais do prontuário
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 @Entity
 @Table(name = "DOCUMENTO_DIGITAL")
 public class DigitalDocument extends BaseObjectWithCreatedAt {
-
-    private static final long serialVersionUID = 4392117344563755949L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +33,7 @@ public class DigitalDocument extends BaseObjectWithCreatedAt {
 
     @Column(name = "BASE64")
     @Lob
-    private String base64;
+    private byte[] base64;
 
     @Column(name = "NOME")
     private String name;
@@ -83,11 +70,11 @@ public class DigitalDocument extends BaseObjectWithCreatedAt {
     }
 
     public String getBase64() {
-        return base64;
+        return base64 != null ? new String(base64, StandardCharsets.UTF_8) : null;
     }
 
     public void setBase64(String base64) {
-        this.base64 = base64;
+        this.base64 = base64 != null ? base64.getBytes() : null;
     }
 
     public String getName() {
@@ -127,20 +114,13 @@ public class DigitalDocument extends BaseObjectWithCreatedAt {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("DigitalDocument [id=");
-        builder.append(id);
-        builder.append(", attendanceEvent=");
-        builder.append(attendanceEvent);
-        builder.append(", type=");
-        builder.append(type);
-        builder.append(", base64=");
-        builder.append(base64);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", createdAt=");
-        builder.append(createdAt);
-        builder.append("]");
-        return builder.toString();
+        return "DigitalDocument{" +
+                "id=" + id +
+                ", attendanceEvent=" + attendanceEvent +
+                ", type=" + type +
+                ", base64=" + Arrays.toString(base64) +
+                ", name='" + name + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

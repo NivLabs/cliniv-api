@@ -1,19 +1,16 @@
 package br.com.nivlabs.cliniv.event;
 
-import javax.servlet.http.HttpServletResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.ApplicationEvent;
 
 /**
  * Classe CreatedResourceEvent.java
- * 
+ *
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
  * @since 7 de set de 2019
  */
 public class CreatedResourceEvent extends ApplicationEvent {
-
-    private static final long serialVersionUID = 1155275871912052929L;
 
     private HttpServletResponse response;
     private Long codigo;
@@ -22,10 +19,6 @@ public class CreatedResourceEvent extends ApplicationEvent {
         super(object);
         this.response = response;
         this.codigo = codigo;
-    }
-
-    public CreatedResourceEvent(Object source) {
-        super(source);
     }
 
     public HttpServletResponse getResponse() {

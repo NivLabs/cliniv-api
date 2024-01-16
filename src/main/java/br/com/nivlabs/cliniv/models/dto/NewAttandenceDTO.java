@@ -1,6 +1,6 @@
 package br.com.nivlabs.cliniv.models.dto;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import br.com.nivlabs.cliniv.enums.AttendanceLevel;
 import br.com.nivlabs.cliniv.enums.EventType;

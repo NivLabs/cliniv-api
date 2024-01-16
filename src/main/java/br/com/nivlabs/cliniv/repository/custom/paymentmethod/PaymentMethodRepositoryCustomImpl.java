@@ -3,10 +3,10 @@ package br.com.nivlabs.cliniv.repository.custom.paymentmethod;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -30,8 +30,8 @@ public class PaymentMethodRepositoryCustomImpl extends GenericCustomRepository<P
         Root<PaymentMethod> root = criteria.from(PaymentMethod.class);
 
         criteria.select(builder.construct(PaymentMethodDTO.class,
-                                          root.get(PaymentMethod_.id),
-                                          root.get(PaymentMethod_.name)));
+                root.get("id"),
+                root.get("name")));
         return getPage(filters, builder, criteria, root);
     }
 
@@ -42,12 +42,12 @@ public class PaymentMethodRepositoryCustomImpl extends GenericCustomRepository<P
         }
         List<Predicate> predicates = new ArrayList<>();
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-            predicates.add(builder.equal(root.get(PaymentMethod_.id), Long.parseLong(filters.getId())));
+            predicates.add(builder.equal(root.get("id"), Long.parseLong(filters.getId())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getName())) {
-            predicates.add(builder.like(root.get(PaymentMethod_.name), filters.getName()));
+            predicates.add(builder.like(root.get("name"), filters.getName()));
         }
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates.toArray(new Predicate[0]);
     }
 
 }

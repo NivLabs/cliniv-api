@@ -5,10 +5,10 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -28,9 +28,8 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Implementação customizada de paginação para agendamentos
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class AppointmentRepositoryCustomImpl extends GenericCustomRepository<Appointment, AppointmentDTO>
         implements AppointmentRepositoryCustom {
@@ -42,14 +41,14 @@ public class AppointmentRepositoryCustomImpl extends GenericCustomRepository<App
         Root<Appointment> root = criteria.from(Appointment.class);
 
         criteria.select(builder.construct(AppointmentDTO.class,
-                                          root.get(Appointment_.id),
-                                          root.get(Appointment_.patient).get(Patient_.person)
-                                                  .get(Person_.fullName),
-                                          root.get(Appointment_.patient).get(Patient_.person).get(Person_.cpf),
-                                          root.get(Appointment_.professional).get(Responsible_.id),
-                                          root.get(Appointment_.professional).get(Responsible_.person).get(Person_.fullName),
-                                          root.get(Appointment_.appointmentDateAndTime),
-                                          root.get(Appointment_.status)));
+                root.get("id"),
+                root.get("patient").get("person")
+                        .get("fullName"),
+                root.get("patient").get("person").get("cpf"),
+                root.get("professional").get("id"),
+                root.get("professional").get("person").get("fullName"),
+                root.get("appointmentDateAndTime"),
+                root.get("status")));
         return getPage(filters, builder, criteria, root);
     }
 
@@ -61,18 +60,18 @@ public class AppointmentRepositoryCustomImpl extends GenericCustomRepository<App
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getProfessionalId()) && StringUtils.isNumeric(filters.getProfessionalId())) {
-            predicates.add(builder.equal(root.get(Appointment_.professional).get(Responsible_.id),
-                                         Long.parseLong(filters.getProfessionalId())));
+            predicates.add(builder.equal(root.get("professional").get("id"),
+                    Long.parseLong(filters.getProfessionalId())));
         }
-        predicates.add(builder.and(builder.greaterThan(root.get(Appointment_.appointmentDateAndTime),
-                                                       LocalDateTime.of(filters.getStartDate(), LocalTime.MIN)),
-                                   builder.lessThan(root.get(Appointment_.appointmentDateAndTime),
-                                                    LocalDateTime.of(filters.getEndDate(), LocalTime.MAX))));
+        predicates.add(builder.and(builder.greaterThan(root.get("appointmentDateAndTime"),
+                        LocalDateTime.of(filters.getStartDate(), LocalTime.MIN)),
+                builder.lessThan(root.get("appointmentDateAndTime"),
+                        LocalDateTime.of(filters.getEndDate(), LocalTime.MAX))));
         if (!StringUtils.isNullOrEmpty(filters.getStatus())) {
-            predicates.add(builder.equal(root.get(Appointment_.status), handleScheduleStatus(filters.getStatus())));
+            predicates.add(builder.equal(root.get("status"), handleScheduleStatus(filters.getStatus())));
         }
 
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates.toArray(new Predicate[0]);
     }
 
     private AppointmentStatus handleScheduleStatus(String statusFromRequest) {

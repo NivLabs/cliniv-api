@@ -1,27 +1,18 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-
 import br.com.nivlabs.cliniv.manager.models.CGCType;
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Base64;
+import java.util.Date;
 
 /**
- * 
  * Classe Institute.java
- * 
+ *
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
  * @since 30 de nov de 2019
  */
 @Entity
@@ -46,7 +37,7 @@ public class Institute extends BaseObjectWithId {
 
     @Lob
     @Column(name = "LOGO")
-    private String companyLogo;
+    private byte[] companyLogo;
 
     @Column(name = "NOME")
     private String name;
@@ -148,11 +139,11 @@ public class Institute extends BaseObjectWithId {
     }
 
     public String getCompanyLogo() {
-        return companyLogo;
+        return companyLogo != null ? new String(companyLogo, StandardCharsets.UTF_8) : null;
     }
 
     public void setCompanyLogo(String companyLogo) {
-        this.companyLogo = companyLogo;
+        this.companyLogo = companyLogo != null ? companyLogo.getBytes() : null;
     }
 
     public String getName() {

@@ -3,10 +3,10 @@ package br.com.nivlabs.cliniv.repository.custom.sector;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,9 +22,8 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 
 /**
  * Repositório de Profissionais e responsáveis customizado
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class SectorRepositoryCustomImpl extends GenericCustomRepository<Sector, SectorDTO> implements SectorRepositoryCustom {
 
@@ -35,8 +34,8 @@ public class SectorRepositoryCustomImpl extends GenericCustomRepository<Sector, 
         Root<Sector> root = criteria.from(Sector.class);
 
         criteria.select(builder.construct(SectorDTO.class,
-                                          root.get(Sector_.id),
-                                          root.get(Sector_.description)));
+                root.get("id"),
+                root.get("description")));
         return getPage(filters, builder, criteria, root);
     }
 
@@ -48,13 +47,13 @@ public class SectorRepositoryCustomImpl extends GenericCustomRepository<Sector, 
         List<Predicate> predicates = new ArrayList<>();
 
         if (!StringUtils.isNullOrEmpty(filters.getId()) && StringUtils.isNumeric(filters.getId())) {
-            predicates.add(builder.equal(root.get(Sector_.id), Long.parseLong(filters.getId())));
+            predicates.add(builder.equal(root.get("id"), Long.parseLong(filters.getId())));
         }
         if (!StringUtils.isNullOrEmpty(filters.getDescription())) {
-            predicates.add(builder.like(root.get(Sector_.description), filters.getDescription()));
+            predicates.add(builder.like(root.get("description"), filters.getDescription()));
         }
 
-        return predicates.toArray(new Predicate[predicates.size()]);
+        return predicates.toArray(new Predicate[0]);
     }
 
 }

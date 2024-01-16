@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,8 @@ import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 
 /**
  * Componente de Criação de cliente nas bases internas
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 @Component
 public class CreateCustomerBusinessHandler implements BaseBusinessHandler {
@@ -55,7 +54,7 @@ public class CreateCustomerBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Envia e-mail de confirmação de novo registro
-     * 
+     *
      * @param customer Cliente cadastrado
      */
     private void sendConfirmationMail(Customer customer) {
@@ -67,7 +66,7 @@ public class CreateCustomerBusinessHandler implements BaseBusinessHandler {
             vars.put("managerName", customer.getManagerName());
             emailService
                     .sendHtmlMessage(emailService.prepareHtmlMessage("Confirmação CliNiv", "email/ativacao", vars, customer.getEmail()));
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             logger.error("Falha ao tentar enviar o e-mail de confirmação!", e);
         }
 
@@ -75,7 +74,7 @@ public class CreateCustomerBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte requisição em objeto domínio
-     * 
+     *
      * @param request Requisição de criação de novo cliente
      * @return Entidade relacional de cliente
      */

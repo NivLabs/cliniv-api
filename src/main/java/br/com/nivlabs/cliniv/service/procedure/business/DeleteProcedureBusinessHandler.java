@@ -1,6 +1,6 @@
 package br.com.nivlabs.cliniv.service.procedure.business;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

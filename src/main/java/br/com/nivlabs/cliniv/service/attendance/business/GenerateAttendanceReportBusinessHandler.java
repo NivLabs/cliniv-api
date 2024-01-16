@@ -3,7 +3,7 @@ package br.com.nivlabs.cliniv.service.attendance.business;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

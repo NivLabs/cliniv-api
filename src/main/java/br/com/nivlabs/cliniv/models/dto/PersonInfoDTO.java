@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -21,9 +21,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe PersonInfoDTO.java
- * 
+ *
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
  * @since 9 de fev de 2020
  */
 @Schema(description = "Informações detalhadas da pessoa")
@@ -392,7 +391,7 @@ public class PersonInfoDTO extends DataTransferObjectBase {
     @Override
     public int hashCode() {
         return Objects.hash(address, bloodType, bornDate, document, documents, email, ethnicGroup, fatherName, fullName, gender,
-                            genderIdentity, id, motherName, nationality, principalNumber, profilePhoto, secondaryNumber, socialName);
+                genderIdentity, id, motherName, nationality, principalNumber, profilePhoto, secondaryNumber, socialName);
     }
 
     @Override

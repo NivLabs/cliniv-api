@@ -1,6 +1,6 @@
 package br.com.nivlabs.cliniv.service.healthoperator.business;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Component;
 

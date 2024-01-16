@@ -2,7 +2,7 @@ package br.com.nivlabs.cliniv.service.responsible.business;
 
 import java.util.ArrayList;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

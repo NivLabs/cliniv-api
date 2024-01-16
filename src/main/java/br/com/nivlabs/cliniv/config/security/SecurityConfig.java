@@ -1,35 +1,30 @@
 package br.com.nivlabs.cliniv.config.security;
 
-import java.util.Arrays;
-import java.util.List;
-
+import br.com.nivlabs.cliniv.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import br.com.nivlabs.cliniv.repository.UserRepository;
+import java.util.Arrays;
 
-/**
- * Classe SecurityConfig.java
- *
- * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * @since 15 de set de 2019
- */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
+
+    @Autowired
+    private AuthenticationConfiguration authenticationConfiguration;
 
     @Autowired
     private Environment env;
@@ -40,51 +35,65 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserRepository userDao;
 
-    private static final String[] PUBLIC_MATCHES = {"/v2/**",
+    private static final String[] PUBLIC_MATCHES = {
+            "/v2/**",
             "/webjars/**",
             "/swagger-ui/**",
             "/api-docs/**",
-            "/swagger-resources/**"};
+            "/swagger-resources/**"
+    };
 
-    private static final String[] PUBLIC_MATCHES_GET = {"/server/", "/server", "/actuator/**", "/status", "/dashboard"};
+    private static final String[] PUBLIC_MATCHES_GET = {
+            "/server/",
+            "/server",
+            "/actuator/**",
+            "/status"
+    };
 
-    private static final String[] PUBLIC_MATCHES_POST = {"/auth/forgot/**", "/auth", "/customer", "/customer/confirm/**"};
+    private static final String[] PUBLIC_MATCHES_POST = {
+            "/auth/forgot/**",
+            "/auth",
+            "/customer",
+            "/customer/confirm/**"
+    };
+
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     /**
      * Configurações gerais de segurança da API
      */
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        if (Arrays.asList(env.getActiveProfiles()).contains("test"))
-            http.headers().frameOptions().disable();
 
-        http.cors().and().csrf().disable();
-
-        http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, PUBLIC_MATCHES_GET).permitAll()
-                .antMatchers(PUBLIC_MATCHES_POST).permitAll()
-                .antMatchers(PUBLIC_MATCHES).permitAll().anyRequest()
-                .authenticated();
-
-        http.addFilter(new JwtAuthorizationFilter(authenticationManager(), jwtUtils, userDao));
-
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
-
-    /**
-     * Configura CORS
-     *
-     * @return CorsConfigurationSource
-     */
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration configCors = new CorsConfiguration().applyPermitDefaultValues();
-        configCors.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTIONS"));
-        configCors.setAllowedHeaders(List.of("*"));
-        configCors.setAllowedOrigins(List.of("*"));
-        source.registerCorsConfiguration("/**", configCors);
-        return source;
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable);
+
+
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(HttpMethod.POST, PUBLIC_MATCHES_POST)
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, PUBLIC_MATCHES_GET)
+                .permitAll()
+                .requestMatchers(PUBLIC_MATCHES)
+                .permitAll()
+                .anyRequest().authenticated());
+
+        http.addFilterBefore(
+                new JwtAuthorizationFilter(
+                        authenticationManager(authenticationConfiguration),
+                        jwtUtils,
+                        userDao,
+                        Arrays.asList(PUBLIC_MATCHES),
+                        Arrays.asList(PUBLIC_MATCHES_GET),
+                        Arrays.asList(PUBLIC_MATCHES_POST)),
+                UsernamePasswordAuthenticationFilter.class);
+
+        http.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        return http.build();
     }
 
     /**
@@ -93,7 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @return BCryptPasswordEncoder
      */
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

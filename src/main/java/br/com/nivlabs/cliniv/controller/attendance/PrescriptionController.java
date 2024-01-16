@@ -1,6 +1,6 @@
 package br.com.nivlabs.cliniv.controller.attendance;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

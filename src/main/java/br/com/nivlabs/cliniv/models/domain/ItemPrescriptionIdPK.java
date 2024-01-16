@@ -2,9 +2,9 @@ package br.com.nivlabs.cliniv.models.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.JoinColumn;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.JoinColumn;
 
 @Embeddable
 public class ItemPrescriptionIdPK implements Serializable {

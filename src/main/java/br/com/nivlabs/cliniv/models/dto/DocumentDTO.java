@@ -2,20 +2,19 @@ package br.com.nivlabs.cliniv.models.dto;
 
 import java.time.LocalDate;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import br.com.nivlabs.cliniv.enums.DocumentType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Classe DocumentDTO.java
- * 
+ *
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
  * @since 31 de out de 2019
  */
 
@@ -57,9 +56,9 @@ public class DocumentDTO extends DataTransferObjectBase {
     }
 
     public DocumentDTO(Long personId,
-            @NotNull(message = "O tipo do documeno deve ser informado") @NotEmpty(message = "O tipo do documeno deve ser informado") @NotBlank(message = "O tipo do documeno deve ser informado") DocumentType type,
-            @NotNull(message = "O documeno deve ser informado") @NotEmpty(message = "O documeno deve ser informado") @NotBlank(message = "O documento deve ser informado") String value,
-            String dispatcher, LocalDate expeditionDate, LocalDate validate, String uf) {
+                       @NotNull(message = "O tipo do documeno deve ser informado") @NotEmpty(message = "O tipo do documeno deve ser informado") @NotBlank(message = "O tipo do documeno deve ser informado") DocumentType type,
+                       @NotNull(message = "O documeno deve ser informado") @NotEmpty(message = "O documeno deve ser informado") @NotBlank(message = "O documento deve ser informado") String value,
+                       String dispatcher, LocalDate expeditionDate, LocalDate validate, String uf) {
         super();
         this.personId = personId;
         this.type = type;

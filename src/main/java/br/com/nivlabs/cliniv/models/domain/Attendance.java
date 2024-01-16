@@ -1,24 +1,26 @@
 package br.com.nivlabs.cliniv.models.domain;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
+import br.com.nivlabs.cliniv.ApplicationMain;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 import br.com.nivlabs.cliniv.enums.AttendanceLevel;
 import br.com.nivlabs.cliniv.enums.EntryType;
@@ -26,16 +28,13 @@ import br.com.nivlabs.cliniv.models.BaseObjectWithId;
 
 /**
  * Classe Visit.java
- * 
+ *
  * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
- * 
  * @since 8 de set de 2019
  */
 @Entity
 @Table(name = "VISITA")
 public class Attendance extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -2728953699232281599L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -173,38 +172,9 @@ public class Attendance extends BaseObjectWithId {
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Attendance [id=");
-        builder.append(id);
-        builder.append(", patient=");
-        builder.append(patient);
-        builder.append(", entryDateTime=");
-        builder.append(entryDateTime);
-        builder.append(", exitDateTime=");
-        builder.append(exitDateTime);
-        builder.append(", currentAccommodation=");
-        builder.append(currentAccommodation);
-        builder.append(", professional=");
-        builder.append(professional);
-        builder.append(", entryType=");
-        builder.append(entryType);
-        builder.append(", events=");
-        builder.append(events);
-        builder.append(", evolutions=");
-        builder.append(evolutions);
-        builder.append(", reasonForEntry=");
-        builder.append(reasonForEntry);
-        builder.append(", level=");
-        builder.append(level);
-        builder.append("]");
-        return builder.toString();
-    }
-
-    @Override
     public int hashCode() {
         return Objects.hash(currentAccommodation, entryDateTime, entryType, events, evolutions, exitDateTime, id, level, patient,
-                            professional, reasonForEntry);
+                professional, reasonForEntry);
     }
 
     @Override
@@ -225,7 +195,23 @@ public class Attendance extends BaseObjectWithId {
 
     @PrePersist
     public void prePersist() {
-        final LocalDateTime now = LocalDateTime.now();
-        this.entryDateTime = now;
+        this.entryDateTime = LocalDateTime.now(ZoneId.of(ApplicationMain.AMERICA_SAO_PAULO));
+    }
+
+    @Override
+    public String toString() {
+        return "Attendance{" +
+                "id=" + id +
+                ", patient=" + patient +
+                ", entryDateTime=" + entryDateTime +
+                ", exitDateTime=" + exitDateTime +
+                ", currentAccommodation=" + currentAccommodation +
+                ", professional=" + professional +
+                ", entryType=" + entryType +
+                ", events=" + events +
+                ", evolutions=" + evolutions +
+                ", reasonForEntry='" + reasonForEntry + '\'' +
+                ", level=" + level +
+                '}';
     }
 }

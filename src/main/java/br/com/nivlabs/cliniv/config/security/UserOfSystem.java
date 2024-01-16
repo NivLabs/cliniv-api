@@ -16,41 +16,25 @@ import br.com.nivlabs.cliniv.models.domain.Role;
 
 /**
  * Classe UserOfSystem.java
- * 
+ *
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
  * @since 15 de set de 2019
  */
 public class UserOfSystem implements UserDetails {
-
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4402147670971545592L;
 
     public static final String INFO_AUTHORIZED = "authorized";
     public static final String INFO_PERSON_NAME = "personName";
     public static final String INFO_USER_NAME = "user";
     public static final String CUSTOMER_ID = "customerId";
 
-    private String username;
-    private String password;
-    private String personName;
-    private Boolean isExpired;
-    private String customerId;
+    private final String username;
+    private final String password;
+    private final String personName;
+    private final Boolean isExpired;
+    private final String customerId;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    private final Collection<? extends GrantedAuthority> authorities;
 
-    /**
-     * Cria o usuário do sistema
-     * 
-     * @param username
-     * @param password
-     * @param person
-     * @param isExpired
-     * @param roles
-     * @param customerId
-     */
     public UserOfSystem(String username, String password, Person person, Boolean isExpired, List<Role> roles, String customerId) {
         super();
         this.personName = getPersonName(person);
@@ -62,12 +46,6 @@ public class UserOfSystem implements UserDetails {
         this.customerId = customerId;
     }
 
-    /**
-     * Constrói o nome completo do usuário logado
-     * 
-     * @param person
-     * @return
-     */
     private String getPersonName(Person person) {
         return person.getFullName();
     }
@@ -111,11 +89,6 @@ public class UserOfSystem implements UserDetails {
         return this.personName;
     }
 
-    /**
-     * Constrói as informações do token de acesso
-     * 
-     * @return
-     */
     public Map<String, Object> getInfo() {
         Map<String, Object> info = new HashMap<>();
         List<String> permissions = new ArrayList<>();

@@ -2,7 +2,7 @@ package br.com.nivlabs.cliniv.models.dto;
 
 import java.util.Objects;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import br.com.nivlabs.cliniv.enums.Abragency;
 import br.com.nivlabs.cliniv.enums.ContractType;

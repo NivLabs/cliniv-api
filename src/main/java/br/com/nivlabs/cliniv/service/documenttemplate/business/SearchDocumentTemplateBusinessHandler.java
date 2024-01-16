@@ -1,6 +1,6 @@
 package br.com.nivlabs.cliniv.service.documenttemplate.business;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

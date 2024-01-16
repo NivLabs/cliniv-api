@@ -15,10 +15,9 @@ import br.com.nivlabs.cliniv.exception.HttpException;
 
 /**
  * Controlador Multi Tenant
- * 
+ *
  * @author viniciosarodrigues
  * @since 08/01/2022
- *
  */
 @Component
 public class MultiTenantConnectionProviderCustom implements MultiTenantConnectionProvider {
@@ -26,10 +25,9 @@ public class MultiTenantConnectionProviderCustom implements MultiTenantConnectio
     @Autowired
     private Logger logger;
 
-    private static final long serialVersionUID = 6599108049945296684L;
-
     private final DataSource dataSource;
 
+    @Autowired
     public MultiTenantConnectionProviderCustom(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -46,6 +44,7 @@ public class MultiTenantConnectionProviderCustom implements MultiTenantConnectio
 
     @Override
     public Connection getConnection(String tenantIdentifier) throws SQLException {
+        logger.trace("Capturando conexão para o tenant '{}'", tenantIdentifier);
         final Connection connection = getAnyConnection();
         try {
             connection.createStatement().execute("USE " + tenantIdentifier);
@@ -59,13 +58,10 @@ public class MultiTenantConnectionProviderCustom implements MultiTenantConnectio
 
     @Override
     public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
-        try (connection) {
-            connection.createStatement().execute("USE " + TenantContext.DEFAULT_TENANT);
-        } catch (SQLException e) {
-            logger.error("Não foi se conectar ao schema padrão", e);
-            throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi se conectar ao schema padrão");
-        }
+        logger.trace("Liberando conexão para o Tenant '{}'", tenantIdentifier);
+        releaseAnyConnection(connection);
     }
+
 
     @Override
     public boolean isUnwrappableAs(@SuppressWarnings("rawtypes") Class unwrapType) {

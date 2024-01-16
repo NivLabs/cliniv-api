@@ -1,10 +1,10 @@
 package br.com.nivlabs.cliniv.service.security.business;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import br.com.nivlabs.cliniv.exception.HttpException;
@@ -19,7 +19,6 @@ import br.com.nivlabs.cliniv.util.SecurityContextUtil;
  *
  * @author viniciosarodrigues
  * @since 16-09-2021
- *
  */
 @Component
 public class UpdatePasswordBusinessHandler implements BaseBusinessHandler {
@@ -28,14 +27,8 @@ public class UpdatePasswordBusinessHandler implements BaseBusinessHandler {
     UserRepository userRepo;
 
     @Autowired
-    BCryptPasswordEncoder bc;
+    PasswordEncoder bc;
 
-    /**
-     * Atualiza a senha do usuário logado
-     * 
-     * @param request
-     * @param userFromContext
-     */
     @Transactional
     public void updatePasswordFromContextLogedUser(NewPasswordRequestDTO request) {
         var userFromContext = SecurityContextUtil.getAuthenticatedUser();

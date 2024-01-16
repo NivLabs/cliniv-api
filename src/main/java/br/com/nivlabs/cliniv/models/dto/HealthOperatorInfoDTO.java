@@ -2,7 +2,7 @@ package br.com.nivlabs.cliniv.models.dto;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
 
