@@ -20,7 +20,7 @@ import java.io.IOException;
  * @since 08/01/2022
  */
 @Component
-@Order(1)
+@Order(Integer.MIN_VALUE)
 public class TenantInterceptor extends OncePerRequestFilter {
 
     @Autowired
