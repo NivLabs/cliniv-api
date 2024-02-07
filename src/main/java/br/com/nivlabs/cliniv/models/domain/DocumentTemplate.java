@@ -1,15 +1,11 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.models.BaseObject;
+import jakarta.persistence.*;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Objects;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
-
-import br.com.nivlabs.cliniv.models.BaseObject;
 
 @Entity
 @Table(name = "TEMPLATE_DOC")
@@ -22,7 +18,7 @@ public class DocumentTemplate extends BaseObject {
 
     @Column(name = "TEXTO_TEMPLATE")
     @Lob
-    private String text;
+    private byte[] text;
 
     public DocumentTemplatePK getPk() {
         return pk;
@@ -41,11 +37,11 @@ public class DocumentTemplate extends BaseObject {
     }
 
     public String getText() {
-        return text != null ? new String(Base64.getDecoder().decode(text)) : null;
+        return text != null ? new String(Base64.getDecoder().decode(text), StandardCharsets.UTF_8) : null;
     }
 
     public void setText(String text) {
-        this.text = text != null ? Base64.getEncoder().encodeToString(text.getBytes()) : null;
+        this.text = text != null ? Base64.getEncoder().encode(text.getBytes()) : null;
     }
 
     @Override

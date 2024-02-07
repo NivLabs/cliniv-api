@@ -1,23 +1,20 @@
 package br.com.nivlabs.cliniv.manager.service.customer.business;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import jakarta.mail.MessagingException;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.integration.email.EmailService;
 import br.com.nivlabs.cliniv.manager.dto.NewCustomerDTO;
 import br.com.nivlabs.cliniv.manager.models.Customer;
 import br.com.nivlabs.cliniv.manager.repository.CustomerRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Componente de Criação de cliente nas bases internas

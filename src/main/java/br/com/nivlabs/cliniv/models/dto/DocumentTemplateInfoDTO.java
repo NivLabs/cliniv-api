@@ -1,14 +1,11 @@
 package br.com.nivlabs.cliniv.models.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 @Schema(name = "DocumentTemplate", description = "Template de documento")
 public class DocumentTemplateInfoDTO extends DataTransferObjectBase {
-
-    private static final long serialVersionUID = 8225906144097304704L;
 
     @Schema(description = "Identificador único do template")
     private Long id;

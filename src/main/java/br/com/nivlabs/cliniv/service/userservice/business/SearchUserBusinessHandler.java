@@ -1,16 +1,5 @@
 package br.com.nivlabs.cliniv.service.userservice.business;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.controller.filters.UserFilters;
 import br.com.nivlabs.cliniv.enums.DocumentType;
 import br.com.nivlabs.cliniv.exception.HttpException;
@@ -18,22 +7,25 @@ import br.com.nivlabs.cliniv.models.domain.Person;
 import br.com.nivlabs.cliniv.models.domain.PersonDocument;
 import br.com.nivlabs.cliniv.models.domain.Role;
 import br.com.nivlabs.cliniv.models.domain.UserApplication;
-import br.com.nivlabs.cliniv.models.dto.AddressDTO;
-import br.com.nivlabs.cliniv.models.dto.DocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.RoleDTO;
-import br.com.nivlabs.cliniv.models.dto.UserDTO;
-import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
+import br.com.nivlabs.cliniv.models.dto.*;
 import br.com.nivlabs.cliniv.repository.PersonRepository;
 import br.com.nivlabs.cliniv.repository.UserRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 
  * Componente específico para consulta de usuários
  *
  * @author viniciosarodrigues
  * @since 27-09-2021
- *
  */
 @Component
 public class SearchUserBusinessHandler implements BaseBusinessHandler {
@@ -48,8 +40,8 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Consulta página filtrada de usuários
-     * 
-     * @param filters Filtros de consulta
+     *
+     * @param filters      Filtros de consulta
      * @param pageSettings Configurações de paginação
      * @return Página filtrada de usuários
      */
@@ -59,7 +51,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca um usuário por nome de usuário
-     * 
+     *
      * @param username nome do usuário
      * @return Informações detalhadas do usuário
      */
@@ -73,7 +65,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca um usuário por nome de identificador único
-     * 
+     *
      * @param id Identificador único do usuário
      * @return Informações detalhadas do usuário
      */
@@ -87,7 +79,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Consulta informações do usuário à partir do CPF
-     * 
+     *
      * @param cpf CPF do usuário
      * @return Informações detalhadas do usuário
      */
@@ -116,7 +108,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte entidade do modelo relacional em objeto de transferência
-     * 
+     *
      * @param userEntity Entidade do modelo relacional
      * @return Objeto de transferência
      */
@@ -171,7 +163,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte uma role da entidade relacional para uma role do objeto de transferência
-     * 
+     *
      * @param role Role de acesso do usuário
      * @return Objeto convertifo para objeto de tranferência
      */
@@ -181,7 +173,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte documentos de domínio para documentos de transferência
-     * 
+     *
      * @param documents Lista de documentos à serem convertidos
      * @return Lista de documentos convertidos
      */

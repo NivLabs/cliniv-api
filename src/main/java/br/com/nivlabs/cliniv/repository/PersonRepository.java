@@ -1,13 +1,10 @@
 package br.com.nivlabs.cliniv.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import br.com.nivlabs.cliniv.models.domain.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import br.com.nivlabs.cliniv.models.domain.Person;
+import java.util.Optional;
 
 /**
  * Classe PersonRepository.java
@@ -18,6 +15,6 @@ import br.com.nivlabs.cliniv.models.domain.Person;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
-    public Optional<Person> findByCpf(String cpf);
+    Optional<Person> findByCpf(String cpf);
 
 }

@@ -1,11 +1,10 @@
 package br.com.nivlabs.cliniv.service.appointment.business;
 
+import br.com.nivlabs.cliniv.models.domain.Appointment;
+import br.com.nivlabs.cliniv.models.dto.AppointmentInfoDTO;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import br.com.nivlabs.cliniv.models.domain.Appointment;
-import br.com.nivlabs.cliniv.models.dto.AppointmentInfoDTO;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -70,7 +69,5 @@ public class CreateAppointmentBusinessHandler extends CreateOrUpdateAppointmentB
             principalRepo.saveAndFlush(entity);
             logger.info("Agendamento para o dia/hora :: {}", newDateTime);
         }
-
     }
-
 }

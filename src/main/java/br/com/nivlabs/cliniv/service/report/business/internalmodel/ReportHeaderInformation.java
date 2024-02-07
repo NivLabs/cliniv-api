@@ -8,9 +8,8 @@ import java.util.Map;
 
 /**
  * Classe interna para criação de cabeçalho de relatórios
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class ReportHeaderInformation {
 
@@ -36,6 +35,7 @@ public class ReportHeaderInformation {
     private final String ATTENDANCE_INI_DATETIME = "ATTENDANCE_INI_DATETIME";
     private final String ATTENDANCE_END_DATETIME = "ATTENDANCE_END_DATETIME";
     private final String ATTENDANCE_ACCOMODATION = "ATTENDANCE_ACCOMODATION";
+    private final String REGISTER = "REGISTER";
 
     private Long attendanceId;
     private String hospitalLogo;
@@ -57,6 +57,7 @@ public class ReportHeaderInformation {
     private LocalDateTime attendanceIniDatetime;
     private LocalDateTime attendanceEndDatetime;
     private String attendanceAccomodation;
+    private String register;
 
     private Map<String, Object> parameters = new HashMap<String, Object>();
 
@@ -82,6 +83,7 @@ public class ReportHeaderInformation {
         setAttendanceIniDatetime(null);
         setAttendanceEndDatetime(null);
         setAttendanceAccomodation(null);
+        setRegister("Não Possui");
     }
 
     public Long getAttendanceId() {
@@ -118,6 +120,15 @@ public class ReportHeaderInformation {
     public void setReaderName(String readerName) {
         this.readerName = readerName != null ? readerName : "Não informado";
         parameters.put(READER_NAME, this.readerName);
+    }
+
+    public String getRegister() {
+        return register;
+    }
+
+    public void setRegister(String register) {
+        this.register = register != null ? register : "Não possui";
+        parameters.put(REGISTER, this.register);
     }
 
     public Long getUserId() {
@@ -319,7 +330,7 @@ public class ReportHeaderInformation {
 
     /**
      * Formata Data/Hora no padrão Brasileiro para o relatório
-     * 
+     *
      * @param datetime Data/hora
      * @return Data/hora formatada
      */
@@ -333,7 +344,7 @@ public class ReportHeaderInformation {
 
     /**
      * Formata Data no padrão Brasileiro para o relatório
-     * 
+     *
      * @param date Data
      * @return Data formatada
      */

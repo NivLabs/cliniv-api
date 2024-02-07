@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Formulario Dinamico" columnCount="2" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="277" columnSpacing="1" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="68c5ae44-61b1-41d2-8da8-418815b473fe">
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Formulario Genérico" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="68c5ae44-61b1-41d2-8da8-418815b473fe">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="false"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
 	<parameter name="ATTENDANCE_ID" class="java.lang.String"/>
 	<parameter name="HOSPITAL_LOGO" class="java.lang.String"/>
 	<parameter name="DOC_TITLE" class="java.lang.String"/>
@@ -25,13 +26,11 @@
 	<parameter name="ATTENDANCE_INI_DATETIME" class="java.lang.String"/>
 	<parameter name="ATTENDANCE_END_DATETIME" class="java.lang.String"/>
 	<parameter name="ATTENDANCE_ACCOMODATION" class="java.lang.String"/>
-	<background>
-		<band height="15" splitType="Stretch"/>
-	</background>
-	<pageHeader>
-		<band height="230" splitType="Stretch">
-			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
-			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
+	<parameter name="REGISTER" class="java.lang.String">
+		<parameterDescription><![CDATA[Registro do Profissional]]></parameterDescription>
+	</parameter>
+	<title>
+		<band height="210">
 			<image hAlign="Center">
 				<reportElement x="0" y="0" width="179" height="79" uuid="893db2f2-5d90-4191-985f-f2cca18b90ec">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -74,14 +73,14 @@
 					<jr:codeExpression><![CDATA[String.format("%15d", LONG_VALUE( $P{ATTENDANCE_ID}))]]></jr:codeExpression>
 				</jr:Code39>
 			</componentElement>
-			<textField>
+			<textField textAdjust="ScaleFont" evaluationTime="Auto">
 				<reportElement x="190" y="10" width="180" height="36" uuid="b61c24f4-9e97-4a2d-8cea-6970fa1e1632"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{HOSPITAL_ADDRESS}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont" evaluationTime="Auto">
 				<reportElement x="190" y="49" width="180" height="30" uuid="a140a406-d175-4a43-ae0d-82fa2f79a3ac"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
@@ -182,84 +181,84 @@
 				</textElement>
 				<text><![CDATA[Data/hora saída:]]></text>
 			</staticText>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement stretchType="ContainerBottom" x="101" y="108" width="200" height="15" uuid="edf56e27-f0c8-4b6b-9378-266f0c9b7ad0"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PATIENT_ID}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement stretchType="ContainerBottom" x="101" y="123" width="200" height="15" uuid="513ca709-3f21-413f-a07b-871845ce94d8"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PATIENT_NAME}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement stretchType="ContainerBottom" x="101" y="138" width="200" height="15" uuid="2da228f2-971f-4f0c-aefb-8026b10248d2"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PATIENT_CNS}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement stretchType="ContainerBottom" x="101" y="153" width="200" height="15" uuid="e3426c80-5a92-4cd8-b99e-81275ddbcf6f"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PATIENT_BORN_DATE}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement stretchType="ContainerBottom" x="101" y="168" width="200" height="15" uuid="174c7639-9ad5-4a5a-a165-a78f1ca832d3"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PATIENT_CPF}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement stretchType="ContainerBottom" x="101" y="183" width="200" height="15" uuid="41a911d1-c815-423e-b780-3ea2848e0684"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PATIENT_MOTHER_NAME}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement x="410" y="108" width="102" height="15" uuid="25ab71d8-6d0d-45c6-b4a9-d09cd1c7efe6"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ATTENDANCE_INI_DATETIME}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement x="410" y="123" width="102" height="15" uuid="9b56c6a4-d06a-44b5-9d14-9a22660f80f3"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PATIENT_BLOOD_TYPE}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement x="410" y="138" width="102" height="15" uuid="b6e9b5ce-02d9-45a4-a9f0-d68c73e64b1d"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PATIENT_ETHINIC_GROUP}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement x="410" y="153" width="102" height="15" uuid="a360e502-26d3-4bf5-bdbe-34322c17925d"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{PATIENT_NATIONALITY}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement x="410" y="168" width="102" height="15" uuid="ddcf96bc-c3f0-47f1-ab53-869c28c830e0"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{ATTENDANCE_ACCOMODATION}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField textAdjust="ScaleFont">
 				<reportElement x="410" y="183" width="102" height="15" uuid="e3ea73b9-9340-485a-b2d5-45d9c0380011"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="9"/>
@@ -267,24 +266,20 @@
 				<textFieldExpression><![CDATA[$P{ATTENDANCE_END_DATETIME}]]></textFieldExpression>
 			</textField>
 		</band>
-	</pageHeader>
+	</title>
 	<detail>
-		<band height="351" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="555" height="351" uuid="0caf6cc2-5575-4b9e-82b9-088adf2c3c20"/>
+		<band height="516" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement stretchType="ElementGroupHeight" isPrintRepeatedValues="false" x="0" y="0" width="555" height="22" uuid="5d472025-94f6-4326-bc97-af2a8370af40"/>
 				<textElement markup="html"/>
-				<textFieldExpression><![CDATA[$P{REPORT_TEXT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["<html>" + $P{REPORT_TEXT} + "</html>"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="54" splitType="Stretch">
+		<band height="56" splitType="Stretch">
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
-			<textField>
-				<reportElement x="258" y="34" width="290" height="19" forecolor="#000000" uuid="d53bb85a-f1fe-4df4-bf03-f9c485f1f13d"/>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="0" y="10" width="52" height="12" uuid="8d0ac5c6-b265-4ced-aa8f-f7f08b95a3f7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -295,7 +290,7 @@
 				<text><![CDATA[Profissional:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="22" width="72" height="12" uuid="937ebee9-0d75-47ec-be8a-b3403144225a">
+				<reportElement x="0" y="37" width="72" height="12" uuid="937ebee9-0d75-47ec-be8a-b3403144225a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -304,18 +299,48 @@
 				<text><![CDATA[Data da geração:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="73" y="22" width="100" height="12" uuid="12771c67-bae7-4783-844e-08419caa8122"/>
+				<reportElement x="73" y="37" width="100" height="12" uuid="12771c67-bae7-4783-844e-08419caa8122"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{TODAY}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="73" y="10" width="160" height="12" uuid="3f5819ea-eb3a-466e-abd0-fe66c2c4eee0"/>
+			<textField textAdjust="ScaleFont" evaluationTime="Auto">
+				<reportElement x="73" y="10" width="480" height="12" uuid="3f5819ea-eb3a-466e-abd0-fe66c2c4eee0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{READER_NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="21" width="72" height="12" uuid="addb89ec-b679-4c36-b042-f07195bcc01a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Registro]]></text>
+			</staticText>
+			<textField textAdjust="ScaleFont" evaluationTime="Auto">
+				<reportElement x="73" y="21" width="346" height="12" uuid="77aff60a-ffe6-4deb-b3a6-9bed0c8dd2f3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REGISTER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="432" y="36" width="80" height="20" forecolor="#000000" backcolor="#000000" uuid="6aaa75d3-6a0e-46d7-abea-4b92b38aa0f9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="512" y="36" width="40" height="20" forecolor="#000000" backcolor="#000000" uuid="75ee996f-0bc8-49e9-8dec-801463dd4da0"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

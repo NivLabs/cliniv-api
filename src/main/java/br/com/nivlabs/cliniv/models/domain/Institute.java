@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Base64;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -18,8 +18,6 @@ import java.util.Date;
 @Entity
 @Table(name = "INSTITUTO")
 public class Institute extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -8389926388826078313L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -316,61 +314,32 @@ public class Institute extends BaseObjectWithId {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Institute [id=");
-        builder.append(id);
-        builder.append(", cgcType=");
-        builder.append(cgcType);
-        builder.append(", cgc=");
-        builder.append(cgc);
-        builder.append(", cnes=");
-        builder.append(cnes);
-        builder.append(", companyLogo=");
-        builder.append(companyLogo);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", corporativeName=");
-        builder.append(corporativeName);
-        builder.append(", legalNature=");
-        builder.append(legalNature);
-        builder.append(", street=");
-        builder.append(street);
-        builder.append(", addressNumber=");
-        builder.append(addressNumber);
-        builder.append(", complement=");
-        builder.append(complement);
-        builder.append(", postalCode=");
-        builder.append(postalCode);
-        builder.append(", state=");
-        builder.append(state);
-        builder.append(", neighborhood=");
-        builder.append(neighborhood);
-        builder.append(", city=");
-        builder.append(city);
-        builder.append(", phone=");
-        builder.append(phone);
-        builder.append(", dependency=");
-        builder.append(dependency);
-        builder.append(", instituteType=");
-        builder.append(instituteType);
-        builder.append(", managerName=");
-        builder.append(managerName);
-        builder.append(", managerPhone=");
-        builder.append(managerPhone);
-        builder.append(", managerMail=");
-        builder.append(managerMail);
-        builder.append(", licenseDate=");
-        builder.append(licenseDate);
-        builder.append(", userOfRegister=");
-        builder.append(userOfRegister);
-        builder.append(", key=");
-        builder.append(key);
-        builder.append(", startDate=");
-        builder.append(startDate);
-        builder.append(", endDate=");
-        builder.append(endDate);
-        builder.append("]");
-        return builder.toString();
+        return "Institute{" +
+                "id=" + id +
+                ", cgcType=" + cgcType +
+                ", cgc='" + cgc + '\'' +
+                ", cnes='" + cnes + '\'' +
+                ", name='" + name + '\'' +
+                ", corporativeName='" + corporativeName + '\'' +
+                ", legalNature='" + legalNature + '\'' +
+                ", street='" + street + '\'' +
+                ", addressNumber='" + addressNumber + '\'' +
+                ", complement='" + complement + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", state='" + state + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", city='" + city + '\'' +
+                ", phone='" + phone + '\'' +
+                ", dependency='" + dependency + '\'' +
+                ", instituteType='" + instituteType + '\'' +
+                ", managerName='" + managerName + '\'' +
+                ", managerPhone='" + managerPhone + '\'' +
+                ", managerMail='" + managerMail + '\'' +
+                ", licenseDate=" + licenseDate +
+                ", userOfRegister='" + userOfRegister + '\'' +
+                ", key='" + key + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
     }
-
 }

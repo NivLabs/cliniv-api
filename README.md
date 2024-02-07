@@ -7,7 +7,9 @@
   CliNiv - API
 </h2>
 
-CliNiv-API é uma API Rest criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no processo de prontuário. O CliNiv-API é integrado com um client baseado em Angular, o [CliNiv-UI](https://github.com/niv-labs/cliniv-ui).
+CliNiv-API é uma API Rest criada inicialmente como doação para hospitais que não possuem nenhuma solução de automação no
+processo de prontuário. O CliNiv-API é integrado com um client baseado em Angular,
+o [CliNiv-UI](https://github.com/niv-labs/cliniv-ui).
 
 <p align="center">
     <a href="https://github.com/niv-labs/">
@@ -62,7 +64,7 @@ Atualmente encontra-se na versão 1.1.0
 
 Para rodar o projeto, existem alguns requisítos mínimos de configurações, são eles:
 
-- Java 17 **(Obrigatório)**
+- Java 21 **(Obrigatório)**
 - MariaDB Server 10.5+ **(Obrigatório se não for rodar via docker)**
 - Eclipse ou STS **(Obrigatório)**
 - Docker **(Obrigatório se for rodar via script)
@@ -70,50 +72,64 @@ Para rodar o projeto, existem alguns requisítos mínimos de configurações, s�
 ---
 
 ## MariaDB
+
 ### Sem Docker
 
-Para que seja possível rodar a aplicação, faz-se necessário configurar previamente as informações de conexão no arquivo `application-prod.properties` deste projeto.
+Para que seja possível rodar a aplicação, faz-se necessário configurar previamente as informações de conexão no
+arquivo `application-prod.properties` deste projeto.
 
 Um setup inicial válido para uma base nova pode seguir os padrões abaixo:
 
 - URL de conexão da base `spring.datasource.url=jdbc:mariadb://[SERVIDOR]:[PORTA]`.
 
-- No meu caso, a primeira linha do meu `application-prod.properties` fica `spring.datasource.url=jdbc:mariadb://localhost:3306`
+- No meu caso, a primeira linha do meu `application-prod.properties`
+  fica `spring.datasource.url=jdbc:mariadb://localhost:3306`
 
 - As duas linhas seguintes servem para você informar o usuário e a senha de conexão.
 
-- Não informamos o nome da base neste momento porque a aplicação possui um sistema de múltiplas bases. Isto será explicado mais abaixo.
+- Não informamos o nome da base neste momento porque a aplicação possui um sistema de múltiplas bases. Isto será
+  explicado mais abaixo.
 
 ### Com Docker
-O projeto possui um build pronto do MariaDB em Docker, neste caso não precisamos alterar nada, basta executar o shellscript `./run-mariadb.sh` e seguir para o próximo passo.
+
+O projeto possui um build pronto do MariaDB em Docker, neste caso não precisamos alterar nada, basta executar o
+shellscript `./run-mariadb.sh` e seguir para o próximo passo.
 
 OBS: Obrigatório ter o Docker instalado.
 
 - URL de conexão da base `spring.datasource.url=jdbc:mariadb://[SERVIDOR]:[PORTA]`.
 
-- No meu caso, a primeira linha do meu `application-prod.properties` fica `spring.datasource.url=jdbc:mariadb://localhost:3306`
+- No meu caso, a primeira linha do meu `application-prod.properties`
+  fica `spring.datasource.url=jdbc:mariadb://localhost:3306`
 
 - As duas linhas seguintes servem para você informar o usuário e a senha de conexão.
 
-- Não informamos o nome da base neste momento porque a aplicação possui um sistema de múltiplas bases. Isto será explicado mais abaixo.
+- Não informamos o nome da base neste momento porque a aplicação possui um sistema de múltiplas bases. Isto será
+  explicado mais abaixo.
 
 ### Observações
-A base de dados deve ser criada manualmente no MariaDB em ambos os casos. A diferença entre elas é que com o Docker não há a necessidade de instalação do banco, facilitando o desenvolvimento.
+
+A base de dados deve ser criada manualmente no MariaDB em ambos os casos. A diferença entre elas é que com o Docker não
+há a necessidade de instalação do banco, facilitando o desenvolvimento.
 
 ---
 
 ## Como rodar a API?
 
 ### Usando Docker
+
 #### Passo 1
+
 - 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/cliniv-api.git`
 
 #### Passo 1
+
 - 🔃 Rode o script `./startWithDocker.sh`
 
 - OBS: Obrigatório ter o Docker instalado.
 
 ### Usando o Eclipse ou STS
+
 #### Passo 1
 
 - 👯 Clone este repositório na sua máquina local usando `https://github.com/niv-labs/cliniv-api.git`
@@ -124,13 +140,19 @@ A base de dados deve ser criada manualmente no MariaDB em ambos os casos. A dife
 
 #### Passo 3
 
-- 🔃 Rode a aplicação com botão direito do mouse no projeto, `run as` > `Spring Boot App`. Também é possível rodar a aplicação à partir da classe `ApplicationMain` dentro do projeto, basca clicar com o botão direito na classe e seguir o mesmo fluxo.
+- 🔃 Rode a aplicação com botão direito do mouse no projeto, `run as` > `Spring Boot App`. Também é possível rodar a
+  aplicação à partir da classe `ApplicationMain` dentro do projeto, basca clicar com o botão direito na classe e seguir
+  o mesmo fluxo.
 
 #### Dica
-- Se você estiver usando o Eclipse, pode ser uma boa ideia baixar o plugin disponibilizado pela Pitoval no marketplace, o `Spring Tools 4 (release)`.
+
+- Se você estiver usando o Eclipse, pode ser uma boa ideia baixar o plugin disponibilizado pela Pitoval no marketplace,
+  o `Spring Tools 4 (release)`.
 
 #### Dica 2
-- A aplicação utiliza um sistema de múltiplas conexões, para que a API saiba qual base se conectar, deve-se informar o nome da mesma via cabeçalho com a chave `CUSTOMER_ID`.
+
+- A aplicação utiliza um sistema de múltiplas conexões, para que a API saiba qual base se conectar, deve-se informar o
+  nome da mesma via cabeçalho com a chave `CUSTOMER_ID`.
 
 ---
 
@@ -165,8 +187,11 @@ Depois que seu Pull Request é aceito e o merge é realizado, você pode deletar
 ---
 
 ## Arquitetura (Em desenvolvimento...)
+
 Esta área especifica definições técnicas da aplicação, suas características e comportamentos.
+
 ### Modelagem de dados
+
 <img alt="Diagrama" src="./readme/Diagrama.png" />
 
 ---

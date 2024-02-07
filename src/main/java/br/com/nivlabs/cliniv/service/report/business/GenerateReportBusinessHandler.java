@@ -1,32 +1,10 @@
 package br.com.nivlabs.cliniv.service.report.business;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Base64;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import br.com.nivlabs.cliniv.enums.DigitalDocumentType;
 import br.com.nivlabs.cliniv.enums.MetaType;
 import br.com.nivlabs.cliniv.exception.HttpException;
-import br.com.nivlabs.cliniv.models.domain.Attendance;
-import br.com.nivlabs.cliniv.models.domain.AttendanceEvent;
-import br.com.nivlabs.cliniv.models.domain.Patient;
-import br.com.nivlabs.cliniv.models.domain.Person;
-import br.com.nivlabs.cliniv.models.domain.ReportLayout;
-import br.com.nivlabs.cliniv.models.dto.AddressDTO;
-import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.InstituteDTO;
-import br.com.nivlabs.cliniv.models.dto.ReportGenerationRequestDTO;
+import br.com.nivlabs.cliniv.models.domain.*;
+import br.com.nivlabs.cliniv.models.dto.*;
 import br.com.nivlabs.cliniv.report.JasperReportsCreator;
 import br.com.nivlabs.cliniv.report.ReportParam;
 import br.com.nivlabs.cliniv.repository.AttendanceEventRepository;
@@ -35,21 +13,31 @@ import br.com.nivlabs.cliniv.repository.ReportRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.service.InstituteService;
 import br.com.nivlabs.cliniv.service.report.business.internalmodel.ReportHeaderInformation;
+import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
+import br.com.nivlabs.cliniv.service.userservice.UserService;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.*;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Base64;
 
 /**
- * 
  * Componente específico para geração de relatórios
  *
  * @author viniciosarodrigues
  * @since 09-10-2021
- *
  */
 @Component
 public class GenerateReportBusinessHandler implements BaseBusinessHandler {
@@ -67,15 +55,19 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
     private AttendanceRepository attendanceRepo;
     @Autowired
     private InstituteService instituteService;
+    @Autowired
+    private ResponsibleService responsibleService;
+    @Autowired
+    private UserService userService;
 
     private static final String GENERIC_REPORT_SOURCE = "reports/generico.jrxml";
 
     /**
      * Cria um documento digital anexado a um atendimento
-     * 
+     *
      * @param attendanceEventId Identificador único do atendimento (se houver)
-     * @param reportName Nome do relatório
-     * @param params Parâmetros do relatório
+     * @param reportName        Nome do relatório
+     * @param params            Parâmetros do relatório
      * @param reportInputStream Stream do Relatório (jxml)
      * @return Documento digital do relatório gerado
      */
@@ -84,7 +76,7 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
                                                      InputStream reportInputStream) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: {} :: Instância -> {}",
-                        reportName, reportInputStream);
+                    reportName, reportInputStream);
 
             JasperPrint jasperPrint = jasperReportCreator.create(params, reportInputStream);
 
@@ -107,9 +99,9 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Cria relatório à partir de um layout pré-configurado
-     * 
+     *
      * @param layoutId Identificador único de Layout de Relatório
-     * @param params Parâmetros do Layout
+     * @param params   Parâmetros do Layout
      * @return Documento digital gerado do relatório
      */
     @Transactional
@@ -124,10 +116,10 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Gera um relatório à partir de um array de bytes
-     * 
-     * @param bytes Array de bytes do relatório
+     *
+     * @param bytes      Array de bytes do relatório
      * @param reportName Nome do relatório
-     * @param params Parâmetros do relatório
+     * @param params     Parâmetros do relatório
      * @return Documento digital com o base64 do relatório
      */
     @Transactional
@@ -142,10 +134,10 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Gera um relatório à partir de um array de bytes
-     * 
-     * @param bytes Array de bytes do relatório
+     *
+     * @param bytes      Array de bytes do relatório
      * @param reportName Nome do relatório
-     * @param params Parâmetros do relatório
+     * @param params     Parâmetros do relatório
      * @return Documento digital com o base64 do relatório
      */
     @Transactional
@@ -165,7 +157,7 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Gera um relatório à partir de um texto livre
-     * 
+     *
      * @param text Texto livre
      * @return Documento digital
      */
@@ -177,12 +169,14 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
             reportInputStream = new ClassPathResource(GENERIC_REPORT_SOURCE)
                     .getInputStream();
             outputStream = new ByteArrayOutputStream();
+            logger.info("Iniciando geração do documento...");
             JasperPrint jasperPrint = JasperFillManager.fillReport(JasperCompileManager.compileReport(reportInputStream),
-                                                                   getReportHeaderInformationFromAttendance(attendanceEventId, title, text)
-                                                                           .getParameters(),
-                                                                   new JREmptyDataSource());
+                    getReportHeaderInformationFromAttendance(attendanceEventId, title, text)
+                            .getParameters(),
+                    new JREmptyDataSource());
 
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+            logger.info("Documento digital gerado com sucesso! Criando resposta...");
 
             DigitalDocumentDTO document = new DigitalDocumentDTO();
             document.setCreatedAt(LocalDateTime.now());
@@ -211,12 +205,14 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca informações do cabeçalho do relatório à partir de um código de atendimento
-     * 
-     * @param attendanceId Código do atendimento
-     * @return Informações do cabeçalho do relatório
+     *
+     * @param attendanceEventId Código do evento de atendimento
+     * @param title             Título do documento
+     * @param text              Texto do documento
+     * @return Cabeçalho do documento
      */
     @Transactional
-    private ReportHeaderInformation getReportHeaderInformationFromAttendance(Long attendanceEventId, String title, String text) {
+    ReportHeaderInformation getReportHeaderInformationFromAttendance(Long attendanceEventId, String title, String text) {
         ReportHeaderInformation headerInfo = new ReportHeaderInformation();
         headerInfo.setDocTitle(title);
         headerInfo.setReportText(text);
@@ -231,10 +227,10 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
         AddressDTO address = institute.getCustomerInfo().getAddress();
         headerInfo.setFormatedHospitalAddress(address.getStreet() + ", " + address.getAddressNumber() + ", "
                 + (address.getComplement() != null ? address.getComplement() + ", "
-                                                   : "")
+                : "")
                 + address.getCity() + " - "
                 + address.getState() + " - " + StringUtils.printCEP(address.getPostalCode()));
-
+        logger.info("Informações da instituição preenchidas, iniciando busca de informações do atendimento...");
         // Parâmetros do atendimento
         Attendance attendance = event.getAttendance();
         if (attendance.getPatient() == null) {
@@ -244,15 +240,15 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
         }
         headerInfo.setAttendanceId(attendance.getId());
         headerInfo.setAttendanceAccomodation(attendance.getCurrentAccommodation() != null
-                                                                                          ? attendance.getCurrentAccommodation()
-                                                                                                  .getDescription()
-                                                                                          : null);
+                ? attendance.getCurrentAccommodation()
+                .getDescription()
+                : null);
         headerInfo.setAttendanceIniDatetime(attendance.getEntryDateTime());
         headerInfo.setAttendanceEndDatetime(attendance.getExitDateTime());
 
         // Parâmetros do solicitante
         headerInfo.setReaderName(SecurityContextUtil.getAuthenticatedUser().getPersonName());
-        // headerInfo.setUserId(SecurityContextUtil.getAuthenticatedUser().getUsername());
+        headerInfo.setRegister(getRegister());
 
         // Parâmetros do paciente
         Patient patient = attendance.getPatient();
@@ -266,13 +262,25 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
         headerInfo.setPatientMotherName(person.getMotherName());
         headerInfo.setPatientNationality(person.getNationality());
         headerInfo.setFormatedPatientCPF(person.getCpf());
-
+        logger.info("Informações do cabeçalho do documento preenchidas com sucesso");
         return headerInfo;
+    }
+
+    private String getRegister() {
+        final DocumentDTO document = userService.findByUserName(SecurityContextUtil.getAuthenticatedUser().getUsername()).getDocument();
+        if (document == null) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "O cadastro do seu usuário está sem CPF informado, complete o cadastro para continuar com a geração de documento.");
+        }
+        final ResponsibleInfoDTO responsible = responsibleService.findByCpf(document.getValue());
+        if (responsible.getProfessionalIdentity() != null) {
+            return responsible.getProfessionalIdentity().getRegisterType() + " " + responsible.getProfessionalIdentity().getRegisterValue();
+        }
+        return "Não possui";
     }
 
     /**
      * Converte os parâmetros da requisição em parâmetros do relatório
-     * 
+     *
      * @param request Requisição de geração de relatório
      * @return Parâmetros de relatório
      */
