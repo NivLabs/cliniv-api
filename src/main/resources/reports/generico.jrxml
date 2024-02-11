@@ -281,8 +281,8 @@
 			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ElementGroupHeight" isPrintRepeatedValues="false" x="0" y="0" width="555" height="22" uuid="5d472025-94f6-4326-bc97-af2a8370af40"/>
-				<textElement markup="html"/>
-				<textFieldExpression><![CDATA["<html>" + $P{REPORT_TEXT} + "</html>"]]></textFieldExpression>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA[$P{REPORT_TEXT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
