@@ -1,10 +1,16 @@
 package br.com.nivlabs.cliniv.service.appointment.business;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-
+import br.com.nivlabs.cliniv.controller.filters.AppointmentFilters;
+import br.com.nivlabs.cliniv.enums.DocumentType;
+import br.com.nivlabs.cliniv.exception.HttpException;
+import br.com.nivlabs.cliniv.models.domain.*;
+import br.com.nivlabs.cliniv.models.dto.*;
+import br.com.nivlabs.cliniv.repository.AppointmentRepository;
+import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
+import br.com.nivlabs.cliniv.service.userservice.UserService;
+import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+import br.com.nivlabs.cliniv.util.StringUtils;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -13,30 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.cliniv.controller.filters.AppointmentFilters;
-import br.com.nivlabs.cliniv.enums.DocumentType;
-import br.com.nivlabs.cliniv.exception.HttpException;
-import br.com.nivlabs.cliniv.models.domain.Appointment;
-import br.com.nivlabs.cliniv.models.domain.Patient;
-import br.com.nivlabs.cliniv.models.domain.Person;
-import br.com.nivlabs.cliniv.models.domain.PersonDocument;
-import br.com.nivlabs.cliniv.models.domain.Responsible;
-import br.com.nivlabs.cliniv.models.dto.AddressDTO;
-import br.com.nivlabs.cliniv.models.dto.AppointmentDTO;
-import br.com.nivlabs.cliniv.models.dto.AppointmentInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.AppointmentsResponseDTO;
-import br.com.nivlabs.cliniv.models.dto.DocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.HealthPlanDTO;
-import br.com.nivlabs.cliniv.models.dto.PatientInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.ProfessionalIdentityDTO;
-import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
-import br.com.nivlabs.cliniv.repository.AppointmentRepository;
-import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
-import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
-import br.com.nivlabs.cliniv.service.userservice.UserService;
-import br.com.nivlabs.cliniv.util.SecurityContextUtil;
-import br.com.nivlabs.cliniv.util.StringUtils;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Componente específico para busca de agendamentos
@@ -77,7 +62,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
         if (filters.getEndDate() == null) {
             filters.setEndDate(LocalDate.now());
         }
-        filters.setSize(100);
+        filters.setSize(1000);
         return scheduleRepository.resumedList(filters);
     }
 
@@ -108,7 +93,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      * @param scheduleInfo   Objeto de transferência de agendamento
      */
     @Transactional
-    private void parseScheduleEntityToDTO(Appointment scheduleEntity, AppointmentInfoDTO scheduleInfo) {
+    protected void parseScheduleEntityToDTO(Appointment scheduleEntity, AppointmentInfoDTO scheduleInfo) {
         logger.info("Iniciando conversão de entidade Agendamento para resposta...");
         scheduleInfo.setId(scheduleEntity.getId());
         scheduleInfo.setAnnotation(scheduleEntity.getAnnotation());
@@ -154,7 +139,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      * @param professionalInfo DTO de profissional
      */
     @Transactional
-    private void parsePersonEntityToProfessionalInfo(Person person, ResponsibleInfoDTO professionalInfo) {
+    protected void parsePersonEntityToProfessionalInfo(Person person, ResponsibleInfoDTO professionalInfo) {
         professionalInfo.setFullName(person.getFullName());
         professionalInfo.setSocialName(person.getSocialName());
         professionalInfo.setBornDate(person.getBornDate());
@@ -181,7 +166,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      * @param patientInfo   Objeto de transferência de paciente
      */
     @Transactional
-    private void parsePatientEntityToDTO(Patient patientEntity, PatientInfoDTO patientInfo) {
+    protected void parsePatientEntityToDTO(Patient patientEntity, PatientInfoDTO patientInfo) {
         logger.info("Iniciando conversão de entidade Paciente para resposta...");
 
         patientInfo.setId(patientEntity.getId());
@@ -215,7 +200,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      * @param patientInfo Entidade do modelo relacional
      */
     @Transactional
-    private void parsePersonEntityToPatientInfo(Person person, PatientInfoDTO patientInfo) {
+    protected void parsePersonEntityToPatientInfo(Person person, PatientInfoDTO patientInfo) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Patient -> PatientInfoDTO");
 
         patientInfo.setPersonId(person.getId());
@@ -259,7 +244,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      * @return Lista de documentos convertidos
      */
     @Transactional
-    private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
+    protected List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
         List<DocumentDTO> convertedDocuments = new ArrayList<>();
 
         documents.forEach(doc -> {
@@ -281,7 +266,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      * @param personInfo
      */
     @Transactional
-    private void handleDocument(Person personEntity, PatientInfoDTO personInfo) {
+    protected void handleDocument(Person personEntity, PatientInfoDTO personInfo) {
         if (StringUtils.isNullOrEmpty(personEntity.getCpf())) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "O cadastro do paciente está sem CPF informado, favor completar o cadastro antes de realizar um agendamento");
@@ -297,7 +282,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      * @param target
      */
     @Transactional
-    private void handleDocument(Person source, ResponsibleInfoDTO target) {
+    protected void handleDocument(Person source, ResponsibleInfoDTO target) {
         if (StringUtils.isNullOrEmpty(source.getCpf())) {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                     "O cadastro do paciente está sem CPF informado, favor completar o cadastro antes de realizar um agendamento");

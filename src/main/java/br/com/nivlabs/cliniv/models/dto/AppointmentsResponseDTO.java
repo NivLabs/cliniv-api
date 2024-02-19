@@ -1,13 +1,15 @@
 package br.com.nivlabs.cliniv.models.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Informações da agenda por filtro")
 public class AppointmentsResponseDTO extends DataTransferObjectBase {
 
+    @Serial
     private static final long serialVersionUID = -9068171305217428958L;
 
     @Schema(description = "Agendamentos do período")
