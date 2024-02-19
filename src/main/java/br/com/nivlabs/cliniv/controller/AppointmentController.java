@@ -1,23 +1,16 @@
 package br.com.nivlabs.cliniv.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import br.com.nivlabs.cliniv.controller.filters.AppointmentFilters;
 import br.com.nivlabs.cliniv.models.dto.AppointmentInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.AppointmentsResponseDTO;
 import br.com.nivlabs.cliniv.service.appointment.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Agenda", description = "Endpoint - Operações da Agenda")
 @RestController
@@ -51,6 +44,14 @@ public class AppointmentController extends BaseController<AppointmentService> {
     public ResponseEntity<AppointmentInfoDTO> update(@PathVariable("id") Long id,
                                                      @Validated @RequestBody(required = true) AppointmentInfoDTO appointment) {
         return ResponseEntity.ok().body(service.update(id, appointment));
+    }
+
+    @Operation(summary = "appointment-delete", description = "Remove agendamento existente na aplicação")
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('AGENDA_ESCRITA', 'ADMIN')")
+    public ResponseEntity<AppointmentInfoDTO> delete(@PathVariable("id") Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

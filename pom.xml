@@ -12,7 +12,7 @@
 
     <groupId>br.com.nivlabs</groupId>
     <artifactId>cliniv-api</artifactId>
-    <version>v2.0.0</version>
+    <version>v2.1.0</version>
     <name>CliNiv API</name>
     <description>API da aplicação de CliNiv</description>
     <packaging>jar</packaging>
