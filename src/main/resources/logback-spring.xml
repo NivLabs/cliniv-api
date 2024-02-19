@@ -3,7 +3,7 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
-            <Pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</Pattern>
+            <Pattern>%d %-4relative [%thread] %-5level %logger{35} - [%mdc] - %msg%n</Pattern>
         </encoder>
     </appender>
 
@@ -19,16 +19,16 @@
         </rollingPolicy>
         <encoder>
             <charset>UTF-8</charset>
-            <pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+            <pattern>%d %-4relative [%thread] %-5level %logger{35} - [%mdc] - %msg%n</pattern>
         </encoder>
     </appender>
-    
+
     <logger name="br.com.nivlabs.cliniv" level="INFO" additivity="true">
-	    <appender-ref ref="CLINIV_APPRENDER" />
-	</logger>
-	<logger name="org.springframework" level="INFO" additivity="true">
-		<appender-ref ref="CLINIV_APPRENDER" />
-	</logger>
+        <appender-ref ref="CLINIV_APPRENDER"/>
+    </logger>
+    <logger name="org.springframework" level="INFO" additivity="true">
+        <appender-ref ref="CLINIV_APPRENDER"/>
+    </logger>
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>

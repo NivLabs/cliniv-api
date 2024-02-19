@@ -1,31 +1,29 @@
 package br.com.nivlabs.cliniv.util;
 
-import java.util.stream.Collectors;
-
+import br.com.nivlabs.cliniv.config.security.UserOfSystem;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import br.com.nivlabs.cliniv.config.security.UserOfSystem;
+import java.util.stream.Collectors;
 
 /**
- * 
  * Utilitário de contexto de segurança
  *
  * @author viniciosarodrigues
  * @since 16-09-2021
- *
  */
 public class SecurityContextUtil {
 
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
-    
-    public static final String CUSTOMER_ID_HEADER_KEY = "x-cutomer-id";
+
+    public static final String CUSTOMER_ID_HEADER_KEY = "X-Customer-Id";
+    public final static String OPERATION_ID_HEADER_KEY = "X-Operation-Id";
 
     private SecurityContextUtil() {
     }
 
     /**
      * Retorna o usuário logado no sistema
-     * 
+     *
      * @return Usuário logado
      */
     public static UserOfSystem getAuthenticatedUser() {
@@ -38,7 +36,7 @@ public class SecurityContextUtil {
 
     /**
      * Retorna se o usuário logado é usuário administrador ou não
-     * 
+     *
      * @return TRUE - Administrado | FALSE - Não administrador
      */
     public static boolean isAdmin() {

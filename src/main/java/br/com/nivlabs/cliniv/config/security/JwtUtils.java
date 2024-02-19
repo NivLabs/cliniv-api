@@ -11,12 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Base64;
 import java.util.Date;
 
 /**
@@ -83,7 +79,7 @@ public class JwtUtils {
     }
 
     public String getUserName(final String token, final String customerId) {
-        Claims claims = getClaims(token,customerId);
+        Claims claims = getClaims(token, customerId);
         if (claims != null)
             return claims.getSubject();
         return null;
