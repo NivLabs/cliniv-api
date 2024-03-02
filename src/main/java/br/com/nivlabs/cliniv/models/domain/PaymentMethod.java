@@ -1,19 +1,13 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "METODO_PAGAMENTO")
-public class PaymentMethod extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -7050156949633911352L;
+public class PaymentMethod extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,13 +49,22 @@ public class PaymentMethod extends BaseObjectWithId {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("PaymentMethod [id=");
-        builder.append(id);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append("]");
-        return builder.toString();
+        return "PaymentMethod{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PaymentMethod that = (PaymentMethod) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
 }

@@ -1,24 +1,16 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "LEMBRETE")
-public class Sticker extends BaseObjectWithId {
+public class Sticker extends BaseObjectWithId<Long> {
 
-    private static final long serialVersionUID = 8638692062935408333L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -70,18 +62,26 @@ public class Sticker extends BaseObjectWithId {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sticker sticker = (Sticker) o;
+        return Objects.equals(id, sticker.id) && Objects.equals(createdAt, sticker.createdAt) && Objects.equals(description, sticker.description) && Objects.equals(user, sticker.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createdAt, description, user);
+    }
+
+    @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Sticker [id=");
-        builder.append(id);
-        builder.append(", createdAt=");
-        builder.append(createdAt);
-        builder.append(", description=");
-        builder.append(description);
-        builder.append(", user=");
-        builder.append(user);
-        builder.append("]");
-        return builder.toString();
+        return "Sticker{" +
+                "id=" + id +
+                ", createdAt=" + createdAt +
+                ", description='" + description + '\'' +
+                ", user=" + user +
+                '}';
     }
 
 }

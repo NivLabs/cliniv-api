@@ -1,30 +1,19 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
 
-import br.com.nivlabs.cliniv.models.BaseObject;
+import java.util.Objects;
 
 /**
  * Classe ReportLayoutParameter.java
- * 
+ *
  * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
- * 
  * @since 24 de janeiro de 2021
  */
 @Entity
 @Table(name = "PARAMETROS_LAYOUT_RELATORIO")
-public class ReportLayoutParameter extends BaseObject {
-
-    private static final long serialVersionUID = -2781134021717644682L;
+public class ReportLayoutParameter extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -108,9 +97,27 @@ public class ReportLayoutParameter extends BaseObject {
     }
 
     @Override
-    public String toString() {
-        return "ReportLayoutParameter [id=" + id + ", name=" + name + ", type=" + type + ", description=" + description + ", defaultValue="
-                + defaultValue + ", layout=" + layout + "]";
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ReportLayoutParameter that = (ReportLayoutParameter) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(type, that.type) && Objects.equals(description, that.description) && Objects.equals(defaultValue, that.defaultValue) && Objects.equals(layout, that.layout);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, type, description, defaultValue, layout);
+    }
+
+    @Override
+    public String toString() {
+        return "ReportLayoutParameter{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", description='" + description + '\'' +
+                ", defaultValue='" + defaultValue + '\'' +
+                ", layout=" + layout +
+                '}';
+    }
 }

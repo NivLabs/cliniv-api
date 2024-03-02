@@ -1,30 +1,17 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import br.com.nivlabs.cliniv.models.converter.BooleanConverter;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
-import br.com.nivlabs.cliniv.models.BaseObjectWithId;
-import br.com.nivlabs.cliniv.models.converter.BooleanConverter;
+import java.util.Objects;
 
 @Entity
 @Table(name = "PRESCRICAO")
-public class Prescription extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -6245493538304106585L;
+public class Prescription extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -142,28 +129,31 @@ public class Prescription extends BaseObjectWithId {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Prescription that = (Prescription) o;
+        return special == that.special && insertToMedicalRecords == that.insertToMedicalRecords && Objects.equals(id, that.id) && Objects.equals(attendance, that.attendance) && Objects.equals(responsible, that.responsible) && Objects.equals(datetimeInit, that.datetimeInit) && Objects.equals(datetimeEnd, that.datetimeEnd) && Objects.equals(responsibleForCancel, that.responsibleForCancel) && Objects.equals(items, that.items);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, attendance, responsible, datetimeInit, datetimeEnd, special, insertToMedicalRecords, responsibleForCancel, items);
+    }
+
+    @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Prescription [id=");
-        builder.append(id);
-        builder.append(", attendance=");
-        builder.append(attendance);
-        builder.append(", responsible=");
-        builder.append(responsible);
-        builder.append(", datetimeInit=");
-        builder.append(datetimeInit);
-        builder.append(", datetimeEnd=");
-        builder.append(datetimeEnd);
-        builder.append(", special=");
-        builder.append(special);
-        builder.append(", insertToMedicalRecords=");
-        builder.append(insertToMedicalRecords);
-        builder.append(", responsibleForCancel=");
-        builder.append(responsibleForCancel);
-        builder.append(", items=");
-        builder.append(items);
-        builder.append("]");
-        return builder.toString();
+        return "Prescription{" +
+                "id=" + id +
+                ", attendance=" + attendance +
+                ", responsible=" + responsible +
+                ", datetimeInit=" + datetimeInit +
+                ", datetimeEnd=" + datetimeEnd +
+                ", special=" + special +
+                ", insertToMedicalRecords=" + insertToMedicalRecords +
+                ", responsibleForCancel=" + responsibleForCancel +
+                ", items=" + items +
+                '}';
     }
 
 }

@@ -9,7 +9,7 @@ import jakarta.persistence.MappedSuperclass;
  * @since 6 de set de 2019
  */
 @MappedSuperclass
-public abstract class BaseObjectWithId extends BaseObject {
+public abstract class BaseObjectWithId<T> extends BaseObject {
 
-    public abstract Long getId();
+    public abstract T getId();
 }

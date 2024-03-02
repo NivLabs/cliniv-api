@@ -1,17 +1,14 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import br.com.nivlabs.cliniv.models.BaseObject;
-
 @Entity
 @Table(name = "FORMULARIO_RESPONDIDO")
-public class DynamicFormAnswered extends BaseObject {
-
-    private static final long serialVersionUID = -2766545587502322092L;
+public class DynamicFormAnswered extends BaseObjectWithId<Long> {
 
     @Id
     private Long id;

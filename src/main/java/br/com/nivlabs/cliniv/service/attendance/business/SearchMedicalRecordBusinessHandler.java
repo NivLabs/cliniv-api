@@ -1,38 +1,11 @@
 package br.com.nivlabs.cliniv.service.attendance.business;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.enums.DocumentType;
 import br.com.nivlabs.cliniv.enums.EventType;
 import br.com.nivlabs.cliniv.enums.ParameterAliasType;
 import br.com.nivlabs.cliniv.exception.HttpException;
-import br.com.nivlabs.cliniv.models.domain.Accommodation;
-import br.com.nivlabs.cliniv.models.domain.Attendance;
-import br.com.nivlabs.cliniv.models.domain.AttendanceEvent;
-import br.com.nivlabs.cliniv.models.domain.DigitalDocument;
-import br.com.nivlabs.cliniv.models.domain.Patient;
-import br.com.nivlabs.cliniv.models.domain.PatientAllergy;
-import br.com.nivlabs.cliniv.models.domain.Person;
-import br.com.nivlabs.cliniv.models.domain.Responsible;
-import br.com.nivlabs.cliniv.models.dto.AccommodationDTO;
-import br.com.nivlabs.cliniv.models.dto.AttendanceEventDTO;
-import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.DocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.EvolutionInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.MedicalRecordDTO;
-import br.com.nivlabs.cliniv.models.dto.MedicineInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.ResponsibleDTO;
-import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
+import br.com.nivlabs.cliniv.models.domain.*;
+import br.com.nivlabs.cliniv.models.dto.*;
 import br.com.nivlabs.cliniv.repository.AttendanceRepository;
 import br.com.nivlabs.cliniv.repository.ParameterRepository;
 import br.com.nivlabs.cliniv.repository.PatientRepository;
@@ -40,14 +13,21 @@ import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
 import br.com.nivlabs.cliniv.service.userservice.UserService;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * 
  * Camada de negócio para processos relacionados à buscas de informaões do prontuário
  *
  * @author viniciosarodrigues
  * @since 19-09-2021
- *
  */
 @Component
 public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
@@ -113,9 +93,9 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Checa os parâmetros e aplica algumas regras de negócios na consulta de atendimento
-     * 
+     *
      * @param attendance Atendimento
-     * @param person PessoaparameterDao
+     * @param person     PessoaparameterDao
      */
     @Transactional
     private void checkParameters(Attendance attendance) {
@@ -125,10 +105,10 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
             logger.info("O parâmetro que bloqueia a leitura de prontuário sem atendimento ativo está habilitado, iniciando processo de verificação...");
             attendanceDao.findByPatientAndExitDateTimeIsNull(new Patient(attendance.getPatient().getId()))
                     .orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, String.format(
-                                                                                                        "Não há atendimento iniciado para o paciente de código %s e nome %s! Inicie um novo atendimento para acessar o prontuário do mesmo.",
-                                                                                                        attendance.getPatient().getId(),
-                                                                                                        attendance.getPatient().getPerson()
-                                                                                                                .getFullName())));
+                            "Não há atendimento iniciado para o paciente de código %s e nome %s! Inicie um novo atendimento para acessar o prontuário do mesmo.",
+                            attendance.getPatient().getId(),
+                            attendance.getPatient().getPerson()
+                                    .getFullName())));
         }
         var enableServiceSharingParameter = parameterDao.findByAlias(ParameterAliasType.ENABLE_SERVICE_SHARING);
         if (enableServiceSharingParameter.isPresent() && !Boolean.valueOf(enableServiceSharingParameter.get().getValue())) {
@@ -163,7 +143,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Realiza a busca de um prontuário ativo por código de paciente
-     * 
+     *
      * @param patientId Identificador único do paciente
      * @return Prontuário de atendimento ativo do paciente
      */
@@ -176,8 +156,8 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
         Attendance attendance = attendanceDao.findByPatientAndExitDateTimeIsNull(new Patient(patient.getId()))
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, String.format(
-                                                                                         "Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
-                                                                                         person.getFullName())));
+                        "Nenhum atendimento ativo encontrado para %s, inicie um novo atendimento para o paciente.",
+                        person.getFullName())));
         checkParameters(attendance);
 
         MedicalRecordDTO medicalRecord = new MedicalRecordDTO();
@@ -212,8 +192,8 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Processa eventos do atendimento no prontuário
-     * 
-     * @param entity Objeto de entidade relacional referente ao atendimento
+     *
+     * @param entity        Objeto de entidade relacional referente ao atendimento
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
      */
     @Transactional
@@ -225,7 +205,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte entidades relacionais de documentos para objeto de transferência
-     * 
+     *
      * @param documents Lista de documentos (entidades)
      * @return Lista de documentos (DTO)
      */
@@ -245,9 +225,9 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Processa evento no prontuário
-     * 
+     *
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
-     * @param entity Objeto de entidade relacional referente ao evento do atendimento
+     * @param entity        Objeto de entidade relacional referente ao evento do atendimento
      */
     @Transactional
     private void processEvent(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
@@ -269,12 +249,12 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte entidade relacional de profissional responsável
-     * 
+     *
      * @param responsible Profissional responsável (entidade)
      * @return Profissional responsável (DTO)
      */
     @Transactional
-    private ResponsibleDTO convertProfessional(Responsible responsible) {
+    ResponsibleDTO convertProfessional(Responsible responsible) {
         if (responsible != null) {
             Person professionalPerson = responsible.getPerson();
 
@@ -287,7 +267,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte entidade relacional de acomodação
-     * 
+     *
      * @param accommodation Acomodação (entidade)
      * @return Acomodação (DTO)
      */
@@ -299,9 +279,9 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Processa evoluções no prontuário
-     * 
+     *
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
-     * @param entity Objeto de entidade relacional referente ao evento do atendimento
+     * @param entity        Objeto de entidade relacional referente ao evento do atendimento
      */
     @Transactional
     private void processEvolution(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
@@ -318,9 +298,9 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Processa medicamentos no protuário
-     * 
+     *
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
-     * @param entity Objeto de entidade relacional referente ao evento do atendimento
+     * @param entity        Objeto de entidade relacional referente ao evento do atendimento
      */
     @Transactional
     private void processMedications(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {

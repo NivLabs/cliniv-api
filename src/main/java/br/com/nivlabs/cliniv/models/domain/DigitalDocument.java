@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Objects;
 
 /**
@@ -17,7 +16,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "DOCUMENTO_DIGITAL")
-public class DigitalDocument extends BaseObjectWithCreatedAt {
+public class DigitalDocument extends BaseObjectWithCreatedAt<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,7 +94,7 @@ public class DigitalDocument extends BaseObjectWithCreatedAt {
 
     @Override
     public int hashCode() {
-        return Objects.hash(attendanceEvent, base64, createdAt, id, name, type);
+        return Objects.hash(attendanceEvent, Arrays.hashCode(base64), createdAt, id, name, type);
     }
 
     @Override

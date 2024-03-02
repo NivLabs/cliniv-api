@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "PESSOA_FISICA")
-public class Person extends BaseObjectWithId {
+public class Person extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -237,26 +238,25 @@ public class Person extends BaseObjectWithId {
 
     @Override
     public String toString() {
-        return "Person ["
-                + "id=" + id
-                + ", fullName=" + fullName
-                + ", socialName=" + socialName
-                + ", cpf=" + cpf
-                + ", documents=" + documents
-                + ", gender=" + gender
-                + ", genderIdentity=" + genderIdentity
-                + ", fatherName=" + fatherName
-                + ", motherName=" + motherName
-                + ", bornDate=" + bornDate
-                + ", address=" + address
-                + ", principalNumber=" + principalNumber
-                + ", secondaryNumber=" + secondaryNumber
-                + ", profilePhoto=" + profilePhoto
-                + ", email=" + email
-                + ", ethnicGroup=" + ethnicGroup
-                + ", bloodType=" + bloodType
-                + ", nationality=" + nationality
-                + "]";
+        return "Person{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", socialName='" + socialName + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", documents=" + documents +
+                ", gender=" + gender +
+                ", genderIdentity=" + genderIdentity +
+                ", fatherName='" + fatherName + '\'' +
+                ", motherName='" + motherName + '\'' +
+                ", bornDate=" + bornDate +
+                ", address=" + address +
+                ", principalNumber='" + principalNumber + '\'' +
+                ", secondaryNumber='" + secondaryNumber + '\'' +
+                ", profilePhoto=" + Arrays.toString(profilePhoto) +
+                ", email='" + email + '\'' +
+                ", ethnicGroup=" + ethnicGroup +
+                ", bloodType=" + bloodType +
+                ", nationality='" + nationality + '\'' +
+                '}';
     }
-
 }

@@ -1,30 +1,18 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.math.BigDecimal;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.enums.TimeIntervalType;
-import br.com.nivlabs.cliniv.models.BaseObject;
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ITEM_PRESCRICAO")
-public class PrescriptionItem extends BaseObject {
-
-    private static final long serialVersionUID = 7633223068100987676L;
+public class PrescriptionItem extends BaseObjectWithId<ItemPrescriptionId> {
 
     @EmbeddedId
-    private ItemPrescriptionIdPK id;
+    private ItemPrescriptionId id;
 
     @Column(name = "DESCRICAO")
     private String description;
@@ -54,11 +42,11 @@ public class PrescriptionItem extends BaseObject {
     @JoinColumn(name = "ID_PRESCRICAO")
     private Prescription prescription;
 
-    public ItemPrescriptionIdPK getId() {
+    public ItemPrescriptionId getId() {
         return id;
     }
 
-    public void setId(ItemPrescriptionIdPK id) {
+    public void setId(ItemPrescriptionId id) {
         this.id = id;
     }
 
@@ -127,17 +115,31 @@ public class PrescriptionItem extends BaseObject {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PrescriptionItem that = (PrescriptionItem) o;
+        return Objects.equals(id, that.id) && Objects.equals(description, that.description) && Objects.equals(observations, that.observations) && Objects.equals(routeOfAdministration, that.routeOfAdministration) && Objects.equals(dosage, that.dosage) && Objects.equals(unitOfMeasurement, that.unitOfMeasurement) && Objects.equals(timeInterval, that.timeInterval) && timeIntervalType == that.timeIntervalType && Objects.equals(prescription, that.prescription);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, description, observations, routeOfAdministration, dosage, unitOfMeasurement, timeInterval, timeIntervalType, prescription);
+    }
+
+    @Override
     public String toString() {
-        return "PrescriptionItem ["
-                + "id=" + id
-                + ", description=" + description
-                + ", observations=" + observations
-                + ", routeOfAdministration=" + routeOfAdministration
-                + ", dosage=" + dosage
-                + ", unitOfMeasurement=" + unitOfMeasurement
-                + ", timeInterval=" + timeInterval
-                + ", timeIntervalType=" + timeIntervalType
-                + "]";
+        return "PrescriptionItem{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", observations='" + observations + '\'' +
+                ", routeOfAdministration='" + routeOfAdministration + '\'' +
+                ", dosage=" + dosage +
+                ", unitOfMeasurement=" + unitOfMeasurement +
+                ", timeInterval=" + timeInterval +
+                ", timeIntervalType=" + timeIntervalType +
+                ", prescription=" + prescription +
+                '}';
     }
 
 }

@@ -1,28 +1,16 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.enums.Abragency;
 import br.com.nivlabs.cliniv.enums.ContractType;
 import br.com.nivlabs.cliniv.enums.Segmentation;
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "PLANO")
-public class HealthPlan extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -7856635198888818925L;
+public class HealthPlan extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -122,84 +110,31 @@ public class HealthPlan extends BaseObjectWithId {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((abrangency == null) ? 0 : abrangency.hashCode());
-        result = prime * result + ((commercialName == null) ? 0 : commercialName.hashCode());
-        result = prime * result + ((contractType == null) ? 0 : contractType.hashCode());
-        result = prime * result + ((healthOperator == null) ? 0 : healthOperator.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((planCode == null) ? 0 : planCode.hashCode());
-        result = prime * result + ((segmentation == null) ? 0 : segmentation.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HealthPlan that = (HealthPlan) o;
+        return Objects.equals(id, that.id) && Objects.equals(planCode, that.planCode) && Objects.equals(commercialName, that.commercialName) && segmentation == that.segmentation && contractType == that.contractType && abrangency == that.abrangency && Objects.equals(type, that.type) && Objects.equals(healthOperator, that.healthOperator);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        HealthPlan other = (HealthPlan) obj;
-        if (abrangency != other.abrangency)
-            return false;
-        if (commercialName == null) {
-            if (other.commercialName != null)
-                return false;
-        } else if (!commercialName.equals(other.commercialName))
-            return false;
-        if (contractType != other.contractType)
-            return false;
-        if (healthOperator == null) {
-            if (other.healthOperator != null)
-                return false;
-        } else if (!healthOperator.equals(other.healthOperator))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (planCode == null) {
-            if (other.planCode != null)
-                return false;
-        } else if (!planCode.equals(other.planCode))
-            return false;
-        if (segmentation != other.segmentation)
-            return false;
-        if (type == null) {
-            if (other.type != null)
-                return false;
-        } else if (!type.equals(other.type))
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(id, planCode, commercialName, segmentation, contractType, abrangency, type, healthOperator);
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("HealthPlan [id=");
-        builder.append(id);
-        builder.append(", planCode=");
-        builder.append(planCode);
-        builder.append(", commercialName=");
-        builder.append(commercialName);
-        builder.append(", segmentation=");
-        builder.append(segmentation);
-        builder.append(", contractType=");
-        builder.append(contractType);
-        builder.append(", abrangency=");
-        builder.append(abrangency);
-        builder.append(", type=");
-        builder.append(type);
-        builder.append(", healthOperator=");
-        builder.append(healthOperator);
-        builder.append("]");
-        return builder.toString();
+        return "HealthPlan{" +
+                "id=" + id +
+                ", planCode=" + planCode +
+                ", commercialName='" + commercialName + '\'' +
+                ", segmentation=" + segmentation +
+                ", contractType=" + contractType +
+                ", abrangency=" + abrangency +
+                ", type='" + type + '\'' +
+                ", healthOperator=" + healthOperator +
+                '}';
     }
 
 }

@@ -1,30 +1,16 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.ApplicationMain;
+import br.com.nivlabs.cliniv.enums.AttendanceLevel;
+import br.com.nivlabs.cliniv.enums.EntryType;
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import br.com.nivlabs.cliniv.ApplicationMain;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-
-import br.com.nivlabs.cliniv.enums.AttendanceLevel;
-import br.com.nivlabs.cliniv.enums.EntryType;
-import br.com.nivlabs.cliniv.models.BaseObjectWithId;
 
 /**
  * Classe Visit.java
@@ -34,7 +20,7 @@ import br.com.nivlabs.cliniv.models.BaseObjectWithId;
  */
 @Entity
 @Table(name = "VISITA")
-public class Attendance extends BaseObjectWithId {
+public class Attendance extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

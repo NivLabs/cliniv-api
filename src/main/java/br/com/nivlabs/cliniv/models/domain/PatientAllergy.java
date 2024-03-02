@@ -1,19 +1,12 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.models.BaseObject;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "PACIENTE_ALERGIA")
 @IdClass(PatientAllergyID.class)
 public class PatientAllergy extends BaseObject {
-
-    private static final long serialVersionUID = -727231950405483043L;
 
     @Id
     @Column(name = "ID_PACIENTE")

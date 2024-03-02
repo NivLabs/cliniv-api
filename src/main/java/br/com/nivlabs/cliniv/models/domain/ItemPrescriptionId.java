@@ -1,15 +1,13 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.io.Serializable;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 
-@Embeddable
-public class ItemPrescriptionIdPK implements Serializable {
+import java.io.Serializable;
 
-    private static final long serialVersionUID = -1449457580776578769L;
+@Embeddable
+public class ItemPrescriptionId implements Serializable {
 
     @Column(name = "SEQUENCIAL", insertable = false, updatable = false)
     private Long sequential;
@@ -17,11 +15,11 @@ public class ItemPrescriptionIdPK implements Serializable {
     @JoinColumn(name = "ID_PRESCRICAO", insertable = false, updatable = false)
     private Long prescriptionId;
 
-    public ItemPrescriptionIdPK() {
+    public ItemPrescriptionId() {
         super();
     }
 
-    public ItemPrescriptionIdPK(Long sequential, Long prescriptionId) {
+    public ItemPrescriptionId(Long sequential, Long prescriptionId) {
         super();
         this.sequential = sequential;
         this.prescriptionId = prescriptionId;
@@ -60,7 +58,7 @@ public class ItemPrescriptionIdPK implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        ItemPrescriptionIdPK other = (ItemPrescriptionIdPK) obj;
+        ItemPrescriptionId other = (ItemPrescriptionId) obj;
         if (prescriptionId == null) {
             if (other.prescriptionId != null)
                 return false;

@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Classe Institute.java
@@ -17,7 +18,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "INSTITUTO")
-public class Institute extends BaseObjectWithId {
+public class Institute extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -313,12 +314,28 @@ public class Institute extends BaseObjectWithId {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Institute institute = (Institute) o;
+        return Objects.equals(id, institute.id) && cgcType == institute.cgcType && Objects.equals(cgc, institute.cgc) && Objects.equals(cnes, institute.cnes) && Arrays.equals(companyLogo, institute.companyLogo) && Objects.equals(name, institute.name) && Objects.equals(corporativeName, institute.corporativeName) && Objects.equals(legalNature, institute.legalNature) && Objects.equals(street, institute.street) && Objects.equals(addressNumber, institute.addressNumber) && Objects.equals(complement, institute.complement) && Objects.equals(postalCode, institute.postalCode) && Objects.equals(state, institute.state) && Objects.equals(neighborhood, institute.neighborhood) && Objects.equals(city, institute.city) && Objects.equals(phone, institute.phone) && Objects.equals(dependency, institute.dependency) && Objects.equals(instituteType, institute.instituteType) && Objects.equals(managerName, institute.managerName) && Objects.equals(managerPhone, institute.managerPhone) && Objects.equals(managerMail, institute.managerMail) && Objects.equals(licenseDate, institute.licenseDate) && Objects.equals(userOfRegister, institute.userOfRegister) && Objects.equals(key, institute.key) && Objects.equals(startDate, institute.startDate) && Objects.equals(endDate, institute.endDate);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, cgcType, cgc, cnes, name, corporativeName, legalNature, street, addressNumber, complement, postalCode, state, neighborhood, city, phone, dependency, instituteType, managerName, managerPhone, managerMail, licenseDate, userOfRegister, key, startDate, endDate);
+        result = 31 * result + Arrays.hashCode(companyLogo);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Institute{" +
                 "id=" + id +
                 ", cgcType=" + cgcType +
                 ", cgc='" + cgc + '\'' +
                 ", cnes='" + cnes + '\'' +
+                ", companyLogo=" + Arrays.toString(companyLogo) +
                 ", name='" + name + '\'' +
                 ", corporativeName='" + corporativeName + '\'' +
                 ", legalNature='" + legalNature + '\'' +

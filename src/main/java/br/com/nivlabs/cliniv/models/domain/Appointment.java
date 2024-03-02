@@ -1,35 +1,20 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.enums.AppointmentStatus;
+import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-import br.com.nivlabs.cliniv.enums.AppointmentStatus;
-import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
-
 /**
  * Entidade que representa um agendamento no banco
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 @Table
 @Entity(name = "AGENDAMENTO")
-public class Appointment extends BaseObjectWithCreatedAt {
-
-    private static final long serialVersionUID = 4186684259235415032L;
+public class Appointment extends BaseObjectWithCreatedAt<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

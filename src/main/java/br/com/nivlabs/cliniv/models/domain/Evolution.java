@@ -1,34 +1,21 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * Entidade relacional que representa a evolução clínica do paciente no banco de dados
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 @Entity
 @Table(name = "EVOLUCAO")
-public class Evolution extends BaseObjectWithId {
-
-    private static final long serialVersionUID = 2220797718806275886L;
+public class Evolution extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,51 +77,25 @@ public class Evolution extends BaseObjectWithId {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((attendance == null) ? 0 : attendance.hashCode());
-        result = prime * result + ((datetime == null) ? 0 : datetime.hashCode());
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Evolution evolution = (Evolution) o;
+        return Objects.equals(id, evolution.id) && Objects.equals(attendance, evolution.attendance) && Objects.equals(description, evolution.description) && Objects.equals(datetime, evolution.datetime);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Evolution other = (Evolution) obj;
-        if (attendance == null) {
-            if (other.attendance != null)
-                return false;
-        } else if (!attendance.equals(other.attendance))
-            return false;
-        if (datetime == null) {
-            if (other.datetime != null)
-                return false;
-        } else if (!datetime.equals(other.datetime))
-            return false;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(id, attendance, description, datetime);
     }
 
     @Override
     public String toString() {
-        return "Evolution [id=" + id + ", attendance=" + attendance + ", description=" + description + ", datetime=" + datetime + "]";
+        return "Evolution{" +
+                "id=" + id +
+                ", attendance=" + attendance +
+                ", description='" + description + '\'' +
+                ", datetime=" + datetime +
+                '}';
     }
-
 }

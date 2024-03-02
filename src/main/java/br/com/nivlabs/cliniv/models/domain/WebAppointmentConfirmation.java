@@ -1,28 +1,17 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.enums.AppointmentStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import br.com.nivlabs.cliniv.enums.AppointmentStatus;
+import java.util.Objects;
 
 @Entity
 @Table(name = "AGENDA_CONFIRMACAO")
 public class WebAppointmentConfirmation implements Serializable {
 
-    private static final long serialVersionUID = 3844020943998908507L;
 
     @Id
     @Column(name = "ID", length = 100)
@@ -47,7 +36,7 @@ public class WebAppointmentConfirmation implements Serializable {
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
-    @JoinColumn(name = "ID_RESPONSVEL")
+    @JoinColumn(name = "ID_RESPONSAVEL")
     private Responsible responsible;
 
     public String getId() {
@@ -107,67 +96,29 @@ public class WebAppointmentConfirmation implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-        result = prime * result + ((dateTimeResponse == null) ? 0 : dateTimeResponse.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((originIp == null) ? 0 : originIp.hashCode());
-        result = prime * result + ((patient == null) ? 0 : patient.hashCode());
-        result = prime * result + ((responsible == null) ? 0 : responsible.hashCode());
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WebAppointmentConfirmation that = (WebAppointmentConfirmation) o;
+        return Objects.equals(id, that.id) && Objects.equals(dateTimeResponse, that.dateTimeResponse) && Objects.equals(originIp, that.originIp) && status == that.status && Objects.equals(createdAt, that.createdAt) && Objects.equals(patient, that.patient) && Objects.equals(responsible, that.responsible);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        WebAppointmentConfirmation other = (WebAppointmentConfirmation) obj;
-        if (createdAt == null) {
-            if (other.createdAt != null)
-                return false;
-        } else if (!createdAt.equals(other.createdAt))
-            return false;
-        if (dateTimeResponse == null) {
-            if (other.dateTimeResponse != null)
-                return false;
-        } else if (!dateTimeResponse.equals(other.dateTimeResponse))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (originIp == null) {
-            if (other.originIp != null)
-                return false;
-        } else if (!originIp.equals(other.originIp))
-            return false;
-        if (patient == null) {
-            if (other.patient != null)
-                return false;
-        } else if (!patient.equals(other.patient))
-            return false;
-        if (responsible == null) {
-            if (other.responsible != null)
-                return false;
-        } else if (!responsible.equals(other.responsible))
-            return false;
-        if (status != other.status)
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(id, dateTimeResponse, originIp, status, createdAt, patient, responsible);
     }
 
     @Override
     public String toString() {
-        return "WebAppointmentConfirmation [id=" + id + ", dateTimeResponse=" + dateTimeResponse + ", originIp=" + originIp + ", status="
-                + status + ", createdAt=" + createdAt + ", patient=" + patient + ", responsible=" + responsible + "]";
+        return "WebAppointmentConfirmation{" +
+                "id='" + id + '\'' +
+                ", dateTimeResponse=" + dateTimeResponse +
+                ", originIp='" + originIp + '\'' +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", patient=" + patient +
+                ", responsible=" + responsible +
+                '}';
     }
 
 }

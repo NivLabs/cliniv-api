@@ -1,24 +1,15 @@
 package br.com.nivlabs.cliniv.models.domain.tiss;
 
-import java.math.BigDecimal;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-import org.springframework.beans.BeanUtils;
-
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
 import br.com.nivlabs.cliniv.models.dto.ProcedureInfoDTO;
+import jakarta.persistence.*;
+import org.springframework.beans.BeanUtils;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "PROCEDIMENTO")
-public class Procedure extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -7145671144200832961L;
+public class Procedure extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

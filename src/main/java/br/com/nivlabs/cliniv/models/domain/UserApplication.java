@@ -1,37 +1,23 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
-
 /**
  * Classe User.java
- * 
+ *
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
  * @since 6 de set de 2019
  */
 @Entity
 @Table(name = "USUARIO")
-public class UserApplication extends BaseObjectWithCreatedAt {
+public class UserApplication extends BaseObjectWithCreatedAt<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,7 +53,7 @@ public class UserApplication extends BaseObjectWithCreatedAt {
     }
 
     public UserApplication(Long id, Person person, String userName, String password, boolean active, boolean firstSignin,
-            LocalDateTime lastAcess, List<Role> roles) {
+                           LocalDateTime lastAcess, List<Role> roles) {
         super();
         this.id = id;
         this.person = person;
@@ -193,22 +179,29 @@ public class UserApplication extends BaseObjectWithCreatedAt {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(active, firstSignin, id, password, person, roles, userName);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserApplication that = (UserApplication) o;
+        return active == that.active && firstSignin == that.firstSignin && Objects.equals(id, that.id) && Objects.equals(person, that.person) && Objects.equals(userName, that.userName) && Objects.equals(password, that.password) && Objects.equals(lastAcess, that.lastAcess) && Objects.equals(roles, that.roles);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        UserApplication other = (UserApplication) obj;
-        return active == other.active && firstSignin == other.firstSignin && Objects.equals(id, other.id)
-                && Objects.equals(password, other.password) && Objects.equals(person, other.person) && Objects.equals(roles, other.roles)
-                && Objects.equals(userName, other.userName);
+    public int hashCode() {
+        return Objects.hash(id, person, userName, password, active, firstSignin, lastAcess, roles);
     }
 
+    @Override
+    public String toString() {
+        return "UserApplication{" +
+                "id=" + id +
+                ", person=" + person +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", active=" + active +
+                ", firstSignin=" + firstSignin +
+                ", lastAcess=" + lastAcess +
+                ", roles=" + roles +
+                '}';
+    }
 }

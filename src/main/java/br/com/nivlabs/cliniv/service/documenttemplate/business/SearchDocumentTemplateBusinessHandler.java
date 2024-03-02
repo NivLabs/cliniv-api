@@ -1,12 +1,5 @@
 package br.com.nivlabs.cliniv.service.documenttemplate.business;
 
-import jakarta.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.controller.filters.DocumentTemplateFilter;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.DocumentTemplate;
@@ -18,6 +11,11 @@ import br.com.nivlabs.cliniv.repository.DocumentTemplateRepository;
 import br.com.nivlabs.cliniv.repository.UserRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandler {
@@ -29,7 +27,7 @@ public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandle
 
     /**
      * Busca informações de um template de documento por identificador único do documento
-     * 
+     *
      * @param id Identificador único do template
      * @return Template de documento
      */
@@ -43,13 +41,13 @@ public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandle
 
     /**
      * Converte a entidade relacional em objeto de transferência
-     * 
+     *
      * @param entity Entidade relacional
      * @return Objeto de transferência
      */
     private DocumentTemplateInfoDTO convertDocument(DocumentTemplate entity) {
         DocumentTemplateInfoDTO response = new DocumentTemplateInfoDTO();
-        response.setId(entity.getPk().getId());
+        response.setId(entity.getId().getId());
         response.setDescription(entity.getDescription());
         response.setText(entity.getText());
         return response;
@@ -58,8 +56,8 @@ public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandle
 
     /**
      * Realiza uma busca paginada de templates
-     * 
-     * @param filters Filtros de busca
+     *
+     * @param filters      Filtros de busca
      * @param pageSettings Configurações de páginas
      * @return Página de templates
      */
@@ -71,7 +69,7 @@ public class SearchDocumentTemplateBusinessHandler implements BaseBusinessHandle
 
     /**
      * Busca informações detalhadas do usuário logado
-     * 
+     *
      * @return Informações do usuário logado
      */
     private UserApplication getContextUserInformations() {

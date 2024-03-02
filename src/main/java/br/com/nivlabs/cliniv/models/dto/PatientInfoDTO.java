@@ -1,11 +1,8 @@
 package br.com.nivlabs.cliniv.models.dto;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-
+import br.com.nivlabs.cliniv.ApplicationMain;
+import br.com.nivlabs.cliniv.enums.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
@@ -13,12 +10,12 @@ import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.cliniv.enums.BloodType;
-import br.com.nivlabs.cliniv.enums.EthnicGroup;
-import br.com.nivlabs.cliniv.enums.Gender;
-import br.com.nivlabs.cliniv.enums.GenderIdentity;
-import br.com.nivlabs.cliniv.enums.PatientType;
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Informações detalhadas do paciente
@@ -46,6 +43,9 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @Schema(description = "Data de nascimento")
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDate bornDate;
+
+    @Schema(description = "Descrição do tempo de vida")
+    private String lifetimeDescription;
 
     @Schema(description = "Documento do paciente")
     @NotNull(message = "O documento deve ser informado")
@@ -187,6 +187,47 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     public void setBornDate(LocalDate bornDate) {
         this.bornDate = bornDate;
     }
+
+    public String getLifetimeDescription() {
+        if (this.bornDate == null) {
+            return null;
+        }
+
+        Period period = Period.between(this.bornDate, LocalDate.now(ZoneId.of(ApplicationMain.AMERICA_SAO_PAULO)));
+
+        int years = period.getYears();
+        int months = period.getMonths();
+        int days = period.getDays();
+
+
+        StringBuilder sb = new StringBuilder();
+        if (years > 0) {
+            sb.append(years).append(" ano");
+            if (years > 1) {
+                sb.append("s");
+            }
+            if (months > 0) {
+                sb.append(", ");
+            }
+        }
+        if (months > 0) {
+            if (months > 1)
+                sb.append(months).append(" meses");
+            else
+                sb.append(months).append(" mês");
+        }
+        if (days > 0) {
+            if (years > 0 || months > 0)
+                sb.append(" e ").append(days).append(" dia");
+            else
+                sb.append(days).append(" dia");
+            if (days > 1) {
+                sb.append("s");
+            }
+        }
+        return sb.toString();
+    }
+
 
     /**
      * @return the document

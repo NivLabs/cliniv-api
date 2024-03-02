@@ -1,36 +1,23 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import java.util.Objects;
 
 /**
  * Classe Specialty.java
- * 
+ *
  * @author <a href="mailto:viniciosarodrigues@gmail.com">Vinícios Rodrigues</a>
- * 
  * @since 23 de set de 2019
  */
 @Entity
 @Table(name = "ESPECIALIDADE")
-public class Speciality extends BaseObjectWithId {
+public class Speciality extends BaseObjectWithId<Long> {
 
-    private static final long serialVersionUID = 5635833259887178379L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -92,51 +79,26 @@ public class Speciality extends BaseObjectWithId {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((responsibles == null) ? 0 : responsibles.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Speciality that = (Speciality) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(responsibles, that.responsibles);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Speciality other = (Speciality) obj;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (responsibles == null) {
-            if (other.responsibles != null)
-                return false;
-        } else if (!responsibles.equals(other.responsibles))
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(id, name, description, responsibles);
     }
 
     @Override
     public String toString() {
-        return "Speciality [id=" + id + ", name=" + name + ", description=" + description + ", responsibles=" + responsibles + "]";
+        return "Speciality{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", responsibles=" + responsibles +
+                '}';
     }
 
 }

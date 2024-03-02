@@ -1,33 +1,19 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
 import br.com.nivlabs.cliniv.models.dto.EventTypeDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 /**
  * Classe EventType.java
- * 
+ *
  * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
- * 
  * @since 8 de set de 2019
  */
 @Entity
 @Table(name = "TIPO_EVENTO")
-public class EventType extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -8716334303463572525L;
+public class EventType extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,21 +69,6 @@ public class EventType extends BaseObjectWithId {
         this.description = description;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("EventType [id=");
-        builder.append(id);
-        builder.append(", superEventType=");
-        builder.append(superEventType);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", description=");
-        builder.append(description);
-        builder.append("]");
-        return builder.toString();
-    }
-
     @JsonIgnore
     public EventTypeDTO getEventTypeDTOFromDomain() {
         EventTypeDTO dtoEntity = new EventTypeDTO();
@@ -108,4 +79,13 @@ public class EventType extends BaseObjectWithId {
         return dtoEntity;
     }
 
+    @Override
+    public String toString() {
+        return "EventType{" +
+                "id=" + id +
+                ", superEventType=" + superEventType +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

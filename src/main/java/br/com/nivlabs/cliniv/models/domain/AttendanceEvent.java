@@ -1,33 +1,17 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.ApplicationMain;
+import br.com.nivlabs.cliniv.enums.EventType;
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import br.com.nivlabs.cliniv.models.domain.tiss.Procedure;
+import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
-
-import br.com.nivlabs.cliniv.ApplicationMain;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
-
-import br.com.nivlabs.cliniv.enums.EventType;
-import br.com.nivlabs.cliniv.models.BaseObjectWithId;
-import br.com.nivlabs.cliniv.models.domain.tiss.Procedure;
 
 /**
  * Classe VisitEvent.java
@@ -40,7 +24,7 @@ import br.com.nivlabs.cliniv.models.domain.tiss.Procedure;
  */
 @Entity
 @Table(name = "VISITA_EVENTO")
-public class AttendanceEvent extends BaseObjectWithId {
+public class AttendanceEvent extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

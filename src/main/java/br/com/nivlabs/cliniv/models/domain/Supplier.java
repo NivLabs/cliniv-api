@@ -1,24 +1,14 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.util.Objects;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.enums.SupplierType;
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "FORNECEDOR")
-public class Supplier extends BaseObjectWithId {
+public class Supplier extends BaseObjectWithId<Long> {
 
     private static final long serialVersionUID = -6757073229237534589L;
 
@@ -161,26 +151,33 @@ public class Supplier extends BaseObjectWithId {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(address, corporateReason, document, email, fantasyName, id, municipalResgistration, observation, principalPhone,
-                            secondaryPhone, stateRegistration, type);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Supplier supplier = (Supplier) o;
+        return Objects.equals(id, supplier.id) && Objects.equals(document, supplier.document) && Objects.equals(fantasyName, supplier.fantasyName) && Objects.equals(corporateReason, supplier.corporateReason) && Objects.equals(stateRegistration, supplier.stateRegistration) && Objects.equals(municipalResgistration, supplier.municipalResgistration) && type == supplier.type && Objects.equals(observation, supplier.observation) && Objects.equals(principalPhone, supplier.principalPhone) && Objects.equals(secondaryPhone, supplier.secondaryPhone) && Objects.equals(email, supplier.email) && Objects.equals(address, supplier.address);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Supplier other = (Supplier) obj;
-        return Objects.equals(address, other.address) && Objects.equals(corporateReason, other.corporateReason)
-                && Objects.equals(document, other.document) && Objects.equals(email, other.email)
-                && Objects.equals(fantasyName, other.fantasyName) && Objects.equals(id, other.id)
-                && Objects.equals(municipalResgistration, other.municipalResgistration) && Objects.equals(observation, other.observation)
-                && Objects.equals(principalPhone, other.principalPhone) && Objects.equals(secondaryPhone, other.secondaryPhone)
-                && Objects.equals(stateRegistration, other.stateRegistration) && type == other.type;
+    public int hashCode() {
+        return Objects.hash(id, document, fantasyName, corporateReason, stateRegistration, municipalResgistration, type, observation, principalPhone, secondaryPhone, email, address);
     }
 
+    @Override
+    public String toString() {
+        return "Supplier{" +
+                "id=" + id +
+                ", document='" + document + '\'' +
+                ", fantasyName='" + fantasyName + '\'' +
+                ", corporateReason='" + corporateReason + '\'' +
+                ", stateRegistration='" + stateRegistration + '\'' +
+                ", municipalResgistration='" + municipalResgistration + '\'' +
+                ", type=" + type +
+                ", observation='" + observation + '\'' +
+                ", principalPhone='" + principalPhone + '\'' +
+                ", secondaryPhone='" + secondaryPhone + '\'' +
+                ", email='" + email + '\'' +
+                ", address=" + address +
+                '}';
+    }
 }

@@ -1,22 +1,11 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
-import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
+import java.util.Objects;
 
 /**
  * Classe Reponsible.java
@@ -26,9 +15,7 @@ import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
  */
 @Entity
 @Table(name = "RESPONSAVEL")
-public class Responsible extends BaseObjectWithCreatedAt {
-
-    private static final long serialVersionUID = 6649135435429790655L;
+public class Responsible extends BaseObjectWithCreatedAt<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -107,58 +94,27 @@ public class Responsible extends BaseObjectWithCreatedAt {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((initialsIdentity == null) ? 0 : initialsIdentity.hashCode());
-        result = prime * result + ((person == null) ? 0 : person.hashCode());
-        result = prime * result + ((professionalIdentity == null) ? 0 : professionalIdentity.hashCode());
-        result = prime * result + ((specializations == null) ? 0 : specializations.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Responsible that = (Responsible) o;
+        return Objects.equals(id, that.id) && Objects.equals(person, that.person) && Objects.equals(professionalIdentity, that.professionalIdentity) && Objects.equals(initialsIdentity, that.initialsIdentity) && Objects.equals(specializations, that.specializations);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Responsible other = (Responsible) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (initialsIdentity == null) {
-            if (other.initialsIdentity != null)
-                return false;
-        } else if (!initialsIdentity.equals(other.initialsIdentity))
-            return false;
-        if (person == null) {
-            if (other.person != null)
-                return false;
-        } else if (!person.equals(other.person))
-            return false;
-        if (professionalIdentity == null) {
-            if (other.professionalIdentity != null)
-                return false;
-        } else if (!professionalIdentity.equals(other.professionalIdentity))
-            return false;
-        if (specializations == null) {
-            if (other.specializations != null)
-                return false;
-        } else if (!specializations.equals(other.specializations))
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(id, person, professionalIdentity, initialsIdentity, specializations);
     }
 
     @Override
     public String toString() {
-        return "Responsible [id=" + id + ", person=" + person + ", professionalIdentity=" + professionalIdentity + ", initialsIdentity="
-                + initialsIdentity + ", specializations=" + specializations + "]";
+        return "Responsible{" +
+                "id=" + id +
+                ", person=" + person +
+                ", professionalIdentity='" + professionalIdentity + '\'' +
+                ", initialsIdentity='" + initialsIdentity + '\'' +
+                ", specializations=" + specializations +
+                '}';
     }
 
 }

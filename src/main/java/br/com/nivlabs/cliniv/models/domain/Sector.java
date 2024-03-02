@@ -1,35 +1,24 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import java.util.Objects;
 
 /**
  * Classe Sector.java
- * 
- * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
  *
+ * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
  * @since 13 dez, 2019
  */
 @Entity
 @Table(name = "SETOR")
-public class Sector extends BaseObjectWithId {
+public class Sector extends BaseObjectWithId<Long> {
 
-    private static final long serialVersionUID = -8491049323618565782L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -94,52 +83,26 @@ public class Sector extends BaseObjectWithId {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((listOfRoomsOrBeds == null) ? 0 : listOfRoomsOrBeds.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sector sector = (Sector) o;
+        return Objects.equals(id, sector.id) && Objects.equals(description, sector.description) && Objects.equals(createdAt, sector.createdAt) && Objects.equals(listOfRoomsOrBeds, sector.listOfRoomsOrBeds);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Sector other = (Sector) obj;
-        if (createdAt == null) {
-            if (other.createdAt != null)
-                return false;
-        } else if (!createdAt.equals(other.createdAt))
-            return false;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (listOfRoomsOrBeds == null) {
-            if (other.listOfRoomsOrBeds != null)
-                return false;
-        } else if (!listOfRoomsOrBeds.equals(other.listOfRoomsOrBeds))
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(id, description, createdAt, listOfRoomsOrBeds);
     }
 
     @Override
     public String toString() {
-        return "Sector [id=" + id + ", description=" + description + ", createdAt=" + createdAt + ", listOfRoomsOrBeds=" + listOfRoomsOrBeds
-                + "]";
+        return "Sector{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                ", listOfRoomsOrBeds=" + listOfRoomsOrBeds +
+                '}';
     }
 
 }

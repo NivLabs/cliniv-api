@@ -1,6 +1,6 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import br.com.nivlabs.cliniv.models.BaseObject;
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
 import jakarta.persistence.*;
 
 import java.nio.charset.StandardCharsets;
@@ -9,9 +9,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "TEMPLATE_DOC")
-public class DocumentTemplate extends BaseObject {
+public class DocumentTemplate extends BaseObjectWithId<DocumentTemplatePK> {
+    
     @Id
-    private DocumentTemplatePK pk;
+    private DocumentTemplatePK id;
 
     @Column(name = "DESCRICAO")
     private String description;
@@ -20,12 +21,12 @@ public class DocumentTemplate extends BaseObject {
     @Lob
     private byte[] text;
 
-    public DocumentTemplatePK getPk() {
-        return pk;
+    public DocumentTemplatePK getId() {
+        return id;
     }
 
-    public void setPk(DocumentTemplatePK pk) {
-        this.pk = pk;
+    public void setId(DocumentTemplatePK id) {
+        this.id = id;
     }
 
     public String getDescription() {
@@ -46,7 +47,7 @@ public class DocumentTemplate extends BaseObject {
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, pk, text);
+        return Objects.hash(description, id);
     }
 
     @Override
@@ -58,6 +59,6 @@ public class DocumentTemplate extends BaseObject {
         if (getClass() != obj.getClass())
             return false;
         DocumentTemplate other = (DocumentTemplate) obj;
-        return Objects.equals(description, other.description) && Objects.equals(pk, other.pk) && Objects.equals(text, other.text);
+        return Objects.equals(description, other.description) && Objects.equals(id, other.id) && Objects.equals(text, other.text);
     }
 }

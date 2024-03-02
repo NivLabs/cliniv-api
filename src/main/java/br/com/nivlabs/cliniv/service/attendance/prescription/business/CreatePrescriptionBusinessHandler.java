@@ -1,33 +1,9 @@
 package br.com.nivlabs.cliniv.service.attendance.prescription.business;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.enums.EventType;
 import br.com.nivlabs.cliniv.exception.HttpException;
-import br.com.nivlabs.cliniv.models.domain.Attendance;
-import br.com.nivlabs.cliniv.models.domain.ItemPrescriptionIdPK;
-import br.com.nivlabs.cliniv.models.domain.Prescription;
-import br.com.nivlabs.cliniv.models.domain.PrescriptionItem;
-import br.com.nivlabs.cliniv.models.domain.Responsible;
-import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.InstituteDTO;
-import br.com.nivlabs.cliniv.models.dto.MedicalRecordDTO;
-import br.com.nivlabs.cliniv.models.dto.NewAttendanceEventDTO;
-import br.com.nivlabs.cliniv.models.dto.PrescriptionInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.PrescriptionItemDTO;
-import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
+import br.com.nivlabs.cliniv.models.domain.*;
+import br.com.nivlabs.cliniv.models.dto.*;
 import br.com.nivlabs.cliniv.report.ReportParam;
 import br.com.nivlabs.cliniv.repository.PrescriptionRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
@@ -37,6 +13,17 @@ import br.com.nivlabs.cliniv.service.report.ReportService;
 import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
 import br.com.nivlabs.cliniv.service.userservice.UserService;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Componente específico para criação de prescriação
@@ -116,7 +103,7 @@ public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
             logger.info("Item :: {}", item);
 
             PrescriptionItem convertedItem = new PrescriptionItem();
-            convertedItem.setId(new ItemPrescriptionIdPK(item.getSequential(), prescription.getId()));
+            convertedItem.setId(new ItemPrescriptionId(item.getSequential(), prescription.getId()));
             convertedItem.setDescription(item.getDescription());
             convertedItem.setPrescription(prescription);
             convertedItem.setDosage(item.getDosage());

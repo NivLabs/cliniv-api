@@ -1,17 +1,15 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 @Embeddable
 public class DocumentTemplatePK implements Serializable {
-
-    private static final long serialVersionUID = -7840554737274545252L;
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

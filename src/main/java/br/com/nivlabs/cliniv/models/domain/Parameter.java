@@ -1,23 +1,15 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.util.Objects;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.enums.MetaType;
 import br.com.nivlabs.cliniv.enums.ParameterAliasType;
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "APP_PARAM")
-public class Parameter extends BaseObjectWithId {
-
-    private static final long serialVersionUID = 3908449162745360425L;
+public class Parameter extends BaseObjectWithId<Long> {
 
     @Id
     private Long id;
@@ -114,43 +106,29 @@ public class Parameter extends BaseObjectWithId {
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Parameter [id=");
-        builder.append(id);
-        builder.append(", alias=");
-        builder.append(alias);
-        builder.append(", name=");
-        builder.append(name);
-        builder.append(", group=");
-        builder.append(group);
-        builder.append(", metaType=");
-        builder.append(metaType);
-        builder.append(", value=");
-        builder.append(value);
-        builder.append(", groupValues=");
-        builder.append(groupValues);
-        builder.append("]");
-        return builder.toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Parameter parameter = (Parameter) o;
+        return Objects.equals(id, parameter.id) && alias == parameter.alias && Objects.equals(name, parameter.name) && Objects.equals(group, parameter.group) && metaType == parameter.metaType && Objects.equals(value, parameter.value) && Objects.equals(groupValues, parameter.groupValues);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(alias, group, groupValues, id, metaType, name, value);
+        return Objects.hash(id, alias, name, group, metaType, value, groupValues);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Parameter other = (Parameter) obj;
-        return Objects.equals(alias, other.alias) && Objects.equals(group, other.group) && Objects.equals(groupValues, other.groupValues)
-                && Objects.equals(id, other.id) && metaType == other.metaType && Objects.equals(name, other.name)
-                && Objects.equals(value, other.value);
+    public String toString() {
+        return "Parameter{" +
+                "id=" + id +
+                ", alias=" + alias +
+                ", name='" + name + '\'' +
+                ", group='" + group + '\'' +
+                ", metaType=" + metaType +
+                ", value='" + value + '\'' +
+                ", groupValues='" + groupValues + '\'' +
+                '}';
     }
 
 }

@@ -1,28 +1,17 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.time.LocalDate;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.models.BaseObject;
+import jakarta.persistence.*;
+
+import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * @author viniciosarodrigues
- *
  */
 @Entity
 @Table(name = "DOCUMENTO_PESSOA")
 public class PersonDocument extends BaseObject {
-
-    private static final long serialVersionUID = 58027003453495426L;
 
     @EmbeddedId
     private PersonDocumentPK id;
@@ -97,9 +86,28 @@ public class PersonDocument extends BaseObject {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PersonDocument that = (PersonDocument) o;
+        return Objects.equals(id, that.id) && Objects.equals(dispatcher, that.dispatcher) && Objects.equals(expeditionDate, that.expeditionDate) && Objects.equals(validate, that.validate) && Objects.equals(uf, that.uf) && Objects.equals(person, that.person);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, dispatcher, expeditionDate, validate, uf, person);
+    }
+
+    @Override
     public String toString() {
-        return "PersonDocument [id=" + id + ", dispatcher=" + dispatcher + ", expeditionDate=" + expeditionDate + ", validate=" + validate
-                + ", uf=" + uf + ", person=" + person + "]";
+        return "PersonDocument{" +
+                "id=" + id +
+                ", dispatcher='" + dispatcher + '\'' +
+                ", expeditionDate=" + expeditionDate +
+                ", validate=" + validate +
+                ", uf='" + uf + '\'' +
+                ", person=" + person +
+                '}';
     }
 
 }

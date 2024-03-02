@@ -1,17 +1,16 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import java.util.Objects;
 
 @Entity
 @Table(name = "UNIDADE_MEDIDA")
-public class UnitOfMeasurement extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -5469261685230682235L;
+public class UnitOfMeasurement extends BaseObjectWithId<Long> {
 
     @Id
     private Long id;
@@ -64,16 +63,25 @@ public class UnitOfMeasurement extends BaseObjectWithId {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UnitOfMeasurement that = (UnitOfMeasurement) o;
+        return Objects.equals(id, that.id) && Objects.equals(value, that.value) && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, value, description);
+    }
+
+    @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("UnitOfMeasurement [id=");
-        builder.append(id);
-        builder.append(", value=");
-        builder.append(value);
-        builder.append(", description=");
-        builder.append(description);
-        builder.append("]");
-        return builder.toString();
+        return "UnitOfMeasurement{" +
+                "id=" + id +
+                ", value='" + value + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 
 }

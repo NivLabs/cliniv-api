@@ -1,10 +1,5 @@
 package br.com.nivlabs.cliniv.service.documenttemplate.business;
 
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.DocumentTemplate;
 import br.com.nivlabs.cliniv.models.domain.DocumentTemplatePK;
@@ -13,6 +8,10 @@ import br.com.nivlabs.cliniv.repository.DocumentTemplateRepository;
 import br.com.nivlabs.cliniv.repository.UserRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CreateDocumentTemplateBusinessHandler implements BaseBusinessHandler {
@@ -26,7 +25,7 @@ public class CreateDocumentTemplateBusinessHandler implements BaseBusinessHandle
 
     /**
      * Cria um template de documento digital na aplicação
-     * 
+     *
      * @param request Objeto de requisição para criação de template de documento digital
      * @return Template de documento criado na base
      */
@@ -36,7 +35,7 @@ public class CreateDocumentTemplateBusinessHandler implements BaseBusinessHandle
                 "Nenhum usuário com o nome '" + userName + "' encontrado, o processo de busca de templates foi cancelado."));
         logger.info("Iniciando processo de criação de modelo de documento para o usuário :: {}", userName);
         DocumentTemplate template = new DocumentTemplate();
-        template.setPk(new DocumentTemplatePK(null, user.getId()));
+        template.setId(new DocumentTemplatePK(null, user.getId()));
         template.setDescription(request.getDescription());
         template.setText(request.getText());
 
@@ -48,13 +47,13 @@ public class CreateDocumentTemplateBusinessHandler implements BaseBusinessHandle
 
     /**
      * Converte a entidade relacional em objeto de transferência
-     * 
+     *
      * @param entity Entidade relacional
      * @return Objeto de transferência
      */
     private DocumentTemplateInfoDTO convertDocument(DocumentTemplate entity) {
         DocumentTemplateInfoDTO response = new DocumentTemplateInfoDTO();
-        response.setId(entity.getPk().getId());
+        response.setId(entity.getId().getId());
         response.setDescription(entity.getDescription());
         response.setText(entity.getText());
         return response;

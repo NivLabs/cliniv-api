@@ -1,21 +1,17 @@
 package br.com.nivlabs.cliniv.controller.filters;
 
-import java.time.LocalDate;
-
+import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
+import java.time.LocalDate;
 
 /**
  * Filtro de pesquisa dinâmica para Agendamento
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class AppointmentFilters extends CustomFilters {
-
-    private static final long serialVersionUID = 5552517752886764329L;
 
     private String professionalId;
 

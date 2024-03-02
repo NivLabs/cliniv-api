@@ -1,33 +1,23 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
-import br.com.nivlabs.cliniv.models.BaseObject;
+import java.util.Objects;
 
 /**
  * Classe ReportLayout.java
- * 
+ *
  * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
- * 
  * @since 24 de janeiro de 2021
  */
 @Entity
 @Table(name = "LAYOUT_RELATORIO")
-public class ReportLayout extends BaseObject {
+public class ReportLayout extends BaseObjectWithId<Long> {
 
-    private static final long serialVersionUID = 545660687640626225L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,9 +105,28 @@ public class ReportLayout extends BaseObject {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ReportLayout that = (ReportLayout) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(createdAt, that.createdAt) && Objects.equals(xml, that.xml) && Objects.equals(params, that.params);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, createdAt, xml, params);
+    }
+
+    @Override
     public String toString() {
-        return "ReportLayout [id=" + id + ", name=" + name + ", description=" + description + ", createdAt=" + createdAt + ", xml=" + xml
-                + ", params=" + params + "]";
+        return "ReportLayout{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                ", xml='" + xml + '\'' +
+                ", params=" + params +
+                '}';
     }
 
 }

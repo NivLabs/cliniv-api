@@ -1,25 +1,22 @@
 package br.com.nivlabs.cliniv.models.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-
 /**
  * Esta classe representa as informações detalhadas do usuário, serve para criação e atualização das informações do usuário
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 @Schema(description = "Informações detalhadas do usuário")
 public class UserInfoDTO extends PersonInfoDTO {
 
-    private static final long serialVersionUID = 2270108536170182840L;
 
     @Schema(description = "Nome de usuário")
     @NotNull(message = "Informe o nome de usuário")

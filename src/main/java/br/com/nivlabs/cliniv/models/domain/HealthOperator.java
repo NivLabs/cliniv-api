@@ -1,28 +1,16 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.enums.Modality;
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "OPERADORA")
-public class HealthOperator extends BaseObjectWithId {
-
-    private static final long serialVersionUID = -4784137469843956304L;
+public class HealthOperator extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -108,67 +96,28 @@ public class HealthOperator extends BaseObjectWithId {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((ansCode == null) ? 0 : ansCode.hashCode());
-        result = prime * result + ((cnpj == null) ? 0 : cnpj.hashCode());
-        result = prime * result + ((companyName == null) ? 0 : companyName.hashCode());
-        result = prime * result + ((fantasyName == null) ? 0 : fantasyName.hashCode());
-        result = prime * result + ((healthPlans == null) ? 0 : healthPlans.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((modality == null) ? 0 : modality.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HealthOperator that = (HealthOperator) o;
+        return Objects.equals(id, that.id) && Objects.equals(ansCode, that.ansCode) && Objects.equals(cnpj, that.cnpj) && Objects.equals(companyName, that.companyName) && Objects.equals(fantasyName, that.fantasyName) && modality == that.modality && Objects.equals(healthPlans, that.healthPlans);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        HealthOperator other = (HealthOperator) obj;
-        if (ansCode == null) {
-            if (other.ansCode != null)
-                return false;
-        } else if (!ansCode.equals(other.ansCode))
-            return false;
-        if (cnpj == null) {
-            if (other.cnpj != null)
-                return false;
-        } else if (!cnpj.equals(other.cnpj))
-            return false;
-        if (companyName == null) {
-            if (other.companyName != null)
-                return false;
-        } else if (!companyName.equals(other.companyName))
-            return false;
-        if (fantasyName == null) {
-            if (other.fantasyName != null)
-                return false;
-        } else if (!fantasyName.equals(other.fantasyName))
-            return false;
-        if (healthPlans == null) {
-            if (other.healthPlans != null)
-                return false;
-        } else if (!healthPlans.equals(other.healthPlans))
-            return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (modality != other.modality)
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(id, ansCode, cnpj, companyName, fantasyName, modality, healthPlans);
     }
 
     @Override
     public String toString() {
-        return "HealthOperator [id=" + id + ", ansCode=" + ansCode + ", cnpj=" + cnpj + ", companyName=" + companyName + ", fantasyName="
-                + fantasyName + ", modality=" + modality + ", healthPlans=" + healthPlans + "]";
+        return "HealthOperator{" +
+                "id=" + id +
+                ", ansCode='" + ansCode + '\'' +
+                ", cnpj='" + cnpj + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", fantasyName='" + fantasyName + '\'' +
+                ", modality=" + modality +
+                ", healthPlans=" + healthPlans +
+                '}';
     }
-
 }

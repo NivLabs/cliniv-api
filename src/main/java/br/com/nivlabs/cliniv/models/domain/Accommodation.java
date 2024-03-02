@@ -1,31 +1,15 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-import org.springframework.beans.BeanUtils;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import br.com.nivlabs.cliniv.enums.AccommodationType;
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
 import br.com.nivlabs.cliniv.models.dto.AccommodationDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import org.springframework.beans.BeanUtils;
 
 @Entity
 @Table(name = "SALA_LEITO")
-public class Accommodation extends BaseObjectWithId {
-
-    private static final long serialVersionUID = 7743590060203121165L;
+public class Accommodation extends BaseObjectWithId<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

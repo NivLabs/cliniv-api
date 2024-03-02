@@ -1,39 +1,22 @@
 package br.com.nivlabs.cliniv.models.domain;
 
+import br.com.nivlabs.cliniv.enums.PatientType;
+import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
-import br.com.nivlabs.cliniv.enums.PatientType;
-import br.com.nivlabs.cliniv.models.BaseObjectWithCreatedAt;
-
 /**
  * Classe Patient.java
- * 
+ *
  * @author <a href="mailto:carolexc@gmail.com">Caroline Aguiar</a>
- * 
  * @since 15 de set de 2019
  */
 @Entity
 @Table(name = "PACIENTE")
-public class Patient extends BaseObjectWithCreatedAt {
-
-    private static final long serialVersionUID = 4873898002597934236L;
+public class Patient extends BaseObjectWithCreatedAt<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -138,45 +121,28 @@ public class Patient extends BaseObjectWithCreatedAt {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Patient [id=");
-        builder.append(id);
-        builder.append(", cnsNumber=");
-        builder.append(cnsNumber);
-        builder.append(", person=");
-        builder.append(person);
-        builder.append(", healthPlan=");
-        builder.append(healthPlan);
-        builder.append(", healthPlanCode=");
-        builder.append(healthPlanCode);
-        builder.append(", type=");
-        builder.append(type);
-        builder.append(", annotations=");
-        builder.append(annotations);
-        builder.append(", allergies=");
-        builder.append(allergies);
-        builder.append("]");
-        return builder.toString();
+        return "Patient{" +
+                "id=" + id +
+                ", cnsNumber='" + cnsNumber + '\'' +
+                ", person=" + person +
+                ", healthPlan=" + healthPlan +
+                ", healthPlanCode='" + healthPlanCode + '\'' +
+                ", type=" + type +
+                ", annotations='" + annotations + '\'' +
+                ", allergies=" + allergies +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Patient patient = (Patient) o;
+        return Objects.equals(id, patient.id) && Objects.equals(cnsNumber, patient.cnsNumber) && Objects.equals(person, patient.person) && Objects.equals(healthPlan, patient.healthPlan) && Objects.equals(healthPlanCode, patient.healthPlanCode) && type == patient.type && Objects.equals(annotations, patient.annotations) && Objects.equals(allergies, patient.allergies);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(allergies, annotations, cnsNumber, healthPlan, healthPlanCode, id, person, type);
+        return Objects.hash(id, cnsNumber, person, healthPlan, healthPlanCode, type, annotations, allergies);
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Patient other = (Patient) obj;
-        return Objects.equals(allergies, other.allergies) && Objects.equals(annotations, other.annotations)
-                && Objects.equals(cnsNumber, other.cnsNumber) && Objects.equals(healthPlan, other.healthPlan)
-                && Objects.equals(healthPlanCode, other.healthPlanCode) && Objects.equals(id, other.id)
-                && Objects.equals(person, other.person) && type == other.type;
-    }
-
 }

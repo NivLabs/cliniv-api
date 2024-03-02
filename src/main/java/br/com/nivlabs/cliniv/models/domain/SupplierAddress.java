@@ -1,24 +1,14 @@
 package br.com.nivlabs.cliniv.models.domain;
 
-import java.util.Objects;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
 import br.com.nivlabs.cliniv.models.BaseObjectWithId;
+import jakarta.persistence.*;
+
+import java.util.Objects;
 
 @Entity
 @Table(name = "ENDERECO_FORNECEDOR")
-public class SupplierAddress extends BaseObjectWithId {
+public class SupplierAddress extends BaseObjectWithId<Long> {
 
-    private static final long serialVersionUID = 7701185672879682675L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,7 +44,7 @@ public class SupplierAddress extends BaseObjectWithId {
     }
 
     public SupplierAddress(Long id, Supplier supplier, String street, String addressNumber, String complement, String postalCode,
-            String state, String neighborhood, String city) {
+                           String state, String neighborhood, String city) {
         super();
         this.id = id;
         this.supplier = supplier;
@@ -140,23 +130,30 @@ public class SupplierAddress extends BaseObjectWithId {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(addressNumber, city, complement, id, neighborhood, postalCode, state, street, supplier);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SupplierAddress that = (SupplierAddress) o;
+        return Objects.equals(id, that.id) && Objects.equals(supplier, that.supplier) && Objects.equals(street, that.street) && Objects.equals(addressNumber, that.addressNumber) && Objects.equals(complement, that.complement) && Objects.equals(postalCode, that.postalCode) && Objects.equals(state, that.state) && Objects.equals(neighborhood, that.neighborhood) && Objects.equals(city, that.city);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SupplierAddress other = (SupplierAddress) obj;
-        return Objects.equals(addressNumber, other.addressNumber) && Objects.equals(city, other.city)
-                && Objects.equals(complement, other.complement) && Objects.equals(id, other.id)
-                && Objects.equals(neighborhood, other.neighborhood) && Objects.equals(postalCode, other.postalCode)
-                && Objects.equals(state, other.state) && Objects.equals(street, other.street) && Objects.equals(supplier, other.supplier);
+    public int hashCode() {
+        return Objects.hash(id, supplier, street, addressNumber, complement, postalCode, state, neighborhood, city);
     }
 
+    @Override
+    public String toString() {
+        return "SupplierAddress{" +
+                "id=" + id +
+                ", supplier=" + supplier +
+                ", street='" + street + '\'' +
+                ", addressNumber='" + addressNumber + '\'' +
+                ", complement='" + complement + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", state='" + state + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
 }
