@@ -17,9 +17,7 @@ import java.util.List;
 public class ResponsibleDTO extends PersonDTO {
 
     private String professionalIdentity;
-
     private String initialsIdentity;
-
     private List<SpecialityDTO> specializations = new ArrayList<>();
 
     public ResponsibleDTO(Long id, String fullName, String socialName, String cpf, LocalDate bornDate, String principalNumber,
