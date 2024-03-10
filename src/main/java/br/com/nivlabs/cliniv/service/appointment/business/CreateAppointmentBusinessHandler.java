@@ -41,28 +41,23 @@ public class CreateAppointmentBusinessHandler extends CreateOrUpdateAppointmentB
         logger.info("Iniciando processo de geração de agendamento recorrentes...");
         logger.info("Data do primeiro agendamento :: {}", schedulingDate);
         logger.info("Quantidade de ocorrências :: {}", occurrenceQuantity);
-        logger.info("Usa dias não úteis? :: {}", isBusinessDaysOnly ? "SIM" : "NÃO");
+        logger.info("Apenas dias úteis? :: {}", isBusinessDaysOnly ? "SIM" : "NÃO");
         LocalDateTime newDateTime = schedulingDate;
         for (int i = 0; i < occurrenceQuantity; i++) {
             switch (request.getRepeatSettings().getIntervalType()) {
-                case DAILY -> {
-                    newDateTime = newDateTime.plusDays(1);
-                }
-                case WEEKLY -> {
-                    newDateTime = newDateTime.plusWeeks(1);
-                }
-                case MONTHLY -> {
-                    newDateTime = newDateTime.plusMonths(1);
-                }
-                case YEARLY -> {
-                    newDateTime = newDateTime.plusYears(1);
-                }
+                case DAILY -> newDateTime = newDateTime.plusDays(1);
+                case WEEKLY -> newDateTime = newDateTime.plusWeeks(1);
+                case MONTHLY -> newDateTime = newDateTime.plusMonths(1);
+                case YEARLY -> newDateTime = newDateTime.plusYears(1);
             }
             if (isBusinessDaysOnly) {
-                if (newDateTime.getDayOfWeek() == DayOfWeek.SATURDAY)
+                if (newDateTime.getDayOfWeek() == DayOfWeek.SATURDAY) {
                     newDateTime = newDateTime.plusDays(2);
-                else if (newDateTime.getDayOfWeek() == DayOfWeek.MONDAY)
+                    logger.info("O dia selecionado é um sábado, a marcação será reagendada para o próximo dia útil :: {}", newDateTime);
+                } else if (newDateTime.getDayOfWeek() == DayOfWeek.SUNDAY) {
                     newDateTime = newDateTime.plusDays(1);
+                    logger.info("O dia selecionado é um domingo, a marcação será reagendada para o próximo dia útil :: {}", newDateTime);
+                }
             }
             var entity = convertObject(request);
             entity.setAppointmentDateAndTime(newDateTime);
