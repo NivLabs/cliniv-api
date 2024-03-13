@@ -1,25 +1,21 @@
 package br.com.nivlabs.cliniv.repository.custom.documenttemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-
 import br.com.nivlabs.cliniv.controller.filters.DocumentTemplateFilter;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.DocumentTemplate;
-import br.com.nivlabs.cliniv.models.domain.DocumentTemplatePK_;
-import br.com.nivlabs.cliniv.models.domain.DocumentTemplate_;
 import br.com.nivlabs.cliniv.models.dto.DocumentTemplateDTO;
 import br.com.nivlabs.cliniv.repository.custom.CustomFilters;
 import br.com.nivlabs.cliniv.repository.custom.GenericCustomRepository;
 import br.com.nivlabs.cliniv.util.StringUtils;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Repositório customizado para Templates de documentos
@@ -37,7 +33,7 @@ public class DocumentTemplateRepositoryCustomImpl extends GenericCustomRepositor
         Root<DocumentTemplate> root = criteria.from(DocumentTemplate.class);
 
         criteria.select(builder.construct(DocumentTemplateDTO.class,
-                root.get("pk").get("id"),
+                root.get("id").get("id"),
                 root.get("description")));
         return getPage(filters, builder, criteria, root);
     }
