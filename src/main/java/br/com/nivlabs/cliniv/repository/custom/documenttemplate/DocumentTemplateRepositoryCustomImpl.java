@@ -47,7 +47,7 @@ public class DocumentTemplateRepositoryCustomImpl extends GenericCustomRepositor
         List<Predicate> predicates = new ArrayList<>();
 
         if (filters.getUserId() != null) {
-            predicates.add(builder.equal(root.get("pk").get("userId"), filters.getUserId()));
+            predicates.add(builder.equal(root.get("id").get("userId"), filters.getUserId()));
         }
         if (!StringUtils.isNullOrEmpty(filters.getDescription())) {
             predicates.add(builder.like(root.get("description"), filters.getDescription()));
