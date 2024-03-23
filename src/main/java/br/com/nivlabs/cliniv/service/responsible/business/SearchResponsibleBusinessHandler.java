@@ -1,10 +1,15 @@
 package br.com.nivlabs.cliniv.service.responsible.business;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import br.com.nivlabs.cliniv.controller.filters.ResponsibleFilters;
+import br.com.nivlabs.cliniv.enums.DocumentType;
+import br.com.nivlabs.cliniv.exception.HttpException;
+import br.com.nivlabs.cliniv.models.domain.*;
+import br.com.nivlabs.cliniv.models.dto.*;
+import br.com.nivlabs.cliniv.repository.PersonRepository;
+import br.com.nivlabs.cliniv.repository.ResponsibleRepository;
+import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import br.com.nivlabs.cliniv.util.StringUtils;
 import jakarta.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,32 +17,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.cliniv.controller.filters.ResponsibleFilters;
-import br.com.nivlabs.cliniv.enums.DocumentType;
-import br.com.nivlabs.cliniv.exception.HttpException;
-import br.com.nivlabs.cliniv.models.domain.Person;
-import br.com.nivlabs.cliniv.models.domain.PersonAddress;
-import br.com.nivlabs.cliniv.models.domain.PersonDocument;
-import br.com.nivlabs.cliniv.models.domain.Responsible;
-import br.com.nivlabs.cliniv.models.domain.Speciality;
-import br.com.nivlabs.cliniv.models.dto.AddressDTO;
-import br.com.nivlabs.cliniv.models.dto.DocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.ProfessionalIdentityDTO;
-import br.com.nivlabs.cliniv.models.dto.ResponsibleDTO;
-import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.SpecialityDTO;
-import br.com.nivlabs.cliniv.repository.PersonRepository;
-import br.com.nivlabs.cliniv.repository.ResponsibleRepository;
-import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
-import br.com.nivlabs.cliniv.util.StringUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 
  * Componente específico para consulta de profissionais e responsáveis
  *
  * @author viniciosarodrigues
  * @since 26-09-2021
- *
  */
 @Component
 public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
@@ -54,8 +41,8 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Realiza uma busca paginada por informações resumidas dos profissionais/responsáveis
-     * 
-     * @param filters Filtros de busca
+     *
+     * @param filters     Filtros de busca
      * @param pageRequest Configuraçõe de paginação
      * @return Página de responsáveis e profissionais
      */
@@ -65,7 +52,7 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca um profissional ou responsável pelo identificador
-     * 
+     *
      * @param id Identificador único do responsável / profissional
      * @return Responsável / Profissional encontrado
      */
@@ -78,7 +65,7 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca um profissional ou responsável por CPF
-     * 
+     *
      * @param cpf CPF do profissional
      * @return Informações do profissional
      */
@@ -111,12 +98,12 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte entidade do modelo relacional em objeto de transferência
-     * 
+     *
      * @param responsible Entidade do modelo relacional
      * @return Objeto de transferência
      */
     @Transactional
-    private ResponsibleInfoDTO convertEntityToDTO(Responsible responsible) {
+    ResponsibleInfoDTO convertEntityToDTO(Responsible responsible) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Responsible -> ResponsibleInfoDTO");
         Person person = responsible.getPerson();
 
@@ -153,12 +140,12 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte especialidade da entidade relacional para especialidade de objeto de transferência
-     * 
+     *
      * @param specializations Especializações da entidade relacional
      * @return Especializações de objetod e transferência
      */
     @Transactional
-    private List<SpecialityDTO> convertSpecializations(List<Speciality> specializations) {
+    List<SpecialityDTO> convertSpecializations(List<Speciality> specializations) {
         List<SpecialityDTO> listOfSpecializations = new ArrayList<>();
         logger.info("Verificando especializações...");
         if (specializations != null) {
@@ -169,12 +156,12 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte informações de endereço
-     * 
+     *
      * @param personAddress Endereço em entidade relacional
      * @return Endereço em objeto de transferência
      */
     @Transactional
-    private AddressDTO convertAddress(PersonAddress personAddress) {
+    AddressDTO convertAddress(PersonAddress personAddress) {
         AddressDTO address = null;
         if (personAddress != null) {
             address = new AddressDTO();
@@ -191,12 +178,12 @@ public class SearchResponsibleBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte documentos de domínio para documentos de transferência
-     * 
+     *
      * @param documents Lista de documentos à serem convertidos
      * @return Lista de documentos convertidos
      */
     @Transactional
-    private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
+    List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
         List<DocumentDTO> convertedDocuments = new ArrayList<>();
 
         documents.forEach(doc -> {

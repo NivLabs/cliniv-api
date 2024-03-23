@@ -66,7 +66,7 @@ Para rodar o projeto, existem alguns requisítos mínimos de configurações, s�
 
 - Java 21 **(Obrigatório)**
 - MariaDB Server 10.5+ **(Obrigatório se não for rodar via docker)**
-- Eclipse ou STS **(Obrigatório)**
+- IntelliJ, Eclipse ou STS **(Obrigatório)**
 - Docker **(Obrigatório se for rodar via script)
 
 ---
@@ -128,7 +128,7 @@ há a necessidade de instalação do banco, facilitando o desenvolvimento.
 
 - OBS: Obrigatório ter o Docker instalado.
 
-### Usando o Eclipse ou STS
+### Configurando ambiente
 
 #### Passo 1
 
@@ -153,6 +153,10 @@ há a necessidade de instalação do banco, facilitando o desenvolvimento.
 
 - A aplicação utiliza um sistema de múltiplas conexões, para que a API saiba qual base se conectar, deve-se informar o
   nome da mesma via cabeçalho com a chave `CUSTOMER_ID`.
+
+#### Dica 3
+
+- Checar todas as properties necessárias para levantar o ambiente olhando no arquivo `application.propeties`.
 
 ---
 

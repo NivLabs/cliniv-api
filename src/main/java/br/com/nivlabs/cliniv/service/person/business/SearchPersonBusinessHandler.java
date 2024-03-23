@@ -1,16 +1,5 @@
 package br.com.nivlabs.cliniv.service.person.business;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.enums.DocumentType;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Person;
@@ -21,14 +10,21 @@ import br.com.nivlabs.cliniv.models.dto.PersonInfoDTO;
 import br.com.nivlabs.cliniv.repository.PersonRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.util.StringUtils;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 
  * Componente específico para consulta de pessoas
  *
  * @author viniciosarodrigues
  * @since 26-09-2021
- *
  */
 @Component
 public class SearchPersonBusinessHandler implements BaseBusinessHandler {
@@ -40,7 +36,7 @@ public class SearchPersonBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Consulta informações de pessoa física por identificador único do cadastro de pessoa física
-     * 
+     *
      * @param id Identificador único de pessoa física
      * @return Informações detalhadas do cadastro de pessoa física encontrado
      */
@@ -56,7 +52,7 @@ public class SearchPersonBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Consulta informações de pessoa física por CPF do cadastro de pessoa física
-     * 
+     *
      * @param cpf CPF de pessoa física
      * @return Informações detalhadas do cadastro de pessoa física encontrado
      */
@@ -73,7 +69,7 @@ public class SearchPersonBusinessHandler implements BaseBusinessHandler {
     }
 
     @Transactional
-    private PersonInfoDTO convertEntityToDTO(Person person) {
+    PersonInfoDTO convertEntityToDTO(Person person) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Person -> PersonInfoDTO");
 
         PersonInfoDTO response = new PersonInfoDTO();
@@ -114,12 +110,12 @@ public class SearchPersonBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte documentos de domínio para documentos de transferência
-     * 
+     *
      * @param documents Lista de documentos à serem convertidos
      * @return Lista de documentos convertidos
      */
     @Transactional
-    private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
+    List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
         List<DocumentDTO> convertedDocuments = new ArrayList<>();
 
         documents.forEach(doc -> {

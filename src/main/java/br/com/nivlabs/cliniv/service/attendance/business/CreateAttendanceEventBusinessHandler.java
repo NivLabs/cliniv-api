@@ -1,29 +1,10 @@
 package br.com.nivlabs.cliniv.service.attendance.business;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.enums.EventType;
 import br.com.nivlabs.cliniv.exception.HttpException;
-import br.com.nivlabs.cliniv.models.domain.Accommodation;
-import br.com.nivlabs.cliniv.models.domain.Attendance;
-import br.com.nivlabs.cliniv.models.domain.AttendanceEvent;
-import br.com.nivlabs.cliniv.models.domain.Responsible;
-import br.com.nivlabs.cliniv.models.domain.Sector;
+import br.com.nivlabs.cliniv.models.domain.*;
 import br.com.nivlabs.cliniv.models.domain.tiss.Procedure;
-import br.com.nivlabs.cliniv.models.dto.AccommodationDTO;
-import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.NewAttendanceEventDTO;
-import br.com.nivlabs.cliniv.models.dto.ProcedureDTO;
-import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
+import br.com.nivlabs.cliniv.models.dto.*;
 import br.com.nivlabs.cliniv.repository.AttendanceEventRepository;
 import br.com.nivlabs.cliniv.repository.AttendanceRepository;
 import br.com.nivlabs.cliniv.repository.ProcedureRepository;
@@ -34,6 +15,14 @@ import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
 import br.com.nivlabs.cliniv.service.userservice.UserService;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 import br.com.nivlabs.cliniv.util.StringUtils;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Camada de negócio relacionada à processo de criação de evento de atendimento
@@ -148,7 +137,7 @@ public class CreateAttendanceEventBusinessHandler implements BaseBusinessHandler
      * @return Acomodação do novo evento (Entity)
      */
     @Transactional
-    private Accommodation convertAccommodation(AccommodationDTO accommodation) {
+    protected Accommodation convertAccommodation(AccommodationDTO accommodation) {
         logger.info("Convertendo informações de Sala ou Leito :: Identificador processado -> {}", accommodation.getId());
         Accommodation accommodationReturn = new Accommodation();
         accommodationReturn.setId(accommodation.getId());

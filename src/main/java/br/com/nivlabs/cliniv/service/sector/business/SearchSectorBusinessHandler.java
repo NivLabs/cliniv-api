@@ -1,13 +1,5 @@
 package br.com.nivlabs.cliniv.service.sector.business;
 
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.controller.filters.SectorFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Sector;
@@ -16,14 +8,18 @@ import br.com.nivlabs.cliniv.models.dto.SectorDTO;
 import br.com.nivlabs.cliniv.models.dto.SectorInfoDTO;
 import br.com.nivlabs.cliniv.repository.SectorRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 /**
- * 
  * Componente específico para busca de setores e acomodações
  *
  * @author viniciosarodrigues
  * @since 06-10-2021
- *
  */
 @Component
 public class SearchSectorBusinessHandler implements BaseBusinessHandler {
@@ -36,8 +32,8 @@ public class SearchSectorBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Realiza a busca pagina de setores
-     * 
-     * @param filters Filtros de pesquisa
+     *
+     * @param filters     Filtros de pesquisa
      * @param pageRequest Configurações de paginação
      * @return Página de setores
      */
@@ -48,7 +44,7 @@ public class SearchSectorBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca informações do setor por identificador único do setor
-     * 
+     *
      * @param id Identificador único do setor
      * @return Informações do setor
      */
@@ -65,12 +61,12 @@ public class SearchSectorBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte entidade relacional de Setor para DTO de Setor
-     * 
+     *
      * @param sectorEntity Entidade relacional de setor
      * @return DTO de setor
      */
     @Transactional
-    private SectorInfoDTO convertEntityToDTO(Sector sectorEntity) {
+    SectorInfoDTO convertEntityToDTO(Sector sectorEntity) {
         logger.info("Convertendo entidade relacional de Setor para DTO");
         SectorInfoDTO sectorInfo = new SectorInfoDTO();
         sectorInfo.setId(sectorEntity.getId());

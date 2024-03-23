@@ -1,16 +1,5 @@
 package br.com.nivlabs.cliniv.service.attendance.business;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.cliniv.models.dto.InstituteDTO;
@@ -19,6 +8,15 @@ import br.com.nivlabs.cliniv.report.ReportParam;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.service.InstituteService;
 import br.com.nivlabs.cliniv.service.report.ReportService;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Component
 public class GenerateAttendanceReportBusinessHandler implements BaseBusinessHandler {
@@ -63,17 +61,17 @@ public class GenerateAttendanceReportBusinessHandler implements BaseBusinessHand
 
     /**
      * Cria um documento digital anexado a um atendimento
-     * 
-     * @param reportName Nome do relatório
-     * @param params Parâmetros do relatório
+     *
+     * @param reportName        Nome do relatório
+     * @param params            Parâmetros do relatório
      * @param reportInputStream Stream do Relatório (jxml)
      * @return Documento digital do relatório gerado
      */
     @Transactional
-    private DigitalDocumentDTO generateFromJxmlStream(ReportParam params) {
+    DigitalDocumentDTO generateFromJxmlStream(ReportParam params) {
         try {
             return reportService.generateDocumentFromJxmlStream(new ClassPathResource(GENERIC_REPORT_SOURCE).getInputStream(),
-                                                                "Relatório de Atendimento", params);
+                    "Relatório de Atendimento", params);
         } catch (IOException e) {
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar relatório.");
         }

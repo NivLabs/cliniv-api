@@ -19,12 +19,13 @@ public class DocumentValidator {
 
     private static boolean isInvalidSequence(String string) {
         boolean invalidSequence = true;
-        if (string != null && string.length() > 0) {
+        if (string != null && !string.isEmpty()) {
             char[] chars = string.toCharArray();
             char firstChar = chars[0];
-            for (int i = 1; i < chars.length && invalidSequence; i++) {
+            for (int i = 1; i < chars.length; i++) {
                 if (firstChar != chars[i]) {
                     invalidSequence = false;
+                    break;
                 }
             }
         }
@@ -36,9 +37,9 @@ public class DocumentValidator {
             return false;
         }
 
-        Integer digito1 = calcularDigito(cpf.substring(0, 9), pesoCPF);
-        Integer digito2 = calcularDigito(cpf.substring(0, 9) + digito1, pesoCPF);
-        return cpf.equals(cpf.substring(0, 9) + digito1.toString() + digito2.toString());
+        int digito1 = calcularDigito(cpf.substring(0, 9), pesoCPF);
+        int digito2 = calcularDigito(cpf.substring(0, 9) + digito1, pesoCPF);
+        return cpf.equals(cpf.substring(0, 9) + digito1 + digito2);
     }
 
     public static boolean isValidCNPJ(String cnpj) {
@@ -46,9 +47,9 @@ public class DocumentValidator {
             return false;
         }
 
-        Integer digito1 = calcularDigito(cnpj.substring(0, 12), pesoCNPJ);
-        Integer digito2 = calcularDigito(cnpj.substring(0, 12) + digito1, pesoCNPJ);
-        return cnpj.equals(cnpj.substring(0, 12) + digito1.toString() + digito2.toString());
+        int digito1 = calcularDigito(cnpj.substring(0, 12), pesoCNPJ);
+        int digito2 = calcularDigito(cnpj.substring(0, 12) + digito1, pesoCNPJ);
+        return cnpj.equals(cnpj.substring(0, 12) + digito1 + digito2);
     }
 
 }

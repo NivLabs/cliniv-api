@@ -21,6 +21,8 @@ public class AppointmentFilters extends CustomFilters {
     @DateTimeFormat(iso = ISO.DATE)
     private LocalDate endDate = LocalDate.now();
 
+    private Long patientId;
+
     private String status;
 
     public String getProfessionalId() {
@@ -51,23 +53,27 @@ public class AppointmentFilters extends CustomFilters {
         return status;
     }
 
+    public Long getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(Long patientId) {
+        this.patientId = patientId;
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("AppointmentFilters [professionalId=");
-        builder.append(professionalId);
-        builder.append(", startDate=");
-        builder.append(startDate);
-        builder.append(", endDate=");
-        builder.append(endDate);
-        builder.append(", status=");
-        builder.append(status);
-        builder.append("]");
-        return builder.toString();
+        return "AppointmentFilters{" +
+                "professionalId='" + professionalId + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", patientId=" + patientId +
+                ", status='" + status + '\'' +
+                '}';
     }
 
 }

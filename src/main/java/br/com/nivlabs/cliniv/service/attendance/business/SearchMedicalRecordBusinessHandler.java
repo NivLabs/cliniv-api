@@ -98,7 +98,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param person     PessoaparameterDao
      */
     @Transactional
-    private void checkParameters(Attendance attendance) {
+    void checkParameters(Attendance attendance) {
         var blocksReadingMedicalRecord = parameterDao
                 .findByAlias(ParameterAliasType.BLOCKS_READING_THE_MEDICAL_RECORD_WITHOUT_ACTIVE_SERVICE);
         if (blocksReadingMedicalRecord.isPresent() && Boolean.valueOf(blocksReadingMedicalRecord.get().getValue())) {
@@ -197,7 +197,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param medicalRecord Objeto de transferência referente às informações do prontuário (Atendimento)
      */
     @Transactional
-    private void processEvents(Attendance entity, MedicalRecordDTO medicalRecord) {
+    void processEvents(Attendance entity, MedicalRecordDTO medicalRecord) {
         entity.getEvents().forEach(event -> {
             processEvent(medicalRecord, event);
         });
@@ -230,7 +230,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param entity        Objeto de entidade relacional referente ao evento do atendimento
      */
     @Transactional
-    private void processEvent(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
+    void processEvent(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
         AttendanceEventDTO attendanceEventInfo = new AttendanceEventDTO();
         attendanceEventInfo.setId(entity.getId());
         attendanceEventInfo.setDatetime(entity.getEventDateTime());
@@ -272,7 +272,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @return Acomodação (DTO)
      */
     @Transactional
-    private AccommodationDTO convertAccomodation(Accommodation accommodation) {
+    AccommodationDTO convertAccomodation(Accommodation accommodation) {
         return new AccommodationDTO(accommodation.getId(), accommodation.getSector().getId(), accommodation.getDescription(),
                 accommodation.getType());
     }
@@ -284,7 +284,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param entity        Objeto de entidade relacional referente ao evento do atendimento
      */
     @Transactional
-    private void processEvolution(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
+    void processEvolution(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
         EvolutionInfoDTO evolution = new EvolutionInfoDTO();
         evolution.setId(entity.getId());
         evolution.setAccommodationId(medicalRecord.getLastAccommodation() != null ? medicalRecord.getLastAccommodation().getId() : null);
@@ -303,7 +303,7 @@ public class SearchMedicalRecordBusinessHandler implements BaseBusinessHandler {
      * @param entity        Objeto de entidade relacional referente ao evento do atendimento
      */
     @Transactional
-    private void processMedications(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
+    void processMedications(MedicalRecordDTO medicalRecord, AttendanceEvent entity) {
         MedicineInfoDTO medicine = new MedicineInfoDTO();
         medicine.setId(entity.getId());
         medicine.setDatetime(entity.getEventDateTime());

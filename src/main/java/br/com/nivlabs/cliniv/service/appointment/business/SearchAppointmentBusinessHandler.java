@@ -14,7 +14,6 @@ import br.com.nivlabs.cliniv.util.StringUtils;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -32,15 +31,20 @@ import java.util.List;
 @Component
 public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
 
-    @Autowired
-    protected Logger logger;
+    protected final Logger logger;
+    protected final AppointmentRepository appointment;
+    private final UserService userService;
+    private final ResponsibleService responsibleService;
 
-    @Autowired
-    protected AppointmentRepository scheduleRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ResponsibleService responsibleService;
+    public SearchAppointmentBusinessHandler(final Logger logger,
+                                            final AppointmentRepository scheduleRepository,
+                                            final UserService userService,
+                                            final ResponsibleService responsibleService) {
+        this.logger = logger;
+        this.appointment = scheduleRepository;
+        this.userService = userService;
+        this.responsibleService = responsibleService;
+    }
 
     /**
      * Consulta de agendamento paginada
@@ -63,7 +67,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
             filters.setEndDate(LocalDate.now());
         }
         filters.setSize(1000);
-        return scheduleRepository.resumedList(filters);
+        return appointment.resumedList(filters);
     }
 
     /**
@@ -74,7 +78,7 @@ public class SearchAppointmentBusinessHandler implements BaseBusinessHandler {
      */
     @Transactional
     public AppointmentInfoDTO byId(Long id) {
-        Appointment scheduleEntity = scheduleRepository.findById(id)
+        Appointment scheduleEntity = appointment.findById(id)
                 .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND, "Agendamento não encontrado!"));
 
         logger.info("Paciente {} encontrado com sucesso!", scheduleEntity.getPatient().getPerson().getFullName());

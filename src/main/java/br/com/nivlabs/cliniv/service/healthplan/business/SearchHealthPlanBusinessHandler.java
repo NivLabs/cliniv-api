@@ -1,26 +1,22 @@
 package br.com.nivlabs.cliniv.service.healthplan.business;
 
+import br.com.nivlabs.cliniv.exception.HttpException;
+import br.com.nivlabs.cliniv.models.domain.HealthPlan;
+import br.com.nivlabs.cliniv.models.dto.HealthPlanDTO;
+import br.com.nivlabs.cliniv.repository.HealthPlanRepository;
+import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import jakarta.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.cliniv.exception.HttpException;
-import br.com.nivlabs.cliniv.models.domain.HealthPlan;
-import br.com.nivlabs.cliniv.models.dto.HealthPlanDTO;
-import br.com.nivlabs.cliniv.repository.HealthPlanRepository;
-import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
-
 /**
- * 
  * Componente específico para operações busca de planos de saúde
  *
  * @author viniciosarodrigues
  * @since 05-10-2021
- *
  */
 @Component
 public class SearchHealthPlanBusinessHandler implements BaseBusinessHandler {
@@ -33,7 +29,7 @@ public class SearchHealthPlanBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca informações do plano de saúde pelo identificador único do plano
-     * 
+     *
      * @param id Identificador único do plano de saúde
      * @return Informações do plano de saúde
      */
@@ -52,7 +48,7 @@ public class SearchHealthPlanBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca informações do plano de saúde pelo código ANS
-     * 
+     *
      * @param ansCode Código do plano na ANS
      * @return Informações do plano de saúde
      */
@@ -70,12 +66,12 @@ public class SearchHealthPlanBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte um HealthPlan padrão de domínio para um DTO
-     * 
+     *
      * @param healthPlanEntity Objeto de domínio
      * @return DTO de resposta
      */
     @Transactional
-    private HealthPlanDTO convertEntityToDTO(HealthPlan healthPlanEntity) {
+    HealthPlanDTO convertEntityToDTO(HealthPlan healthPlanEntity) {
 
         HealthPlanDTO healthPlanInfo = new HealthPlanDTO();
         BeanUtils.copyProperties(healthPlanEntity, healthPlanInfo);

@@ -1,13 +1,5 @@
 package br.com.nivlabs.cliniv.service.procedure.business;
 
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.controller.filters.ProcedureFilters;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.tiss.Procedure;
@@ -15,14 +7,18 @@ import br.com.nivlabs.cliniv.models.dto.ProcedureDTO;
 import br.com.nivlabs.cliniv.models.dto.ProcedureInfoDTO;
 import br.com.nivlabs.cliniv.repository.ProcedureRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 /**
- * 
  * Componente específico para consulta de procedimentos
  *
  * @author viniciosarodrigues
  * @since 08-10-2021
- *
  */
 @Component
 public class SearchProcedureBusinessHandler implements BaseBusinessHandler {
@@ -35,8 +31,8 @@ public class SearchProcedureBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Realiza uma busca paginada de procedimentos
-     * 
-     * @param filters Filtros de busca de procedimentos
+     *
+     * @param filters     Filtros de busca de procedimentos
      * @param pageRequest Configurações de paginação
      * @return Página de procedimentos
      */
@@ -47,7 +43,7 @@ public class SearchProcedureBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Realiza uma busca de procedimento por identificador único do mesmo
-     * 
+     *
      * @param id Identificador único do procedimento
      * @return Procedimento encontrado
      */
@@ -65,12 +61,12 @@ public class SearchProcedureBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte uma entidade relacional em DTO
-     * 
+     *
      * @param procedureEntity Entidade relacional que representa um procedimento
      * @return DTO de procedimento
      */
     @Transactional
-    private ProcedureInfoDTO convertEntityToDTO(Procedure procedureEntity) {
+    ProcedureInfoDTO convertEntityToDTO(Procedure procedureEntity) {
         logger.info("Convertendo entidade encontrada de Procedimento em DTO...");
 
         ProcedureInfoDTO procedureInfo = new ProcedureInfoDTO();

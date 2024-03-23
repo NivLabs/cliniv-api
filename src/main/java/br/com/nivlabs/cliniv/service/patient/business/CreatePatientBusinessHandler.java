@@ -1,12 +1,5 @@
 package br.com.nivlabs.cliniv.service.patient.business;
 
-import java.time.LocalDateTime;
-
-import jakarta.transaction.Transactional;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.enums.DocumentType;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Patient;
@@ -14,21 +7,24 @@ import br.com.nivlabs.cliniv.models.domain.Person;
 import br.com.nivlabs.cliniv.models.dto.PatientInfoDTO;
 import br.com.nivlabs.cliniv.models.dto.PersonInfoDTO;
 import br.com.nivlabs.cliniv.util.StringUtils;
+import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /**
- * 
  * Camada de negócio para a criação de pacientes
  *
  * @author viniciosarodrigues
  * @since 18-09-2021
- *
  */
 @Component
 public class CreatePatientBusinessHandler extends CreateOrUpdatePatientBusinessHandler {
 
     /**
      * Cadastra um novo paciente na aplicação
-     * 
+     *
      * @param request Objeto de transferência com informações detalhadas do paciente
      * @return Informações do paciente pós insert com códigos de criação
      */
@@ -61,12 +57,12 @@ public class CreatePatientBusinessHandler extends CreateOrUpdatePatientBusinessH
 
     /**
      * Valida o cadastro informações da pessoa e retorna um objeto válido
-     * 
+     *
      * @param request Objeto de transferência com informações do paciente
      * @return Entidade existente ou nova se não existir
      */
     @Transactional
-    private PersonInfoDTO getValidPerson(PatientInfoDTO request) {
+    PersonInfoDTO getValidPerson(PatientInfoDTO request) {
         PersonInfoDTO validPerson = new PersonInfoDTO();
         if (request.getDocument() != null && request.getDocument().getValue() != null
                 && request.getDocument().getType() != DocumentType.CPF) {
@@ -94,8 +90,8 @@ public class CreatePatientBusinessHandler extends CreateOrUpdatePatientBusinessH
             }
         } catch (HttpException e) {
             logger.info(
-                        "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
-                        request.getDocument().getType(), request.getDocument().getValue());
+                    "Nenhum cadastro encontrado :: Criando um novo cadastro de Pessoa no documento :: TIPO: {} | VALOR: {}",
+                    request.getDocument().getType(), request.getDocument().getValue());
 
         }
         return validPerson;

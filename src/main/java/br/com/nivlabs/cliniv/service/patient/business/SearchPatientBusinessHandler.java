@@ -1,10 +1,20 @@
 package br.com.nivlabs.cliniv.service.patient.business;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import br.com.nivlabs.cliniv.ApplicationMain;
+import br.com.nivlabs.cliniv.controller.filters.PatientFilters;
+import br.com.nivlabs.cliniv.enums.DocumentType;
+import br.com.nivlabs.cliniv.exception.HttpException;
+import br.com.nivlabs.cliniv.models.domain.Patient;
+import br.com.nivlabs.cliniv.models.domain.Person;
+import br.com.nivlabs.cliniv.models.domain.PersonDocument;
+import br.com.nivlabs.cliniv.models.dto.*;
+import br.com.nivlabs.cliniv.repository.AppointmentRepository;
+import br.com.nivlabs.cliniv.repository.PatientRepository;
+import br.com.nivlabs.cliniv.repository.PersonRepository;
+import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import br.com.nivlabs.cliniv.service.attendance.AttendanceService;
+import br.com.nivlabs.cliniv.util.StringUtils;
 import jakarta.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,49 +22,43 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.cliniv.controller.filters.PatientFilters;
-import br.com.nivlabs.cliniv.enums.DocumentType;
-import br.com.nivlabs.cliniv.exception.HttpException;
-import br.com.nivlabs.cliniv.models.domain.Patient;
-import br.com.nivlabs.cliniv.models.domain.Person;
-import br.com.nivlabs.cliniv.models.domain.PersonDocument;
-import br.com.nivlabs.cliniv.models.dto.AddressDTO;
-import br.com.nivlabs.cliniv.models.dto.DocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.HealthPlanDTO;
-import br.com.nivlabs.cliniv.models.dto.PatientDTO;
-import br.com.nivlabs.cliniv.models.dto.PatientInfoDTO;
-import br.com.nivlabs.cliniv.repository.PatientRepository;
-import br.com.nivlabs.cliniv.repository.PersonRepository;
-import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
-import br.com.nivlabs.cliniv.service.attendance.AttendanceService;
-import br.com.nivlabs.cliniv.util.StringUtils;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 
  * Camada de serviço para todo tipo de consulta de paciente
  *
  * @author viniciosarodrigues
  * @since 18-09-2021
- *
  */
 @Component
 public class SearchPatientBusinessHandler implements BaseBusinessHandler {
 
-    @Autowired
-    private Logger logger;
+    private final Logger logger;
+    private final PatientRepository patientRepo;
+    private final AttendanceService attendanceService;
+    private final PersonRepository personRepo;
+    final private AppointmentRepository appointmentRepository;
 
     @Autowired
-    private PatientRepository patientRepo;
-    @Autowired
-    private AttendanceService attendanceService;
-    @Autowired
-    private PersonRepository personRepo;
+    public SearchPatientBusinessHandler(final AppointmentRepository appointmentRepository,
+                                        final Logger logger,
+                                        final PatientRepository patientRepo,
+                                        final AttendanceService attendanceService,
+                                        final PersonRepository personRepo) {
+        this.appointmentRepository = appointmentRepository;
+        this.logger = logger;
+        this.patientRepo = patientRepo;
+        this.attendanceService = attendanceService;
+        this.personRepo = personRepo;
+    }
 
     /**
      * Busca uma página de informações resumidas de pacientes
-     * 
+     *
      * @param filters Filtros de busca
-     * @param pageRequest Configurações da paginação
      * @return Página com informações resumidas de pacientes
      */
     public Page<PatientDTO> getPage(PatientFilters filters) {
@@ -64,7 +68,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca informações detalhadas do paciente por ID
-     * 
+     *
      * @param id Identificador único do paciente
      * @return Informações detalhadas do paciente
      */
@@ -79,8 +83,8 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca informações do paciente baseado no Código da Carteira Nacional de Saúde
-     * 
-     * @param CNS Código da Carteira Nacional de Saúde
+     *
+     * @param cnsCode Código da Carteira Nacional de Saúde
      * @return Informações detalhadas do paciente
      */
     @Transactional
@@ -93,9 +97,9 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca informações do paciente
-     * 
+     * <p>
      * OBS: Se o paciente não for encontrado, uma busca por informações de pessoa física é realizada e retornada
-     * 
+     *
      * @param cpf CPF do paciente
      * @return Informações detalhadas do paciente ou da pessoa física
      */
@@ -128,12 +132,12 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte entidade do modelo relacional em objeto de transferência
-     * 
+     *
      * @param patient Entidade do modelo relacional
      * @return Objeto de transferência
      */
     @Transactional
-    private PatientInfoDTO convertPatientEntity(Patient patient) {
+    PatientInfoDTO convertPatientEntity(Patient patient) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Patient -> PatientInfoDTO");
         Person person = patient.getPerson();
 
@@ -173,6 +177,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
 
         patient.getAllergies().forEach(allergy -> patientInfo.getAllergies().add(allergy.getDescription()));
 
+        handlerPatientUpcomingAppointments(patientInfo);
         handletPatientHistory(patientInfo);
 
         if (patient.getHealthPlan() != null) {
@@ -200,12 +205,12 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte documentos de domínio para documentos de transferência
-     * 
+     *
      * @param documents Lista de documentos à serem convertidos
      * @return Lista de documentos convertidos
      */
     @Transactional
-    private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
+    List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
         List<DocumentDTO> convertedDocuments = new ArrayList<>();
 
         documents.forEach(doc -> {
@@ -220,13 +225,18 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
         return convertedDocuments;
     }
 
+    private void handlerPatientUpcomingAppointments(PatientInfoDTO patientInfo) {
+        final var appointments = appointmentRepository.findByPatientIdAndInitialDateTime(patientInfo.getId(), LocalDateTime.now(ZoneId.of(ApplicationMain.AMERICA_SAO_PAULO)));
+        patientInfo.getUpcomingAppointments().addAll(appointments);
+    }
+
     /**
      * Adiciona o histórico do paciente
-     * 
+     *
      * @param patientInfo Informações detalhadas do paciente
      */
     @Transactional
-    private void handletPatientHistory(PatientInfoDTO patientInfo) {
+    void handletPatientHistory(PatientInfoDTO patientInfo) {
         try {
             if (patientInfo.getId() != null) {
                 logger.info("Buscando histórico de atendimentos do paciente...");

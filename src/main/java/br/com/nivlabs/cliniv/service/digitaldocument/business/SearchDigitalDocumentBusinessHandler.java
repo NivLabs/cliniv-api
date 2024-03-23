@@ -1,24 +1,20 @@
 package br.com.nivlabs.cliniv.service.digitaldocument.business;
 
-import jakarta.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.DigitalDocument;
 import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
 import br.com.nivlabs.cliniv.repository.DigitalDocumentRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 /**
- *
  * Componente de negócio criado para realizar pesquisas de documentso digitais
  *
  * @author viniciosarodrigues
  * @since 19-09-2021
- *
  */
 @Component
 public class SearchDigitalDocumentBusinessHandler implements BaseBusinessHandler {
@@ -28,7 +24,7 @@ public class SearchDigitalDocumentBusinessHandler implements BaseBusinessHandler
 
     /**
      * Busca informações de um documento digital por identificador único do documento
-     * 
+     *
      * @param id Identificador único do documento
      * @return Documento digital
      */
@@ -41,12 +37,12 @@ public class SearchDigitalDocumentBusinessHandler implements BaseBusinessHandler
 
     /**
      * Converte a entidade relacional em objeto de transferência
-     * 
+     *
      * @param entity Endidade relacional
      * @return Objeto de transferência
      */
     @Transactional
-    private DigitalDocumentDTO convertDocument(DigitalDocument entity) {
+    DigitalDocumentDTO convertDocument(DigitalDocument entity) {
         DigitalDocumentDTO response = new DigitalDocumentDTO();
         response.setId(entity.getId());
         response.setBase64(entity.getBase64());

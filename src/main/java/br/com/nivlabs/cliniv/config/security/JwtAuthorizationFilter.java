@@ -89,12 +89,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         boolean tokenRequired = true;
 
         if (request.getMethod().equals("GET")) {
-            tokenRequired = checkUriAccessPermission(requestURI, tokenRequired, listOfGetMatchs);
+            tokenRequired = checkUriAccessPermission(requestURI, listOfGetMatchs);
         } else if (request.getMethod().equals("POST")) {
-            tokenRequired = checkUriAccessPermission(requestURI, tokenRequired, listOfPostMatchs);
+            tokenRequired = checkUriAccessPermission(requestURI, listOfPostMatchs);
         }
         if (tokenRequired) {
-            tokenRequired = checkUriAccessPermission(requestURI, tokenRequired, listOfAllMatchs);
+            tokenRequired = checkUriAccessPermission(requestURI, listOfAllMatchs);
         }
         final var tuple = getRequestHeaders(request);
         if (tokenRequired && getAuthentication(tuple.getFirst(), tuple.getSecond()) == null) {
@@ -103,7 +103,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         return tokenRequired;
     }
 
-    private boolean checkUriAccessPermission(final String requestURI, boolean tokenRequired, List<String> URIs) {
+    private boolean checkUriAccessPermission(final String requestURI, List<String> URIs) {
+        var tokenRequired = true;
         for (String uri : URIs) {
             if (uri.equals(requestURI)) {
                 tokenRequired = false;

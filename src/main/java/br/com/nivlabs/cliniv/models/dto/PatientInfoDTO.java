@@ -118,6 +118,9 @@ public class PatientInfoDTO extends DataTransferObjectBase {
     @Schema(description = "Nacionalidade do paciente")
     private String nationality;
 
+    @Schema(description = "Lista de próximas consultas")
+    private List<AppointmentDTO> upcomingAppointments = new ArrayList<>();
+
     /**
      * @return the id
      */
@@ -523,6 +526,15 @@ public class PatientInfoDTO extends DataTransferObjectBase {
         this.nationality = nationality;
     }
 
+
+    public List<AppointmentDTO> getUpcomingAppointments() {
+        return upcomingAppointments;
+    }
+
+    public void setUpcomingAppointments(List<AppointmentDTO> upcomingAppointments) {
+        this.upcomingAppointments = upcomingAppointments;
+    }
+
     @Override
     public String toString() {
         return "PatientInfoDTO{" +
@@ -531,6 +543,7 @@ public class PatientInfoDTO extends DataTransferObjectBase {
                 ", fullName='" + fullName + '\'' +
                 ", socialName='" + socialName + '\'' +
                 ", bornDate=" + bornDate +
+                ", lifetimeDescription='" + lifetimeDescription + '\'' +
                 ", document=" + document +
                 ", documents=" + documents +
                 ", gender=" + gender +
@@ -552,6 +565,7 @@ public class PatientInfoDTO extends DataTransferObjectBase {
                 ", ethnicGroup=" + ethnicGroup +
                 ", bloodType=" + bloodType +
                 ", nationality='" + nationality + '\'' +
+                ", upcomingAppointments=" + upcomingAppointments +
                 '}';
     }
 }

@@ -1,14 +1,5 @@
 package br.com.nivlabs.cliniv.service.evolution.business;
 
-import java.time.LocalDateTime;
-
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.enums.EventType;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Accommodation;
@@ -23,14 +14,19 @@ import br.com.nivlabs.cliniv.repository.EvolutionRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.service.attendance.AttendanceService;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /**
- * 
  * Componente de negócio para criação de evoluções clínicas do paciente
  *
  * @author viniciosarodrigues
  * @since 26-09-2021
- *
  */
 @Component
 public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
@@ -49,13 +45,13 @@ public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Insere uma nova evolução clínica do paciente
-     * 
+     *
      * @param request
      */
     @Transactional
     public EvolutionInfoDTO create(EvolutionInfoDTO request) {
         logger.info("Iniciando a adição de uma evolução clínica ao sistema...\nBuscando pelo atendimento informado na requisição :: {}",
-                    request.getAttendanceId());
+                request.getAttendanceId());
         MedicalRecordDTO medicalRecord = attendanceService.findMedicalRecordByAttendanceId(request.getAttendanceId());
 
         logger.info("Atendimento encontrado para o paciente {}.", medicalRecord.getFullName());
@@ -81,11 +77,11 @@ public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Cria o evento de atendimento para adição de Evolução clínica
-     * 
+     *
      * @param evolution
      */
     @Transactional
-    private void createAttendanceEvent(EvolutionInfoDTO request, MedicalRecordDTO medicalRecord, String userFromSession) {
+    protected void createAttendanceEvent(EvolutionInfoDTO request, MedicalRecordDTO medicalRecord, String userFromSession) {
         logger.info("Iniciando processo de criação de evento do atendimento para Evolução clínica");
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
         event.setAttendanceId(request.getAttendanceId());
@@ -100,7 +96,7 @@ public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Adiciona uma acomodação no evento do atendimento
-     * 
+     *
      * @param request
      * @param medicalRecord
      * @param event
@@ -110,7 +106,7 @@ public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
         logger.info("Verificando acomodação do evento...");
         if (request.getAccommodationId() != null) {
             logger.info("A acomodação foi informada via requisição :: Identificador informado :: {} :: Iniciando uma busca pelo mesmo...",
-                        request.getAccommodationId());
+                    request.getAccommodationId());
             Accommodation accommodation = accommodationRepo.findById(request.getAccommodationId())
                     .orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                             String.format("Acomodação com código %s não encontrada", request.getAccommodationId())));
@@ -120,8 +116,8 @@ public class CreateEvolutionBusinessHandler implements BaseBusinessHandler {
             logger.info("Nenhuma acomodação foi informada na requisição, buscando última acomodação do paciente...");
             AccommodationDTO currentAccommodation = medicalRecord.getLastAccommodation();
             logger.info("A última acomodação do paciente foi adicionada ao evento do atendimento (Evolução) :: Identificador {} | Descrição {}",
-                        currentAccommodation.getId(),
-                        currentAccommodation.getDescription());
+                    currentAccommodation.getId(),
+                    currentAccommodation.getDescription());
             event.setAccommodation(new AccommodationDTO(currentAccommodation.getId()));
         } else {
             throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,

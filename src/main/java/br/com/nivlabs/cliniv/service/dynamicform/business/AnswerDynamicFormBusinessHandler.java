@@ -1,28 +1,9 @@
 package br.com.nivlabs.cliniv.service.dynamicform.business;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Date;
-
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.enums.EventType;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.DynamicFormAnswered;
-import br.com.nivlabs.cliniv.models.dto.DigitalDocumentDTO;
-import br.com.nivlabs.cliniv.models.dto.InstituteDTO;
-import br.com.nivlabs.cliniv.models.dto.MedicalRecordDTO;
-import br.com.nivlabs.cliniv.models.dto.NewAttendanceEventDTO;
-import br.com.nivlabs.cliniv.models.dto.NewDynamicFormAnsweredDTO;
-import br.com.nivlabs.cliniv.models.dto.QuestionDTO;
-import br.com.nivlabs.cliniv.models.dto.ResponsibleInfoDTO;
-import br.com.nivlabs.cliniv.models.dto.UserInfoDTO;
+import br.com.nivlabs.cliniv.models.dto.*;
 import br.com.nivlabs.cliniv.report.ReportParam;
 import br.com.nivlabs.cliniv.repository.DynamicFormAnsweredRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
@@ -33,14 +14,22 @@ import br.com.nivlabs.cliniv.service.responsible.ResponsibleService;
 import br.com.nivlabs.cliniv.service.userservice.UserService;
 import br.com.nivlabs.cliniv.util.SecurityContextUtil;
 import br.com.nivlabs.cliniv.util.StringUtils;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
- * 
  * Componente específico para respostas de formulários dinâmicos
  *
  * @author viniciosarodrigues
  * @since 24-09-2021
- *
  */
 @Component
 public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
@@ -77,7 +66,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Cria um novo questionário respondido de anamnese
-     * 
+     *
      * @param request
      * @return
      */
@@ -97,8 +86,8 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
             DigitalDocumentDTO document = reportService
                     .genareteDocumentFromJxmlStream(attendanceId, request.getDocumentTitle(),
-                                                    getAnamnesisReportParams(attendanceId, request, user),
-                                                    new ClassPathResource(REPORT_PATH).getInputStream());
+                            getAnamnesisReportParams(attendanceId, request, user),
+                            new ClassPathResource(REPORT_PATH).getInputStream());
             createAnamneseDocumentEvent(attendanceId, request, medicalRecord, document, user);
         } catch (IOException e) {
             logger.error("Falha ao gerar documento de Anamnese", e);
@@ -110,13 +99,13 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Insere os itens para o formulário dinâmico da aplicação
-     * 
+     *
      * @param responsibleId
      * @param attendanceId
      * @param request
      */
     @Transactional
-    private void createAnsweredForm(Long responsibleId, Long attendanceId, NewDynamicFormAnsweredDTO request) {
+    void createAnsweredForm(Long responsibleId, Long attendanceId, NewDynamicFormAnsweredDTO request) {
         logger.info("Iniciando processo de inserção de respostas do formulário dinâmico :: {}", request.getListOfResponse());
         logger.info("Removendo respostas anteriores...");
         formRepo.deleteByResponsibleId(responsibleId);
@@ -141,15 +130,15 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Cria um evento de documento para anamnese
-     * 
+     *
      * @param request
      * @param document
      * @param requestOwner
      */
     @Transactional
-    private void createAnamneseDocumentEvent(Long attendanceId, NewDynamicFormAnsweredDTO request, MedicalRecordDTO medicalRecord,
-                                             DigitalDocumentDTO document,
-                                             UserInfoDTO requestOwner) {
+    void createAnamneseDocumentEvent(Long attendanceId, NewDynamicFormAnsweredDTO request, MedicalRecordDTO medicalRecord,
+                                     DigitalDocumentDTO document,
+                                     UserInfoDTO requestOwner) {
         logger.info("Iniciando criação de Evento de atendimento para anamnese...");
         NewAttendanceEventDTO event = new NewAttendanceEventDTO();
         event.setEventType(EventType.REPORT);
@@ -170,7 +159,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca o responsável pela requisição da anamnese baseado no usuário
-     * 
+     *
      * @param requestOwner
      * @return
      */
@@ -186,7 +175,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Monta os parâmetros do relatório
-     * 
+     *
      * @param request
      * @param requestOwner
      * @return
@@ -213,7 +202,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Valita as questões
-     * 
+     *
      * @param dynamicFormQuestion
      */
     private void validateQuestions(QuestionDTO dynamicFormQuestion) {
@@ -233,7 +222,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Valida os tipos das respostas
-     * 
+     *
      * @param dynamicFormQuestion
      */
     private void checkMetaTypes(QuestionDTO dynamicFormQuestion) {
@@ -246,7 +235,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
             case BOOL:
                 if (StringUtils.isNullOrEmpty(dynamicFormQuestion.getResponse())
                         || (!dynamicFormQuestion.getResponse().equalsIgnoreCase(TRUE)
-                                && !dynamicFormQuestion.getResponse().equalsIgnoreCase(FALSE)))
+                        && !dynamicFormQuestion.getResponse().equalsIgnoreCase(FALSE)))
                     throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY,
                             "O valor da resposta só pode ser true ou false");
                 break;

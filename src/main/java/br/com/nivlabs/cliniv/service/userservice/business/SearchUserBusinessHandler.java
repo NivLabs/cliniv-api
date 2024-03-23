@@ -113,7 +113,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
      * @return Objeto de transferência
      */
     @Transactional
-    private UserInfoDTO convertEntityToDTO(UserApplication userEntity) {
+    UserInfoDTO convertEntityToDTO(UserApplication userEntity) {
         logger.info("Iniciando processo de conversão de dados de entidade para objeto de transferência :: Patient -> PatientInfoDTO");
         Person person = userEntity.getPerson();
 
@@ -178,7 +178,7 @@ public class SearchUserBusinessHandler implements BaseBusinessHandler {
      * @return Lista de documentos convertidos
      */
     @Transactional
-    private List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
+    List<DocumentDTO> convertDocuments(List<PersonDocument> documents) {
         List<DocumentDTO> convertedDocuments = new ArrayList<>();
 
         documents.forEach(doc -> {

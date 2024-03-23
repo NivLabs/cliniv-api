@@ -1,13 +1,5 @@
 package br.com.nivlabs.cliniv.service.speciality.business;
 
-import jakarta.transaction.Transactional;
-
-import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
 import br.com.nivlabs.cliniv.controller.filters.SpecialityFilter;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.models.domain.Person;
@@ -18,14 +10,18 @@ import br.com.nivlabs.cliniv.models.dto.SpecialityDTO;
 import br.com.nivlabs.cliniv.models.dto.SpecialityInfoDTO;
 import br.com.nivlabs.cliniv.repository.SpecialityRepository;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
+import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 /**
- * 
  * Componente específico para consulta de especialidades
  *
  * @author viniciosarodrigues
  * @since 07-10-2021
- *
  */
 @Component
 public class SearchSpecialityBusinessHandler implements BaseBusinessHandler {
@@ -38,8 +34,8 @@ public class SearchSpecialityBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca infomações paginadas de especialidades cadastradas no sistema
-     * 
-     * @param filter Filtros de busca
+     *
+     * @param filter       Filtros de busca
      * @param pageSettings Configurações de paginação
      * @return Informações paginadas de especialidades cadastradas no sistema
      */
@@ -50,7 +46,7 @@ public class SearchSpecialityBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Busca informações detalhadas de uma especialidade baseada no identificador único da especialidade
-     * 
+     *
      * @param id Identificador único da especialidade
      * @return Informações detalhadas da especialidade
      */
@@ -65,12 +61,12 @@ public class SearchSpecialityBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte Entidade Relacional de especialidade em DTO
-     * 
+     *
      * @param specialityEntity Entidade relacional de especialidade
      * @return DTO de especialidade
      */
     @Transactional
-    private SpecialityInfoDTO convertSpecialityEntityToDTO(Speciality specialityEntity) {
+    SpecialityInfoDTO convertSpecialityEntityToDTO(Speciality specialityEntity) {
         logger.info("Convertendo especialidade encontrada...");
         SpecialityInfoDTO specialityInfo = new SpecialityInfoDTO();
         specialityInfo.setId(specialityEntity.getId());
@@ -88,7 +84,7 @@ public class SearchSpecialityBusinessHandler implements BaseBusinessHandler {
 
     /**
      * Converte entidade relacional de profissional para DTO
-     * 
+     *
      * @param responsible Entidade relacional de profissional
      * @return DTO de profissional
      */

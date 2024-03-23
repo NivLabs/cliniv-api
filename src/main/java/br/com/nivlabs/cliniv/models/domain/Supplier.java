@@ -8,13 +8,10 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "FORNECEDOR")
-public class Supplier extends BaseObjectWithId<Long> {
-
-    private static final long serialVersionUID = -6757073229237534589L;
+public class Supplier extends BaseObjectWithId<String> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(name = "CPF_CNPJ")
     private String document;
@@ -54,11 +51,11 @@ public class Supplier extends BaseObjectWithId<Long> {
         super();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

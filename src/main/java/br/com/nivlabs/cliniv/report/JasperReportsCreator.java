@@ -1,33 +1,24 @@
 package br.com.nivlabs.cliniv.report;
 
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
+import br.com.nivlabs.cliniv.config.db.TenantContext;
+import br.com.nivlabs.cliniv.exception.HttpException;
+import net.sf.jasperreports.engine.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.nivlabs.cliniv.config.db.TenantContext;
-import br.com.nivlabs.cliniv.exception.HttpException;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import javax.sql.DataSource;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- * 
  * Gerador de relatórios Jasper
- * 
+ *
  * @author Vinícios Rodrigues (viniciosarodrigues@gmail.com)
  * @since 21 de jun de 2020
- *
- *
  */
 public class JasperReportsCreator {
 
@@ -38,8 +29,8 @@ public class JasperReportsCreator {
 
     /**
      * Cria o Jasper Print para manipulação
-     * 
-     * @param paramsToReport - Parâmetros do relatório
+     *
+     * @param paramsToReport    - Parâmetros do relatório
      * @param reportInputStream - InputStream do relatório (JXML)
      * @return instância do JasperPrint com buffer do relatório construído para a manipulação
      * @throws JRException
@@ -50,7 +41,7 @@ public class JasperReportsCreator {
 
     /**
      * Contrói dinamicamente o datasource para o Jasper
-     * 
+     *
      * @param tenantIdentifier Identificador do Schema
      * @return Conexão válida
      * @throws SQLException
@@ -69,14 +60,14 @@ public class JasperReportsCreator {
 
     /**
      * Cria o JasperPrint com os parâmetros
-     * 
-     * @param paramsToReport - Parâmetros do relatório
+     *
+     * @param paramsToReport    - Parâmetros do relatório
      * @param reportInputStream - InputStream do relatório (JXML)
      * @return instância do JasperPrint com buffer do relatório construído para a manipulação
      * @throws JRException
      */
     @Transactional
-    private JasperPrint getPrinterByStream(ReportParam paramsToReport, InputStream reportStream)
+    JasperPrint getPrinterByStream(ReportParam paramsToReport, InputStream reportStream)
             throws JRException {
         JasperReport reportCompiled = null;
         Connection connection = null;
