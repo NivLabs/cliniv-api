@@ -92,8 +92,8 @@ public class GenerateUpcomingAppointmentsBusinessHandler implements BaseBusiness
         params.getParams().put("PATIENT_CNS", patientEntity.getCnsNumber() != null ? patientEntity.getCnsNumber() : "Não informado");
         params.getParams().put("PATIENT_MOTHER_NAME", patientEntity.getPerson().getMotherName() != null ? patientEntity.getPerson().getMotherName() : "Não informado");
         params.getParams().put("PATIENT_CPF", patientEntity.getPerson().getCpf() != null ? patientEntity.getPerson().getCpf() : "Não informado");
-        params.getParams().put("PATIENT_BLOOD_TYPE", patientEntity.getPerson().getBloodType().getDescription());
-        params.getParams().put("PATIENT_ETHINIC_GROUP", patientEntity.getPerson().getEthnicGroup().getDescription());
+        params.getParams().put("PATIENT_BLOOD_TYPE", patientEntity.getPerson().getBloodType() != null ? patientEntity.getPerson().getBloodType().getDescription() : "Não informado");
+        params.getParams().put("PATIENT_ETHINIC_GROUP", patientEntity.getPerson().getEthnicGroup() != null ? patientEntity.getPerson().getEthnicGroup().getDescription() : "Não informado");
         params.getParams().put("PATIENT_NATIONALITY", patientEntity.getPerson().getNationality() != null ? patientEntity.getPerson().getNationality() : "Não informado");
 
         final StringBuilder reportText = new StringBuilder();
