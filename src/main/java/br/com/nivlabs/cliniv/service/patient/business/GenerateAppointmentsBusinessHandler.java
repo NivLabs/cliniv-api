@@ -33,7 +33,7 @@ import java.util.Optional;
 
 
 @Component
-public class GenerateUpcomingAppointmentsBusinessHandler implements BaseBusinessHandler {
+public class GenerateAppointmentsBusinessHandler implements BaseBusinessHandler {
 
     private final Logger logger;
     private final AppointmentRepository repo;
@@ -45,7 +45,7 @@ public class GenerateUpcomingAppointmentsBusinessHandler implements BaseBusiness
     private static final String REPORT_SOURCE = "reports/agendamentos_paciente.jrxml";
 
     @Autowired
-    public GenerateUpcomingAppointmentsBusinessHandler(
+    public GenerateAppointmentsBusinessHandler(
             final AppointmentRepository repo,
             final Logger logger,
             final ReportService reportService,

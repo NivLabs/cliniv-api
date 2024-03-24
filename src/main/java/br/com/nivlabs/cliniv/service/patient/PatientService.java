@@ -21,19 +21,19 @@ public class PatientService implements BaseService {
     final CreatePatientBusinessHandler createPatientBusinessHandler;
     final UpdatePatientBusinessHandler updatePatientBusinessHandler;
     final UpdatePatientAllergiesBusinessHandler updatePatientAllergiesBusinessHandler;
-    final GenerateUpcomingAppointmentsBusinessHandler generateUpcomingAppointmentsBusinessHandler;
+    final GenerateAppointmentsBusinessHandler generateAppointmentsBusinessHandler;
 
     @Autowired
     public PatientService(final SearchPatientBusinessHandler patientSearchBusinessHandler,
                           final CreatePatientBusinessHandler createPatientBusinessHandler,
                           final UpdatePatientBusinessHandler updatePatientBusinessHandler,
                           final UpdatePatientAllergiesBusinessHandler updatePatientAllergiesBusinessHandler,
-                          final GenerateUpcomingAppointmentsBusinessHandler generateUpcomingAppointmentsBusinessHandler) {
+                          final GenerateAppointmentsBusinessHandler generateAppointmentsBusinessHandler) {
         this.patientSearchBusinessHandler = patientSearchBusinessHandler;
         this.createPatientBusinessHandler = createPatientBusinessHandler;
         this.updatePatientBusinessHandler = updatePatientBusinessHandler;
         this.updatePatientAllergiesBusinessHandler = updatePatientAllergiesBusinessHandler;
-        this.generateUpcomingAppointmentsBusinessHandler = generateUpcomingAppointmentsBusinessHandler;
+        this.generateAppointmentsBusinessHandler = generateAppointmentsBusinessHandler;
     }
 
     /**
@@ -71,7 +71,7 @@ public class PatientService implements BaseService {
     /**
      * Busca informações do paciente baseado no Código da Carteira Nacional de Saúde
      *
-     * @param CNS Código da Carteira Nacional de Saúde
+     * @param cnsCode Código da Carteira Nacional de Saúde
      * @return Informações detalhadas do paciente
      */
     public PatientInfoDTO findByCnsNumber(String cnsCode) {
@@ -118,6 +118,6 @@ public class PatientService implements BaseService {
      * @return Documento digital
      */
     public DigitalDocumentDTO generateAppointmentsReport(final Long patientId, final PatientAppointmentsReportRequestDTO request) {
-        return generateUpcomingAppointmentsBusinessHandler.execute(patientId, request);
+        return generateAppointmentsBusinessHandler.execute(patientId, request);
     }
 }
