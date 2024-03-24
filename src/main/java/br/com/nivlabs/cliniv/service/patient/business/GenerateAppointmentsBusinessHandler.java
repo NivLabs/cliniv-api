@@ -66,6 +66,11 @@ public class GenerateAppointmentsBusinessHandler implements BaseBusinessHandler 
     public DigitalDocumentDTO execute(Long patientId, PatientAppointmentsReportRequestDTO request) {
         final var initDate = Optional.ofNullable(request.getInitDate()).orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A data inicial não pode ser nula")).atTime(LocalTime.MIN);
         final var endDate = Optional.ofNullable(request.getEndDate()).orElseThrow(() -> new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A data final não pode ser nula")).atTime(LocalTime.MAX);
+
+        if (initDate.isAfter(endDate)) {
+            throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "A data inicial deve ser maior que a data final na requisição de geração de relatório de agendamentos do paciente.");
+        }
+
         logger.info("Iniciando processo de geração de relatório de agendamentos de paciente :: {} - de {} até {}", patientId, initDate, endDate);
         final var appointments = repo.findAppointmentsByPatientIdAndRangeDate(patientId, initDate, endDate);
 
@@ -99,14 +104,16 @@ public class GenerateAppointmentsBusinessHandler implements BaseBusinessHandler 
         final StringBuilder reportText = new StringBuilder();
         appointments.forEach(appointmentDTO -> reportText.append(appointmentDTO.handlerApointmentInPatientReportReport()));
 
+        final var reportTextProcessed = reportText.toString().isEmpty() ?
+                String.format("Nenhum agendamento para o período de %s  até %s",
+                        initDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                        endDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
+                : reportText.toString();
+
         final var responsible = getResponsible();
         params.getParams().put("RESPONSIBLE_REGISTER", responsible.getProfessionalIdentity() != null ? responsible.getProfessionalIdentity().getRegisterType() + " " + responsible.getProfessionalIdentity().getRegisterValue() : "Não possui");
-        params.getParams().put("REPORT_TEXT", reportText.toString());
+        params.getParams().put("REPORT_TEXT", reportTextProcessed);
         params.getParams().put("READER_NAME", responsible.getFullName());
-
-        params.getParams().forEach((s, o) ->
-                logger.info("Chave: {} | Valor: {}", s, o));
-
 
         try {
             return reportService.generateDocumentFromJxmlStream(new ClassPathResource(REPORT_SOURCE).getInputStream(),
