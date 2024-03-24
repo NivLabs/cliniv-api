@@ -49,6 +49,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             a.status)
             from  AGENDAMENTO a
             where a.patient.id = :patientId and a.appointmentDateAndTime >= :initDate and a.appointmentDateAndTime <= :endDate
+            order by a.appointmentDateAndTime asc
             """)
     List<AppointmentDTO> findAppointmentsByPatientIdAndRangeDate(Long patientId, LocalDateTime initDate, LocalDateTime endDate);
 }
