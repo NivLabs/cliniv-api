@@ -86,7 +86,7 @@ public class AnswerDynamicFormBusinessHandler implements BaseBusinessHandler {
 
             DigitalDocumentDTO document = reportService
                     .genareteDocumentFromJxmlStream(attendanceId, request.getDocumentTitle(),
-                            getAnamnesisReportParams(attendanceId, request, user),
+                            true, getAnamnesisReportParams(attendanceId, request, user),
                             new ClassPathResource(REPORT_PATH).getInputStream());
             createAnamneseDocumentEvent(attendanceId, request, medicalRecord, document, user);
         } catch (IOException e) {

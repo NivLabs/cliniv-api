@@ -75,8 +75,7 @@ public class CreatePrescriptionBusinessHandler implements BaseBusinessHandler {
         logger.info("Iniciando criação do documento digital da prescrição");
         try {
             DigitalDocumentDTO document = reportService.genareteDocumentFromJxmlStream(request.getAttendanceId(), "Prescrição Médica",
-                    getReportParam(insetedPrescription.getId(), user),
-                    new ClassPathResource(REPORT_SOURCE)
+                    true, getReportParam(insetedPrescription.getId(), user), new ClassPathResource(REPORT_SOURCE)
                             .getInputStream());
             createDocumentEvent(request, document, responsible, medicalRecord);
         } catch (IOException e) {

@@ -8,6 +8,7 @@ import br.com.nivlabs.cliniv.report.ReportParam;
 import br.com.nivlabs.cliniv.service.BaseBusinessHandler;
 import br.com.nivlabs.cliniv.service.InstituteService;
 import br.com.nivlabs.cliniv.service.report.ReportService;
+import br.com.nivlabs.cliniv.service.report.business.GenerateReportBusinessHandler;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,18 @@ import java.time.LocalDateTime;
 @Component
 public class GenerateAttendanceReportBusinessHandler implements BaseBusinessHandler {
 
-    @Autowired
-    protected Logger logger;
-    @Autowired
-    private ReportService reportService;
-    @Autowired
-    private InstituteService instituteService;
+    protected final Logger logger;
+    private final ReportService reportService;
+    private final InstituteService instituteService;
 
     private static final String GENERIC_REPORT_SOURCE = "reports/attendance_report.jrxml";
-    private static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
+
+    @Autowired
+    public GenerateAttendanceReportBusinessHandler(Logger logger, ReportService reportService, InstituteService instituteService) {
+        this.logger = logger;
+        this.reportService = reportService;
+        this.instituteService = instituteService;
+    }
 
     @Transactional
     public DigitalDocumentDTO generate(ReportParametersDTO reportParameters) {
@@ -51,7 +55,7 @@ public class GenerateAttendanceReportBusinessHandler implements BaseBusinessHand
         String logoBase64 = instituteDTO.getCustomerInfo().getLogoBase64();
 
         ReportParam params = new ReportParam();
-        params.getParams().put(HOSPITAL_LOGO, logoBase64);
+        params.getParams().put(GenerateReportBusinessHandler.HOSPITAL_LOGO, logoBase64);
         params.getParams().put("ID_PROFISSIONAL", responsible);
         params.getParams().put("MES_VIGENCIA", month);
         params.getParams().put("ANO_VIGENCIA", year);
@@ -62,16 +66,14 @@ public class GenerateAttendanceReportBusinessHandler implements BaseBusinessHand
     /**
      * Cria um documento digital anexado a um atendimento
      *
-     * @param reportName        Nome do relatório
-     * @param params            Parâmetros do relatório
-     * @param reportInputStream Stream do Relatório (jxml)
+     * @param params Parâmetros do relatório
      * @return Documento digital do relatório gerado
      */
     @Transactional
     DigitalDocumentDTO generateFromJxmlStream(ReportParam params) {
         try {
             return reportService.generateDocumentFromJxmlStream(new ClassPathResource(GENERIC_REPORT_SOURCE).getInputStream(),
-                    "Relatório de Atendimento", params);
+                    "Relatório de Atendimento", true, params);
         } catch (IOException e) {
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar relatório.");
         }

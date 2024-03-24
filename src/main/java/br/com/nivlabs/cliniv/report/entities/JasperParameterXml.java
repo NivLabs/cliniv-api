@@ -1,20 +1,17 @@
 package br.com.nivlabs.cliniv.report.entities;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
+import java.io.Serializable;
+
 /**
  * Objeto mapeado dos parâmetros do XML Jasper
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class JasperParameterXml implements Serializable {
-
-    private static final long serialVersionUID = 2767273233597008277L;
 
     @JacksonXmlProperty(isAttribute = true, localName = "name")
     private String name;

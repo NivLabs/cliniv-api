@@ -35,5 +35,20 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long>,
             from  AGENDAMENTO a
             where a.patient.id = :patientId and a.appointmentDateAndTime >= :initDateTime
             """)
-    List<AppointmentDTO> findByPatientIdAndInitialDateTime(Long patientId, LocalDateTime initDateTime);
+    List<AppointmentDTO> findUpcomingAppointmentsByPatientId(Long patientId, LocalDateTime initDateTime);
+
+
+    @Query(value = """
+            select new br.com.nivlabs.cliniv.models.dto.AppointmentDTO(
+            a.id,
+            a.patient.person.fullName,
+            a.patient.person.cpf,
+            a.professional.id,
+            a.professional.person.fullName,
+            a.appointmentDateAndTime,
+            a.status)
+            from  AGENDAMENTO a
+            where a.patient.id = :patientId and a.appointmentDateAndTime >= :initDate and a.appointmentDateAndTime <= :endDate
+            """)
+    List<AppointmentDTO> findAppointmentsByPatientIdAndRangeDate(Long patientId, LocalDateTime initDate, LocalDateTime endDate);
 }

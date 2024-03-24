@@ -1,22 +1,18 @@
 package br.com.nivlabs.cliniv.report;
 
-import java.util.Date;
-import java.util.Map;
-
+import br.com.nivlabs.cliniv.util.StringUtils;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.cliniv.util.StringUtils;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Parâmetros necessários para montar a declaração de comparecimento do paciente
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class AttendanceParams extends ReportParam {
-
-    private static final long serialVersionUID = 5738508744853919737L;
 
     private String patientName;
 

@@ -1,12 +1,13 @@
 package br.com.nivlabs.cliniv.models.dto;
 
-import java.time.LocalDateTime;
-
+import br.com.nivlabs.cliniv.enums.AppointmentStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import br.com.nivlabs.cliniv.enums.AppointmentStatus;
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Schema(description = "Informações resumidas do agendamento")
 public class AppointmentDTO extends DataTransferObjectBase {
@@ -36,7 +37,7 @@ public class AppointmentDTO extends DataTransferObjectBase {
     private AppointmentStatus status = AppointmentStatus.WAITING_CONFIRMATION;
 
     public AppointmentDTO(Long id, String patientName, String patientCpf, Long professionalId, String professionalName,
-            LocalDateTime schedulingDateAndTime, AppointmentStatus status) {
+                          LocalDateTime schedulingDateAndTime, AppointmentStatus status) {
         super();
         this.id = id;
         this.patientName = patientName;
@@ -107,69 +108,27 @@ public class AppointmentDTO extends DataTransferObjectBase {
         this.status = status;
     }
 
+    @JsonIgnore
+    public String handlerApointmentInPatientReportReport() {
+        return """
+                ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                _{DATA_HORA} ------ _{PROFESSIONAL_NAME} ------ _{STATUS}
+                """
+                .replace("_{DATA_HORA}", schedulingDateAndTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")))
+                .replace("_{PROFESSIONAL_NAME}", professionalName)
+                .replace("_{STATUS}", status.getDescription());
+    }
+
     @Override
     public String toString() {
-        return "AppointmentDTO [id=" + id + ", patientName=" + patientName + ", patientCpf=" + patientCpf + ", professionalId="
-                + professionalId + ", professionalName=" + professionalName + ", schedulingDateAndTime=" + schedulingDateAndTime
-                + ", status=" + status + "]";
+        return "AppointmentDTO{" +
+                "id=" + id +
+                ", patientName='" + patientName + '\'' +
+                ", patientCpf='" + patientCpf + '\'' +
+                ", professionalId=" + professionalId +
+                ", professionalName='" + professionalName + '\'' +
+                ", schedulingDateAndTime=" + schedulingDateAndTime +
+                ", status=" + status +
+                '}';
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((patientCpf == null) ? 0 : patientCpf.hashCode());
-        result = prime * result + ((patientName == null) ? 0 : patientName.hashCode());
-        result = prime * result + ((professionalId == null) ? 0 : professionalId.hashCode());
-        result = prime * result + ((professionalName == null) ? 0 : professionalName.hashCode());
-        result = prime * result + ((schedulingDateAndTime == null) ? 0 : schedulingDateAndTime.hashCode());
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        AppointmentDTO other = (AppointmentDTO) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        if (patientCpf == null) {
-            if (other.patientCpf != null)
-                return false;
-        } else if (!patientCpf.equals(other.patientCpf))
-            return false;
-        if (patientName == null) {
-            if (other.patientName != null)
-                return false;
-        } else if (!patientName.equals(other.patientName))
-            return false;
-        if (professionalId == null) {
-            if (other.professionalId != null)
-                return false;
-        } else if (!professionalId.equals(other.professionalId))
-            return false;
-        if (professionalName == null) {
-            if (other.professionalName != null)
-                return false;
-        } else if (!professionalName.equals(other.professionalName))
-            return false;
-        if (schedulingDateAndTime == null) {
-            if (other.schedulingDateAndTime != null)
-                return false;
-        } else if (!schedulingDateAndTime.equals(other.schedulingDateAndTime))
-            return false;
-        if (status != other.status)
-            return false;
-        return true;
-    }
-
 }

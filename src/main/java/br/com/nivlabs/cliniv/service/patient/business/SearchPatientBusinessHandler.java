@@ -226,7 +226,7 @@ public class SearchPatientBusinessHandler implements BaseBusinessHandler {
     }
 
     private void handlerPatientUpcomingAppointments(PatientInfoDTO patientInfo) {
-        final var appointments = appointmentRepository.findByPatientIdAndInitialDateTime(patientInfo.getId(), LocalDateTime.now(ZoneId.of(ApplicationMain.AMERICA_SAO_PAULO)));
+        final var appointments = appointmentRepository.findUpcomingAppointmentsByPatientId(patientInfo.getId(), LocalDateTime.now(ZoneId.of(ApplicationMain.AMERICA_SAO_PAULO)));
         patientInfo.getUpcomingAppointments().addAll(appointments);
     }
 

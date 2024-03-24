@@ -42,25 +42,37 @@ import java.util.Base64;
 @Component
 public class GenerateReportBusinessHandler implements BaseBusinessHandler {
 
-    @Autowired
-    protected Logger logger;
+
+    protected final Logger logger;
+
+    private final JasperReportsCreator jasperReportCreator;
+    private final ReportRepository reportRepository;
+    private final AttendanceEventRepository attendanceEventRepo;
+    private final AttendanceRepository attendanceRepo;
+    private final InstituteService instituteService;
+    private final ResponsibleService responsibleService;
+    private final UserService userService;
+    public static final String HOSPITAL_LOGO = "HOSPITAL_LOGO";
+    public static final String GENERIC_REPORT_SOURCE = "reports/generico.jrxml";
 
     @Autowired
-    private JasperReportsCreator jasperReportCreator;
-    @Autowired
-    private ReportRepository reportRepository;
-    @Autowired
-    private AttendanceEventRepository attendanceEventRepo;
-    @Autowired
-    private AttendanceRepository attendanceRepo;
-    @Autowired
-    private InstituteService instituteService;
-    @Autowired
-    private ResponsibleService responsibleService;
-    @Autowired
-    private UserService userService;
-
-    private static final String GENERIC_REPORT_SOURCE = "reports/generico.jrxml";
+    public GenerateReportBusinessHandler(final Logger logger,
+                                         final JasperReportsCreator jasperReportCreator,
+                                         final ReportRepository reportRepository,
+                                         final AttendanceEventRepository attendanceEventRepo,
+                                         final AttendanceRepository attendanceRepo,
+                                         final InstituteService instituteService,
+                                         final ResponsibleService responsibleService,
+                                         final UserService userService) {
+        this.logger = logger;
+        this.jasperReportCreator = jasperReportCreator;
+        this.reportRepository = reportRepository;
+        this.attendanceEventRepo = attendanceEventRepo;
+        this.attendanceRepo = attendanceRepo;
+        this.instituteService = instituteService;
+        this.responsibleService = responsibleService;
+        this.userService = userService;
+    }
 
     /**
      * Cria um documento digital anexado a um atendimento
@@ -72,13 +84,13 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
      * @return Documento digital do relatório gerado
      */
     @Transactional
-    public DigitalDocumentDTO generateFromJxmlStream(Long attendanceEventId, String reportName, ReportParam params,
+    public DigitalDocumentDTO generateFromJxmlStream(Long attendanceEventId, String reportName, boolean isActiveConnection, ReportParam params,
                                                      InputStream reportInputStream) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             logger.info("Iniciando a criação do documento à partir dos parâmetros :: Verificando template do documento :: {} :: Instância -> {}",
                     reportName, reportInputStream);
 
-            JasperPrint jasperPrint = jasperReportCreator.create(params, reportInputStream);
+            JasperPrint jasperPrint = jasperReportCreator.create(isActiveConnection, params, reportInputStream);
 
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
             logger.info("Documento criado com sucesso!");
@@ -105,13 +117,13 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
      * @return Documento digital gerado do relatório
      */
     @Transactional
-    public DigitalDocumentDTO generateFromLayout(Long layoutId, ReportGenerationRequestDTO params) {
+    public DigitalDocumentDTO generateFromLayout(Long layoutId, boolean isActiveConnection, ReportGenerationRequestDTO params) {
 
         ReportLayout reportLayout = reportRepository.findById(layoutId).orElseThrow(() -> new HttpException(HttpStatus.NOT_FOUND,
                 String.format("Layout com o identificador %s não encontrado!", layoutId)));
 
         byte[] bytes = Base64.getDecoder().decode(reportLayout.getXml());
-        return generate(bytes, reportLayout.getName(), params);
+        return generate(bytes, reportLayout.getName(), isActiveConnection, params);
     }
 
     /**
@@ -123,10 +135,10 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
      * @return Documento digital com o base64 do relatório
      */
     @Transactional
-    public DigitalDocumentDTO generate(byte[] bytes, String reportName, ReportGenerationRequestDTO params) {
+    public DigitalDocumentDTO generate(byte[] bytes, String reportName, boolean isActiveConnection, ReportGenerationRequestDTO params) {
         try (InputStream reportInputStream = new ByteArrayInputStream(bytes)) {
             ReportParam reportParam = convertParams(params);
-            return generateFromJxmlStream(0L, reportName, reportParam, reportInputStream);
+            return generateFromJxmlStream(0L, reportName, isActiveConnection, reportParam, reportInputStream);
         } catch (Exception e) {
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento...\n".concat(e.getMessage()), e);
         }
@@ -135,22 +147,22 @@ public class GenerateReportBusinessHandler implements BaseBusinessHandler {
     /**
      * Gera um relatório à partir de um array de bytes
      *
-     * @param bytes      Array de bytes do relatório
-     * @param reportName Nome do relatório
-     * @param params     Parâmetros do relatório
-     * @return Documento digital com o base64 do relatório
+     * @param reportInputStream JXML do relatório
+     * @param reportName        Nome do relatório
+     * @param reportParams      Parâmetros do relatório
+     * @return Documento digital
      */
     @Transactional
-    public DigitalDocumentDTO generate(InputStream reportInputStream, String reportName, ReportParam reportParams) {
+    public DigitalDocumentDTO generate(InputStream reportInputStream, String reportName, boolean isActiveConnection, ReportParam reportParams) {
         try {
-            return generateFromJxmlStream(0L, reportName, reportParams, reportInputStream);
+            return generateFromJxmlStream(0L, reportName, isActiveConnection, reportParams, reportInputStream);
         } catch (Exception e) {
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha ao gerar documento...\n".concat(e.getMessage()), e);
         } finally {
             try {
                 reportInputStream.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Falha ao fechar stream do relatório", e);
             }
         }
     }

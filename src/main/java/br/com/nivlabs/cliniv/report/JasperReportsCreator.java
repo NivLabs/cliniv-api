@@ -22,31 +22,17 @@ import java.sql.SQLException;
  */
 public class JasperReportsCreator {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private DataSource datasource;
 
-    /**
-     * Cria o Jasper Print para manipulação
-     *
-     * @param paramsToReport    - Parâmetros do relatório
-     * @param reportInputStream - InputStream do relatório (JXML)
-     * @return instância do JasperPrint com buffer do relatório construído para a manipulação
-     * @throws JRException
-     */
-    public JasperPrint create(ReportParam paramsToReport, InputStream reportInputStream) throws JRException {
-        return getPrinterByStream(paramsToReport, reportInputStream);
+    @Transactional
+    public JasperPrint create(boolean isActiveConnection, ReportParam paramsToReport, InputStream reportInputStream) throws JRException {
+        return getPrinterByStream(isActiveConnection, paramsToReport, reportInputStream);
     }
 
-    /**
-     * Contrói dinamicamente o datasource para o Jasper
-     *
-     * @param tenantIdentifier Identificador do Schema
-     * @return Conexão válida
-     * @throws SQLException
-     */
-    public Connection getConnection(String tenantIdentifier) throws SQLException {
+    public Connection getConnection(final String tenantIdentifier) throws SQLException {
         final Connection connection = datasource.getConnection();
         try {
             connection.createStatement().execute("USE " + tenantIdentifier);
@@ -58,30 +44,26 @@ public class JasperReportsCreator {
         return connection;
     }
 
-    /**
-     * Cria o JasperPrint com os parâmetros
-     *
-     * @param paramsToReport    - Parâmetros do relatório
-     * @param reportInputStream - InputStream do relatório (JXML)
-     * @return instância do JasperPrint com buffer do relatório construído para a manipulação
-     * @throws JRException
-     */
     @Transactional
-    JasperPrint getPrinterByStream(ReportParam paramsToReport, InputStream reportStream)
+    JasperPrint getPrinterByStream(boolean isActiveConnection, ReportParam paramsToReport, InputStream reportStream)
             throws JRException {
+
         JasperReport reportCompiled = null;
         Connection connection = null;
         try {
+            reportCompiled = JasperCompileManager.compileReport(reportStream);
+            if (!isActiveConnection) {
+                return JasperFillManager.fillReport(reportCompiled, paramsToReport.getParams(), new JREmptyDataSource());
+            }
             connection = getConnection(TenantContext.getCurrentTenant());
             logger.info("Iniciando processo de geração de documento :: Datasource Utilizado: {}", TenantContext.getCurrentTenant());
-            reportCompiled = JasperCompileManager.compileReport(reportStream);
             return JasperFillManager.fillReport(reportCompiled, paramsToReport.getParams(), connection);
         } catch (Exception e) {
             logger.error("Falha ao tentar compilar o relatório para o Jasper", e);
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR, "Falha na criação do relatório");
         } finally {
             try {
-                if (datasource.getConnection() != null && !datasource.getConnection().isClosed()) {
+                if (isActiveConnection && connection != null && datasource.getConnection() != null && !datasource.getConnection().isClosed()) {
                     connection.close();
                 }
             } catch (SQLException e) {
