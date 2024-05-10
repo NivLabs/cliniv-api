@@ -54,7 +54,8 @@ public class SecurityConfig {
             "/auth/forgot/**",
             "/auth",
             "/customer",
-            "/customer/confirm/**"
+            "/customer/confirm/**",
+            "/patient/public"
     };
 
 

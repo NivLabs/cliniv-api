@@ -20,7 +20,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Classe PatientController.java
@@ -46,7 +52,7 @@ public class PatientController extends BaseController<PatientService> {
     @Operation(summary = "patient-post", description = "Insere um novo paciente na aplicação")
     @PostMapping
     @PreAuthorize("hasAnyRole('PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
-    public ResponseEntity<PatientInfoDTO> persist(@Validated @RequestBody(required = true) PatientInfoDTO newPatient,
+    public ResponseEntity<PatientInfoDTO> persist(@Validated @RequestBody PatientInfoDTO newPatient,
                                                   HttpServletResponse response) {
         PatientInfoDTO createdPatient = service.persist(newPatient);
 
@@ -59,7 +65,7 @@ public class PatientController extends BaseController<PatientService> {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> update(@PathVariable("id") Long id,
-                                                 @Validated @RequestBody(required = true) PatientInfoDTO patient) {
+                                                 @Validated @RequestBody PatientInfoDTO patient) {
         return ResponseEntity.ok().body(service.update(id, patient));
     }
 
@@ -75,22 +81,31 @@ public class PatientController extends BaseController<PatientService> {
     @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'PACIENTE_ESCRITA', 'ATENDIMENTO_ESCRITA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
     public ResponseEntity<PatientInfoDTO> findByDocument(@PathVariable("documentType") DocumentType documentType,
                                                          @PathVariable("document") String document) {
-        switch (documentType) {
-            case CPF:
-                return ResponseEntity.ok(service.findByCpf(document));
-            case SUS:
-                return ResponseEntity.ok(service.findByCnsNumber(document));
-            default:
-                throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo de documento desconhecido, esperados: [CPF | SUS]");
-        }
+        return switch (documentType) {
+            case CPF -> ResponseEntity.ok(service.findByCpf(document));
+            case SUS -> ResponseEntity.ok(service.findByCnsNumber(document));
+            default ->
+                    throw new HttpException(HttpStatus.UNPROCESSABLE_ENTITY, "Tipo de documento desconhecido, esperados: [CPF | SUS]");
+        };
     }
 
     @Operation(summary = "patient-appointments-report-post", description = "Gera um documento digital com todos os agendamentos do paciente em um intervalo entre datas")
     @PostMapping("/{patientId}/reports/appointments")
     @PreAuthorize("hasAnyRole('PACIENTE_LEITURA', 'ATENDIMENTO_LEITURA', 'ADMIN')")
-    public ResponseEntity<DigitalDocumentDTO> generateAppointmentsReport(@Validated @RequestBody(required = true) PatientAppointmentsReportRequestDTO request,
+    public ResponseEntity<DigitalDocumentDTO> generateAppointmentsReport(@Validated @RequestBody PatientAppointmentsReportRequestDTO request,
                                                                          @PathVariable("patientId") Long patientId) {
         return ResponseEntity.status(HttpStatus.OK).body(service.generateAppointmentsReport(patientId, request));
+    }
+
+    @Operation(summary = "patient-post", description = "Insere um novo paciente na aplicação")
+    @PostMapping("/public")
+    public ResponseEntity<PatientInfoDTO> persistPublic(@Validated @RequestBody PatientInfoDTO newPatient,
+                                                        HttpServletResponse response) {
+        PatientInfoDTO createdPatient = service.persist(newPatient);
+
+        publisher.publishEvent(new CreatedResourceEvent(this, response, createdPatient.getId()));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPatient);
     }
 
 }
