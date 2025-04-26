@@ -42,12 +42,21 @@ public class MultiTenantConnectionProviderCustom implements MultiTenantConnectio
 
     @Override
     public Connection getConnection(String tenantIdentifier) throws SQLException {
-        logger.trace("Capturando conexão para o tenant '{}'", tenantIdentifier);
+        logger.info("Capturando conexão para o tenant '{}'", tenantIdentifier);
+
+        if (!tenantIdentifier.matches("[a-zA-Z0-9_]+")) {
+            throw new HttpException(HttpStatus.BAD_REQUEST, "Tenant inválido: " + tenantIdentifier);
+        }
+
         final Connection connection = getAnyConnection();
         try {
-            connection.createStatement().execute("USE " + tenantIdentifier);
+            String currentDb = connection.getCatalog();
+            if (!tenantIdentifier.equals(currentDb)) {
+                logger.info("Mudando schema de '{}' para '{}'", currentDb, tenantIdentifier);
+                connection.setCatalog(tenantIdentifier);
+            }
         } catch (SQLException e) {
-            logger.error("Não foi possivel alterar para o schema {}", tenantIdentifier, e);
+            logger.error("Não foi possível alterar para o schema {}", tenantIdentifier, e);
             throw new HttpException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Falha ao iniciar conexão com banco, verifique os logs para mais informações!");
         }
