@@ -1,8 +1,6 @@
 package br.com.nivlabs.cliniv.config.db;
 
 import org.hibernate.cfg.AvailableSettings;
-import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
-import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +33,8 @@ public class MultiTenantSchemaHibernateConfiguration {
     @Bean
     LocalContainerEntityManagerFactoryBean entityManagerFactory(
             DataSource dataSource,
-            MultiTenantConnectionProvider multiTenantConnectionProvider,
-            CurrentTenantIdentifierResolver tenantIdentifierResolver) {
+            MultiTenantConnectionProviderCustom multiTenantConnectionProvider,
+            CurrentTenantIdentifierResolverCustom tenantIdentifierResolver) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan(PACKAGES_TO_SCAN_DOMAIN, PACKAGES_TO_SCAN_MANAGER);

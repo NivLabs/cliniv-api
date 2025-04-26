@@ -1,11 +1,7 @@
 package br.com.nivlabs.cliniv.util;
 
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.Arrays;
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -14,15 +10,17 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Value;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 /**
  * Utilitário para criptografia
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 public class EncryptUtils {
 
@@ -38,22 +36,21 @@ public class EncryptUtils {
 
     public static EncryptUtils getInstance() {
         if (instance == null)
-            return new EncryptUtils();
-        else
-            return instance;
+            instance = new EncryptUtils();
+        return instance;
     }
 
     /**
      * Método para criptografia fraca de informações, não utilizar para informações sensíveis
-     * 
+     *
      * @param privateString texto sem criptografia
      * @return Texto criptografado
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchPaddingException
-     * @throws InvalidKeyException
-     * @throws InvalidAlgorithmParameterException
-     * @throws IllegalBlockSizeException
-     * @throws BadPaddingException
+     * @throws NoSuchAlgorithmException           Algoritimo de criptografia não encontrado
+     * @throws NoSuchPaddingException             Mecanismo de espaçamento não encontrado
+     * @throws InvalidKeyException                Chave inválida
+     * @throws InvalidAlgorithmParameterException Parâmetro de algoritimo inválido
+     * @throws IllegalBlockSizeException          Tamanho de bloco não permitido
+     * @throws BadPaddingException                Espaçamento mal formatado
      */
     public String encrypt(String privateString) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
@@ -75,15 +72,15 @@ public class EncryptUtils {
 
     /**
      * Método para descriptografia fraca de informações
-     * 
+     *
      * @param encrypted Texto criptografado
      * @return Texto descriptografado
-     * @throws NoSuchAlgorithmException
-     * @throws NoSuchPaddingException
-     * @throws InvalidKeyException
-     * @throws InvalidAlgorithmParameterException
-     * @throws IllegalBlockSizeException
-     * @throws BadPaddingException
+     * @throws NoSuchAlgorithmException           Algoritimo de criptografia não encontrado
+     * @throws NoSuchPaddingException             Mecanismo de espaçamento não encontrado
+     * @throws InvalidKeyException                Chave inválida
+     * @throws InvalidAlgorithmParameterException Parâmetro de algoritimo inválido
+     * @throws IllegalBlockSizeException          Tamanho de bloco não permitido
+     * @throws BadPaddingException                Espaçamento mal formatado
      */
     public String decrypt(String encrypted) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
             InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {

@@ -1,17 +1,16 @@
 package br.com.nivlabs.cliniv.config.db;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
+import br.com.nivlabs.cliniv.exception.HttpException;
+import io.micrometer.common.lang.NonNull;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import br.com.nivlabs.cliniv.exception.HttpException;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Controlador Multi Tenant
@@ -20,16 +19,15 @@ import br.com.nivlabs.cliniv.exception.HttpException;
  * @since 08/01/2022
  */
 @Component
-public class MultiTenantConnectionProviderCustom implements MultiTenantConnectionProvider {
+public class MultiTenantConnectionProviderCustom implements MultiTenantConnectionProvider<String> {
 
-    @Autowired
-    private Logger logger;
-
+    private final Logger logger;
     private final DataSource dataSource;
 
     @Autowired
-    public MultiTenantConnectionProviderCustom(DataSource dataSource) {
+    public MultiTenantConnectionProviderCustom(DataSource dataSource, Logger logger) {
         this.dataSource = dataSource;
+        this.logger = logger;
     }
 
     @Override
@@ -59,17 +57,18 @@ public class MultiTenantConnectionProviderCustom implements MultiTenantConnectio
     @Override
     public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
         logger.trace("Liberando conexão para o Tenant '{}'", tenantIdentifier);
-        releaseAnyConnection(connection);
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
+        }
     }
 
-
     @Override
-    public boolean isUnwrappableAs(@SuppressWarnings("rawtypes") Class unwrapType) {
+    public boolean isUnwrappableAs(@NonNull Class unwrapType) {
         return false;
     }
 
     @Override
-    public <T> T unwrap(Class<T> unwrapType) {
+    public <T> T unwrap(@NonNull Class<T> unwrapType) {
         return null;
     }
 
