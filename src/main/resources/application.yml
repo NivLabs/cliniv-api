@@ -1,0 +1,97 @@
+spring:
+  application:
+    name: CliNiv
+
+  mail:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_MAIL_USERNAME}
+    password: ${SMTP_MAIL_PASSWORD}
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          starttls:
+            enable: true
+          timeout: 5000
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${DB_BASE}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      max-lifetime: 600000
+      idle-timeout: 300000
+      maximum-pool-size: 20
+
+  jpa:
+    show-sql: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      format_sql: none
+
+  sql:
+    init:
+      mode: always
+
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+    date-format: yyyy-MM-dd
+    default-property-inclusion: NON_NULL
+
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 1440
+
+nivlabs:
+  integration:
+    email:
+      default-sender: ${SMTP_MAIL_USERNAME}
+  application:
+    zoneId: America/Sao_Paulo
+  api:
+    baseUrl: https://cliniv.cloud
+  ui:
+    baseUrl: https://cliniv.nivlabs.com.br
+
+swagger:
+  owner:
+    url: http://www.nivlabs.com.br/
+    name: NiV Labs - CliNiv
+
+img:
+  prefix:
+    client:
+      profile: cp
+  profile:
+    size: 200
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+secret-key:
+  property: MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDh6ygfEos15525xhBCZPAWywBX2kyg9M+EoYwY4e9GKRn1em2vu1TI+aJfAYSGaCrw6LUK+i6anQ3zducBbnpb7LKM/m1TfeqLQ0DXPSDvFyG3wRFa23uGxvF0f2fW+mbzvXfeXAOjhV64vcMjnu5+a2t0bVrzZh7mL+SS8id6tT7cqvtvFT8fWr36udWvTSFGKZvk1SY5/ZhSBOXjEdt1cprtxzi2wjtAyutjY5dTGtTrI31oCBIFJGSZoSJVA6zfkG9rIh7kS4R1zLCgnG2sfPkwfypC0MXaS31zH8ZtWGZrdltt+cw+CLSXvnw8MmEr+Zj0ggy5mKaYbtTaR3h/AgMBAAECggEAAWip7gdTO9AzPclLYyL1kVmgkyzNDv1W/3ZvUVsbnqne+HmMMj8Lfs+QNfZSXT1wTg/tcd8fsPGvu+kLAjiebJBz0CPbRRTaygg40TtvCFP/joqP3gxC7Oq9jANOFiDqRt1RRXE7yanNMd1nQgOMP6vEihGWBWTIaxcVPvUH9wfuG+Gfedc+J/VNUcRzx/xS077v1qX4Vf4C2JAoq/5nXEYouEaIkrugTzHnWgDYGOiydkTIsUdupJAbI3bnXcx0GLvvO0nPwJLr1tFyQQdvfn8e/RLZ4Lp8XxR4nVbIa0eO+qQXuENvaoWDiNAvGZoPHNyXO+2h8MhwKV14HipZsQKBgQD2SjxyCrKE+RzplFQ0r2UJLf8C3Zu17w95+Y0gnVai/xqjIH4zHe+R2zWz5VLDbyGnGhTmQ970tGgJt/hV3niTryw/IvXMvjL9HNSE5i2ru32FneO43M0ECESDZ6XYg/JTVL41RLcXW5weZUDnmrNXASo5a9kuzPO+TRXFk7jALwKBgQDq01C/DxDEC7C1LK0Wyc6P/6HjXz9OSFmfkMpLpvX2JAQ2NlwOfaBBSW1E6eKQ3i82JVr0/nG/WAk90JJytqWEJpYAmlWuVRqBnAt44JFG2tv7Y0GNyIlHo6QwGr5+lDrJCJuxFBdzSg1+on5Wl+bkHf7Y4EzLEf7lBZrplKDosQKBgE5XAq8LtAkT7BxoL/iqKasn1EunDdZq+jNEK53KLjqehmyI81tzFDcC0Swtr4u2l6+9XhR4Vjzj/YvJ1tYJc7UWLS7QAftkLHfSac70IGbVtnF/7WVp5lR4BML/fwNFxRi4heAPwWVOoHQSpPiGfrEYD8RAB88ZJhbMEjbMbCHFAoGAHZ4tjwuNZ8y5qwBJjJhDj3IErzLyPyNs+m0+trAGUddVGKlejw1VSybBu3FsfC0p80Be6ou1ORcXg05tSj6zPanIPac5q1VclIBkCgj5CeDM4jYwrHtgpUKEkPSuljSH/ZcyW/FWy9nJPfGs0aszGg6WeDBCP1KzvZspYNC4QuECgYBCYYZqxMwxrPSSGfyJsF+4lFm8xvMUqKhsgv90dbdZJFHVIhaNx7/91dGN5qzF7NeCQUzl9N2XoXo+LAlOpbb0THBRFodVndJyCsGnU8Q5351unTfrcup21BFNzIBSfoYMxImLM2ft1A9rY/k0HRZ7JUfp/F+8UvSrE0N69XgjDA==

@@ -1,11 +1,8 @@
 package br.com.nivlabs.cliniv.integration.email;
 
-import java.util.Date;
-import java.util.Map;
-
+import br.com.nivlabs.cliniv.service.BaseService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,13 +12,13 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import br.com.nivlabs.cliniv.service.BaseService;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Servico de integração de e-mail
- * 
- * @author viniciosarodrigues
  *
+ * @author viniciosarodrigues
  */
 @Service
 public class EmailService implements BaseService {
@@ -29,16 +26,20 @@ public class EmailService implements BaseService {
     @Value("${nivlabs.integration.email.default-sender}")
     private String sender;
 
-    @Autowired
-    private TemplateEngine templateEngine;
+    private final TemplateEngine templateEngine;
+
+    private final JavaMailSender javaMailSender;
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    public EmailService(JavaMailSender javaMailSender, TemplateEngine templateEngine) {
+        this.javaMailSender = javaMailSender;
+        this.templateEngine = templateEngine;
+    }
 
     /**
      * Envia uma mensagem HTML via e-mail
-     * 
-     * @param message Mensagem em HTML
+     *
+     * @param mimeMessage Mensagem em HTML
      */
     public void sendHtmlMessage(MimeMessage mimeMessage) {
         javaMailSender.send(mimeMessage);
@@ -46,10 +47,10 @@ public class EmailService implements BaseService {
 
     /**
      * Envia uma mensagem simples via e-mail
-     * 
+     *
      * @param subject Assunto da mensagem
-     * @param to E-mail que receberá a mensagem
-     * @param text Texto que será enviado por e-mail
+     * @param to      E-mail que receberá a mensagem
+     * @param text    Texto que será enviado por e-mail
      */
     public void sendSimpleMessage(String subject, String to, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
@@ -63,11 +64,11 @@ public class EmailService implements BaseService {
 
     /**
      * Prepara a mensagem em HTML para envio
-     * 
-     * @param subject Assunto da mensagem de e-mail
-     * @param template Template HTML para envio
+     *
+     * @param subject   Assunto da mensagem de e-mail
+     * @param template  Template HTML para envio
      * @param variables Variáveis para processamento no template
-     * @param to E-mail que receberá a mensagem
+     * @param to        E-mail que receberá a mensagem
      * @return Mensagem processada pronta para envio
      * @throws MessagingException
      */

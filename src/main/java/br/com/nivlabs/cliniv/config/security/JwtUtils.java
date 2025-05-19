@@ -3,7 +3,12 @@ package br.com.nivlabs.cliniv.config.security;
 import br.com.nivlabs.cliniv.ApplicationMain;
 import br.com.nivlabs.cliniv.exception.HttpException;
 import br.com.nivlabs.cliniv.util.StringUtils;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -33,11 +40,13 @@ public class JwtUtils {
     private Integer expiration;
 
     public String generateToken(UserOfSystem user) {
+        final Key key = Keys.hmacShaKeyFor((user.getInfo().get(UserOfSystem.CUSTOMER_ID) + secret).getBytes(StandardCharsets.UTF_8));
+
         return Jwts.builder()
-                .setClaims(user.getInfo())
-                .setSubject(user.getUsername())
-                .setExpiration(this.getDateWithTimezone(ApplicationMain.AMERICA_SAO_PAULO, expiration))
-                .signWith(Keys.hmacShaKeyFor((user.getInfo().get(UserOfSystem.CUSTOMER_ID) + secret).getBytes()), SignatureAlgorithm.HS256)
+                .claims(user.getInfo())
+                .subject(user.getUsername())
+                .expiration(this.getDateWithTimezone(ApplicationMain.AMERICA_SAO_PAULO, expiration))
+                .signWith(key)
                 .compact();
     }
 
@@ -63,9 +72,10 @@ public class JwtUtils {
     }
 
     private Claims getClaims(final String token, final String customerId) {
+        final var key = Keys.hmacShaKeyFor((customerId + secret).getBytes(StandardCharsets.UTF_8));
         try {
-            return Jwts.parserBuilder().setSigningKey(Keys.hmacShaKeyFor((customerId + secret).getBytes())).build()
-                    .parseClaimsJws(token).getBody();
+            JwtParser parser = Jwts.parser().verifyWith(key).build();
+            return parser.parseSignedClaims(token).getPayload();
         } catch (MalformedJwtException ex) {
             throw new HttpException(HttpStatus.UNAUTHORIZED, "Token inválido!");
         } catch (ExpiredJwtException ex) {

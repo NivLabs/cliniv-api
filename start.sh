@@ -21,6 +21,12 @@ export USER=admin
 export PASS=admin
 ## ======== Configurações do banco ======== ##
 
+## ======== Configurações de SMTP ======== ##
+SMTP_HOST=
+SMTP_MAIL_PASSWORD=
+SMTP_MAIL_USERNAME=
+SMTP_PORT=
+## ======== Configurações de SMTP ======== ##
 echo 'Configurações de conexão com o banco de dados...'
 echo 'HOST: ' ${HOST}
 echo 'PORTA: ' ${PORT}

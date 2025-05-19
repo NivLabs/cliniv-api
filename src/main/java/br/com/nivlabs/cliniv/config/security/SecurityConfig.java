@@ -23,18 +23,10 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private AuthenticationConfiguration authenticationConfiguration;
-
-    @Autowired
-    private Environment env;
-
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
-    private UserRepository userDao;
-
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final Environment env;
+    private final JwtUtils jwtUtils;
+    private final UserRepository userDao;
     private static final String[] PUBLIC_MATCHES = {
             "/v2/**",
             "/webjars/**",
@@ -47,16 +39,24 @@ public class SecurityConfig {
             "/server/",
             "/server",
             "/actuator/**",
-            "/status"
+            "/status",
+            "/customer/confirm/**"
     };
 
     private static final String[] PUBLIC_MATCHES_POST = {
             "/auth/forgot/**",
             "/auth",
             "/customer",
-            "/customer/confirm/**",
             "/patient/public"
     };
+
+    @Autowired
+    public SecurityConfig(final AuthenticationConfiguration authenticationConfiguration, final Environment env, final JwtUtils jwtUtils, final UserRepository userDao) {
+        this.authenticationConfiguration = authenticationConfiguration;
+        this.env = env;
+        this.jwtUtils = jwtUtils;
+        this.userDao = userDao;
+    }
 
 
     @Bean
